@@ -3,6 +3,9 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import Breadcrumb from '@sk-web-gui/breadcrumb';
+import { UserMenu } from '@sk-web-gui/user-menu';
+import { usePathname } from 'next/navigation';
 
 interface DefaultLayoutProps {
   children: React.ReactNode;
@@ -28,6 +31,7 @@ export default function DefaultLayout({
   const router = useRouter();
   const layoutTitle = `${process.env.NEXT_PUBLIC_APP_NAME}${headerSubtitle ? ` - ${headerSubtitle}` : ''}`;
   const fullTitle = postTitle ? `${layoutTitle} - ${postTitle}` : `${layoutTitle}`;
+  const pathname = usePathname();
 
   const { t } = useTranslation();
 
@@ -53,14 +57,36 @@ export default function DefaultLayout({
         </a>
       </NextLink>
 
-      <Header
-        data-cy="nav-header"
-        title={headerTitle ? headerTitle : process.env.NEXT_PUBLIC_APP_NAME}
-        subtitle={headerSubtitle ? headerSubtitle : ''}
-        aria-label={`${headerTitle ? headerTitle : process.env.NEXT_PUBLIC_APP_NAME} ${headerSubtitle}`}
-        logoLinkOnClick={handleLogoClick}
-        LogoLinkWrapperComponent={<NextLink legacyBehavior href={logoLinkHref} passHref />}
-      />
+      <div>
+        <Header
+          data-cy="nav-header"
+          title={headerTitle ? headerTitle : process.env.NEXT_PUBLIC_APP_NAME}
+          subtitle={headerSubtitle ? headerSubtitle : 'Sundsvalls kommun'}
+          aria-label={`${headerTitle ? headerTitle : process.env.NEXT_PUBLIC_APP_NAME} ${headerSubtitle}`}
+          logoLinkOnClick={handleLogoClick}
+          LogoLinkWrapperComponent={<NextLink legacyBehavior href={logoLinkHref} passHref />}
+          wrapperClasses="py-6"
+        >
+          {' '}
+          <UserMenu menuGroups={[]} />{' '}
+        </Header>
+
+        <div className="main-container flex-grow relative w-full flex flex-col">
+          {pathname !== '/start' && (
+            <div className="w-full bg-vattjom-background-200 md:px-32">
+              <Breadcrumb className="container py-20">
+                <Breadcrumb.Item>
+                  <Breadcrumb.Link href="../start">Start</Breadcrumb.Link>
+                </Breadcrumb.Item>
+
+                <Breadcrumb.Item currentPage>
+                  <Breadcrumb.Link href="#">Name of user</Breadcrumb.Link>
+                </Breadcrumb.Item>
+              </Breadcrumb>
+            </div>
+          )}
+        </div>
+      </div>
 
       {preContent && preContent}
 
