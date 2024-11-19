@@ -8,4 +8,8 @@ export const APIS = [
     name: 'employee',
     version: '1.0',
   },
+  {
+    name: 'mdviewer',
+    version: '1.0',
+  },
 ] as const;
