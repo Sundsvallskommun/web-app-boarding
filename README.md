@@ -1,12 +1,13 @@
-# Projektnamn
+# Digital checklista
 
 ## APIer som används
 
 Dessa APIer används i projektet, applikationsanvändaren i WSO2 måste prenumerera på dessa. Systemet utgår ifrån /backend/api-config.ts där dessa står specificerade.
 
-| API             | Version |
-| --------------- | ------: |
-| SimulatorServer |     2.0 |
+| API       | Version |
+|-----------|--------:|
+| Checklist |     1.0 |
+| Employee  |     1.0 |
 
 ## Utveckling
 
