@@ -163,11 +163,6 @@ export const Admin: React.FC = () => {
     setDirty(true);
   };
 
-  const onCloseHandler = () => {
-    setDirty(false);
-    setCurrentData(tableData);
-  };
-
   const onSearchHandler = () => {
     const filtered = currentData.filter((data) => data.name.toLowerCase().includes(term.toLowerCase()));
     setCurrentData(filtered);
@@ -206,7 +201,6 @@ export const Admin: React.FC = () => {
               onChange={onChangeHandler}
               showSearchButton={dirty}
               onSearch={onSearchHandler}
-              onClose={onCloseHandler}
               placeholder="Sök efter namn i listan"
             />
           </div>

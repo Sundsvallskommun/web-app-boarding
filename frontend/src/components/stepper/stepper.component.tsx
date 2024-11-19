@@ -1,59 +1,96 @@
 import { Badge, Label } from '@sk-web-gui/react';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
+import { countFinishedTasks } from '@services/checklist-service/checklist-service';
+import { Phase, Task } from '@data-contracts/backend/data-contracts';
 
-function setColor(status) {
-  if (status === 'none') return 'tertiary';
-  if (status === 'done') return 'gronsta';
-  if (status === 'started') return 'vattjom';
+function setLabelColor(totalTasks: number, currentlyCompleted: number) {
+  if (currentlyCompleted === 0) return 'tertiary';
+  if (currentlyCompleted === totalTasks) return 'gronsta';
+  if (currentlyCompleted < totalTasks) return 'vattjom';
 }
 
 export const Stepper = (props: any) => {
-  const { data, currentPhase, setCurrentPhase } = props;
+  const { data, currentView, currentPhase, setCurrentPhase } = props;
+  const [finishedTasksCount, setFinishedTasksCount] = useState<number[]>();
+  const [totalTasks, setTotalTasks] = useState<any>();
+
+  useEffect(() => {
+    if (currentView === 0) {
+      const totalTasks = data.phases.map((p: Phase) => p.tasks.filter((t: Task) => t.roleType === 'MANAGER'));
+      setTotalTasks(totalTasks);
+    } else {
+      const totalTasks = data.phases.map((p: Phase) => p.tasks.filter((t: Task) => t.roleType === 'EMPLOYEE'));
+      setTotalTasks(totalTasks);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    setFinishedTasksCount(countFinishedTasks(data.phases, currentView));
+  }, [currentView, data]);
 
   const handleClick = (index: number) => {
     setCurrentPhase(index);
   };
 
-  return (
-    <div>
-      {data.map((day, index) => {
-        return (
-          <div key={index}>
-            <div>
-              <p className="my-10">
-                <Badge
-                  rounded
-                  className={
-                    day.title === data[currentPhase].title ?
-                      'align-top mr-20 bg:primary-surface'
-                    : 'align-top mr-20 tertiary'
-                  }
-                  inverted={day.title !== data[currentPhase].title}
-                />
-                {day.title === data[currentPhase].title ?
-                  <span className="underline font-bold cursor-pointer" onClick={() => handleClick(index)}>
-                    {day.title}
-                  </span>
-                : <span className="underline cursor-pointer" onClick={() => handleClick(index)}>
-                    {day.title}
-                  </span>
-                }{' '}
-              </p>
-            </div>
+  const setTimeToBeCompleted = (startDate: string, timeToComplete: string) => {
+    const start = dayjs(startDate);
 
-            <div className={index < data.length - 1 ? 'border-l-2 m-10 pl-12 pb-8' : 'm-10 pl-12 pb-8'}>
-              {day.status !== 'none' ?
-                <Label color={setColor(day.status)} className="align-text-bottom mr-4 ml-24" rounded inverted>
-                  3 av {day.tasks.length}
-                </Label>
-              : <Label className="align-text-bottom mr-4 ml-24 text-black" rounded inverted>
-                  0 av {day.tasks.length}
-                </Label>
-              }
-              <span className="text-small">Klart senast den {day.endDate}</span>
+    switch (timeToComplete) {
+      case 'P1D':
+        return start.format('YYYY-MM-DD');
+      case 'P1W':
+        return start.add(7, 'days').format('YYYY-MM-DD');
+      default:
+        return null;
+    }
+  };
+
+  return finishedTasksCount ?
+      <div>
+        {data.phases.map((phase: Phase, index: number) => {
+          return (
+            <div key={index}>
+              <div>
+                <p className="my-10">
+                  <Badge
+                    rounded
+                    className={
+                      phase.name === data[currentPhase]?.name ?
+                        'align-top mr-20 bg:primary-surface'
+                      : 'align-top mr-20 tertiary'
+                    }
+                    inverted={phase.name !== data.phases[currentPhase].name}
+                  />
+                  {phase.name === data.phases[currentPhase]?.name ?
+                    <span className="underline font-bold cursor-pointer" onClick={() => handleClick(index)}>
+                      {phase.name}
+                    </span>
+                  : <span className="underline cursor-pointer" onClick={() => handleClick(index)}>
+                      {phase.name}
+                    </span>
+                  }{' '}
+                </p>
+              </div>
+
+              <div className={index < data.phases.length - 1 ? 'border-l-2 m-10 pl-12 pb-8' : 'm-10 pl-12 pb-8'}>
+                {
+                  <Label
+                    color={setLabelColor(totalTasks[index].length, finishedTasksCount[index])}
+                    className="align-text-bottom mr-4 ml-24"
+                    rounded
+                    inverted
+                  >
+                    {finishedTasksCount[index]} av {totalTasks[index].length}
+                  </Label>
+                }
+                <span className="text-small">
+                  Klart senast den {setTimeToBeCompleted(data.startDate, data.phases[index].timeToComplete)}
+                </span>
+              </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
-  );
+          );
+        })}
+      </div>
+    : null;
 };
