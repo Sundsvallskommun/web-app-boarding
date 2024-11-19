@@ -5,6 +5,7 @@ import ApiTokenService from './api-token.service';
 
 class ApiResponse<T> {
   data: T;
+  status: number;
   message: string;
 }
 
@@ -28,7 +29,7 @@ class ApiService {
 
     try {
       const res = await axios(preparedConfig);
-      return { data: res.data, message: 'success' };
+      return { data: res.data, status: res.status, message: 'success' };
     } catch (error: unknown | AxiosError) {
       if (axios.isAxiosError(error) && (error as AxiosError).response?.status === 404) {
         throw new HttpException(404, 'Not found');

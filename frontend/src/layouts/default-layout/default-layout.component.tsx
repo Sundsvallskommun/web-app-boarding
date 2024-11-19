@@ -51,11 +51,11 @@ export default function DefaultLayout({
         <meta name="description" content={`${process.env.NEXT_PUBLIC_APP_NAME}`} />
       </Head>
 
-      <NextLink href="#content" legacyBehavior passHref>
+      {/*<NextLink href="#content" legacyBehavior passHref>
         <a onClick={setFocusToMain} accessKey="s" className="next-link-a" data-cy="systemMessage-a">
           {t('layout:header.goto_content')}
         </a>
-      </NextLink>
+      </NextLink>*/}
 
       <div>
         <Header
@@ -98,7 +98,7 @@ export default function DefaultLayout({
 
       <Footer></Footer>
 
-      <CookieConsent
+      {/*<CookieConsent
         title={t('layout:cookies.title', { app: process.env.NEXT_PUBLIC_APP_NAME })}
         body={
           <p>
@@ -133,7 +133,7 @@ export default function DefaultLayout({
           // FIXME: do stuff with cookies?
           // NO ANO FUNCTIONS
         }}
-      />
+      />*/}
     </div>
   );
 }
