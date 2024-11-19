@@ -1,6 +1,7 @@
 import { Avatar, Icon, Label, Logo, MenuVertical, SearchField } from '@sk-web-gui/react';
 import { MenuIndex } from '@sk-web-gui/menu-vertical/dist/types/menu-vertical-context';
 import React, { useState } from 'react';
+import { OrganizationMenu } from '@components/organization-menu/organization-menu.component';
 
 const AdminSearchField = (args) => {
   const [term, setTerm] = useState('');
@@ -42,7 +43,7 @@ export default function AdminSidebar(args) {
     <div className="w-[45rem] bg-background-content">
       <MenuVertical.Provider current={current} setCurrent={handleSetCurrent}>
         {({ setCurrentActiveFocus }) => (
-          <MenuVertical.Nav className="p-20 h-screen shadow-xl">
+          <MenuVertical.Nav className="min-h-full p-20 shadow-xl">
             <Logo variant="service" title="Digital checklista" subtitle="Administratör" className="mt-24" />
 
             <Avatar className="my-40" />
@@ -51,15 +52,9 @@ export default function AdminSidebar(args) {
             <Label className="w-full py-24 justify-start mb-24">Pågående introduktioner</Label>
 
             <MenuVertical.Label>Organisationsträd</MenuVertical.Label>
+            <AdminSearchField />
 
-            <MenuVertical {...args}>
-              <MenuVertical.Item>
-                <AdminSearchField />
-              </MenuVertical.Item>
-              <MenuVertical.Item>
-                <a href="#">Länk</a>
-              </MenuVertical.Item>
-            </MenuVertical>
+            <OrganizationMenu />
           </MenuVertical.Nav>
         )}
       </MenuVertical.Provider>

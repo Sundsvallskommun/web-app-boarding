@@ -7,12 +7,12 @@ import authMiddleware from '@middlewares/auth.middleware';
 import { Response } from 'express';
 import { Controller, Get, Param, Req, Res, UseBefore } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
+import { APIS } from '@config';
 
 @Controller()
-export class UserController {
+export class OrganizationController {
   private apiService = new ApiService();
-
-  private mdviewer = '/mdviewer/1.0';
+  private mdviewer = APIS.find(api => api.name === 'mdviewer');
 
   @Get('/org/:orgId/tree')
   @OpenAPI({
@@ -32,7 +32,7 @@ export class UserController {
     }
 
     try {
-      const data = await this.apiService.get<OrganizationTree>({ url: `${this.mdviewer}/${orgId}/orgtree` });
+      const data = await this.apiService.get<OrganizationTree>({ url: `${this.mdviewer.name}/${this.mdviewer.version}/${orgId}/orgtree` });
       return response.send({ data: data.data, message: 'success' });
     } catch (e) {
       throw new HttpException(e?.status || 500, e?.message || 'Internal server error');
