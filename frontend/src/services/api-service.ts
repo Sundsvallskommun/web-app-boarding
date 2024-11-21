@@ -4,6 +4,7 @@ import { apiURL } from '@utils/api-url';
 
 export interface ApiResponse<T> {
   data: T;
+  status?: number;
   message: string;
 }
 

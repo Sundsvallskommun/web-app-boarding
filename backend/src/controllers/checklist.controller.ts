@@ -1,13 +1,23 @@
-import { Body, Controller, Get, Param, Patch, Post, UseBefore } from 'routing-controllers';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UseBefore } from 'routing-controllers';
 import ApiService from '@services/api.service';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import authMiddleware from '@middlewares/auth.middleware';
-import { Checklist, CustomTaskCreateRequest, EmployeeChecklist, EmployeeChecklistTaskUpdateRequest } from '@/data-contracts/checklist/data-contracts';
+import {
+  Checklist,
+  CustomTask,
+  CustomTaskCreateRequest,
+  EmployeeChecklist,
+  EmployeeChecklistTask,
+  EmployeeChecklistTaskUpdateRequest,
+  Mentor,
+} from '@/data-contracts/checklist/data-contracts';
 import { HttpException } from '@exceptions/HttpException';
 import { DelegatedEmployeeChecklistResponse, EmployeeChecklistApiResponse } from '@/responses/checklist.response';
+import ApiResponse from '@interfaces/api-service.interface';
 
 interface ResponseData<T> {
   data: T;
+  status: number;
   message: string;
 }
 
@@ -21,7 +31,7 @@ export class ChecklistController {
     const url = `/checklist/1.0/2281/checklists`;
     const res = await this.apiService.get<Checklist>({ url });
 
-    return { data: res.data, message: 'success' };
+    return { data: res.data, status: res.status, message: 'success' };
   }
 
   @Get('/employee-checklists/manager/:username')
@@ -39,7 +49,7 @@ export class ChecklistController {
       throw new HttpException(404, 'Data not found');
     }
 
-    return { data: res.data, message: 'success' };
+    return { data: res.data, status: res.status, message: 'success' };
   }
 
   @Get('/employee-checklists/employee/:username')
@@ -50,7 +60,7 @@ export class ChecklistController {
     const url = `checklist/1.0/2281/employee-checklists/employee/${username}`;
     const res = await this.apiService.get<EmployeeChecklist>({ url });
 
-    return { data: res.data, message: 'success' };
+    return { data: res.data, status: res.status, message: 'success' };
   }
 
   @Get('/employee-checklists/delegated-to/:username')
@@ -64,7 +74,7 @@ export class ChecklistController {
     const url = `checklist/1.0/2281/employee-checklists/delegated-to/${username}`;
     const res = await this.apiService.get<DelegatedEmployeeChecklistResponse>({ url });
 
-    return { data: res.data, message: 'success' };
+    return { data: res.data, status: res.status, message: 'success' };
   }
 
   @Patch('/employee-checklists/:employeeChecklistId/tasks/:taskId')
@@ -74,9 +84,9 @@ export class ChecklistController {
     @Param('employeeChecklistId') checklistId: string,
     @Param('taskId') taskId: string,
     @Body() data: EmployeeChecklistTaskUpdateRequest,
-  ): Promise<ResponseData<any>> {
+  ): Promise<ResponseData<EmployeeChecklistTask>> {
     const url = `checklist/1.0/2281/employee-checklists/${checklistId}/tasks/${taskId}`;
-    return await this.apiService.patch<EmployeeChecklistTaskUpdateRequest>({ url, data });
+    return await this.apiService.patch<EmployeeChecklistTask>({ url, data });
   }
 
   @Post('/employee-checklists/:employeeChecklistId/phases/:phaseId/customtasks')
@@ -86,8 +96,40 @@ export class ChecklistController {
     @Param('employeeChecklistId') checklistId: string,
     @Param('phaseId') phaseId: string,
     @Body() data: CustomTaskCreateRequest,
-  ): Promise<ResponseData<any>> {
+  ): Promise<ResponseData<CustomTask>> {
     const url = `checklist/1.0/2281/employee-checklists/${checklistId}/phases/${phaseId}/customtasks`;
-    return await this.apiService.post<CustomTaskCreateRequest>({ url, data });
+    return await this.apiService.post<CustomTask>({ url, data });
+  }
+
+  @Post('/employee-checklists/:employeeChecklistId/delegate-to/:email')
+  @OpenAPI({ summary: 'Delegate a specific checklist to an employee' })
+  @UseBefore(authMiddleware)
+  async delegateChecklist(@Param('employeeChecklistId') checklistId: string, @Param('email') email: string): Promise<{ status: number }> {
+    const url = `checklist/1.0/2281/employee-checklists/${checklistId}/delegate-to/${email}`;
+    return await this.apiService.post<{ status: number }>({ url });
+  }
+
+  @Delete('/employee-checklists/:employeeChecklistId/delegated-to/:email')
+  @OpenAPI({ summary: 'Remove delegation from a specific checklist' })
+  @UseBefore(authMiddleware)
+  async removeDelegation(@Param('employeeChecklistId') checklistId: string, @Param('email') email: string): Promise<{ status: number }> {
+    const url = `checklist/1.0/2281/employee-checklists/${checklistId}/delegated-to/${email}`;
+    return await this.apiService.delete<{ status: number }>({ url });
+  }
+
+  @Put('/employee-checklists/:employeeChecklistId/mentor')
+  @OpenAPI({ summary: 'Assign mentor to a specific employee checklist' })
+  @UseBefore(authMiddleware)
+  async assignMentor(@Param('employeeChecklistId') checklistId: string, @Body() data: Mentor): Promise<ApiResponse<EmployeeChecklist>> {
+    const url = `checklist/1.0/2281/employee-checklists/${checklistId}/mentor`;
+    return await this.apiService.put<EmployeeChecklist>({ url, data });
+  }
+
+  @Delete('/employee-checklists/:employeeChecklistId/mentor')
+  @OpenAPI({ summary: 'Remove mentor from a specific employee checklist' })
+  @UseBefore(authMiddleware)
+  async removeMentor(@Param('employeeChecklistId') checklistId: string): Promise<ResponseData<EmployeeChecklist>> {
+    const url = `checklist/1.0/2281/employee-checklists/${checklistId}/mentor`;
+    return await this.apiService.delete<EmployeeChecklist>({ url });
   }
 }
