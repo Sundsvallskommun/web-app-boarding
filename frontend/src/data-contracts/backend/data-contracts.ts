@@ -314,3 +314,17 @@ export interface EmployeeApiResponse {
   data: Employee;
   message: string;
 }
+
+export interface OrgTree {
+  organizationId: string;
+  orgId: number;
+  treeLevel: number;
+  orgDisplayName?: string;
+  parentId: number;
+  organizations?: OrgTree[];
+}
+
+export interface OrgTreeApiResponse {
+  data: OrgTree;
+  message: string;
+}
