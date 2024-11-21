@@ -4,8 +4,10 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import authMiddleware from '@middlewares/auth.middleware';
 import {
   Checklist,
+  CustomTask,
   CustomTaskCreateRequest,
   EmployeeChecklist,
+  EmployeeChecklistTask,
   EmployeeChecklistTaskUpdateRequest,
   Mentor,
 } from '@/data-contracts/checklist/data-contracts';
@@ -82,9 +84,9 @@ export class ChecklistController {
     @Param('employeeChecklistId') checklistId: string,
     @Param('taskId') taskId: string,
     @Body() data: EmployeeChecklistTaskUpdateRequest,
-  ): Promise<ResponseData<EmployeeChecklistTaskUpdateRequest>> {
+  ): Promise<ResponseData<EmployeeChecklistTask>> {
     const url = `checklist/1.0/2281/employee-checklists/${checklistId}/tasks/${taskId}`;
-    return await this.apiService.patch<EmployeeChecklistTaskUpdateRequest>({ url, data });
+    return await this.apiService.patch<EmployeeChecklistTask>({ url, data });
   }
 
   @Post('/employee-checklists/:employeeChecklistId/phases/:phaseId/customtasks')
@@ -94,9 +96,9 @@ export class ChecklistController {
     @Param('employeeChecklistId') checklistId: string,
     @Param('phaseId') phaseId: string,
     @Body() data: CustomTaskCreateRequest,
-  ): Promise<ResponseData<CustomTaskCreateRequest>> {
+  ): Promise<ResponseData<CustomTask>> {
     const url = `checklist/1.0/2281/employee-checklists/${checklistId}/phases/${phaseId}/customtasks`;
-    return await this.apiService.post<CustomTaskCreateRequest>({ url, data });
+    return await this.apiService.post<CustomTask>({ url, data });
   }
 
   @Post('/employee-checklists/:employeeChecklistId/delegate-to/:email')
