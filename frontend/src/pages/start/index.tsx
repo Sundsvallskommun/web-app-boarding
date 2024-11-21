@@ -7,7 +7,7 @@ import { OngoingChecklistsTable } from '@components/ongoing-checklists-table/ong
 import { useAppContext } from '@contexts/app.context';
 import { getChecklistsAsManager, getDelegatedChecklists } from '@services/checklist-service/checklist-service';
 import { Spinner } from '@sk-web-gui/spinner';
-import { DelegateMultipleChecklistsModal } from '@components/delegate-checklist-modal/delegate-multiple-checklists-modal.component';
+import { DelegateMultipleChecklistsModal } from '@components/delegate-checklists-modal/delegate-checklists-modal.component';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import Divider from '@sk-web-gui/divider';
 import { useUserStore } from '@services/user-service/user-service';
@@ -39,6 +39,7 @@ export const Start: React.FC = () => {
   const openHandler = () => {
     setIsOpen(true);
   };
+
   const closeHandler = () => {
     setIsOpen(false);
   };
@@ -53,14 +54,9 @@ export const Start: React.FC = () => {
             </div>
 
             <div className="w-1/2 text-right">
-              <FormProvider {...methods}>
-                <DelegateMultipleChecklistsModal
-                  fields={fields}
-                  openHandler={openHandler}
-                  closeHandler={closeHandler}
-                  isOpen={isOpen}
-                />
-              </FormProvider>
+              <Button color="vattjom" onClick={openHandler}>
+                Delegera checklista
+              </Button>
             </div>
           </div>
 
@@ -125,6 +121,10 @@ export const Start: React.FC = () => {
             </Button>
           </div>
         : null}
+
+        <FormProvider {...methods}>
+          <DelegateMultipleChecklistsModal fields={fields} closeHandler={closeHandler} isOpen={isOpen} />
+        </FormProvider>
       </Main>
     </DefaultLayout>
   );
