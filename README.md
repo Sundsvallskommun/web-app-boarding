@@ -8,6 +8,8 @@ Dessa APIer används i projektet, applikationsanvändaren i WSO2 måste prenumer
 | --------------- | ------: |
 | SimulatorServer |     2.0 |
 | MDViewer        |     1.0 |
+| Checklist       |     1.0 |
+| Employee        |     1.0 |
 
 ## Utveckling
 
