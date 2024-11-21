@@ -8,6 +8,7 @@
     "start": "dotenv next start",
     "generate:contracts": "cross-env NODE_ENV=development npx tsx ./src/swagger-typescript-api.ts",
     "lint": "next lint --no-cache",
+    "type-check": "tsc --pretty --noEmit",
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
