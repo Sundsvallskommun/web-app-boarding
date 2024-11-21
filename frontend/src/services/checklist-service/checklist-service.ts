@@ -72,7 +72,12 @@ export const updateTaskFulfilmentStatus: (
   taskId: string,
   fulfilmentStatus: string,
   username: string
-) => Promise<any> = async (checklistId: string, taskId: string, fulfilmentStatus: string, username: string) => {
+) => Promise<EmployeeChecklistTask> = async (
+  checklistId: string,
+  taskId: string,
+  fulfilmentStatus: string,
+  username: string
+) => {
   const fulfilmentStatusData = {
     fulfilmentStatus: fulfilmentStatus,
     responseText: '',
@@ -85,7 +90,7 @@ export const updateTaskFulfilmentStatus: (
       fulfilmentStatusData
     )
     .then((response) => {
-      return response;
+      return response.data.data;
     })
     .catch((e) => {
       console.error('Something went wrong when patching fulfilment status.');
@@ -98,7 +103,7 @@ export const addCustomTask: (
   phaseId: string,
   username: string,
   taskData: FieldValues
-) => Promise<any> = async (
+) => Promise<{ status: number }> = async (
   checklistId: string,
   phaseId: string,
   username: string,
@@ -115,7 +120,7 @@ export const addCustomTask: (
   return apiService
     .post<ApiResponse<CustomTask>>(`/employee-checklists/${checklistId}/phases/${phaseId}/customtasks`, customTaskData)
     .then((response) => {
-      return response;
+      return { status: response.status };
     })
     .catch((e) => {
       console.error('Something went wrong when adding a custom task.');
@@ -123,17 +128,59 @@ export const addCustomTask: (
     });
 };
 
-export const assignMentor: (checklistId: string, mentorData: Mentor) => Promise<any> = async (
+export const delegateChecklist: (checklistId: string, email: string) => Promise<{ status: number }> = async (
   checklistId: string,
-  mentorData: any
+  email: string
+) => {
+  return apiService
+    .post<{ status: number }>(`/employee-checklists/${checklistId}/delegate-to/${email}`, {})
+    .then((response) => {
+      return { status: response.status };
+    })
+    .catch((e) => {
+      console.error('Something went wrong when delegating checklist.');
+      throw e;
+    });
+};
+
+export const removeDelegation: (checklistId: string, email: string) => Promise<{ status: number }> = async (
+  checklistId: string,
+  email: string
+) => {
+  return apiService
+    .delete<{ status: number }>(`/employee-checklists/${checklistId}/delegated-to/${email}`)
+    .then((response) => {
+      return { status: response.status };
+    })
+    .catch((e) => {
+      console.error('Something went wrong when removing delegation.');
+      throw e;
+    });
+};
+
+export const assignMentor: (checklistId: string, mentorData: Mentor) => Promise<EmployeeChecklist> = async (
+  checklistId: string,
+  mentorData: Mentor
 ) => {
   return apiService
     .put<ApiResponse<EmployeeChecklist>>(`/employee-checklists/${checklistId}/mentor`, mentorData)
     .then((response) => {
-      return response;
+      return response.data.data;
     })
     .catch((e) => {
       console.error('Something went wrong when assigning a mentor.');
+      throw e;
+    });
+};
+
+export const removeMentor: (checklistId: string) => Promise<{ status: number }> = async (checklistId: string) => {
+  return apiService
+    .delete<{ status: number }>(`/employee-checklists/${checklistId}/mentor`)
+    .then((res) => {
+      return { status: res.status };
+    })
+    .catch((e) => {
+      console.error('Something went wrong when removing mentor.');
       throw e;
     });
 };
