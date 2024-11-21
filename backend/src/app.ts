@@ -44,7 +44,7 @@ import { HttpException } from './exceptions/HttpException';
 import { join } from 'path';
 import { isValidUrl } from './utils/util';
 import { additionalConverters } from './utils/custom-validation-classes';
-import { User } from './interfaces/users.interface';
+import { getPermissions, getRole } from './services/authorization.service';
 
 const SessionStoreCreate = SESSION_MEMORY ? createMemoryStore(session) : createFileStore(session);
 const sessionTTL = 4 * 24 * 60 * 60;
@@ -83,43 +83,40 @@ const samlStrategy = new Strategy(
         message: 'Missing SAML profile',
       });
     }
-    const { givenName, surname, citizenIdentifier, username } = profile;
 
-    if (!givenName || !surname || !citizenIdentifier) {
-      return done({
+    // Depending on using Onegate or ADFS for federation the profile data looks a bit different
+    // Here we use the null coalescing operator (??) to handle both cases.
+    // (A switch from Onegate to ADFS was done on august 6 2023 due to problems in MobilityGuard.)
+    //
+    // const { givenName, sn, email, groups } = profile;
+    const givenName = profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'] ?? profile['givenName'];
+    const sn = profile['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'] ?? profile['sn'];
+    const groups = profile['http://schemas.xmlsoap.org/claims/Group']?.join(',') ?? profile['groups'];
+    const username = profile['urn:oid:0.9.2342.19200300.100.1.1'];
+
+    if (!givenName || !sn || !groups || !username) {
+      logger.error(
+        'Could not extract necessary profile data fields from the IDP profile. Does the Profile interface match the IDP profile response? The profile response may differ, for example Onegate vs ADFS.',
+      );
+      return done(null, null, {
         name: 'SAML_MISSING_ATTRIBUTES',
         message: 'Missing profile attributes',
       });
     }
 
-    //   const groupList: ADRole[] =
-    //   groups !== undefined
-    //     ? (groups
-    //         .split(',')
-    //         .map(x => x.toLowerCase())
-    //         .filter(x => x.includes('sg_appl_app_')) as ADRole[])
-    //     : [];
+    const groupList: string[] = groups !== undefined ? (groups.split(',').map(x => x.toLowerCase()) as string[]) : [];
 
-    // const appGroups: ADRole[] = groupList.length > 0 ? groupList : groupList.concat('sg_appl_app_read');
+    const appGroups: string[] = groupList.length > 0 ? groupList : [];
 
     try {
-      // const personNumber = profile.citizenIdentifier;
-      // const citizenResult = await apiService.get<any>({ url: `citizen/2.0/${personNumber}/guid` });
-      // const { data: personId } = citizenResult;
-
-      // if (!personId) {
-      //   return done({
-      //     name: 'SAML_CITIZEN_FAILED',
-      //     message: 'Failed to fetch user from Citizen API',
-      //   });
-      // }
-
-      const findUser: User = {
-        // personId: personId,
+      const findUser = {
+        name: `${givenName} ${sn}`,
+        firstName: givenName,
+        lastName: sn,
         username: username,
-        name: `${givenName} ${surname}`,
-        givenName: givenName,
-        surname: surname,
+        groups: appGroups,
+        role: getRole(appGroups),
+        permissions: getPermissions(appGroups),
       };
 
       done(null, findUser);

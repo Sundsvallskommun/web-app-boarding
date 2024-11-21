@@ -30,8 +30,12 @@ export const getChecklistsAsManager: (username: string) => Promise<EmployeeCheck
       return response.data.data;
     })
     .catch((e) => {
-      console.error('Something went wrong when fetching checklists as manager.');
-      throw e;
+      if (e.response.status === 404) {
+        return [];
+      } else {
+        console.error('Something went wrong when fetching checklists as manager.');
+        throw e;
+      }
     });
 };
 

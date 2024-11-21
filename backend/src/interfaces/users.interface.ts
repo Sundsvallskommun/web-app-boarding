@@ -1,12 +1,22 @@
-export type User = {
-  // personId: string;
-  username: string;
+export interface ClientUser {
   name: string;
-  givenName: string;
-  surname: string;
-};
+  firstName: string;
+  lastName: string;
+  username: string;
+  permissions: Permissions;
+  role: InternalRole;
+}
+export interface Permissions {
+  canEditAdmin: boolean;
+  canViewAdmin: boolean;
+}
 
-export type ClientUser = {
-  name: string;
-  username: string;
-};
+/** Internal roles */
+export type InternalRole = 'admin' | 'developer' | 'user';
+export enum InternalRoleEnum {
+  'admin',
+  'developer',
+  'user',
+}
+
+export type InternalRoleMap = Map<InternalRole, Partial<Permissions>>;
