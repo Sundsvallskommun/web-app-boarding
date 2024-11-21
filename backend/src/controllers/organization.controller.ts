@@ -32,7 +32,7 @@ export class OrganizationController {
     }
 
     try {
-      const data = await this.apiService.get<OrganizationTree>({ url: `${this.mdviewer.name}/${this.mdviewer.version}/${orgId}/orgtree` });
+      const data = await this.apiService.get<OrganizationTree>({ url: `${this.mdviewer.name}/${this.mdviewer.version}/${orgId}/orgtree` }, req.user);
       return response.send({ data: data.data, message: 'success' });
     } catch (e) {
       throw new HttpException(e?.status || 500, e?.message || 'Internal server error');
