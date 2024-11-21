@@ -15,6 +15,7 @@
     "test": "jest --forceExit --detectOpenHandles",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
     "lint:fix": "npm run lint -- --fix",
+    "type-check": "tsc --pretty --noEmit",
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
     "deploy:dev": "pm2 start ecosystem.config.js --only dev"
   },
@@ -46,6 +47,7 @@
     "routing-controllers-openapi": "^4.0.0",
     "session-file-store": "^1.5.0",
     "swagger-ui-express": "^5.0.0",
+    "uuid": "^11.0.3",
     "winston": "^3.13.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
@@ -80,8 +82,8 @@
     "prettier": "^3.2.5",
     "prisma": "^5.12.1",
     "supertest": "^6.3.4",
-    "ts-jest": "^29.1.2",
     "swagger-typescript-api": "^13.0.3",
+    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
