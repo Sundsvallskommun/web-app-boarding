@@ -22,8 +22,8 @@ export const phaseHasNotBeenCompleted = (phase: EmployeeChecklistPhase, isManage
   return phase.tasks.some((task) => {
     return isManager ?
         (task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || task.roleType === 'MANAGER_FOR_NEW_MANAGER') &&
-          task.fulfilmentStatus === ('EMPTY' || 'FALSE')
+          (task.fulfilmentStatus === 'EMPTY' || task.fulfilmentStatus === 'FALSE')
       : (task.roleType === 'NEW_EMPLOYEE' || task.roleType === 'NEW_MANAGER') &&
-          task.fulfilmentStatus === ('EMPTY' || 'FALSE');
+          (task.fulfilmentStatus === 'EMPTY' || task.fulfilmentStatus === 'FALSE');
   });
 };
