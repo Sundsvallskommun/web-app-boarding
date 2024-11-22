@@ -1,8 +1,12 @@
 import React from 'react';
-import { Checkbox, Input, Link, Pagination, SortMode, Table } from '@sk-web-gui/react';
+import { Avatar, Button, Checkbox, Input, Pagination, SortMode, Table } from '@sk-web-gui/react';
+import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Spinner } from '@sk-web-gui/spinner';
+import { useRouter } from 'next/router';
+import { getChecklistStatusLabel } from '@utils/get-checklist-status';
 
 export const OngoingChecklistsTable = ({ data, delegatedChecklists, fields, watch, append, remove, register }) => {
+  const router = useRouter();
   const [_pageSize, setPageSize] = React.useState<number>(12);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [sortColumn, setSortColumn] = React.useState<string>('name');
@@ -60,18 +64,21 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, fields, watc
             </Table.Column>
           )}
           <Table.Column>
-            <Link href={`start/${d.employee.username}`} className="no-underline text-black">
-              <span>
-                <strong>{d.employee.firstName + ' ' + d.employee.lastName}</strong> ({d.employee.username})
-              </span>
-            </Link>
+            <div className="flex gap-8">
+              <Avatar rounded />
+              <div>
+                <strong>{d.employee.firstName + ' ' + d.employee.lastName}</strong> ({d.employee.username})<p>Titel</p>
+              </div>
+            </div>
           </Table.Column>
-          <Table.Column></Table.Column>
-          <Table.Column></Table.Column>
+          <Table.Column>{getChecklistStatusLabel(d, true)}</Table.Column>
+          <Table.Column>{getChecklistStatusLabel(d, false)}</Table.Column>
           <Table.Column>{d.startDate}</Table.Column>
-          {delegatedChecklists ?
-            <Table.Column>{`${d.manager.firstName} ${d.manager.lastName}`}</Table.Column>
-          : <Table.Column>{d.delegatedTo ? d.delegatedTo : '-'}</Table.Column>}
+          <Table.Column className="justify-end">
+            <Button iconButton onClick={() => router.push(`start/${d.employee.username}`)}>
+              <Icon name="arrow-right" />
+            </Button>
+          </Table.Column>
         </Table.Row>
       );
     });
@@ -126,15 +133,7 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, fields, watc
             </Table.SortButton>
           </Table.HeaderColumn>
 
-          <Table.HeaderColumn aria-sort={sortColumn === 'delegated' ? sortOrder : 'none'}>
-            <Table.SortButton
-              isActive={sortColumn === 'delegated'}
-              sortOrder={sortOrder}
-              onClick={() => handleSorting('delegated')}
-            >
-              {delegatedChecklists ? 'Delegerad av' : 'Delegerad till'}
-            </Table.SortButton>
-          </Table.HeaderColumn>
+          <Table.HeaderColumn></Table.HeaderColumn>
         </Table.Header>
 
         <Table.Body>
@@ -143,7 +142,7 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, fields, watc
           })}
         </Table.Body>
 
-        {data.length > 1 && (
+        {data.length > 12 && (
           <Table.Footer className="flex justify-start">
             <div className="w-1/3">
               <label className="sk-table-bottom-section-label pr-3" htmlFor="pagiPageSize">

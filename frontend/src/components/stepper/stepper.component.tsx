@@ -1,8 +1,8 @@
 import { Badge, Label } from '@sk-web-gui/react';
-import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { countFinishedTasks } from '@services/checklist-service/checklist-service';
 import { Phase, Task } from '@data-contracts/backend/data-contracts';
+import { setTimeToBeCompleted } from '@utils/fulfilment-status-utils';
 
 function setLabelColor(totalTasks: number, currentlyCompleted: number) {
   if (currentlyCompleted === 0) return 'tertiary';
@@ -17,10 +17,14 @@ export const Stepper = (props: any) => {
 
   useEffect(() => {
     if (currentView === 0) {
-      const totalTasks = data.phases.map((p: Phase) => p.tasks.filter((t: Task) => t.roleType === 'MANAGER'));
+      const totalTasks = data.phases.map((p: Phase) =>
+        p.tasks.filter((t: Task) => t.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || 'MANAGER_FOR_NEW_MANAGER')
+      );
       setTotalTasks(totalTasks);
     } else {
-      const totalTasks = data.phases.map((p: Phase) => p.tasks.filter((t: Task) => t.roleType === 'EMPLOYEE'));
+      const totalTasks = data.phases.map((p: Phase) =>
+        p.tasks.filter((t: Task) => t.roleType === 'NEW_EMPLOYEE' || 'NEW_MANAGER')
+      );
       setTotalTasks(totalTasks);
     }
   }, [data]);
@@ -31,19 +35,6 @@ export const Stepper = (props: any) => {
 
   const handleClick = (index: number) => {
     setCurrentPhase(index);
-  };
-
-  const setTimeToBeCompleted = (startDate: string, timeToComplete: string) => {
-    const start = dayjs(startDate);
-
-    switch (timeToComplete) {
-      case 'P1D':
-        return start.format('YYYY-MM-DD');
-      case 'P1W':
-        return start.add(7, 'days').format('YYYY-MM-DD');
-      default:
-        return null;
-    }
   };
 
   return finishedTasksCount ?

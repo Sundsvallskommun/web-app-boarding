@@ -48,17 +48,11 @@ export const Start: React.FC = () => {
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME} - Start`}>
       <Main>
         <div className="py-10 px-10 2xl:px-0">
-          <div className="py-24 flex">
-            <div className="w-1/2">
-              <h2>Pågående introduktioner</h2>
-            </div>
-
-            <div className="w-1/2 text-right">
-              <Button color="vattjom" onClick={openHandler}>
-                Delegera checklista
-              </Button>
-            </div>
-          </div>
+          <h2 className="my-24">Dina introduktioner</h2>
+          <p className="mb-16">
+            Du har {asManagerChecklists.length} pågående
+            {asManagerChecklists.length === 1 ? ' introduktion' : ' introduktioner'}
+          </p>
 
           {asManagerChecklists ?
             <FormProvider {...methods}>
