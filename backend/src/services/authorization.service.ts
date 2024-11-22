@@ -1,38 +1,41 @@
-// import { AUTHORIZED_GROUPS } from '@/config';
-import { Permissions, InternalRole, ADRole } from '@interfaces/auth.interface';
-
-// export function authorizeGroups(groups) {
-//   const authorizedGroupsList = AUTHORIZED_GROUPS.split(',');
-//   const groupsList = groups.split(',').map((g: string) => g.toLowerCase());
-//   return authorizedGroupsList.some(authorizedGroup => groupsList.includes(authorizedGroup));
-// }
+import { InternalRole, Permissions } from '@interfaces/users.interface';
+import { roleADMapping } from './ad-role.service';
+import { logger } from '@/utils/logger';
 
 export const defaultPermissions: () => Permissions = () => ({
-  canEditSystemMessages: false,
+  canEditAdmin: false,
+  canViewAdmin: false,
 });
 
 enum RoleOrderEnum {
-  'app_read',
-  'app_admin',
+  'admin',
+  'developer',
+  'user',
 }
 
 const roles = new Map<InternalRole, Partial<Permissions>>([
   [
-    'app_admin',
+    'admin',
     {
-      canEditSystemMessages: true,
+      canEditAdmin: true,
+      canViewAdmin: true,
     },
   ],
-  ['app_read', {}],
+  [
+    'developer',
+    {
+      canEditAdmin: true,
+      canViewAdmin: true,
+    },
+  ],
+  [
+    'user',
+    {
+      canEditAdmin: false,
+      canViewAdmin: false,
+    },
+  ],
 ]);
-
-type RoleADMapping = {
-  [key in ADRole]: InternalRole;
-};
-const roleADMapping: RoleADMapping = {
-  sg_appl_app_read: 'app_read',
-  sg_appl_app_admin: 'app_admin',
-};
 
 /**
  *
@@ -40,7 +43,7 @@ const roleADMapping: RoleADMapping = {
  * @param internalGroups Whether to use internal groups or external group-mappings
  * @returns collected permissions for all matching role groups
  */
-export const getPermissions = (groups: InternalRole[] | ADRole[], internalGroups = false): Permissions => {
+export const getPermissions = (groups: InternalRole[] | string[], internalGroups = false): Permissions => {
   const permissions: Permissions = defaultPermissions();
   groups.forEach(group => {
     const groupLower = group.toLowerCase();
@@ -62,8 +65,8 @@ export const getPermissions = (groups: InternalRole[] | ADRole[], internalGroups
  * @param groups List of AD roles
  * @returns role with most permissions
  */
-export const getRole = (groups: ADRole[]) => {
-  if (groups.length == 1) return roleADMapping[groups[0]]; // app_read
+export const getRole = (groups: string[]) => {
+  if (groups.length == 1) return roleADMapping[groups[0]];
 
   const roles: InternalRole[] = [];
   groups.forEach(group => {
@@ -74,5 +77,5 @@ export const getRole = (groups: ADRole[]) => {
     }
   });
 
-  return roles.sort((a, b) => (RoleOrderEnum[a] > RoleOrderEnum[b] ? 1 : 0))[0];
+  return roles.sort((a, b) => RoleOrderEnum[a] - RoleOrderEnum[b])[0];
 };
