@@ -27,7 +27,7 @@ export const CheckList: React.FC = () => {
 
   useEffect(() => {
     const { query } = router;
-    if (query) {
+    if (query?.userId) {
       getChecklistAsEmployee(query.userId?.toString()).then((res) => {
         setAsEmployeeChecklists(res);
       });

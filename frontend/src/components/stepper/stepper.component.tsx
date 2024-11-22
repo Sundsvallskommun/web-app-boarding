@@ -12,26 +12,19 @@ function setLabelColor(totalTasks: number, currentlyCompleted: number) {
 
 export const Stepper = (props: any) => {
   const { data, currentView, currentPhase, setCurrentPhase } = props;
-  const [finishedTasksCount, setFinishedTasksCount] = useState<number[]>();
-  const [totalTasks, setTotalTasks] = useState<any>();
 
-  useEffect(() => {
-    if (currentView === 0) {
-      const totalTasks = data.phases.map((p: Phase) =>
-        p.tasks.filter((t: Task) => t.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || 'MANAGER_FOR_NEW_MANAGER')
-      );
-      setTotalTasks(totalTasks);
-    } else {
-      const totalTasks = data.phases.map((p: Phase) =>
-        p.tasks.filter((t: Task) => t.roleType === 'NEW_EMPLOYEE' || 'NEW_MANAGER')
-      );
-      setTotalTasks(totalTasks);
-    }
-  }, [data]);
+  let totalTasks: any = [];
+  if (currentView === 0) {
+    totalTasks = data.phases.map((p: Phase) =>
+      p.tasks.filter((t: Task) => t.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || 'MANAGER_FOR_NEW_MANAGER')
+    );
+  } else {
+    totalTasks = data.phases.map((p: Phase) =>
+      p.tasks.filter((t: Task) => t.roleType === 'NEW_EMPLOYEE' || 'NEW_MANAGER')
+    );
+  }
 
-  useEffect(() => {
-    setFinishedTasksCount(countFinishedTasks(data.phases, currentView));
-  }, [currentView, data]);
+  const finishedTasksCount = countFinishedTasks(data.phases, currentView);
 
   const handleClick = (index: number) => {
     setCurrentPhase(index);
