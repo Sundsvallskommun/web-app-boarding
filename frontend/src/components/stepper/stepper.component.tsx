@@ -13,7 +13,7 @@ function setLabelColor(totalTasks: number, currentlyCompleted: number) {
 export const Stepper = (props: any) => {
   const { data, currentView, currentPhase, setCurrentPhase } = props;
 
-  let totalTasks: any = [];
+  let totalTasks: Task[][] = [];
   if (currentView === 0) {
     totalTasks = data.phases.map((p: Phase) =>
       p.tasks.filter((t: Task) => t.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || 'MANAGER_FOR_NEW_MANAGER')
