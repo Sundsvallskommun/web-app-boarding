@@ -11,7 +11,11 @@
 
 export interface User {
   name: string;
+  firstName: string;
+  lastName: string;
   username: string;
+  role: 'admin' | 'developer' | 'user' | '0' | '1' | '2';
+  permissions: any;
 }
 
 export interface UserApiResponse {
@@ -37,7 +41,7 @@ export interface EmployeeChecklistPhase {
   name: string;
   bodyText: string;
   timeToComplete: string;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   sortOrder: number;
   tasks: EmployeeChecklistTask[];
 }
@@ -47,7 +51,7 @@ export interface EmployeeChecklistTask {
   heading: string;
   text: string;
   sortOrder: number;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   questionType:
     | 'YES_OR_NO'
     | 'YES_OR_NO_WITH_TEXT'
@@ -104,7 +108,7 @@ export interface CustomTask {
   heading: string;
   text: string;
   sortOrder: number;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   questionType:
     | 'YES_OR_NO'
     | 'YES_OR_NO_WITH_TEXT'
@@ -134,7 +138,7 @@ export interface ChecklistCreateRequest {
   name: string;
   displayName: string;
   organizationNumber: number;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   createdBy: string;
 }
 
@@ -142,7 +146,7 @@ export interface PhaseCreateRequest {
   name: string;
   bodyText: string;
   timeToComplete: string;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   permission: 'SUPERADMIN' | 'ADMIN';
   sortOrder: number;
   createdBy: string;
@@ -152,7 +156,7 @@ export interface TaskCreateRequest {
   heading: string;
   text: string;
   sortOrder: number;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   permission: 'SUPERADMIN' | 'ADMIN';
   questionType:
     | 'YES_OR_NO'
@@ -169,7 +173,7 @@ export interface OrganizationUpdateRequest {
 
 export interface Checklist {
   id: string;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   name: string;
   displayName: string;
   version: number;
@@ -195,7 +199,7 @@ export interface Phase {
   name: string;
   bodyText: string;
   timeToComplete: string;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   permission: 'SUPERADMIN' | 'ADMIN';
   sortOrder: number;
   tasks: Task[];
@@ -209,7 +213,7 @@ export interface Task {
   heading: string;
   text: string;
   sortOrder: string;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   questionType:
     | 'YES_OR_NO'
     | 'YES_OR_NO_WITH_TEXT'
@@ -247,7 +251,7 @@ export interface CustomTaskUpdateRequest {
 
 export interface ChecklistUpdateRequest {
   displayName: string;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   updatedBy: string;
 }
 
@@ -255,7 +259,7 @@ export interface PhaseUpdateRequest {
   name: string;
   bodyText: string;
   timeToComplete: string;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   permission: 'SUPERADMIN' | 'ADMIN';
   sortOrder: number;
   updatedBy: string;
@@ -265,7 +269,7 @@ export interface TaskUpdateRequest {
   heading: string;
   text: string;
   sortOrder: number;
-  roleType: 'EMPLOYEE' | 'MANAGER';
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   permission: 'SUPERADMIN' | 'ADMIN';
   questionType:
     | 'YES_OR_NO'

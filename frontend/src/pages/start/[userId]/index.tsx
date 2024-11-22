@@ -76,7 +76,7 @@ export const CheckList: React.FC = () => {
 
                   {data.phases[currentPhase].tasks.map((task) => {
                     if (currentView === 0) {
-                      if (task.roleType === 'MANAGER') {
+                      if (task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || 'MANAGER_FOR_NEW_MANAGER') {
                         return (
                           <ActivityListItem
                             key={task.id}
@@ -87,7 +87,7 @@ export const CheckList: React.FC = () => {
                         );
                       }
                     } else {
-                      if (task.roleType === 'EMPLOYEE') {
+                      if (task.roleType === 'NEW_EMPLOYEE' || 'NEW_MANAGER') {
                         return (
                           <ActivityListItem
                             key={task.id}

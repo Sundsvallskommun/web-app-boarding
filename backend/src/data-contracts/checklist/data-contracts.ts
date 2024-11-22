@@ -18,14 +18,14 @@ export interface Mentor {
 }
 
 export interface Problem {
+  title?: string;
+  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
   parameters?: Record<string, object>;
   status?: StatusType;
-  title?: string;
-  detail?: string;
 }
 
 export interface StatusType {
@@ -53,10 +53,10 @@ export interface ConstraintViolationProblem {
   violations?: Violation[];
   title?: string;
   message?: string;
+  detail?: string;
   /** @format uri */
   instance?: string;
   parameters?: Record<string, object>;
-  detail?: string;
   suppressed?: {
     stackTrace?: {
       classLoaderName?: string;
@@ -89,14 +89,14 @@ export interface ThrowableProblem {
     nativeMethod?: boolean;
   }[];
   message?: string;
+  title?: string;
+  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
   parameters?: Record<string, object>;
   status?: StatusType;
-  title?: string;
-  detail?: string;
   suppressed?: {
     stackTrace?: {
       classLoaderName?: string;
@@ -195,8 +195,6 @@ export interface EmployeeChecklistPhase {
    * @example "P1M"
    */
   timeToComplete?: string;
-  /** The role type of the task */
-  roleType?: RoleType;
   /**
    * The sort order for the phase
    * @format int32
@@ -255,7 +253,10 @@ export interface EmployeeChecklistTask {
   updatedBy?: string;
 }
 
-/** The status of the task fulfilment */
+/**
+ * The status of the task fulfilment
+ * @example "TRUE"
+ */
 export enum FulfilmentStatus {
   EMPTY = 'EMPTY',
   TRUE = 'TRUE',
@@ -272,8 +273,10 @@ export enum QuestionType {
 
 /** The role type of the task */
 export enum RoleType {
-  EMPLOYEE = 'EMPLOYEE',
-  MANAGER = 'MANAGER',
+  NEW_EMPLOYEE = 'NEW_EMPLOYEE',
+  NEW_MANAGER = 'NEW_MANAGER',
+  MANAGER_FOR_NEW_EMPLOYEE = 'MANAGER_FOR_NEW_EMPLOYEE',
+  MANAGER_FOR_NEW_MANAGER = 'MANAGER_FOR_NEW_MANAGER',
 }
 
 /** Model for a stakeholder (employee or manager) to an employee checklist */
@@ -303,6 +306,41 @@ export interface Stakeholder {
    * @example "abc12def"
    */
   username?: string;
+}
+
+/** The permission needed to administrate the phase */
+export enum Permission {
+  SUPERADMIN = 'SUPERADMIN',
+  ADMIN = 'ADMIN',
+}
+
+/** Model for phase create request */
+export interface PhaseCreateRequest {
+  /**
+   * The name of the phase
+   * @example "Första veckan"
+   */
+  name: string;
+  /**
+   * The body text of the phase
+   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
+   */
+  bodyText?: string;
+  /**
+   * The time to complete the phase
+   * @example "P1M"
+   */
+  timeToComplete?: string;
+  /** The permission needed to administrate the phase */
+  permission: Permission;
+  /**
+   * The sort order of the phase
+   * @format int32
+   * @example 1
+   */
+  sortOrder: number;
+  /** The id of the user creating the phase */
+  createdBy: string;
 }
 
 /** Valid channels to use when communicating with the organization */
@@ -432,46 +470,7 @@ export interface ChecklistCreateRequest {
    * @example 11
    */
   organizationNumber: number;
-  /** The role type of the task */
-  roleType: RoleType;
   /** The id of the user creating the checklist */
-  createdBy: string;
-}
-
-/** The permission needed to administrate the phase */
-export enum Permission {
-  SUPERADMIN = 'SUPERADMIN',
-  ADMIN = 'ADMIN',
-}
-
-/** Model for phase create request */
-export interface PhaseCreateRequest {
-  /**
-   * The name of the phase
-   * @example "Första veckan"
-   */
-  name: string;
-  /**
-   * The body text of the phase
-   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
-   */
-  bodyText?: string;
-  /**
-   * The time to complete the phase
-   * @example "P1M"
-   */
-  timeToComplete?: string;
-  /** The role type of the task */
-  roleType: RoleType;
-  /** The permission needed to administrate the phase */
-  permission: Permission;
-  /**
-   * The sort order of the phase
-   * @format int32
-   * @example 1
-   */
-  sortOrder: number;
-  /** The id of the user creating the phase */
   createdBy: string;
 }
 
@@ -503,6 +502,128 @@ export interface TaskCreateRequest {
   createdBy: string;
 }
 
+/** Model for phase update request */
+export interface PhaseUpdateRequest {
+  /**
+   * The name of the phase
+   * @example "Första veckan"
+   */
+  name?: string;
+  /**
+   * The body text of the phase
+   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
+   */
+  bodyText?: string;
+  /**
+   * The time to complete the phase
+   * @example "P1M"
+   */
+  timeToComplete?: string;
+  /** The permission needed to administrate the phase */
+  permission?: Permission;
+  /**
+   * The sort order of the phase
+   * @format int32
+   * @example 1
+   */
+  sortOrder?: number;
+  /** The id of the user updating the phase */
+  updatedBy: string;
+}
+
+/** Model for a phase */
+export interface Phase {
+  /**
+   * The id of the phase
+   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
+   */
+  id?: string;
+  /**
+   * The name of the phase
+   * @example "Första veckan"
+   */
+  name?: string;
+  /**
+   * The body text of the phase
+   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
+   */
+  bodyText?: string;
+  /**
+   * The time to complete the phase
+   * @example "P1M"
+   */
+  timeToComplete?: string;
+  /** The permission needed to administrate the phase */
+  permission?: Permission;
+  /**
+   * The sort order of the phase
+   * @format int32
+   * @example 1
+   */
+  sortOrder?: number;
+  /** Tasks in the phase */
+  tasks?: Task[];
+  /**
+   * The created date and time of the phase
+   * @format date-time
+   * @example "2023-11-22T15:30:00+03:00"
+   */
+  created?: string;
+  /**
+   * The last update date and time of the phase
+   * @format date-time
+   * @example "2023-11-22T15:30:00+03:00"
+   */
+  updated?: string;
+  /** The id of the user that last modified the phase */
+  lastSavedBy?: string;
+}
+
+/** Task model */
+export interface Task {
+  /**
+   * The id of the task
+   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
+   */
+  id?: string;
+  /**
+   * The heading of the task
+   * @example "Bjud på fika"
+   */
+  heading?: string;
+  /**
+   * The body text of the task
+   * @example "Detta är en beskrivning av ett uppdrag"
+   */
+  text?: string;
+  /**
+   * The sort order of the task
+   * @format int32
+   * @example 1
+   */
+  sortOrder?: number;
+  /** The role type of the task */
+  roleType?: RoleType;
+  /** The question type of the task */
+  questionType?: QuestionType;
+  /** The permission needed to administrate the phase */
+  permission?: Permission;
+  /**
+   * The date and time the task was created
+   * @format date-time
+   * @example "2023-11-22T15:30:00+03:00"
+   */
+  created?: string;
+  /**
+   * The date and time the task was last updated
+   * @format date-time
+   * @example "2023-11-22T15:30:00+03:00"
+   */
+  updated?: string;
+  /** The id of the user that last modified the task */
+  lastSavedBy?: string;
+}
+
 /** Model for organizational unit update request */
 export interface OrganizationUpdateRequest {
   /**
@@ -521,8 +642,6 @@ export interface Checklist {
    * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
    */
   id?: string;
-  /** The role type of the task */
-  roleType?: RoleType;
   /**
    * The name of the checklist
    * @example "Checklist_A"
@@ -602,101 +721,6 @@ export interface Organization {
   updated?: string;
 }
 
-/** Model for a phase */
-export interface Phase {
-  /**
-   * The id of the phase
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
-  id?: string;
-  /**
-   * The name of the phase
-   * @example "Första veckan"
-   */
-  name?: string;
-  /**
-   * The body text of the phase
-   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
-   */
-  bodyText?: string;
-  /**
-   * The time to complete the phase
-   * @example "P1M"
-   */
-  timeToComplete?: string;
-  /** The role type of the task */
-  roleType?: RoleType;
-  /** The permission needed to administrate the phase */
-  permission?: Permission;
-  /**
-   * The sort order of the phase
-   * @format int32
-   * @example 1
-   */
-  sortOrder?: number;
-  /** Tasks in the phase */
-  tasks?: Task[];
-  /**
-   * The created date and time of the phase
-   * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
-   */
-  created?: string;
-  /**
-   * The last update date and time of the phase
-   * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
-   */
-  updated?: string;
-  /** The id of the user that last modified the phase */
-  lastSavedBy?: string;
-}
-
-/** Task model */
-export interface Task {
-  /**
-   * The id of the task
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
-  id?: string;
-  /**
-   * The heading of the task
-   * @example "Bjud på fika"
-   */
-  heading?: string;
-  /**
-   * The body text of the task
-   * @example "Detta är en beskrivning av ett uppdrag"
-   */
-  text?: string;
-  /**
-   * The sort order of the task
-   * @format int32
-   * @example 1
-   */
-  sortOrder?: number;
-  /** The role type of the task */
-  roleType?: RoleType;
-  /** The question type of the task */
-  questionType?: QuestionType;
-  /** The permission needed to administrate the phase */
-  permission?: Permission;
-  /**
-   * The date and time the task was created
-   * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
-   */
-  created?: string;
-  /**
-   * The date and time the task was last updated
-   * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
-   */
-  updated?: string;
-  /** The id of the user that last modified the task */
-  lastSavedBy?: string;
-}
-
 /** Model for update request of fulfilment for a task */
 export interface EmployeeChecklistTaskUpdateRequest {
   /** The status of the task fulfilment */
@@ -754,40 +778,7 @@ export interface ChecklistUpdateRequest {
    * @example "New display name"
    */
   displayName?: string;
-  /** The role type of the task */
-  roleType?: RoleType;
   /** The id of the user updating the checklist */
-  updatedBy: string;
-}
-
-/** Model for phase update request */
-export interface PhaseUpdateRequest {
-  /**
-   * The name of the phase
-   * @example "Första veckan"
-   */
-  name?: string;
-  /**
-   * The body text of the phase
-   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
-   */
-  bodyText?: string;
-  /**
-   * The time to complete the phase
-   * @example "P1M"
-   */
-  timeToComplete?: string;
-  /** The role type of the task */
-  roleType?: RoleType;
-  /** The permission needed to administrate the phase */
-  permission?: Permission;
-  /**
-   * The sort order of the phase
-   * @format int32
-   * @example 1
-   */
-  sortOrder?: number;
-  /** The id of the user updating the phase */
   updatedBy: string;
 }
 
