@@ -57,15 +57,18 @@ export const countFinishedTasks = (phases: Phase[], currentView: number) => {
   let phaseArray = [];
   phases.map((phase: Phase) => {
     let count = 0;
-    phase.tasks.map((task: Task) => {
-      if (task.fulfilmentStatus === 'TRUE') {
-        if (currentView === 0) {
-          if (task.roleType === 'MANAGER') count++;
-        } else {
-          if (task.roleType === 'EMPLOYEE') count++;
-        }
-      }
-    });
+    if (currentView === 0) {
+      count = phase.tasks.filter(
+        (task: Task) =>
+          task.fulfilmentStatus === 'TRUE' &&
+          (task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || task.roleType === 'MANAGER_FOR_NEW_MANAGER')
+      ).length;
+    } else {
+      count = phase.tasks.filter(
+        (task: Task) =>
+          task.fulfilmentStatus === 'TRUE' && (task.roleType === 'NEW_EMPLOYEE' || task.roleType === 'NEW_MANAGER')
+      ).length;
+    }
     phaseArray.push(count);
   });
   return phaseArray;
