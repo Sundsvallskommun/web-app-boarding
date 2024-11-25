@@ -1,14 +1,19 @@
 import { User } from '@data-contracts/backend/data-contracts';
 import { ApiResponse } from '@services/api-service';
+import { Permissions } from '@interfaces/permissions';
 
-// export const defaultPermissions: Permissions = {
-//     canEditSystemMessages: false,
-// };
+export const defaultPermissions: Permissions = {
+  canEditAdmin: false,
+  canViewAdmin: false,
+};
 
 export const emptyUser: User = {
   name: '',
+  firstName: '',
+  lastName: '',
   username: '',
-  //   permissions: defaultPermissions,
+  role: 'user',
+  permissions: defaultPermissions,
 };
 
 export const emptyUserResponse: ApiResponse<User> = {
