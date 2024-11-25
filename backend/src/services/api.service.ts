@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { HttpException } from '@exceptions/HttpException';
-import { User } from '@interfaces/users.interface';
+import { ClientUser } from '@interfaces/users.interface';
 import { apiURL } from '@utils/util';
 import { logger } from '@utils/logger';
 import axios, { AxiosError, AxiosInstance, AxiosInterceptorManager, AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
@@ -67,7 +67,7 @@ class ApiService {
       },
     );
   }
-  private async request<T>(config: AxiosRequestConfig, user: User): Promise<ApiResponse<T>> {
+  private async request<T>(config: AxiosRequestConfig, user: ClientUser): Promise<ApiResponse<T>> {
     const defaultParams = {};
     const preparedConfig: AxiosRequestConfig = {
       ...config,
@@ -96,27 +96,27 @@ class ApiService {
     }
   }
 
-  public async get<T>(config: AxiosRequestConfig, user: User): Promise<ApiResponse<T>> {
+  public async get<T>(config: AxiosRequestConfig, user: ClientUser): Promise<ApiResponse<T>> {
     logger.info(`MAKING GET REQUEST TO URL: ${config.baseURL || ''}/${config.url}`);
     return this.request<T>({ ...config, method: 'GET' }, user);
   }
 
-  public async post<T, D>(config: AxiosRequestConfig<D>, user: User): Promise<ApiResponse<T>> {
+  public async post<T, D>(config: AxiosRequestConfig<D>, user: ClientUser): Promise<ApiResponse<T>> {
     logger.info(`MAKING POST REQUEST TO URL: ${config.baseURL || ''}/${config.url}`);
     return this.request<T>({ ...config, method: 'POST' }, user);
   }
 
-  public async patch<T, D>(config: AxiosRequestConfig<D>, user: User): Promise<ApiResponse<T>> {
+  public async patch<T, D>(config: AxiosRequestConfig<D>, user: ClientUser): Promise<ApiResponse<T>> {
     logger.info(`MAKING PATCH REQUEST TO URL: ${config.baseURL || ''}/${config.url}`);
     return this.request<T>({ ...config, method: 'PATCH' }, user);
   }
 
-  public async put<T, D>(config: AxiosRequestConfig<D>, user: User): Promise<ApiResponse<T>> {
+  public async put<T, D>(config: AxiosRequestConfig<D>, user: ClientUser): Promise<ApiResponse<T>> {
     logger.info(`MAKING PUT REQUEST TO URL: ${config.baseURL || ''}/${config.url}`);
     return this.request<T>({ ...config, method: 'PUT' }, user);
   }
 
-  public async delete<T>(config: AxiosRequestConfig, user: User): Promise<ApiResponse<T>> {
+  public async delete<T>(config: AxiosRequestConfig, user: ClientUser): Promise<ApiResponse<T>> {
     return this.request<T>({ ...config, method: 'DELETE' }, user);
   }
 }
