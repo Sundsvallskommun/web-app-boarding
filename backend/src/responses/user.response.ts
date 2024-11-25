@@ -1,12 +1,14 @@
 import ApiResponse from '@/interfaces/api-service.interface';
-import { ClientUser, InternalRole, InternalRoleEnum, Permissions } from '@/interfaces/users.interface';
+import { ClientUser, InternalRole, InternalRoleEnum, Permissions as IPermissions } from '@/interfaces/users.interface';
 import { Type } from 'class-transformer';
-import { IsEnum, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsEnum, IsString, ValidateNested } from 'class-validator';
 
-// export class Permissions implements IPermissions {
-//   @IsBoolean()
-//   canEditSystemMessages: boolean;
-// }
+export class Permissions implements IPermissions {
+  @IsBoolean()
+  canEditAdmin: boolean;
+  @IsBoolean()
+  canViewAdmin: boolean;
+}
 
 export class User implements ClientUser {
   @IsString()
