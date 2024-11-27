@@ -14,6 +14,7 @@ import { shallow } from 'zustand/shallow';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { SearchEmployeeComponent } from '@components/search-employee/search-employee.component';
 import { Mentor } from '@data-contracts/backend/data-contracts';
+import { Avatar } from '@sk-web-gui/avatar';
 
 export const AssignMentorModal = () => {
   const user = useUserStore((s) => s.user, shallow);
@@ -58,7 +59,8 @@ export const AssignMentorModal = () => {
     <div>
       {asEmployeeChecklists?.mentor ?
         <div className="flex gap-8">
-          <p className="text-small">{`${asEmployeeChecklists.mentor.name} (${asEmployeeChecklists.mentor.userId})`}</p>
+          <Avatar size="sm" rounded />
+          <p>{`${asEmployeeChecklists.mentor.name} (${asEmployeeChecklists.mentor.userId})`}</p>
           <Button iconButton name="trash" size="sm" inverted onClick={() => removeAssignedMentor()}>
             <Icon name="trash" />
           </Button>
