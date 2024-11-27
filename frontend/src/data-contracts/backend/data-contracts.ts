@@ -9,13 +9,18 @@
  * ---------------------------------------------------------------
  */
 
+export interface Permissions {
+  canEditAdmin: boolean;
+  canViewAdmin: boolean;
+}
+
 export interface User {
   name: string;
   firstName: string;
   lastName: string;
   username: string;
   role: 'admin' | 'developer' | 'user' | '0' | '1' | '2';
-  permissions: any;
+  permissions: Permissions;
 }
 
 export interface UserApiResponse {
@@ -29,6 +34,7 @@ export interface Stakeholder {
   lastName: string;
   email: string;
   username: string;
+  title: string;
 }
 
 export interface Mentor {

@@ -33,7 +33,7 @@ import {
   CorrespondenceStatus,
   Correspondence as CorrespondenceType,
   DelegatedEmployeeChecklistResponse as DelegatedEmployeeChecklistResponseType,
-} from '@/data-contracts/checklist/data-contracts';
+} from '../data-contracts/checklist/data-contracts';
 
 export class Stakeholder implements StakeholderType {
   @IsString()
@@ -46,6 +46,8 @@ export class Stakeholder implements StakeholderType {
   email?: string;
   @IsString()
   username?: string;
+  @IsString()
+  title?: string;
 }
 
 export class Mentor implements MentorType {
