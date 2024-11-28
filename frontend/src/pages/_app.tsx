@@ -9,6 +9,7 @@ import type { AppProps /*, AppContext */ } from 'next/app';
 import { AppWrapper } from '../contexts/app.context';
 import { appWithTranslation } from 'next-i18next';
 import nextI18NextConfig from '../../next-i18next.config';
+import 'react-quill/dist/quill.snow.css';
 
 dayjs.extend(utc);
 dayjs.locale('sv');

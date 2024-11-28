@@ -116,7 +116,8 @@ export class ChecklistController {
     @Param('employeeChecklistId') checklistId: string,
     @Param('email') email: string,
   ): Promise<{ status: number }> {
-    const url = `checklist/1.0/2281/employee-checklists/${checklistId}/delegate-to/${email}`;
+    const encodedEmail = encodeURIComponent(email);
+    const url = `checklist/1.0/2281/employee-checklists/${checklistId}/delegate-to/${encodedEmail}`;
     return await this.apiService.post<{ status: number }, any>({ url }, req.user);
   }
 
@@ -128,7 +129,8 @@ export class ChecklistController {
     @Param('employeeChecklistId') checklistId: string,
     @Param('email') email: string,
   ): Promise<{ status: number }> {
-    const url = `checklist/1.0/2281/employee-checklists/${checklistId}/delegated-to/${email}`;
+    const encodedEmail = encodeURIComponent(email);
+    const url = `checklist/1.0/2281/employee-checklists/${checklistId}/delegated-to/${encodedEmail}`;
     return await this.apiService.delete<{ status: number }>({ url }, req.user);
   }
 

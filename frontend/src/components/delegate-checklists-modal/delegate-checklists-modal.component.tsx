@@ -3,16 +3,15 @@ import { Button, Modal } from '@sk-web-gui/react';
 import { FormLabel } from '@sk-web-gui/forms';
 import { SearchEmployeeComponent } from '@components/search-employee/search-employee.component';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { delegateChecklist, getChecklistsAsManager } from '@services/checklist-service/checklist-service';
-import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
+import { delegateChecklist, getChecklistAsEmployee } from '@services/checklist-service/checklist-service';
 import { useAppContext } from '@contexts/app.context';
-import { useUserStore } from '@services/user-service/user-service';
-import { shallow } from 'zustand/shallow';
+import { useRouter } from 'next/router';
 
-export const DelegateMultipleChecklistsModal = ({ fields: checklists, closeHandler, isOpen }) => {
-  const user = useUserStore((s) => s.user, shallow);
+export const DelegateMultipleChecklistsModal = ({ checklistIds, closeHandler, isOpen }) => {
   const { control } = useForm();
-  const { setAsManagerChecklists } = useAppContext();
+  const { setAsEmployeeChecklists } = useAppContext();
+  const router = useRouter();
+  const { query } = router;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -21,14 +20,18 @@ export const DelegateMultipleChecklistsModal = ({ fields: checklists, closeHandl
   });
 
   const onSubmit = () => {
-    checklists.map((checklist: EmployeeChecklist) => {
+    checklistIds.map((checklistId: string) => {
       fields.map((field: { email: string; fieldId: string; name: string; userId: string }) => {
-        delegateChecklist(checklist.id, field.email);
+        delegateChecklist(checklistId, field.email).then(() => {
+          if (query.userId) {
+            getChecklistAsEmployee(query.userId.toString()).then((res) => setAsEmployeeChecklists(res));
+          }
+        });
       });
     });
 
-    getChecklistsAsManager(user.username).then((res) => setAsManagerChecklists(res));
     remove();
+    closeHandler();
   };
 
   return (
@@ -43,7 +46,7 @@ export const DelegateMultipleChecklistsModal = ({ fields: checklists, closeHandl
 
         <Modal.Footer>
           <Button
-            disabled={!fields.length || !checklists.length}
+            disabled={!fields.length || !checklistIds.length}
             onClick={() => {
               onSubmit();
             }}

@@ -1,4 +1,4 @@
-import { CookieConsent, Footer, Header, Link } from '@sk-web-gui/react';
+import { CookieConsent, Header, Link } from '@sk-web-gui/react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -6,6 +6,10 @@ import { useTranslation } from 'next-i18next';
 import Breadcrumb from '@sk-web-gui/breadcrumb';
 import { UserMenu } from '@sk-web-gui/user-menu';
 import { usePathname } from 'next/navigation';
+import { useUserStore } from '@services/user-service/user-service';
+import { shallow } from 'zustand/shallow';
+import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
+import { useAppContext } from '@contexts/app.context';
 
 interface DefaultLayoutProps {
   children: React.ReactNode;
@@ -32,6 +36,8 @@ export default function DefaultLayout({
   const layoutTitle = `${process.env.NEXT_PUBLIC_APP_NAME}${headerSubtitle ? ` - ${headerSubtitle}` : ''}`;
   const fullTitle = postTitle ? `${layoutTitle} - ${postTitle}` : `${layoutTitle}`;
   const pathname = usePathname();
+  const user = useUserStore((s) => s.user, shallow);
+  const { asEmployeeChecklists, asManagerChecklists } = useAppContext();
 
   const { t } = useTranslation();
 
@@ -45,7 +51,7 @@ export default function DefaultLayout({
   };
 
   return (
-    <div className="DefaultLayout full-page-layout">
+    <div className="DefaultLayout full-page-layout bg-background-100">
       <Head>
         <title>{title ? title : fullTitle}</title>
         <meta name="description" content={`${process.env.NEXT_PUBLIC_APP_NAME}`} />
@@ -67,24 +73,43 @@ export default function DefaultLayout({
           LogoLinkWrapperComponent={<NextLink legacyBehavior href={logoLinkHref} passHref />}
           wrapperClasses="py-6"
         >
-          {' '}
-          <UserMenu menuGroups={[]} />{' '}
+          <UserMenu
+            initials={`${user.firstName[0]}${user.lastName[0]}`}
+            menuTitle={`${user.name} (${user.username})`}
+            menuGroups={[
+              {
+                label: 'Logga ut',
+                elements: [
+                  {
+                    label: 'Logga ut',
+                    element: () => (
+                      <Link key={'logout'} href={`/logout`}>
+                        <Icon name="log-out" /> Logga ut
+                      </Link>
+                    ),
+                  },
+                ],
+              },
+            ]}
+          />
         </Header>
 
-        <div className="main-container flex-grow relative w-full flex flex-col">
-          {pathname !== '/start' && (
-            <div className="w-full bg-vattjom-background-200 md:px-32">
-              <Breadcrumb className="container py-20">
+        <div className="main-container flex-grow relative w-full flex flex-col pt-20">
+          {pathname !== '/' && asManagerChecklists.length ?
+            <div className="w-full md:px-32">
+              <Breadcrumb className="container ">
                 <Breadcrumb.Item>
-                  <Breadcrumb.Link href="../start">Start</Breadcrumb.Link>
+                  <Breadcrumb.Link href="../">Start</Breadcrumb.Link>
                 </Breadcrumb.Item>
 
                 <Breadcrumb.Item currentPage>
-                  <Breadcrumb.Link href="#">Name of user</Breadcrumb.Link>
+                  <Breadcrumb.Link href="#">
+                    {asEmployeeChecklists.employee.firstName} {asEmployeeChecklists.employee.lastName}
+                  </Breadcrumb.Link>
                 </Breadcrumb.Item>
               </Breadcrumb>
             </div>
-          )}
+          : null}
         </div>
       </div>
 
@@ -95,8 +120,6 @@ export default function DefaultLayout({
       </div>
 
       {postContent && postContent}
-
-      <Footer></Footer>
 
       {/*<CookieConsent
         title={t('layout:cookies.title', { app: process.env.NEXT_PUBLIC_APP_NAME })}

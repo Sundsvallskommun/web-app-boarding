@@ -4,22 +4,43 @@ import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Spinner } from '@sk-web-gui/spinner';
 import { useRouter } from 'next/router';
 import { getChecklistStatusLabel } from '@utils/get-checklist-status';
+import { useAppContext } from '@contexts/app.context';
+import { getChecklistAsEmployee } from '@services/checklist-service/checklist-service';
+import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 
-export const OngoingChecklistsTable = ({ data, delegatedChecklists, fields, watch, append, remove, register }) => {
+export const OngoingChecklistsTable = ({ data, delegatedChecklists, watch, register, setValue }) => {
   const router = useRouter();
   const [_pageSize, setPageSize] = React.useState<number>(12);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
-  const [sortColumn, setSortColumn] = React.useState<string>('name');
+  const [sortColumn, setSortColumn] = React.useState<string>('employee.firstName');
   const [sortOrder, setSortOrder] = React.useState(SortMode.ASC);
+  const { setAsEmployeeChecklists } = useAppContext();
 
-  const checkAll = watch('checkAll');
+  const { checked, checkAll } = watch();
 
   const handleCheckAll = () => {
-    if (fields.length && checkAll) {
-      remove();
+    if (checked.length && checkAll) {
+      setValue('checked', []);
     } else {
-      data.every((list) => append(list));
+      setValue(
+        'checked',
+        data.map((checklist: EmployeeChecklist) => checklist.id)
+      );
     }
+  };
+
+  const getDeepColumn = (column: string, object: EmployeeChecklist) => {
+    const columns = column.split('.');
+    let value = object;
+    columns.forEach((col) => {
+      if (value && value[col]) {
+        value = value[col];
+      } else {
+        value[col] = 0;
+        value = value[col];
+      }
+    });
+    return value;
   };
 
   const handleSorting = (column: string) => {
@@ -34,8 +55,8 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, fields, watc
     .sort((a, b) => {
       const order = sortOrder === SortMode.ASC ? -1 : 1;
       return (
-        a[sortColumn] < b[sortColumn] ? order
-        : a[sortColumn] > b[sortColumn] ? order * -1
+        getDeepColumn(sortColumn, a) < getDeepColumn(sortColumn, b) ? order
+        : getDeepColumn(sortColumn, a) > getDeepColumn(sortColumn, b) ? order * -1
         : 0
       );
     })
@@ -45,29 +66,15 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, fields, watc
         <Table.Row key={`row-${idx}`} className="bg-background-content">
           {!delegatedChecklists && (
             <Table.Column>
-              <Checkbox
-                checked={fields.length ? fields.every((field) => field.id === field.id) : false}
-                onChange={() => {
-                  if (fields.length) {
-                    fields.map((f, index) => {
-                      if (f.id === d.id) {
-                        remove(index);
-                      } else {
-                        append(d);
-                      }
-                    });
-                  } else {
-                    append(d);
-                  }
-                }}
-              />
+              <Checkbox {...register('checked')} value={d.id} />
             </Table.Column>
           )}
           <Table.Column>
             <div className="flex gap-8">
-              <Avatar rounded />
+              <Avatar initials={`${d.employee.firstName[0]}${d.employee.lastName[0]}`} rounded />
               <div>
-                <strong>{d.employee.firstName + ' ' + d.employee.lastName}</strong> ({d.employee.username})<p>Titel</p>
+                <strong>{d.employee.firstName + ' ' + d.employee.lastName}</strong> ({d.employee.username})
+                <p>{d.employee.title}</p>
               </div>
             </div>
           </Table.Column>
@@ -75,7 +82,15 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, fields, watc
           <Table.Column>{getChecklistStatusLabel(d, false)}</Table.Column>
           <Table.Column>{d.startDate}</Table.Column>
           <Table.Column className="justify-end">
-            <Button iconButton onClick={() => router.push(`start/${d.employee.username}`)}>
+            <Button
+              iconButton
+              onClick={() => {
+                getChecklistAsEmployee(d.employee.username).then((res) => {
+                  setAsEmployeeChecklists(res);
+                });
+                router.push(`/${d.employee.username}`);
+              }}
+            >
               <Icon name="arrow-right" />
             </Button>
           </Table.Column>
@@ -93,41 +108,41 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, fields, watc
             </Table.HeaderColumn>
           )}
 
-          <Table.HeaderColumn aria-sort={sortColumn === 'name' ? sortOrder : 'none'}>
+          <Table.HeaderColumn aria-sort={sortColumn === 'employee.firstName' ? sortOrder : 'none'}>
             <Table.SortButton
-              isActive={sortColumn === 'name'}
+              isActive={sortColumn === 'employee.firstName'}
               sortOrder={sortOrder}
-              onClick={() => handleSorting('name')}
+              onClick={() => handleSorting('employee.firstName')}
             >
               Anställd
             </Table.SortButton>
           </Table.HeaderColumn>
 
-          <Table.HeaderColumn aria-sort={sortColumn === 'supervisorStatus' ? sortOrder : 'none'}>
+          <Table.HeaderColumn aria-sort={sortColumn === 'managerStatus' ? sortOrder : 'none'}>
             <Table.SortButton
-              isActive={sortColumn === 'supervisorStatus'}
+              isActive={sortColumn === 'managerStatus'}
               sortOrder={sortOrder}
-              onClick={() => handleSorting('supervisorStatus')}
+              onClick={() => handleSorting('managerStatus')}
             >
               Status chef
             </Table.SortButton>
           </Table.HeaderColumn>
 
-          <Table.HeaderColumn aria-sort={sortColumn === 'workerStatus' ? sortOrder : 'none'}>
+          <Table.HeaderColumn aria-sort={sortColumn === 'employeeStatus' ? sortOrder : 'none'}>
             <Table.SortButton
-              isActive={sortColumn === 'workerStatus'}
+              isActive={sortColumn === 'employeeStatus'}
               sortOrder={sortOrder}
-              onClick={() => handleSorting('workerStatus')}
+              onClick={() => handleSorting('employeeStatus')}
             >
               Status anställd
             </Table.SortButton>
           </Table.HeaderColumn>
 
-          <Table.HeaderColumn aria-sort={sortColumn === 'hireDate' ? sortOrder : 'none'}>
+          <Table.HeaderColumn aria-sort={sortColumn === 'startDate' ? sortOrder : 'none'}>
             <Table.SortButton
-              isActive={sortColumn === 'hireDate'}
+              isActive={sortColumn === 'startDate'}
               sortOrder={sortOrder}
-              onClick={() => handleSorting('hireDate')}
+              onClick={() => handleSorting('startDate')}
             >
               Anställningsdatum
             </Table.SortButton>
