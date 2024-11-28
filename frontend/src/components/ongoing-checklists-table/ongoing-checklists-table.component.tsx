@@ -12,7 +12,7 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, watch, regis
   const router = useRouter();
   const [_pageSize, setPageSize] = React.useState<number>(12);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
-  const [sortColumn, setSortColumn] = React.useState<string>('name');
+  const [sortColumn, setSortColumn] = React.useState<string>('employee.firstName');
   const [sortOrder, setSortOrder] = React.useState(SortMode.ASC);
   const { setAsEmployeeChecklists } = useAppContext();
 
@@ -29,6 +29,20 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, watch, regis
     }
   };
 
+  const getDeepColumn = (column: string, object: EmployeeChecklist) => {
+    const columns = column.split('.');
+    let value = object;
+    columns.forEach((col) => {
+      if (value && value[col]) {
+        value = value[col];
+      } else {
+        value[col] = 0;
+        value = value[col];
+      }
+    });
+    return value;
+  };
+
   const handleSorting = (column: string) => {
     if (sortColumn !== column) {
       setSortColumn(column);
@@ -41,8 +55,8 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, watch, regis
     .sort((a, b) => {
       const order = sortOrder === SortMode.ASC ? -1 : 1;
       return (
-        a[sortColumn] < b[sortColumn] ? order
-        : a[sortColumn] > b[sortColumn] ? order * -1
+        getDeepColumn(sortColumn, a) < getDeepColumn(sortColumn, b) ? order
+        : getDeepColumn(sortColumn, a) > getDeepColumn(sortColumn, b) ? order * -1
         : 0
       );
     })
@@ -94,11 +108,11 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, watch, regis
             </Table.HeaderColumn>
           )}
 
-          <Table.HeaderColumn aria-sort={sortColumn === 'name' ? sortOrder : 'none'}>
+          <Table.HeaderColumn aria-sort={sortColumn === 'employee.firstName' ? sortOrder : 'none'}>
             <Table.SortButton
-              isActive={sortColumn === 'name'}
+              isActive={sortColumn === 'employee.firstName'}
               sortOrder={sortOrder}
-              onClick={() => handleSorting('name')}
+              onClick={() => handleSorting('employee.firstName')}
             >
               Anställd
             </Table.SortButton>
