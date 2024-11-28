@@ -104,7 +104,7 @@ export default function DefaultLayout({
 
                 <Breadcrumb.Item currentPage>
                   <Breadcrumb.Link href="#">
-                    {asEmployeeChecklists.employee.firstName} {asEmployeeChecklists.employee.lastName}
+                    {asEmployeeChecklists?.employee?.firstName} {asEmployeeChecklists?.employee?.lastName}
                   </Breadcrumb.Link>
                 </Breadcrumb.Item>
               </Breadcrumb>

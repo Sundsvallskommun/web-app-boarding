@@ -39,6 +39,12 @@ export const CheckList: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    getChecklistsAsManager(user.username).then((res) => {
+      setAsManagerChecklists(res);
+    });
+  }, []);
+
+  useEffect(() => {
     setIsLoading(true);
     if (asManagerChecklists.length > 0) {
       getChecklistAsEmployee(query.userId.toString()).then((res) => {
@@ -53,7 +59,7 @@ export const CheckList: React.FC = () => {
       setCurrentView(1);
     }
     setIsLoading(false);
-  }, [router.isReady]);
+  }, [asManagerChecklists]);
 
   useEffect(() => {
     if (currentView === 0) {
