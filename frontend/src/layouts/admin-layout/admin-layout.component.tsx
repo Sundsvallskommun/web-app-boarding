@@ -1,5 +1,6 @@
+import AdminSidebar from '@components/admin/admin-sidebar/admin-sidebar.component';
+import Main from '@layouts/main/main.component';
 import Head from 'next/head';
-import AdminSidebar from '@components/admin-sidebar/admin-sidebar.component';
 
 export default function AdminLayoutComponent({ title, children }) {
   return (
@@ -9,8 +10,8 @@ export default function AdminLayoutComponent({ title, children }) {
       </Head>
 
       <div className="main-container w-full flex">
-        <AdminSidebar args="" />
-        <div className="w-full main-content-padding">{children}</div>
+        <AdminSidebar />
+        <Main className="w-full p-40">{children}</Main>
       </div>
     </div>
   );

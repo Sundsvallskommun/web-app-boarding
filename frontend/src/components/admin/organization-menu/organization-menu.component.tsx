@@ -1,19 +1,21 @@
 import { OrgTree } from '@data-contracts/backend/data-contracts';
 import { useOrgTree } from '@services/organization-service';
 import { MenuVertical } from '@sk-web-gui/react';
-import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
-export const OrganizationMenu: React.FC = () => {
+interface OrganizationMenuProps {
+  current?: string | number;
+  setCurrent?: (index: string | number) => void;
+}
+
+export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ current, setCurrent }) => {
   const { data, loaded } = useOrgTree([2669, 2725, 13]);
 
-  useEffect(() => {
-    console.log('data: ', data);
-    console.log('loaded: ', loaded);
-  }, [data, loaded]);
+  const { t } = useTranslation();
 
   const renderChildren = (organizations: OrgTree[]) => {
     return organizations.map((org) => (
-      <MenuVertical.Item key={org.orgId}>
+      <MenuVertical.Item key={org.orgId} menuIndex={org.orgId}>
         {org.organizations && org.organizations?.length > 0 ?
           <MenuVertical>
             <MenuVertical.SubmenuButton>
@@ -27,11 +29,14 @@ export const OrganizationMenu: React.FC = () => {
   };
 
   return (
-    data &&
+    data?.length > 2 &&
     loaded && (
-      <MenuVertical.Sidebar className="-mx-24">
-        <MenuVertical>{renderChildren(data)}</MenuVertical>
-      </MenuVertical.Sidebar>
+      <MenuVertical.Provider current={current} setCurrent={setCurrent}>
+        <MenuVertical.Sidebar>
+          <MenuVertical.Label>{t('admin:menu.orgtree')}</MenuVertical.Label>
+          <MenuVertical className="!pr-0 !pl-0">{renderChildren(data)}</MenuVertical>
+        </MenuVertical.Sidebar>
+      </MenuVertical.Provider>
     )
   );
 };
