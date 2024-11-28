@@ -83,6 +83,8 @@ class ApiService {
     } catch (error: unknown | AxiosError) {
       if (axios.isAxiosError(error) && (error as AxiosError).response?.status === 404) {
         throw new HttpException(404, 'Not found');
+      } else if (axios.isAxiosError(error) && (error as AxiosError).response?.status === 409) {
+        throw new HttpException(409, 'Conflict');
       } else if (axios.isAxiosError(error) && (error as AxiosError).response?.data) {
         logger.error(`ERROR: API request failed with status: ${error.response?.status}`);
         logger.error(`Error details: ${JSON.stringify(error.response.data)}`);
