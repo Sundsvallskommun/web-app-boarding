@@ -6,6 +6,7 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { delegateChecklist, getChecklistAsEmployee } from '@services/checklist-service/checklist-service';
 import { useAppContext } from '@contexts/app.context';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 export const DelegateMultipleChecklistsModal = ({ checklistIds, closeHandler, isOpen }) => {
   const { control } = useForm();
@@ -13,6 +14,7 @@ export const DelegateMultipleChecklistsModal = ({ checklistIds, closeHandler, is
   const router = useRouter();
   const { query } = router;
   const toastMessage = useSnackbar();
+  const { t } = useTranslation();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -33,7 +35,7 @@ export const DelegateMultipleChecklistsModal = ({ checklistIds, closeHandler, is
             toastMessage({
               position: 'bottom',
               closeable: false,
-              message: `Det gick inte att delegera till ${field.email}`,
+              message: t('delegation:errors.conflict') + `${field.email}`,
               status: 'error',
             });
           });
