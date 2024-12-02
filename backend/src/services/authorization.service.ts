@@ -1,10 +1,10 @@
 import { InternalRole, Permissions } from '@interfaces/users.interface';
 import { roleADMapping } from './ad-role.service';
-import { logger } from '@/utils/logger';
 
 export const defaultPermissions: () => Permissions = () => ({
   canEditAdmin: false,
   canViewAdmin: false,
+  isManager: false,
 });
 
 enum RoleOrderEnum {

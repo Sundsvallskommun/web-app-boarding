@@ -8,6 +8,8 @@ export class Permissions implements IPermissions {
   canEditAdmin: boolean;
   @IsBoolean()
   canViewAdmin: boolean;
+  @IsBoolean()
+  isManager: boolean;
 }
 
 export class User implements ClientUser {

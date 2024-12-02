@@ -5,6 +5,7 @@ import { Permissions } from '@interfaces/permissions';
 export const defaultPermissions: Permissions = {
   canEditAdmin: false,
   canViewAdmin: false,
+  isManager: false,
 };
 
 export const emptyUser: User = {
