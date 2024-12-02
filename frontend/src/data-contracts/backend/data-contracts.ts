@@ -12,6 +12,7 @@
 export interface Permissions {
   canEditAdmin: boolean;
   canViewAdmin: boolean;
+  isManager: boolean;
 }
 
 export interface User {
@@ -19,7 +20,7 @@ export interface User {
   firstName: string;
   lastName: string;
   username: string;
-  role: 'admin' | 'developer' | 'user' | '0' | '1' | '2';
+  role: 'admin' | 'developer' | 'user';
   permissions: Permissions;
 }
 

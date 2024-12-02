@@ -39,10 +39,12 @@ export const CheckList: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    getChecklistsAsManager(user.username).then((res) => {
-      setAsManagerChecklists(res);
-    });
-  }, []);
+    if (user.permissions.isManager) {
+      getChecklistsAsManager(user.username).then((res) => {
+        setAsManagerChecklists(res);
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     setIsLoading(true);

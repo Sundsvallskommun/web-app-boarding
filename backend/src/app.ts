@@ -45,6 +45,8 @@ import { join } from 'path';
 import { isValidUrl } from './utils/util';
 import { additionalConverters } from './utils/custom-validation-classes';
 import { getPermissions, getRole } from './services/authorization.service';
+import ApiService from './services/api.service';
+import { EmployeeChecklist } from './responses/checklist.response';
 
 const SessionStoreCreate = SESSION_MEMORY ? createMemoryStore(session) : createFileStore(session);
 const sessionTTL = 4 * 24 * 60 * 60;
@@ -52,7 +54,7 @@ const sessionTTL = 4 * 24 * 60 * 60;
 const sessionStore = new SessionStoreCreate(SESSION_MEMORY ? { checkPeriod: sessionTTL * 1000 } : { sessionTTL, path: './data/sessions' });
 
 // const prisma = new PrismaClient();
-// const apiService = new ApiService();
+const apiService = new ApiService();
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -108,6 +110,29 @@ const samlStrategy = new Strategy(
 
     const appGroups: string[] = groupList.length > 0 ? groupList : [];
 
+    const getIsManager = async () => {
+      try {
+        const url = `checklist/1.0/2281/employee-checklists/manager/${username}`;
+        const res = await apiService.get<EmployeeChecklist[]>(
+          { url },
+          {
+            firstName: '',
+            username: username,
+            name: '',
+            lastName: '',
+            permissions: undefined,
+            role: 'user',
+          },
+        );
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          return true;
+        }
+        return false;
+      } catch {
+        return false;
+      }
+    };
+
     try {
       const findUser = {
         name: `${givenName} ${sn}`,
@@ -116,7 +141,7 @@ const samlStrategy = new Strategy(
         username: username,
         groups: appGroups,
         role: getRole(appGroups),
-        permissions: getPermissions(appGroups),
+        permissions: { ...getPermissions(appGroups), isManager: await getIsManager() },
       };
 
       done(null, findUser);
