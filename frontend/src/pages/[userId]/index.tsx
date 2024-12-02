@@ -25,6 +25,7 @@ import {
 } from '@utils/count-tasks';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { setTimeToBeCompleted } from '@utils/fulfilment-status-utils';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export const CheckList: React.FC = () => {
   const user = useUserStore((s) => s.user, shallow);
@@ -248,3 +249,9 @@ export const CheckList: React.FC = () => {
 };
 
 export default CheckList;
+
+export const getServerSideProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['delegation'])),
+  },
+});
