@@ -1,0 +1,13 @@
+{
+  "name": "introduktion",
+  "name_one": "introduktion",
+  "name_zero": "introduktioner",
+  "name_other": "introduktioner",
+  "count_one": "{{count}} introduktion",
+  "count_zero": "{{count}} introduktioner",
+  "count_other": "{{count}} introduktioner",
+  "ongoing_checklists": "pågående introduktioner",
+  "you_got_ongoing_checklists_zero": "Du har {{count}} pågående introduktioner",
+  "you_got_ongoing_checklists_one": "Du har {{count}} pågående introduktion",
+  "you_got_ongoing_checklists_other": "Du har {{count}} pågående introduktioner"
+}

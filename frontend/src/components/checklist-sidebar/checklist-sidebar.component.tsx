@@ -8,10 +8,16 @@ import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import Divider from '@sk-web-gui/divider';
 import { Button } from '@sk-web-gui/react';
 import { getChecklistAsEmployee, removeDelegation } from '@services/checklist-service/checklist-service';
+import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
+import { useUserStore } from '@services/user-service/user-service';
+import { useShallow } from 'zustand/react/shallow';
 
 export const ChecklistSidebar = () => {
-  const { asManagerChecklists, asEmployeeChecklists, setAsEmployeeChecklists } = useAppContext();
+  const { asEmployeeChecklists, setAsEmployeeChecklists } = useAppContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const {
+    permissions: { isManager },
+  } = useUserStore(useShallow((state) => state.user));
 
   const openHandler = () => {
     setIsOpen(true);
@@ -35,7 +41,7 @@ export const ChecklistSidebar = () => {
           <p className="text-small">{asEmployeeChecklists.startDate}</p>
         </div>
 
-        {asManagerChecklists.length ?
+        {isManager ?
           <>
             <Divider className="my-24" />
 

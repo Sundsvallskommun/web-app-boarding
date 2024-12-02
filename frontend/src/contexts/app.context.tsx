@@ -9,9 +9,6 @@ export interface AppContextInterface {
   checklist: Checklist;
   setChecklist: (checklist: Checklist) => void;
 
-  asManagerChecklists: EmployeeChecklist[];
-  setAsManagerChecklists: (asManagerChecklists: EmployeeChecklist[]) => void;
-
   asEmployeeChecklists: EmployeeChecklist;
   setAsEmployeeChecklists: (asEmployeeChecklists: EmployeeChecklist) => void;
 
@@ -29,7 +26,6 @@ const AppContext = createContext<AppContextInterface>(null);
 export function AppWrapper({ children }) {
   const [user, setUser] = useState<User>();
   const [checklist, setChecklist] = useState<Checklist>();
-  const [asManagerChecklists, setAsManagerChecklists] = useState<EmployeeChecklist[]>([]);
   const [asEmployeeChecklists, setAsEmployeeChecklists] = useState<EmployeeChecklist>();
   const [delegatedChecklists, setDelegatedChecklists] = useState<EmployeeChecklist[]>([]);
 
@@ -50,10 +46,6 @@ export function AppWrapper({ children }) {
 
         checklist,
         setChecklist: (checklist: Checklist) => setChecklist(checklist),
-
-        asManagerChecklists,
-        setAsManagerChecklists: (asManagerChecklists: EmployeeChecklist[]) =>
-          setAsManagerChecklists(asManagerChecklists),
 
         asEmployeeChecklists,
         setAsEmployeeChecklists: (asEmployeeChecklists: EmployeeChecklist) =>

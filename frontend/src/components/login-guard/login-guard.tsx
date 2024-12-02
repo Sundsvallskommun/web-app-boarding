@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 export const LoginGuard: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const user = useUserStore((s) => s.user);
   const getMe = useUserStore((s) => s.getMe);
-
   const router = useRouter();
+  const { query } = router;
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -27,6 +27,10 @@ export const LoginGuard: React.FC<{ children?: React.ReactNode }> = ({ children 
   //   router.push('/');
   //   return <LoaderFullScreen />;
   // }
+
+  if (user?.username && !user?.permissions?.isManager && query?.userId !== user?.username) {
+    router.push(`/${user.username}`);
+  }
 
   return <>{children}</>;
 };

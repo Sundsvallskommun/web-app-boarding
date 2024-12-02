@@ -1,22 +1,21 @@
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { DelegateMultipleChecklistsModal } from '@components/delegate-checklists-modal/delegate-checklists-modal.component';
+import { OngoingChecklistsTable } from '@components/ongoing-checklists-table/ongoing-checklists-table.component';
 import { useAppContext } from '@contexts/app.context';
-import { useUserStore } from '@services/user-service/user-service';
-import { shallow } from 'zustand/shallow';
-import { FormProvider, useForm } from 'react-hook-form';
-import { getChecklistsAsManager } from '@services/checklist-service/checklist-service';
 import DefaultLayout from '@layouts/default-layout/default-layout.component';
 import Main from '@layouts/main/main.component';
-import { OngoingChecklistsTable } from '@components/ongoing-checklists-table/ongoing-checklists-table.component';
-import { Spinner } from '@sk-web-gui/spinner';
-import { Button } from '@sk-web-gui/react';
+import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import Divider from '@sk-web-gui/divider';
-import { DelegateMultipleChecklistsModal } from '@components/delegate-checklists-modal/delegate-checklists-modal.component';
+import { Button } from '@sk-web-gui/react';
+import { Spinner } from '@sk-web-gui/spinner';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { capitalize } from 'underscore.string';
 
-export default function Index() {
-  const user = useUserStore((s) => s.user, shallow);
-  const router = useRouter();
-  const { asManagerChecklists, setAsManagerChecklists, delegatedChecklists } = useAppContext();
+export function Index() {
+  const { t } = useTranslation();
+  const { delegatedChecklists } = useAppContext();
   const methods = useForm();
   const { register, watch, setValue } = useForm<{ checkAll: boolean; checked: [] }>({
     defaultValues: { checkAll: false, checked: [] },
@@ -24,11 +23,7 @@ export default function Index() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { checked } = watch();
 
-  useEffect(() => {
-    getChecklistsAsManager(user.username).then((res) => {
-      res.length > 0 ? setAsManagerChecklists(res) : router.push(`/${user.username}`);
-    });
-  }, []);
+  const { data: managedChecklists, loaded: managedChecklistsLoaded } = useManagedChecklists();
 
   const openHandler = () => {
     setIsOpen(true);
@@ -39,20 +34,17 @@ export default function Index() {
   };
 
   return (
-    asManagerChecklists.length && (
+    managedChecklistsLoaded && (
       <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
         <Main>
           <div className="py-10 px-10 2xl:px-0">
-            <h2 className="my-16">Pågående introduktioner</h2>
-            <p className="mb-16">
-              Du har {asManagerChecklists.length} pågående
-              {asManagerChecklists.length === 1 ? ' introduktion' : ' introduktioner'}
-            </p>
+            <h2 className="my-16">{capitalize(t('checklists:ongoing_checklists'))}</h2>
+            <p className="mb-16">{t('checklists:you_got_ongoing_checklists', { count: managedChecklists?.length })}</p>
 
-            {asManagerChecklists ?
+            {managedChecklists ?
               <FormProvider {...methods}>
                 <OngoingChecklistsTable
-                  data={asManagerChecklists}
+                  data={managedChecklists}
                   delegatedChecklists={false}
                   register={register}
                   watch={watch}
@@ -64,7 +56,7 @@ export default function Index() {
             {delegatedChecklists.length ?
               <div className="py-24">
                 <h2 className="mb-16">Delegerade introduktioner</h2>
-                {asManagerChecklists ?
+                {managedChecklists ?
                   <OngoingChecklistsTable
                     data={delegatedChecklists}
                     delegatedChecklists={true}
@@ -109,3 +101,11 @@ export default function Index() {
     )
   );
 }
+
+export const getServerSideProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists'])),
+  },
+});
+
+export default Index;
