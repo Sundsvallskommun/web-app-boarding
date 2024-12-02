@@ -1,5 +1,5 @@
 {
   "errors": {
-    "conflict": "Det gick inte att delegera till "
+    "conflict": "Det gick inte att delegera till {{user}}"
   }
 }

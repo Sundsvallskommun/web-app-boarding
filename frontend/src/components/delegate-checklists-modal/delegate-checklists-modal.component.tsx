@@ -35,7 +35,7 @@ export const DelegateMultipleChecklistsModal = ({ checklistIds, closeHandler, is
             toastMessage({
               position: 'bottom',
               closeable: false,
-              message: t('delegation:errors.conflict') + `${field.email}`,
+              message: t('delegation:errors.conflict', { user: field.email }),
               status: 'error',
             });
           });
