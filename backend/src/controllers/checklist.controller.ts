@@ -11,7 +11,6 @@ import {
   EmployeeChecklistTask,
   EmployeeChecklistTaskUpdateRequest,
   Mentor,
-  Task,
 } from '@/data-contracts/checklist/data-contracts';
 import { HttpException } from '@exceptions/HttpException';
 import { DelegatedEmployeeChecklistResponse, EmployeeChecklistApiResponse } from '@/responses/checklist.response';
@@ -98,7 +97,7 @@ export class ChecklistController {
   }
 
   @Post('/employee-checklists/:employeeChecklistId/phases/:phaseId/customtasks')
-  @OpenAPI({ summary: 'Add custom task to specific checklist' })
+  @OpenAPI({ summary: 'Add a custom task to specific checklist' })
   @UseBefore(authMiddleware)
   async addCustomTask(
     @Req() req: RequestWithUser,
@@ -111,7 +110,7 @@ export class ChecklistController {
   }
 
   @Patch('/employee-checklists/:employeeChecklistId/customtasks/:taskId')
-  @OpenAPI({ summary: 'Update custom task' })
+  @OpenAPI({ summary: 'Update a custom task' })
   @UseBefore(authMiddleware)
   async updateCustomTask(
     @Req() req: RequestWithUser,
@@ -120,7 +119,7 @@ export class ChecklistController {
     @Body() data: CustomTaskUpdateRequest,
   ): Promise<ResponseData<CustomTask>> {
     const url = `checklist/1.0/2281/employee-checklists/${checklistId}/customtasks/${taskId}`;
-    return await this.apiService.patch<Task, CustomTaskUpdateRequest>({ url, data }, req.user);
+    return await this.apiService.patch<CustomTask, CustomTaskUpdateRequest>({ url, data }, req.user);
   }
 
   @Delete('/employee-checklists/:employeeChecklistId/customtasks/:taskId')
