@@ -245,14 +245,8 @@ export const CheckList: React.FC = () => {
 
 export const getServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists'])),
+    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists', 'delegation'])),
   },
 });
 
 export default CheckList;
-
-export const getServerSideProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ['delegation'])),
-  },
-});
