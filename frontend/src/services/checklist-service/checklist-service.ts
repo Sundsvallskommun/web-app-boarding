@@ -9,6 +9,7 @@ import {
   Phase,
   Task,
   Employee,
+  CustomTaskUpdateRequest,
 } from '@data-contracts/backend/data-contracts';
 import { FieldValues } from 'react-hook-form';
 
@@ -130,6 +131,45 @@ export const addCustomTask: (
     })
     .catch((e) => {
       console.error('Something went wrong when adding a custom task.');
+      throw e;
+    });
+};
+
+export const updateCustomTask: (checklistId: string, taskId: string, taskData: any) => Promise<CustomTask> = async (
+  checklistId: string,
+  taskId: string,
+  taskData: any
+) => {
+  const taskUpdateRequest: CustomTaskUpdateRequest = {
+    heading: taskData.heading,
+    text: taskData.text,
+    questionType: taskData.questionType,
+    sortOrder: taskData.sortOrder,
+    updatedBy: taskData.updatedBy,
+  };
+
+  return apiService
+    .patch<ApiResponse<CustomTask>>(`/employee-checklists/${checklistId}/customtasks/${taskId}`, taskUpdateRequest)
+    .then((response) => {
+      return response.data.data;
+    })
+    .catch((e) => {
+      console.error('Something went wrong when updating custom task.');
+      throw e;
+    });
+};
+
+export const removeCustomTask: (checklistId: string, taskId: string) => Promise<{ status: number }> = async (
+  checklistId: string,
+  taskId: string
+) => {
+  return apiService
+    .delete<{ status: number }>(`/employee-checklists/${checklistId}/customtasks/${taskId}`)
+    .then((response) => {
+      return { status: response.status };
+    })
+    .catch((e) => {
+      console.error('Something went wrong when removing a custom task.');
       throw e;
     });
 };
