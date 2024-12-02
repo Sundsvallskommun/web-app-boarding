@@ -1,5 +1,11 @@
 {
-  "welcome": "välkommen",
+  "title": "Digital checklista",
+  "admin": "administratör",
+  "introduction_zero": "introduktioner",
+  "introduction_one": "introduktion",
+  "introduction_other": "introduktioner",
   "login": "logga in",
-  "logout": "logga ut"
+  "logout": "logga ut",
+  "ongoing_introductions": "pågående introduktioner",
+  "welcome": "välkommen"
 }
