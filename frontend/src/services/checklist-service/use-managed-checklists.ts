@@ -1,0 +1,46 @@
+import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
+import { useUserStore } from '@services/user-service/user-service';
+import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+import { getChecklistsAsManager } from './checklist-service';
+import { useManagedChecklistStore } from './use-checklist-store';
+import { useCrudHelper } from '@utils/use-crud-helpers';
+
+export const useManagedChecklists = (): {
+  data: EmployeeChecklist[];
+  loaded: boolean;
+  loading: boolean;
+  refresh: () => void;
+} => {
+  const { permissions, username } = useUserStore(useShallow((state) => state.user));
+  const { handleGetMany } = useCrudHelper('checklists');
+  const [data, setData, loaded, setLoaded, loading, setLoading] = useManagedChecklistStore(
+    useShallow((state) => [state.data, state.setData, state.loaded, state.setLoaded, state.loading, state.setLoading])
+  );
+
+  const refresh = () => {
+    if (permissions.isManager && username) {
+      setLoading(true);
+      handleGetMany(() => getChecklistsAsManager(username))
+        .then((res) => {
+          if (res) {
+            setData(res);
+          }
+          setLoaded(true);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoaded(false);
+          setLoading(false);
+        });
+    } else {
+      setData([]);
+    }
+  };
+
+  useEffect(() => {
+    refresh();
+  }, [username, permissions.isManager]);
+
+  return { data, loaded, loading, refresh };
+};

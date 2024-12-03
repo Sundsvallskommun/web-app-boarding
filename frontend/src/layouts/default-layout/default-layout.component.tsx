@@ -37,7 +37,7 @@ export default function DefaultLayout({
   const fullTitle = postTitle ? `${layoutTitle} - ${postTitle}` : `${layoutTitle}`;
   const pathname = usePathname();
   const user = useUserStore((s) => s.user, shallow);
-  const { asEmployeeChecklists, asManagerChecklists } = useAppContext();
+  const { asEmployeeChecklists } = useAppContext();
 
   const { t } = useTranslation();
 
@@ -95,7 +95,7 @@ export default function DefaultLayout({
         </Header>
 
         <div className="main-container flex-grow relative w-full flex flex-col pt-20">
-          {pathname !== '/' && asManagerChecklists.length ?
+          {pathname !== '/' && user.permissions.isManager ?
             <div className="w-full md:px-32">
               <Breadcrumb className="container ">
                 <Breadcrumb.Item>

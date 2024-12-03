@@ -1,76 +1,69 @@
-import DefaultLayout from '@layouts/default-layout/default-layout.component';
-import Main from '@layouts/main/main.component';
-import { Button, MenuBar, RadioButton, Checkbox } from '@sk-web-gui/react';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { ActivityListItem } from '@components/activity-list-item/activity-list-item.component';
-import {
-  getChecklistAsEmployee,
-  getChecklistsAsManager,
-  updateTaskFulfilmentStatus,
-} from '@services/checklist-service/checklist-service';
+import { AddActivityModal } from '@components/add-activity-modal/add-activity-modal.component';
+import { ChecklistSidebar } from '@components/checklist-sidebar/checklist-sidebar.component';
 import { useAppContext } from '@contexts/app.context';
 import { EmployeeChecklist, EmployeeChecklistPhase } from '@data-contracts/backend/data-contracts';
-import { Spinner } from '@sk-web-gui/spinner';
-import { ChecklistSidebar } from '@components/checklist-sidebar/checklist-sidebar.component';
-import Divider from '@sk-web-gui/divider';
+import DefaultLayout from '@layouts/default-layout/default-layout.component';
+import Main from '@layouts/main/main.component';
+import { getChecklistAsEmployee, updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
+import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { useUserStore } from '@services/user-service/user-service';
-import { shallow } from 'zustand/shallow';
-import { AddActivityModal } from '@components/add-activity-modal/add-activity-modal.component';
+import Divider from '@sk-web-gui/divider';
+import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
+import { Button, Checkbox, MenuBar, RadioButton } from '@sk-web-gui/react';
+import { Spinner } from '@sk-web-gui/spinner';
 import {
   countCompletedEmployeeTasks,
   countCompletedManagerTasks,
   countEmployeeTasks,
   countManagerTasks,
 } from '@utils/count-tasks';
-import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { setTimeToBeCompleted } from '@utils/fulfilment-status-utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 export const CheckList: React.FC = () => {
-  const user = useUserStore((s) => s.user, shallow);
+  const {
+    username,
+    permissions: { isManager },
+  } = useUserStore(useShallow((s) => s.user));
   const router = useRouter();
   const { query } = router;
-  const { asEmployeeChecklists, setAsEmployeeChecklists, asManagerChecklists, setAsManagerChecklists } =
-    useAppContext();
+  const { asEmployeeChecklists, setAsEmployeeChecklists } = useAppContext();
 
   const [data, setData] = useState<EmployeeChecklist>();
   const [currentPhase, setCurrentPhase] = useState<number>(0);
   const [currentView, setCurrentView] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (user.permissions.isManager) {
-      getChecklistsAsManager(user.username).then((res) => {
-        setAsManagerChecklists(res);
-      });
-    }
-  }, [user]);
+  const { data: managedChecklists, refresh: refreshManagedChecklists } = useManagedChecklists();
 
   useEffect(() => {
     setIsLoading(true);
-    if (asManagerChecklists.length > 0) {
+    if (isManager && query?.userId) {
       getChecklistAsEmployee(query.userId.toString()).then((res) => {
         setAsEmployeeChecklists(res);
       });
-      setData(asManagerChecklists.filter((employee) => employee.employee.username === query?.userId)[0]);
+      setData(managedChecklists.filter((employee) => employee.employee.username === query?.userId)[0]);
     } else {
-      getChecklistAsEmployee(user.username).then((res) => {
+      getChecklistAsEmployee(username).then((res) => {
         setAsEmployeeChecklists(res);
       });
       setData(asEmployeeChecklists);
       setCurrentView(1);
     }
     setIsLoading(false);
-  }, [asManagerChecklists]);
+  }, [managedChecklists]);
 
   useEffect(() => {
     if (currentView === 0) {
-      setData(asManagerChecklists.filter((employee) => employee.employee.username === query?.userId)[0]);
+      setData(managedChecklists.filter((employee) => employee.employee.username === query?.userId)[0]);
     } else {
       setData(asEmployeeChecklists);
     }
-  }, [currentView, asManagerChecklists, asEmployeeChecklists]);
+  }, [currentView, managedChecklists, asEmployeeChecklists]);
 
   useEffect(() => {
     setCurrentPhase(0);
@@ -80,13 +73,13 @@ export const CheckList: React.FC = () => {
     data.phases[currentPhase].tasks.map((task) => {
       if (currentView === 0) {
         if (task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || task.roleType === 'MANAGER_FOR_NEW_MANAGER') {
-          updateTaskFulfilmentStatus(data.id, task.id, phaseCompletion ? 'FALSE' : 'TRUE', user.username).then(() => {
-            getChecklistsAsManager(user.username).then((res) => setAsManagerChecklists(res));
+          updateTaskFulfilmentStatus(data.id, task.id, phaseCompletion ? 'FALSE' : 'TRUE', username).then(() => {
+            refreshManagedChecklists();
           });
         }
       } else {
         if (task.roleType === 'NEW_EMPLOYEE' || task.roleType === 'NEW_MANAGER') {
-          updateTaskFulfilmentStatus(data.id, task.id, phaseCompletion ? 'FALSE' : 'TRUE', user.username).then(() => {
+          updateTaskFulfilmentStatus(data.id, task.id, phaseCompletion ? 'FALSE' : 'TRUE', username).then(() => {
             getChecklistAsEmployee(asEmployeeChecklists.employee.username).then((res) => {
               setAsEmployeeChecklists(res);
             });
@@ -124,7 +117,7 @@ export const CheckList: React.FC = () => {
                 <h1 className="text-h1-md mb-40">
                   Introduktion för {data.employee.firstName} {data.employee.lastName}
                 </h1>
-                {asManagerChecklists.length ?
+                {isManager ?
                   <div className="flex gap-16 my-24 justify-between">
                     <div className="flex">
                       <strong>Visa checklista för </strong>
@@ -138,7 +131,7 @@ export const CheckList: React.FC = () => {
                       </RadioButton.Group>
                     </div>
 
-                    {asManagerChecklists.length && <AddActivityModal />}
+                    {managedChecklists.length && <AddActivityModal />}
                   </div>
                 : null}
 
@@ -250,10 +243,10 @@ export const CheckList: React.FC = () => {
   );
 };
 
-export default CheckList;
-
 export const getServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ['delegation'])),
+    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists', 'delegation'])),
   },
 });
+
+export default CheckList;

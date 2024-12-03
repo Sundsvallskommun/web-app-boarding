@@ -33,7 +33,6 @@ export const getChecklistsAsManager: (username: string) => Promise<EmployeeCheck
       if (e.response.status === 404) {
         return [];
       } else {
-        console.error('Something went wrong when fetching checklists as manager.');
         throw e;
       }
     });

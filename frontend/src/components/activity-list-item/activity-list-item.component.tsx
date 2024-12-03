@@ -1,13 +1,10 @@
-import { Checkbox, Label } from '@sk-web-gui/react';
-import {
-  getChecklistAsEmployee,
-  getChecklistsAsManager,
-  updateTaskFulfilmentStatus,
-} from '@services/checklist-service/checklist-service';
 import { useAppContext } from '@contexts/app.context';
-import { useUserStore } from '@services/user-service/user-service';
-import { shallow } from 'zustand/shallow';
+import { getChecklistAsEmployee, updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
+import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import sanitized from '@services/sanitizer-service';
+import { useUserStore } from '@services/user-service/user-service';
+import { Checkbox, Label } from '@sk-web-gui/react';
+import { shallow } from 'zustand/shallow';
 
 const isChecked = (fulfilmentStatus: string) => {
   switch (fulfilmentStatus) {
@@ -25,12 +22,13 @@ const isChecked = (fulfilmentStatus: string) => {
 export const ActivityListItem = (props: any) => {
   const user = useUserStore((s) => s.user, shallow);
   const { task, checklistId, employee, currentView } = props;
-  const { setAsManagerChecklists, setAsEmployeeChecklists } = useAppContext();
+  const { setAsEmployeeChecklists } = useAppContext();
+  const { refresh } = useManagedChecklists();
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
     updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(() => {
       if (currentView === 0) {
-        getChecklistsAsManager(user.username).then((res) => setAsManagerChecklists(res));
+        refresh();
       } else {
         getChecklistAsEmployee(employee).then((res) => {
           setAsEmployeeChecklists(res);

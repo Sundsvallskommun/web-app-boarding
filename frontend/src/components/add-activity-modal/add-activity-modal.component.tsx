@@ -6,15 +6,12 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppContext } from '@contexts/app.context';
-import {
-  addCustomTask,
-  getChecklistAsEmployee,
-  getChecklistsAsManager,
-} from '@services/checklist-service/checklist-service';
+import { addCustomTask, getChecklistAsEmployee } from '@services/checklist-service/checklist-service';
 import { useUserStore } from '@services/user-service/user-service';
 import { shallow } from 'zustand/shallow';
 import { RichTextEditor } from '@components/rich-text-editor/rich-text-editor.component';
 import sanitized from '@services/sanitizer-service';
+import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 
 let formSchema = yup.object({
   heading: yup.string().min(1, 'Du måste skriva en rubrik').required('Du måste skriva en rubrik'),
@@ -27,7 +24,8 @@ let formSchema = yup.object({
 
 export const AddActivityModal = () => {
   const user = useUserStore((s) => s.user, shallow);
-  const { setAsManagerChecklists, asEmployeeChecklists, setAsEmployeeChecklists } = useAppContext();
+  const { asEmployeeChecklists, setAsEmployeeChecklists } = useAppContext();
+  const { refresh } = useManagedChecklists();
   const [richText, setRichText] = useState<string>('');
   const quillRef = useRef(null);
 
@@ -69,7 +67,7 @@ export const AddActivityModal = () => {
   const onSubmit = () => {
     addCustomTask(asEmployeeChecklists.id, getValues('phaseId'), user.username, getValues()).then(() => {
       getChecklistAsEmployee(asEmployeeChecklists.employee.username).then((res) => setAsEmployeeChecklists(res));
-      getChecklistsAsManager(user.username).then((res) => setAsManagerChecklists(res));
+      refresh();
     });
     closeHandler();
   };
@@ -95,7 +93,7 @@ export const AddActivityModal = () => {
               <Select.Option value="" disabled>
                 Välj fas
               </Select.Option>
-              {asEmployeeChecklists.phases.map((phase) => {
+              {asEmployeeChecklists?.phases?.map((phase) => {
                 return (
                   <Select.Option key={`employee-${phase.id}`} value={phase.id}>
                     {phase.name}
