@@ -1,15 +1,15 @@
 import { EmployeeChecklistTask } from '@data-contracts/backend/data-contracts';
-import { updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
+import { removeCustomTask, updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import sanitized from '@services/sanitizer-service';
 import { useUserStore } from '@services/user-service/user-service';
-import { Checkbox, Label } from '@sk-web-gui/react';
+import { Button, Checkbox, Label, PopupMenu } from '@sk-web-gui/react';
 import { shallow } from 'zustand/shallow';
-import sanitized from '@services/sanitizer-service';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import React, { useState } from 'react';
 import { EditTaskModal } from '@components/edit-task-modal/edit-task-modal.component';
 import { useTranslation } from 'next-i18next';
+import { useChecklist } from '@services/checklist-service/use-checklist';
 
 const isChecked = (fulfilmentStatus: string) => {
   switch (fulfilmentStatus) {
@@ -28,28 +28,30 @@ interface ActivityListItemProps {
   task: EmployeeChecklistTask;
   checklistId: string;
   currentView: number;
-  onTaskDone: () => void;
 }
 
 export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const user = useUserStore((s) => s.user, shallow);
-  const { task, checklistId, employee, currentView } = props;
+  const { task, checklistId, currentView } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { task, checklistId, currentView, onTaskDone } = props;
   const { t } = useTranslation();
+  const { refresh: refreshManagedChecklists } = useManagedChecklists();
+  const { refresh: refreshChecklist } = useChecklist();
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
     updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(() => {
-      onTaskDone();
+      if (currentView === 0) {
+        refreshManagedChecklists();
+      } else {
+        refreshChecklist();
+      }
     });
   };
 
   const removeTask = () => {
     removeCustomTask(checklistId, task.id).then(() => {
-      getChecklistsAsManager(user.username).then((res) => {
-        setAsManagerChecklists(res);
-      });
-      getChecklistAsEmployee(asEmployeeChecklists.employee.username).then((res) => setAsEmployeeChecklists(res));
+      refreshManagedChecklists();
+      refreshChecklist();
     });
   };
 
@@ -123,7 +125,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
           </div>
         </div>
       </div>
-      <EditTaskModal closeHandler={closeHandler} isOpen={isOpen} checklistId={checklistId} task={task} />
+      {isOpen && <EditTaskModal closeHandler={closeHandler} isOpen={isOpen} checklistId={checklistId} task={task} />}
     </div>
   );
 };

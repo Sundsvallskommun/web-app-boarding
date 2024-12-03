@@ -1,5 +1,4 @@
 import { RichTextEditor } from '@components/rich-text-editor/rich-text-editor.component';
-import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { addCustomTask } from '@services/checklist-service/checklist-service';
 import { useChecklist } from '@services/checklist-service/use-checklist';
