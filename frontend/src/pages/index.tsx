@@ -94,7 +94,7 @@ export function Index() {
           : null}
 
           <FormProvider {...methods}>
-            <DelegateMultipleChecklistsModal checklistIds={checked} closeHandler={closeHandler} isOpen={isOpen} />
+            <DelegateMultipleChecklistsModal checklistIds={checked} onClose={closeHandler} isOpen={isOpen} />
           </FormProvider>
         </Main>
       </DefaultLayout>

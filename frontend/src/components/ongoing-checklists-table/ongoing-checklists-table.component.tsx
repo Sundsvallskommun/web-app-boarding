@@ -1,12 +1,10 @@
-import React from 'react';
-import { Avatar, Button, Checkbox, Input, Pagination, SortMode, Table } from '@sk-web-gui/react';
-import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Spinner } from '@sk-web-gui/spinner';
-import { useRouter } from 'next/router';
-import { getChecklistStatusLabel } from '@utils/get-checklist-status';
-import { useAppContext } from '@contexts/app.context';
-import { getChecklistAsEmployee } from '@services/checklist-service/checklist-service';
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
+import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
+import { Avatar, Button, Checkbox, Input, Pagination, SortMode, Table } from '@sk-web-gui/react';
+import { Spinner } from '@sk-web-gui/spinner';
+import { getChecklistStatusLabel } from '@utils/get-checklist-status';
+import { useRouter } from 'next/router';
+import React from 'react';
 
 export const OngoingChecklistsTable = ({ data, delegatedChecklists, watch, register, setValue }) => {
   const router = useRouter();
@@ -14,7 +12,6 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, watch, regis
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [sortColumn, setSortColumn] = React.useState<string>('employee.firstName');
   const [sortOrder, setSortOrder] = React.useState(SortMode.ASC);
-  const { setAsEmployeeChecklists } = useAppContext();
 
   const { checked, checkAll } = watch();
 
@@ -85,9 +82,6 @@ export const OngoingChecklistsTable = ({ data, delegatedChecklists, watch, regis
             <Button
               iconButton
               onClick={() => {
-                getChecklistAsEmployee(d.employee.username).then((res) => {
-                  setAsEmployeeChecklists(res);
-                });
                 router.push(`/${d.employee.username}`);
               }}
             >

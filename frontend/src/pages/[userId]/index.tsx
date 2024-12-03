@@ -43,10 +43,9 @@ export const CheckList: React.FC = () => {
     refresh: refreshChecklist,
   } = useChecklist((query?.userId as string) || username);
 
-  const data =
-    currentView === 0 ?
-      managedChecklists.filter((employee) => employee.employee.username === query?.userId)[0]
-    : employeeChecklist;
+  const managedChecklist = managedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];
+  const data = currentView === 0 ? managedChecklist : employeeChecklist;
+
   useEffect(() => {
     if (!isManager) {
       setCurrentView(1);
@@ -58,7 +57,7 @@ export const CheckList: React.FC = () => {
   }, [currentView]);
 
   const updateAllTaskFulfilments = (phaseCompletion: boolean) => {
-    data?.phases[currentPhase].tasks.map((task) => {
+    data?.phases[currentPhase]?.tasks.map((task) => {
       if (currentView === 0) {
         if (task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || task.roleType === 'MANAGER_FOR_NEW_MANAGER') {
           updateTaskFulfilmentStatus(data?.id, task.id, phaseCompletion ? 'FALSE' : 'TRUE', username).then(() => {
@@ -146,7 +145,7 @@ export const CheckList: React.FC = () => {
                     <Divider className="w-full" />
 
                     <div className="py-24 px-40">
-                      <h2 className="mb-24 text-h2-md"> {data?.phases[currentPhase].name}</h2>
+                      <h2 className="mb-24 text-h2-md"> {data?.phases[currentPhase]?.name}</h2>
                       <div className="flex mb-24 gap-16">
                         <div>
                           <Icon name="check" className="align-sub" size="2rem" />{' '}
@@ -154,7 +153,7 @@ export const CheckList: React.FC = () => {
                         </div>
                         <div>
                           <Icon name="alarm-clock" className="align-sub" size="2rem" /> Slutför senast{' '}
-                          {setTimeToBeCompleted(data?.startDate, data?.phases[currentPhase].timeToComplete)}
+                          {setTimeToBeCompleted(data?.startDate, data?.phases[currentPhase]?.timeToComplete)}
                         </div>
                       </div>
 
@@ -183,7 +182,7 @@ export const CheckList: React.FC = () => {
                         <span className="text-small">Markera alla aktiviteter som klar</span>
                       </div>
 
-                      {data?.phases[currentPhase].tasks.map((task) => {
+                      {data?.phases[currentPhase]?.tasks.map((task) => {
                         if (currentView === 0) {
                           if (
                             task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' ||
