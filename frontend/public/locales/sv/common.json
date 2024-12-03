@@ -6,6 +6,10 @@
   "introduction_other": "introduktioner",
   "login": "logga in",
   "logout": "logga ut",
+  "edit": "Redigera",
+  "remove": "Ta bort",
+  "save": "Spara",
+  "cancel": "Avbryt"
   "ongoing_introductions": "pågående introduktioner",
   "welcome": "välkommen"
 }

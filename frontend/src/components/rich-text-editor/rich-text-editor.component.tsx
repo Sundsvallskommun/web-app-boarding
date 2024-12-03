@@ -69,9 +69,7 @@ export const RichTextEditor = React.forwardRef<
         readOnly={readOnly}
         className={cx(`mb-md h-[120px]`)}
         value={value}
-        onChange={(val, delta, source, editor, ev) => {
-          return onChange(val, delta, source, editor);
-        }}
+        onChange={(val, delta, source, editor) => onChange(val, delta, source, editor)}
         modules={modules}
       />
     </div>

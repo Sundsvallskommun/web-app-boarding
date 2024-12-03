@@ -93,7 +93,7 @@ export const CheckList: React.FC = () => {
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
-        {loading ?
+        {!loaded ?
           <Spinner />
         : <div>
             {loaded && !data ?
@@ -190,7 +190,6 @@ export const CheckList: React.FC = () => {
                           ) {
                             return (
                               <ActivityListItem
-                                onTaskDone={refreshManagedChecklists}
                                 key={task.id}
                                 task={task}
                                 checklistId={data?.id}
@@ -202,7 +201,6 @@ export const CheckList: React.FC = () => {
                           if (task.roleType === 'NEW_EMPLOYEE' || task.roleType === 'NEW_MANAGER') {
                             return (
                               <ActivityListItem
-                                onTaskDone={refreshChecklist}
                                 key={task.id}
                                 task={task}
                                 checklistId={data?.id}
@@ -230,7 +228,7 @@ export const CheckList: React.FC = () => {
 
 export const getServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists', 'delegation'])),
+    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists', 'delegation', 'task'])),
   },
 });
 

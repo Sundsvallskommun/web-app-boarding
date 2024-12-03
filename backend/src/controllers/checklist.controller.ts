@@ -6,6 +6,7 @@ import {
   Checklist,
   CustomTask,
   CustomTaskCreateRequest,
+  CustomTaskUpdateRequest,
   EmployeeChecklist,
   EmployeeChecklistTask,
   EmployeeChecklistTaskUpdateRequest,
@@ -96,7 +97,7 @@ export class ChecklistController {
   }
 
   @Post('/employee-checklists/:employeeChecklistId/phases/:phaseId/customtasks')
-  @OpenAPI({ summary: 'Add custom task to specific checklist' })
+  @OpenAPI({ summary: 'Add a custom task to specific checklist' })
   @UseBefore(authMiddleware)
   async addCustomTask(
     @Req() req: RequestWithUser,
@@ -106,6 +107,31 @@ export class ChecklistController {
   ): Promise<ResponseData<CustomTask>> {
     const url = `checklist/1.0/2281/employee-checklists/${checklistId}/phases/${phaseId}/customtasks`;
     return await this.apiService.post<CustomTask, CustomTaskCreateRequest>({ url, data }, req.user);
+  }
+
+  @Patch('/employee-checklists/:employeeChecklistId/customtasks/:taskId')
+  @OpenAPI({ summary: 'Update a custom task' })
+  @UseBefore(authMiddleware)
+  async updateCustomTask(
+    @Req() req: RequestWithUser,
+    @Param('employeeChecklistId') checklistId: string,
+    @Param('taskId') taskId: string,
+    @Body() data: CustomTaskUpdateRequest,
+  ): Promise<ResponseData<CustomTask>> {
+    const url = `checklist/1.0/2281/employee-checklists/${checklistId}/customtasks/${taskId}`;
+    return await this.apiService.patch<CustomTask, CustomTaskUpdateRequest>({ url, data }, req.user);
+  }
+
+  @Delete('/employee-checklists/:employeeChecklistId/customtasks/:taskId')
+  @OpenAPI({ summary: 'Remove custom task' })
+  @UseBefore(authMiddleware)
+  async removeCustomTask(
+    @Req() req: RequestWithUser,
+    @Param('employeeChecklistId') checklistId: string,
+    @Param('taskId') taskId: string,
+  ): Promise<{ status: number }> {
+    const url = `checklist/1.0/2281/employee-checklists/${checklistId}/customtasks/${taskId}`;
+    return await this.apiService.delete<{ status: number }>({ url }, req.user);
   }
 
   @Post('/employee-checklists/:employeeChecklistId/delegate-to/:email')

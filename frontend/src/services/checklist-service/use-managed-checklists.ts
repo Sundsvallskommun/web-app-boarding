@@ -39,7 +39,9 @@ export const useManagedChecklists = (): {
   };
 
   useEffect(() => {
-    refresh();
+    if (!loaded || !data) {
+      refresh();
+    }
   }, [username, permissions.isManager]);
 
   return { data, loaded, loading, refresh };
