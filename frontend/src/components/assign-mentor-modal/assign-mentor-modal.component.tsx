@@ -1,24 +1,20 @@
 import { SearchEmployeeComponent } from '@components/search-employee/search-employee.component';
-import { useAppContext } from '@contexts/app.context';
 import { Mentor } from '@data-contracts/backend/data-contracts';
-import { assignMentor, getChecklistAsEmployee, removeMentor } from '@services/checklist-service/checklist-service';
+import { assignMentor, removeMentor } from '@services/checklist-service/checklist-service';
+import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
-import { useUserStore } from '@services/user-service/user-service';
 import { Avatar } from '@sk-web-gui/avatar';
 import { Link } from '@sk-web-gui/link';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Modal } from '@sk-web-gui/react';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { shallow } from 'zustand/shallow';
 
-export const AssignMentorModal = () => {
-  const user = useUserStore((s) => s.user, shallow);
+export const AssignMentorModal: React.FC = () => {
   const { control } = useForm();
-  const { asEmployeeChecklists, setAsEmployeeChecklists } = useAppContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { refresh } = useManagedChecklists();
-
+  const { data, refresh } = useChecklist();
+  const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'recipient',
@@ -29,35 +25,32 @@ export const AssignMentorModal = () => {
   };
 
   const closeHandler = () => {
+    refresh();
+    refreshManagedChecklists();
     remove();
     setIsOpen(false);
   };
 
   const onSubmit = () => {
     fields.map((field: Mentor & { id: string }) => {
-      assignMentor(asEmployeeChecklists.id, { userId: field.userId, name: field.name }).then(() => {
-        refresh();
-        getChecklistAsEmployee(asEmployeeChecklists.employee.username).then((res) => setAsEmployeeChecklists(res));
+      assignMentor(data.id, { userId: field.userId, name: field.name }).then(() => {
+        closeHandler();
       });
     });
-
-    remove();
-    closeHandler();
   };
 
   const removeAssignedMentor = () => {
-    removeMentor(asEmployeeChecklists.id).then(() => {
-      refresh();
-      getChecklistAsEmployee(asEmployeeChecklists.employee.username).then((res) => setAsEmployeeChecklists(res));
+    removeMentor(data.id).then(() => {
+      closeHandler();
     });
   };
 
   return (
     <div>
-      {asEmployeeChecklists?.mentor ?
+      {data?.mentor ?
         <div className="flex gap-8">
           <Avatar size="sm" rounded />
-          <p>{`${asEmployeeChecklists.mentor.name} (${asEmployeeChecklists.mentor.userId})`}</p>
+          <p>{`${data?.mentor?.name} (${data?.mentor?.userId})`}</p>
           <Button iconButton name="trash" size="sm" inverted onClick={() => removeAssignedMentor()}>
             <Icon name="trash" />
           </Button>

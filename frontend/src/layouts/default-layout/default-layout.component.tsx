@@ -1,15 +1,15 @@
-import { CookieConsent, Header, Link } from '@sk-web-gui/react';
+import { useChecklist } from '@services/checklist-service/use-checklist';
+import { useUserStore } from '@services/user-service/user-service';
+import Breadcrumb from '@sk-web-gui/breadcrumb';
+import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
+import { Header, Link } from '@sk-web-gui/react';
+import { UserMenu } from '@sk-web-gui/user-menu';
+import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
-import Breadcrumb from '@sk-web-gui/breadcrumb';
-import { UserMenu } from '@sk-web-gui/user-menu';
 import { usePathname } from 'next/navigation';
-import { useUserStore } from '@services/user-service/user-service';
+import { useRouter } from 'next/router';
 import { shallow } from 'zustand/shallow';
-import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { useAppContext } from '@contexts/app.context';
 
 interface DefaultLayoutProps {
   children: React.ReactNode;
@@ -37,7 +37,6 @@ export default function DefaultLayout({
   const fullTitle = postTitle ? `${layoutTitle} - ${postTitle}` : `${layoutTitle}`;
   const pathname = usePathname();
   const user = useUserStore((s) => s.user, shallow);
-  const { asEmployeeChecklists } = useAppContext();
 
   const { t } = useTranslation();
 
@@ -49,6 +48,8 @@ export default function DefaultLayout({
   const handleLogoClick = () => {
     router.push(logoLinkHref);
   };
+
+  const { data } = useChecklist();
 
   return (
     <div className="DefaultLayout full-page-layout bg-background-100">
@@ -104,7 +105,7 @@ export default function DefaultLayout({
 
                 <Breadcrumb.Item currentPage>
                   <Breadcrumb.Link href="#">
-                    {asEmployeeChecklists?.employee?.firstName} {asEmployeeChecklists?.employee?.lastName}
+                    {data?.employee?.firstName} {data?.employee?.lastName}
                   </Breadcrumb.Link>
                 </Breadcrumb.Item>
               </Breadcrumb>

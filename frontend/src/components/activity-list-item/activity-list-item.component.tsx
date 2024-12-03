@@ -1,5 +1,5 @@
-import { useAppContext } from '@contexts/app.context';
-import { getChecklistAsEmployee, updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
+import { EmployeeChecklistTask } from '@data-contracts/backend/data-contracts';
+import { updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import sanitized from '@services/sanitizer-service';
 import { useUserStore } from '@services/user-service/user-service';
@@ -19,21 +19,20 @@ const isChecked = (fulfilmentStatus: string) => {
   }
 };
 
-export const ActivityListItem = (props: any) => {
+interface ActivityListItemProps {
+  task: EmployeeChecklistTask;
+  checklistId: string;
+  currentView: number;
+  onTaskDone: () => void;
+}
+
+export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const user = useUserStore((s) => s.user, shallow);
-  const { task, checklistId, employee, currentView } = props;
-  const { setAsEmployeeChecklists } = useAppContext();
-  const { refresh } = useManagedChecklists();
+  const { task, checklistId, currentView, onTaskDone } = props;
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
     updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(() => {
-      if (currentView === 0) {
-        refresh();
-      } else {
-        getChecklistAsEmployee(employee).then((res) => {
-          setAsEmployeeChecklists(res);
-        });
-      }
+      onTaskDone();
     });
   };
 

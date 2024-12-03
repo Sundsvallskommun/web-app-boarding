@@ -1,17 +1,17 @@
-import { useRef, useState } from 'react';
-import { Button, Modal, Select } from '@sk-web-gui/react';
-import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
+import { RichTextEditor } from '@components/rich-text-editor/rich-text-editor.component';
+import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { addCustomTask } from '@services/checklist-service/checklist-service';
+import { useChecklist } from '@services/checklist-service/use-checklist';
+import sanitized from '@services/sanitizer-service';
+import { useUserStore } from '@services/user-service/user-service';
 import { FormControl, FormErrorMessage, FormLabel, Input } from '@sk-web-gui/forms';
+import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
+import { Button, Modal, Select } from '@sk-web-gui/react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useAppContext } from '@contexts/app.context';
-import { addCustomTask, getChecklistAsEmployee } from '@services/checklist-service/checklist-service';
-import { useUserStore } from '@services/user-service/user-service';
 import { shallow } from 'zustand/shallow';
-import { RichTextEditor } from '@components/rich-text-editor/rich-text-editor.component';
-import sanitized from '@services/sanitizer-service';
-import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 
 let formSchema = yup.object({
   heading: yup.string().min(1, 'Du måste skriva en rubrik').required('Du måste skriva en rubrik'),
@@ -22,10 +22,9 @@ let formSchema = yup.object({
   createdBy: yup.string().required(),
 });
 
-export const AddActivityModal = () => {
+export const AddActivityModal: React.FC = () => {
   const user = useUserStore((s) => s.user, shallow);
-  const { asEmployeeChecklists, setAsEmployeeChecklists } = useAppContext();
-  const { refresh } = useManagedChecklists();
+  const { data, refresh } = useChecklist();
   const [richText, setRichText] = useState<string>('');
   const quillRef = useRef(null);
 
@@ -65,11 +64,10 @@ export const AddActivityModal = () => {
   };
 
   const onSubmit = () => {
-    addCustomTask(asEmployeeChecklists.id, getValues('phaseId'), user.username, getValues()).then(() => {
-      getChecklistAsEmployee(asEmployeeChecklists.employee.username).then((res) => setAsEmployeeChecklists(res));
+    addCustomTask(data.id, getValues('phaseId'), user.username, getValues()).then(() => {
       refresh();
+      closeHandler();
     });
-    closeHandler();
   };
 
   const onRichTextChange = (val: string) => {
@@ -93,7 +91,7 @@ export const AddActivityModal = () => {
               <Select.Option value="" disabled>
                 Välj fas
               </Select.Option>
-              {asEmployeeChecklists?.phases?.map((phase) => {
+              {data?.phases?.map((phase) => {
                 return (
                   <Select.Option key={`employee-${phase.id}`} value={phase.id}>
                     {phase.name}
