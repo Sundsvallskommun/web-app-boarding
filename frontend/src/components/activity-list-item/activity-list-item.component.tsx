@@ -9,6 +9,7 @@ import sanitized from '@services/sanitizer-service';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import React, { useState } from 'react';
 import { EditTaskModal } from '@components/edit-task-modal/edit-task-modal.component';
+import { useTranslation } from 'next-i18next';
 
 const isChecked = (fulfilmentStatus: string) => {
   switch (fulfilmentStatus) {
@@ -35,6 +36,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const { task, checklistId, employee, currentView } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { task, checklistId, currentView, onTaskDone } = props;
+  const { t } = useTranslation();
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
     updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(() => {
@@ -104,12 +106,12 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                       <PopupMenu.Items>
                         <PopupMenu.Item>
                           <Button leftIcon={<Icon name="pen" />} onClick={() => openHandler()}>
-                            Redigera
+                            {t('common:edit')}
                           </Button>
                         </PopupMenu.Item>
                         <PopupMenu.Item>
                           <Button leftIcon={<Icon name="trash" />} onClick={() => removeTask()}>
-                            Ta bort
+                            {t('common:remove')}
                           </Button>
                         </PopupMenu.Item>
                       </PopupMenu.Items>
