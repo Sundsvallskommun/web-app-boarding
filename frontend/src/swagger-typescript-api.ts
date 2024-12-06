@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import { exec, ExecException } from 'child_process';
 import path from 'path';
 import fs from 'node:fs';
 import { config } from 'dotenv';
@@ -6,7 +6,7 @@ config();
 
 const PATH_TO_OUTPUT_DIR = path.resolve(process.cwd(), './src/data-contracts');
 
-const stdout = (error, stdout, stderr) => {
+const stdout = (error: ExecException | null, stdout: string, stderr: string) => {
   if (error) {
     console.log(`error: ${error.message}`);
     return;

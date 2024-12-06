@@ -8,7 +8,7 @@ export interface ApiResponse<T> {
   message: string;
 }
 
-export const handleError = (error) => {
+export const handleError = (error: any) => {
   if (error?.response?.status === 401 && !Router.pathname.includes('login')) {
     Router.push(
       {

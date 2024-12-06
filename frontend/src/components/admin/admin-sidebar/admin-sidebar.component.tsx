@@ -19,7 +19,7 @@ export default function AdminSidebar() {
       <Logo variant="service" title={t('common:title')} subtitle={capitalize(t('common:admin'))} className="mt-24" />
       <Avatar />
       <div className="flex flex-col gap-24">
-        <MenuVertical.Provider current={current} setCurrent={handleSetCurrent}>
+        <MenuVertical.Provider current={current} setCurrent={() => handleSetCurrent}>
           <MenuVertical.Nav>
             <MenuVertical.Label className="mb-16">{t('admin:menu.introductions')}</MenuVertical.Label>
             <MenuVertical>
@@ -37,7 +37,7 @@ export default function AdminSidebar() {
           </MenuVertical.Nav>
         </MenuVertical.Provider>
 
-        <OrganizationMenu current={current} setCurrent={handleSetCurrent} />
+        <OrganizationMenu current={current} setCurrent={() => handleSetCurrent} />
       </div>
     </div>
   );

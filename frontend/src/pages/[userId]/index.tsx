@@ -93,131 +93,133 @@ export const CheckList: React.FC = () => {
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
-        {!loaded ?
+        {loading ?
           <Spinner />
         : <div>
             {loaded && !data ?
               <h2>Du har ingen pågående introduktion.</h2>
-            : <div>
-                <h1 className="text-h1-md mb-40">
-                  Introduktion för {data?.employee?.firstName} {data?.employee?.lastName}
-                </h1>
-                {isManager ?
-                  <div className="flex gap-16 my-24 justify-between">
-                    <div className="flex">
-                      <strong>Visa checklista för </strong>
-                      <RadioButton.Group inline className="mx-16">
-                        <RadioButton checked={currentView === 0} value={0} onChange={() => setCurrentView(0)}>
-                          Chef
-                        </RadioButton>
-                        <RadioButton checked={currentView === 1} value={1} onChange={() => setCurrentView(1)}>
-                          Anställd
-                        </RadioButton>
-                      </RadioButton.Group>
-                    </div>
-
-                    {managedChecklists.length && <AddActivityModal />}
-                  </div>
-                : null}
-
-                <div className="flex gap-40">
-                  <div className="w-full rounded bg-white border-1 border-divider">
-                    <MenuBar current={currentPhase} className="w-full">
-                      {data?.phases.map((phase, index) => {
-                        return (
-                          currentView === 0 && countManagerTasks(phase) > 0 ?
-                            <MenuBar.Item key={index}>
-                              <Button onClick={() => setCurrentPhase(index)}>
-                                {phase.name} ({countTasks(data?.phases[index])})
-                              </Button>
-                            </MenuBar.Item>
-                          : currentView === 1 && countEmployeeTasks(phase) > 0 ?
-                            <MenuBar.Item key={index}>
-                              <Button onClick={() => setCurrentPhase(index)}>
-                                {phase.name} ({countTasks(data?.phases[index])})
-                              </Button>
-                            </MenuBar.Item>
-                          : null
-                        );
-                      })}
-                    </MenuBar>
-
-                    <Divider className="w-full" />
-
-                    <div className="py-24 px-40">
-                      <h2 className="mb-24 text-h2-md"> {data?.phases[currentPhase]?.name}</h2>
-                      <div className="flex mb-24 gap-16">
-                        <div>
-                          <Icon name="check" className="align-sub" size="2rem" />{' '}
-                          <strong>{countTasks(data?.phases[currentPhase])}</strong> aktiviteter klara
-                        </div>
-                        <div>
-                          <Icon name="alarm-clock" className="align-sub" size="2rem" /> Slutför senast{' '}
-                          {setTimeToBeCompleted(data?.startDate, data?.phases[currentPhase]?.timeToComplete)}
-                        </div>
+            : data && (
+                <div>
+                  <h1 className="text-h1-md mb-40">
+                    Introduktion för {data?.employee?.firstName} {data?.employee?.lastName}
+                  </h1>
+                  {isManager ?
+                    <div className="flex gap-16 my-24 justify-between">
+                      <div className="flex">
+                        <strong>Visa checklista för </strong>
+                        <RadioButton.Group inline className="mx-16">
+                          <RadioButton checked={currentView === 0} value={0} onChange={() => setCurrentView(0)}>
+                            Chef
+                          </RadioButton>
+                          <RadioButton checked={currentView === 1} value={1} onChange={() => setCurrentView(1)}>
+                            Anställd
+                          </RadioButton>
+                        </RadioButton.Group>
                       </div>
 
-                      <Divider />
+                      {managedChecklists.length && <AddActivityModal />}
+                    </div>
+                  : null}
 
-                      <div className="p-16 mt-16">
-                        <Checkbox
-                          className="pr-20"
-                          checked={
-                            currentView === 0 ?
-                              countCompletedManagerTasks(data?.phases[currentPhase]) ===
-                              countManagerTasks(data?.phases[currentPhase])
-                            : countCompletedEmployeeTasks(data?.phases[currentPhase]) ===
-                              countEmployeeTasks(data?.phases[currentPhase])
-                          }
-                          onClick={() =>
-                            updateAllTaskFulfilments(
+                  <div className="flex gap-40">
+                    <div className="w-full rounded bg-white border-1 border-divider">
+                      <MenuBar current={currentPhase} className="w-full">
+                        {data?.phases.map((phase, index) => {
+                          return (
+                            currentView === 0 && countManagerTasks(phase) > 0 ?
+                              <MenuBar.Item key={index}>
+                                <Button onClick={() => setCurrentPhase(index)}>
+                                  {phase.name} ({countTasks(data?.phases[index])})
+                                </Button>
+                              </MenuBar.Item>
+                            : currentView === 1 && countEmployeeTasks(phase) > 0 ?
+                              <MenuBar.Item key={index}>
+                                <Button onClick={() => setCurrentPhase(index)}>
+                                  {phase.name} ({countTasks(data?.phases[index])})
+                                </Button>
+                              </MenuBar.Item>
+                            : null
+                          );
+                        })}
+                      </MenuBar>
+
+                      <Divider className="w-full" />
+
+                      <div className="py-24 px-40">
+                        <h2 className="mb-24 text-h2-md"> {data?.phases[currentPhase]?.name}</h2>
+                        <div className="flex mb-24 gap-16">
+                          <div>
+                            <Icon name="check" className="align-sub" size="2rem" />{' '}
+                            <strong>{countTasks(data?.phases[currentPhase])}</strong> aktiviteter klara
+                          </div>
+                          <div>
+                            <Icon name="alarm-clock" className="align-sub" size="2rem" /> Slutför senast{' '}
+                            {setTimeToBeCompleted(data?.startDate, data?.phases[currentPhase]?.timeToComplete)}
+                          </div>
+                        </div>
+
+                        <Divider />
+
+                        <div className="p-16 mt-16">
+                          <Checkbox
+                            className="pr-20"
+                            checked={
                               currentView === 0 ?
                                 countCompletedManagerTasks(data?.phases[currentPhase]) ===
-                                  countManagerTasks(data?.phases[currentPhase])
+                                countManagerTasks(data?.phases[currentPhase])
                               : countCompletedEmployeeTasks(data?.phases[currentPhase]) ===
-                                  countEmployeeTasks(data?.phases[currentPhase])
-                            )
-                          }
-                        />
-                        <span className="text-small">Markera alla aktiviteter som klar</span>
-                      </div>
+                                countEmployeeTasks(data?.phases[currentPhase])
+                            }
+                            onClick={() =>
+                              updateAllTaskFulfilments(
+                                currentView === 0 ?
+                                  countCompletedManagerTasks(data?.phases[currentPhase]) ===
+                                    countManagerTasks(data?.phases[currentPhase])
+                                : countCompletedEmployeeTasks(data?.phases[currentPhase]) ===
+                                    countEmployeeTasks(data?.phases[currentPhase])
+                              )
+                            }
+                          />
+                          <span className="text-small">Markera alla aktiviteter som klar</span>
+                        </div>
 
-                      {data?.phases[currentPhase]?.tasks.map((task) => {
-                        if (currentView === 0) {
-                          if (
-                            task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' ||
-                            task.roleType === 'MANAGER_FOR_NEW_MANAGER'
-                          ) {
-                            return (
-                              <ActivityListItem
-                                key={task.id}
-                                task={task}
-                                checklistId={data?.id}
-                                currentView={currentView}
-                              />
-                            );
+                        {data?.phases[currentPhase]?.tasks.map((task) => {
+                          if (currentView === 0) {
+                            if (
+                              task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' ||
+                              task.roleType === 'MANAGER_FOR_NEW_MANAGER'
+                            ) {
+                              return (
+                                <ActivityListItem
+                                  key={task.id}
+                                  task={task}
+                                  checklistId={data?.id}
+                                  currentView={currentView}
+                                />
+                              );
+                            }
+                          } else {
+                            if (task.roleType === 'NEW_EMPLOYEE' || task.roleType === 'NEW_MANAGER') {
+                              return (
+                                <ActivityListItem
+                                  key={task.id}
+                                  task={task}
+                                  checklistId={data?.id}
+                                  currentView={currentView}
+                                />
+                              );
+                            }
                           }
-                        } else {
-                          if (task.roleType === 'NEW_EMPLOYEE' || task.roleType === 'NEW_MANAGER') {
-                            return (
-                              <ActivityListItem
-                                key={task.id}
-                                task={task}
-                                checklistId={data?.id}
-                                currentView={currentView}
-                              />
-                            );
-                          }
-                        }
-                      })}
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="w-5/12">
+                      <ChecklistSidebar />
                     </div>
                   </div>
-
-                  <div className="w-5/12">
-                    <ChecklistSidebar />
-                  </div>
                 </div>
-              </div>
+              )
             }
           </div>
         }
@@ -226,7 +228,7 @@ export const CheckList: React.FC = () => {
   );
 };
 
-export const getServerSideProps = async ({ locale }) => ({
+export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
     ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists', 'delegation', 'task'])),
   },

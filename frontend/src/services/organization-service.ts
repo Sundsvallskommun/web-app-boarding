@@ -21,7 +21,7 @@ export const useOrgTree = (organizations: number[]) => {
     for (let index = 0; index < organizations.length; index++) {
       getOrgTree(organizations[index])
         .then((res) => {
-          setData((oldTree) => ({ ...oldTree, [organizations[index]]: res }));
+          res && setData((oldTree) => ({ ...oldTree, [organizations[index]]: res }));
         })
         .catch((e) => {
           console.log(e);

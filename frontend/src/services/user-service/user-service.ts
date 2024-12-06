@@ -46,7 +46,7 @@ export const useUserStore = createWithEqualityFn<State & Actions>()(
       getMe: async () => {
         let user = get().user;
         const res = await getMe();
-        if (!res.error) {
+        if (!res.error && res.data) {
           user = res.data;
           set(() => ({ user: user }));
         }

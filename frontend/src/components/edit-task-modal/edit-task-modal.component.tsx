@@ -8,20 +8,32 @@ import { FormControl, FormErrorMessage, FormLabel, Input } from '@sk-web-gui/for
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Modal } from '@sk-web-gui/react';
 import { useTranslation } from 'next-i18next';
-import { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { shallow } from 'zustand/shallow';
+import { CustomTaskUpdateRequest, EmployeeChecklistTask } from '@data-contracts/backend/data-contracts';
 
-export const EditTaskModal = ({ closeHandler, isOpen, task, checklistId }) => {
+interface EditTaskModalProps {
+  closeHandler: () => void;
+  isOpen: boolean;
+  task: EmployeeChecklistTask;
+  checklistId: string;
+}
+
+export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
+  const { closeHandler, isOpen, task, checklistId } = props;
   const user = useUserStore((s) => s.user, shallow);
   const { t } = useTranslation();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { refresh: refreshChecklist } = useChecklist();
   let formSchema = yup.object({
     heading: yup.string().min(1, t('task:errors.heading')).required(t('task:errors.heading')),
-    text: yup.string(),
-    questionType: yup.string().required(),
+    text: yup.string().required(),
+    questionType: yup
+      .mixed<CustomTaskUpdateRequest['questionType']>()
+      .required()
+      .oneOf(['YES_OR_NO', 'YES_OR_NO_WITH_TEXT', 'COMPLETED_OR_NOT_RELEVANT', 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT']),
     sortOrder: yup.number().required(),
     updatedBy: yup.string().required(),
   });
@@ -30,7 +42,7 @@ export const EditTaskModal = ({ closeHandler, isOpen, task, checklistId }) => {
     defaultValues: {
       heading: '',
       text: '',
-      questionType: '',
+      questionType: 'YES_OR_NO' as CustomTaskUpdateRequest['questionType'],
       updatedBy: '',
       sortOrder: 0,
     },
@@ -58,7 +70,7 @@ export const EditTaskModal = ({ closeHandler, isOpen, task, checklistId }) => {
     });
   }, [task]);
 
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<CustomTaskUpdateRequest> = (data) => {
     updateCustomTask(checklistId, task.id, data).then(() => {
       refreshManagedChecklists();
       refreshChecklist();
@@ -67,8 +79,8 @@ export const EditTaskModal = ({ closeHandler, isOpen, task, checklistId }) => {
     closeHandler();
   };
 
-  const onRichTextChange = (val, delta, source, editor) => {
-    setValue('text', val);
+  const onRichTextChange = (val: string) => {
+    setValue('text', val.length ? val : '');
   };
 
   return (

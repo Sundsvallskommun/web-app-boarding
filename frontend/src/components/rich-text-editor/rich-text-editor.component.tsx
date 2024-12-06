@@ -5,10 +5,10 @@ import React, { useEffect, useRef } from 'react';
 import { UnprivilegedEditor, Value } from 'react-quill';
 
 export const RichTextEditor = React.forwardRef<
-  UnprivilegedEditor,
+  typeof ReactQuill,
   {
     value: Value;
-    onChange: ((value: string, delta?: DeltaStatic, source?: Sources, editor?: UnprivilegedEditor) => void) | undefined;
+    onChange: ((value: string, delta?: DeltaStatic, source?: Sources, editor?: typeof ReactQuill) => void) | undefined;
     toggleModal?: () => void;
     isMaximizable?: boolean;
     readOnly?: boolean;
@@ -69,7 +69,9 @@ export const RichTextEditor = React.forwardRef<
         readOnly={readOnly}
         className={cx(`mb-md h-[120px]`)}
         value={value}
-        onChange={(val, delta, source, editor) => onChange(val, delta, source, editor)}
+        onChange={(val: string, delta: DeltaStatic, source: Sources, editor: UnprivilegedEditor) =>
+          onChange ? onChange(val, delta, source, editor) : null
+        }
         modules={modules}
       />
     </div>

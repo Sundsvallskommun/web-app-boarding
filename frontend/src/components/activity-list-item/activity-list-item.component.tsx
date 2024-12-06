@@ -75,7 +75,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
               updateTaskFulfilment(task.fulfilmentStatus === 'TRUE' ? 'FALSE' : 'TRUE');
             }}
           />
-          <div className="pl-20 pr-96 w-full">
+          <div className="pl-20 pr-80 w-full">
             <div className={task.fulfilmentStatus === 'TRUE' ? 'text-dark-disabled' : ''}>
               <span className="mr-3 text-large">{task.heading}</span>
               <div className="pr-40">

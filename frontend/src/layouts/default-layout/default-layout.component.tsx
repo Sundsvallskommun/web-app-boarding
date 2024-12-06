@@ -40,10 +40,10 @@ export default function DefaultLayout({
 
   const { t } = useTranslation();
 
-  const setFocusToMain = () => {
+  /*const setFocusToMain = () => {
     const contentElement = document.getElementById('content');
     contentElement.focus();
-  };
+  };*/
 
   const handleLogoClick = () => {
     router.push(logoLinkHref);
