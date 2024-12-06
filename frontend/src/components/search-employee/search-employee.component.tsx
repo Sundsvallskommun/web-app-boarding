@@ -5,7 +5,7 @@ import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { FormLabel } from '@sk-web-gui/forms';
 import Divider from '@sk-web-gui/divider';
 import { Mentor } from '@data-contracts/backend/data-contracts';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -13,7 +13,22 @@ let formSchema = yup.object({
   userId: yup.string().required(),
 });
 
-export const SearchEmployeeComponent = ({ multiple, fields, append, remove }) => {
+interface SearchEmployeeComponentProps {
+  multiple: boolean;
+}
+
+interface UserForm {
+  userId: string;
+  name: string;
+  email: string;
+}
+
+export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = ({ multiple }) => {
+  const { control } = useFormContext<{ recipients: UserForm[] }>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'recipients',
+  });
   const [notFound, setNotFound] = useState<boolean>(false);
   const { register, getValues, setValue, trigger } = useForm({
     resolver: yupResolver(formSchema),

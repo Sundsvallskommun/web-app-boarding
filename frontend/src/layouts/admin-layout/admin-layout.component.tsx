@@ -1,8 +1,9 @@
 import AdminSidebar from '@components/admin/admin-sidebar/admin-sidebar.component';
 import Main from '@layouts/main/main.component';
 import Head from 'next/head';
+import { ReactNode } from 'react';
 
-export default function AdminLayoutComponent({ title, children }) {
+export default function AdminLayoutComponent({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="DefaultLayout full-page-layout bg-background-100">
       <Head>

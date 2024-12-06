@@ -9,8 +9,9 @@ import Divider from '@sk-web-gui/divider';
 import { Link } from '@sk-web-gui/link';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button } from '@sk-web-gui/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { FormProvider, useForm } from 'react-hook-form';
 
 export const ChecklistSidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -20,6 +21,8 @@ export const ChecklistSidebar: React.FC = () => {
 
   const { refresh, data } = useChecklist();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
+
+  const methods = useForm();
 
   const openHandler = () => {
     setIsOpen(true);
@@ -39,8 +42,8 @@ export const ChecklistSidebar: React.FC = () => {
     data && (
       <div className="rounded bg-white border-1 border-divider py-8 px-24">
         <div className="my-8">
-          <strong>{`${data.employee.firstName} ${data.employee.lastName} (${data.employee.username})`}</strong>
-          <p className="text-small my-0">{data.employee.title ? data.employee.title : ''}</p>
+          <strong>{`${data.employee?.firstName} ${data.employee?.lastName} (${data.employee?.username})`}</strong>
+          <p className="text-small my-0">{data.employee?.title ? data.employee?.title : ''}</p>
         </div>
 
         <div className="my-8">
@@ -68,7 +71,7 @@ export const ChecklistSidebar: React.FC = () => {
                       name="trash"
                       size="sm"
                       inverted
-                      onClick={() => removeDelegation(data.id, delegation).then(() => onUpdate)}
+                      onClick={() => removeDelegation(data.id, delegation).then(() => onUpdate())}
                     >
                       <Icon name="trash" />
                     </Button>
@@ -83,7 +86,9 @@ export const ChecklistSidebar: React.FC = () => {
               </p>
             </div>
 
-            <DelegateMultipleChecklistsModal checklistIds={[data.id]} onClose={closeHandler} isOpen={isOpen} />
+            <FormProvider {...methods}>
+              <DelegateMultipleChecklistsModal checklistIds={[data.id]} onClose={closeHandler} isOpen={isOpen} />
+            </FormProvider>
           </>
         : null}
       </div>

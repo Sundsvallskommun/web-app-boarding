@@ -1,14 +1,7 @@
-import { createContext, useContext, useState } from 'react';
-import { Checklist, EmployeeChecklist } from '@data-contracts/backend/data-contracts';
-import { User } from '@data-contracts/backend/data-contracts';
+import { createContext, ReactNode, useContext, useState } from 'react';
+import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 
 export interface AppContextInterface {
-  user: User;
-  setUser: (user: User) => void;
-
-  checklist: Checklist;
-  setChecklist: (checklist: Checklist) => void;
-
   delegatedChecklists: EmployeeChecklist[];
   setDelegatedChecklists: (delegatedChecklists: EmployeeChecklist[]) => void;
 
@@ -18,11 +11,15 @@ export interface AppContextInterface {
   setDefaults: () => void;
 }
 
-const AppContext = createContext<AppContextInterface>(null);
+const AppContext = createContext<AppContextInterface>({
+  delegatedChecklists: [],
+  isCookieConsentOpen: false,
+  setIsCookieConsentOpen: () => ({}),
+  setDefaults: () => ({}),
+  setDelegatedChecklists: () => [],
+});
 
-export function AppWrapper({ children }) {
-  const [user, setUser] = useState<User>();
-  const [checklist, setChecklist] = useState<Checklist>();
+export function AppWrapper({ children }: { children: ReactNode }) {
   const [delegatedChecklists, setDelegatedChecklists] = useState<EmployeeChecklist[]>([]);
 
   const contextDefaults = {
@@ -37,12 +34,6 @@ export function AppWrapper({ children }) {
   return (
     <AppContext.Provider
       value={{
-        user,
-        setUser: (user: User) => setUser(user),
-
-        checklist,
-        setChecklist: (checklist: Checklist) => setChecklist(checklist),
-
         delegatedChecklists,
         setDelegatedChecklists: (delegatedChecklists: EmployeeChecklist[]) =>
           setDelegatedChecklists(delegatedChecklists),

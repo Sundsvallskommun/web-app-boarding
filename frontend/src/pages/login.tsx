@@ -19,7 +19,7 @@ export default function Start() {
   // Turn on/off automatic login
   const autoLogin = true;
 
-  const initalFocus = useRef(null);
+  const initalFocus = useRef<HTMLButtonElement>(null);
   const setInitalFocus = () => {
     setTimeout(() => {
       initalFocus.current && initalFocus.current.focus();
@@ -87,7 +87,7 @@ export default function Start() {
   );
 }
 
-export const getServerSideProps = async ({ locale }) => ({
+export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
     ...(await serverSideTranslations(locale, ['common', 'login'])),
   },

@@ -2,10 +2,12 @@ import { OrgTree } from '@data-contracts/backend/data-contracts';
 import { useOrgTree } from '@services/organization-service';
 import { MenuVertical } from '@sk-web-gui/react';
 import { useTranslation } from 'react-i18next';
+import { MenuIndex } from '@sk-web-gui/menu-vertical/dist/types/menu-vertical-context';
+import { Dispatch, SetStateAction } from 'react';
 
 interface OrganizationMenuProps {
-  current?: string | number;
-  setCurrent?: (index: string | number) => void;
+  current?: MenuIndex;
+  setCurrent?: Dispatch<SetStateAction<MenuIndex>>;
 }
 
 export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ current, setCurrent }) => {

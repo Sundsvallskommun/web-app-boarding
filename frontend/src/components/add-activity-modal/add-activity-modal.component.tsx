@@ -11,6 +11,8 @@ import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { shallow } from 'zustand/shallow';
+import { CustomTaskCreateRequest } from '@data-contracts/backend/data-contracts';
+import ReactQuill from 'react-quill';
 
 let formSchema = yup.object({
   heading: yup.string().min(1, 'Du måste skriva en rubrik').required('Du måste skriva en rubrik'),
@@ -25,7 +27,7 @@ export const AddActivityModal: React.FC = () => {
   const user = useUserStore((s) => s.user, shallow);
   const { data, refresh } = useChecklist();
   const [richText, setRichText] = useState<string>('');
-  const quillRef = useRef(null);
+  const quillRef = useRef<ReactQuill>(null);
 
   const formControl = useForm({
     defaultValues: {
@@ -63,17 +65,20 @@ export const AddActivityModal: React.FC = () => {
   };
 
   const onSubmit = () => {
-    addCustomTask(data.id, getValues('phaseId'), user.username, getValues()).then(() => {
-      refresh();
-      closeHandler();
-    });
+    data &&
+      addCustomTask(data.id, getValues('phaseId'), user.username, getValues() as CustomTaskCreateRequest).then(() => {
+        refresh();
+        closeHandler();
+      });
   };
 
   const onRichTextChange = (val: string) => {
-    const editor = quillRef.current.getEditor();
-    const length = editor.getLength();
-    setRichText(val);
-    setValue('text', sanitized(length > 1 ? val : undefined));
+    if (quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      const length = editor.getLength();
+      setRichText(val);
+      setValue('text', sanitized(length > 1 ? val : ''));
+    }
   };
 
   return (

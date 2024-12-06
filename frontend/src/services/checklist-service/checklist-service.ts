@@ -11,7 +11,6 @@ import {
   Employee,
   CustomTaskUpdateRequest,
 } from '@data-contracts/backend/data-contracts';
-import { FieldValues } from 'react-hook-form';
 
 export const getChecklistAsEmployee: (username: string) => Promise<EmployeeChecklist> = async (username: string) => {
   return await apiService
@@ -54,7 +53,7 @@ export const getDelegatedChecklists: (username: string) => Promise<DelegatedEmpl
 };
 
 export const countFinishedTasks = (phases: Phase[], currentView: number) => {
-  let phaseArray = [];
+  let phaseArray: number[] = [];
   phases.map((phase: Phase) => {
     let count = 0;
     if (currentView === 0) {
@@ -109,7 +108,7 @@ export const addCustomTask: (
   checklistId: string,
   phaseId: string,
   username: string,
-  taskData: FieldValues
+  taskData: CustomTaskCreateRequest
 ) => Promise<{ status: number }> = async (
   checklistId: string,
   phaseId: string,
@@ -135,11 +134,11 @@ export const addCustomTask: (
     });
 };
 
-export const updateCustomTask: (checklistId: string, taskId: string, taskData: any) => Promise<CustomTask> = async (
+export const updateCustomTask: (
   checklistId: string,
   taskId: string,
-  taskData: any
-) => {
+  taskData: CustomTaskUpdateRequest
+) => Promise<CustomTask> = async (checklistId: string, taskId: string, taskData: CustomTaskUpdateRequest) => {
   const taskUpdateRequest: CustomTaskUpdateRequest = {
     heading: taskData.heading,
     text: taskData.text,
