@@ -23,6 +23,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 
 export const CheckList: React.FC = () => {
   const {
@@ -34,21 +35,27 @@ export const CheckList: React.FC = () => {
 
   const [currentPhase, setCurrentPhase] = useState<number>(0);
   const [currentView, setCurrentView] = useState<number>(0);
+  const [isUserChecklist, setIsUserChecklist] = useState<boolean>(false);
 
   const { data: managedChecklists, refresh: refreshManagedChecklists } = useManagedChecklists();
   const {
     data: employeeChecklist,
     loaded,
-    loading,
     refresh: refreshChecklist,
   } = useChecklist((query?.userId as string) || username);
+  const { data: delegatedChecklists, refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
 
   const managedChecklist = managedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];
-  const data = currentView === 0 ? managedChecklist : employeeChecklist;
+  const delegatedChecklist = delegatedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];
+  const data =
+    currentView === 0 && managedChecklist ? managedChecklist
+    : currentView === 0 && delegatedChecklist ? delegatedChecklist
+    : employeeChecklist;
 
   useEffect(() => {
-    if (!isManager) {
+    if (!isManager || (isManager && employeeChecklist?.employee.username === query?.userId)) {
       setCurrentView(1);
+      setIsUserChecklist(true);
     }
   }, [isManager]);
 
@@ -61,7 +68,7 @@ export const CheckList: React.FC = () => {
       if (currentView === 0) {
         if (task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || task.roleType === 'MANAGER_FOR_NEW_MANAGER') {
           updateTaskFulfilmentStatus(data?.id, task.id, phaseCompletion ? 'FALSE' : 'TRUE', username).then(() => {
-            refreshManagedChecklists();
+            delegatedChecklist ? refreshDelegatedChecklists() : refreshManagedChecklists();
           });
         }
       } else {
@@ -93,7 +100,7 @@ export const CheckList: React.FC = () => {
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
-        {loading ?
+        {!loaded ?
           <Spinner />
         : <div>
             {loaded && !data ?
@@ -103,7 +110,7 @@ export const CheckList: React.FC = () => {
                   <h1 className="text-h1-md mb-40">
                     Introduktion för {data?.employee?.firstName} {data?.employee?.lastName}
                   </h1>
-                  {isManager ?
+                  {!isUserChecklist ?
                     <div className="flex gap-16 my-24 justify-between">
                       <div className="flex">
                         <strong>Visa checklista för </strong>
@@ -117,7 +124,7 @@ export const CheckList: React.FC = () => {
                         </RadioButton.Group>
                       </div>
 
-                      {managedChecklists.length && <AddActivityModal />}
+                      {(managedChecklists || delegatedChecklist) && <AddActivityModal />}
                     </div>
                   : null}
 

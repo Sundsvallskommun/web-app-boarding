@@ -47,6 +47,7 @@ import { additionalConverters } from './utils/custom-validation-classes';
 import { getPermissions, getRole } from './services/authorization.service';
 import ApiService from './services/api.service';
 import { EmployeeChecklist } from './responses/checklist.response';
+import { DelegatedEmployeeChecklistResponse } from '@/data-contracts/checklist/data-contracts';
 
 const SessionStoreCreate = SESSION_MEMORY ? createMemoryStore(session) : createFileStore(session);
 const sessionTTL = 4 * 24 * 60 * 60;
@@ -127,6 +128,24 @@ const samlStrategy = new Strategy(
         if (Array.isArray(res.data) && res.data.length > 0) {
           return true;
         }
+
+        const hasDelegated = `checklist/1.0/2281/employee-checklists/delegated-to/${username}`;
+        const hasDelegatedRes = await apiService.get<DelegatedEmployeeChecklistResponse>(
+          { url: hasDelegated },
+          {
+            firstName: '',
+            username: username,
+            name: '',
+            lastName: '',
+            permissions: undefined,
+            role: 'user',
+          },
+        );
+
+        if (Array.isArray(hasDelegatedRes.data.employeeChecklists) && hasDelegatedRes.data.employeeChecklists.length > 0) {
+          return true;
+        }
+
         return false;
       } catch {
         return false;

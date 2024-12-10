@@ -89,6 +89,11 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
               </div>
             </div>
           </Table.Column>
+          {delegatedChecklists && (
+            <Table.Column>
+              {d.manager.firstName} {d.manager.lastName}
+            </Table.Column>
+          )}
           <Table.Column>{getChecklistStatusLabel(d, true)}</Table.Column>
           <Table.Column>{getChecklistStatusLabel(d, false)}</Table.Column>
           <Table.Column>{d.startDate}</Table.Column>
@@ -126,6 +131,18 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 Anställd
               </Table.SortButton>
             </Table.HeaderColumn>
+
+            {delegatedChecklists && (
+              <Table.HeaderColumn aria-sort={sortColumn === 'manager.firstName' ? sortOrder : 'none'}>
+                <Table.SortButton
+                  isActive={sortColumn === 'manager.firstName'}
+                  sortOrder={sortOrder}
+                  onClick={() => handleSorting('manager.firstName')}
+                >
+                  Chef
+                </Table.SortButton>
+              </Table.HeaderColumn>
+            )}
 
             <Table.HeaderColumn aria-sort={sortColumn === 'managerStatus' ? sortOrder : 'none'}>
               <Table.SortButton
@@ -203,27 +220,35 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
           <div className="flex w-full justify-center">
             <div className="absolute bottom-40 rounded-button bg-inverted-background-content text-white font-bold py-16 px-24 flex">
               <span className="content-center mr-8">
-                {checked.length} {checked.length > 1 ? 'valda' : 'vald'}
+                {checked.length} {checked.length > 1 ? 'anställda valda' : 'anställd vald'}
               </span>
+
               <Button
                 className="mx-16"
-                onClick={() => {
-                  methods.setValue('checkAll', false);
-                  methods.setValue('checked', []);
-                }}
                 variant="secondary"
+                leftIcon={<Icon name="user-plus" />}
+                onClick={() => setIsOpen(true)}
                 inverted
               >
-                Avmarkera alla
-              </Button>
-              <Divider className="mx-16 my-0 mr-32 bg-inverted-divider" orientation="vertical" />
-              <Button color="primary" onClick={() => setIsOpen(true)} inverted>
                 <DelegateMultipleChecklistsModal
                   checklistIds={methods.getValues('checked')}
                   onClose={closeHandler}
                   isOpen={isOpen}
                 />
+                Tilldela checklista
               </Button>
+
+              <Button
+                iconButton
+                leftIcon={<Icon name="x" />}
+                onClick={() => {
+                  methods.setValue('checkAll', false);
+                  methods.setValue('checked', []);
+                }}
+                variant="tertiary"
+                showBackground={false}
+                inverted
+              ></Button>
             </div>
           </div>
         : null}
