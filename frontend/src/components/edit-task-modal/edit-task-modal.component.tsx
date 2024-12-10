@@ -13,6 +13,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { shallow } from 'zustand/shallow';
 import { CustomTaskUpdateRequest, EmployeeChecklistTask } from '@data-contracts/backend/data-contracts';
+import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 
 interface EditTaskModalProps {
   closeHandler: () => void;
@@ -27,6 +28,8 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
   const { t } = useTranslation();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { refresh: refreshChecklist } = useChecklist();
+  const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
+
   let formSchema = yup.object({
     heading: yup.string().min(1, t('task:errors.heading')).required(t('task:errors.heading')),
     text: yup.string().required(),
@@ -74,6 +77,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
     updateCustomTask(checklistId, task.id, data).then(() => {
       refreshManagedChecklists();
       refreshChecklist();
+      refreshDelegatedChecklists();
     });
 
     closeHandler();
@@ -84,13 +88,18 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
   };
 
   return (
-    <Modal show={isOpen} onClose={closeHandler} className="w-[70rem] p-32" label={<h4>Redigera aktivitet</h4>}>
+    <Modal
+      show={isOpen}
+      onClose={closeHandler}
+      className="w-[70rem] p-32"
+      label={<h4 className="text-label-medium">{t('task:edit_activity')}</h4>}
+    >
       <FormProvider {...formControl}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Modal.Content className="mb-24">
             <FormControl className="w-full" required>
               <FormLabel showRequired={false} className="mt-16">
-                Rubrik (obligatorisk)
+                {t('task:heading')}
               </FormLabel>
               <Input {...register('heading')} />
               {errors.heading && (
@@ -105,7 +114,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
             <Input {...register('link')} className="mb-16" />*/}
 
             <FormControl className="w-full">
-              <FormLabel className="mt-16">Brödtext</FormLabel>
+              <FormLabel className="mt-16">{t('task:text')}</FormLabel>
               <RichTextEditor containerLabel="text" value={text} onChange={onRichTextChange} />
             </FormControl>
           </Modal.Content>

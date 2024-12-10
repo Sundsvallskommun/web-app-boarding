@@ -1,5 +1,10 @@
 {
   "errors": {
     "heading": "Du måste skriva en rubrik"
-  }
+  },
+  "add_activity" : "Lägg till aktivitet",
+  "edit_activity" : "Redigera aktivitet",
+  "choose_phase" : "Välj fas",
+  "heading" : "Rubrik (obligatorisk)",
+  "text" : "Brödtext"
 }

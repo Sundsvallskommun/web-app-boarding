@@ -9,5 +9,10 @@
   "ongoing_checklists": "pågående introduktioner",
   "you_got_ongoing_checklists_zero": "Du har {{count}} pågående introduktioner",
   "you_got_ongoing_checklists_one": "Du har {{count}} pågående introduktion",
-  "you_got_ongoing_checklists_other": "Du har {{count}} pågående introduktioner"
+  "you_got_ongoing_checklists_other": "Du har {{count}} pågående introduktioner",
+  "mentor" : {
+    "assign_mentor" : "Lägg till mentor för {{user}}",
+    "no_mentor" : "Det finns ingen tillagd mentor"
+  },
+  "delegated_employees": "Tilldelade medarbetare"
 }

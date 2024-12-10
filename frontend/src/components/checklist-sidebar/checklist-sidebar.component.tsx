@@ -8,14 +8,16 @@ import { Avatar } from '@sk-web-gui/avatar';
 import Divider from '@sk-web-gui/divider';
 import { Link } from '@sk-web-gui/link';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button } from '@sk-web-gui/react';
-import React, { useState } from 'react';
+import { Button, PopupMenu } from '@sk-web-gui/react';
+import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 export const ChecklistSidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const {
+    username,
     permissions: { isManager },
   } = useUserStore(useShallow((state) => state.user));
 
@@ -23,6 +25,7 @@ export const ChecklistSidebar: React.FC = () => {
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
 
   const methods = useForm();
+  const { t } = useTranslation();
 
   const openHandler = () => {
     setIsOpen(true);
@@ -40,55 +43,68 @@ export const ChecklistSidebar: React.FC = () => {
 
   return (
     data && (
-      <div className="rounded bg-white border-1 border-divider py-8 px-24">
-        <div className="my-8">
-          <strong>{`${data.employee?.firstName} ${data.employee?.lastName} (${data.employee?.username})`}</strong>
-          <p className="text-small my-0">{data.employee?.title ? data.employee?.title : ''}</p>
+      <div className="rounded bg-white border-1 border-divider py-24 px-24">
+        <div className="flex gap-16">
+          <Avatar rounded />
+          <div>
+            <strong>{`${data.employee?.firstName} ${data.employee?.lastName} (${data.employee?.username})`}</strong>
+            <p className="text-small my-0">{data.employee?.title ? data.employee?.title : ''}</p>
+          </div>
+        </div>
+
+        <div className="my-16">
+          <strong>E-postadress</strong>
+          <p className="m-0">{data.employee.email}</p>
         </div>
 
         <div className="my-8">
           <strong>Anställningsdatum</strong>
-          <p className="text-small">{data.startDate}</p>
+          <p className="m-0">{data.startDate}</p>
+        </div>
+
+        <Divider className="my-24" />
+
+        <div className="mt-16 mb-24">
+          <AssignMentorModal />
         </div>
 
         {isManager ?
           <>
-            <Divider className="my-24" />
+            {data?.employee.username !== username && (
+              <div>
+                <div className="my-8">
+                  <strong>{t('checklists:delegated_employees')}</strong>
 
-            <div className="my-16">
-              <strong>Mentor</strong>
-              <AssignMentorModal />
-            </div>
+                  {data.delegatedTo?.map((email, index) => {
+                    return (
+                      <div key={index} className="flex justify-between mb-16 mt-8">
+                        <div>
+                          <Avatar size="sm" className="mr-4" rounded /> {email}
+                        </div>
 
-            <div className="my-16">
-              <strong>Delegerad till</strong>
-              {data.delegatedTo?.map((delegation, index) => {
-                return (
-                  <div key={index} className="mt-8">
-                    <Avatar size="sm" className="mr-4" rounded /> {delegation}
-                    <Button
-                      iconButton
-                      name="trash"
-                      size="sm"
-                      inverted
-                      onClick={() => removeDelegation(data.id, delegation).then(() => onUpdate())}
-                    >
-                      <Icon name="trash" />
-                    </Button>
-                  </div>
-                );
-              })}
-              <p className="text-small cursor-pointer flex">
-                <Link onClick={openHandler}>
-                  <Icon name="plus" size="1.5rem" className="mr-4" />
-                  Delegera checklista
-                </Link>
-              </p>
-            </div>
+                        <Button
+                          iconButton
+                          name="trash"
+                          size="sm"
+                          inverted
+                          onClick={() => removeDelegation(data.id, email).then(() => onUpdate())}
+                        >
+                          <Icon name="trash" />
+                        </Button>
+                      </div>
+                    );
+                  })}
+                </div>
 
-            <FormProvider {...methods}>
-              <DelegateMultipleChecklistsModal checklistIds={[data.id]} onClose={closeHandler} isOpen={isOpen} />
-            </FormProvider>
+                <Button variant="tertiary" onClick={openHandler} size="sm">
+                  Tilldela checklista
+                </Button>
+
+                <FormProvider {...methods}>
+                  <DelegateMultipleChecklistsModal checklistIds={[data.id]} onClose={closeHandler} isOpen={isOpen} />
+                </FormProvider>
+              </div>
+            )}
           </>
         : null}
       </div>

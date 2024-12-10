@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { getEmployee } from '@services/checklist-service/checklist-service';
-import { Button, SearchField } from '@sk-web-gui/react';
+import { Avatar, Button, SearchField } from '@sk-web-gui/react';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { FormLabel } from '@sk-web-gui/forms';
-import Divider from '@sk-web-gui/divider';
 import { Mentor } from '@data-contracts/backend/data-contracts';
 import { useFieldArray, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useTranslation } from 'react-i18next';
+import { getEmployeeDepartment } from '@utils/get-employee-department';
 
 let formSchema = yup.object({
   userId: yup.string().required(),
@@ -30,6 +31,7 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
     name: 'recipients',
   });
   const [notFound, setNotFound] = useState<boolean>(false);
+  const [searchResult, setSearchResult] = useState<{ userId: string; name: string; email: string; orgTree: string }>();
   const { register, getValues, setValue, trigger } = useForm({
     resolver: yupResolver(formSchema),
     defaultValues: {
@@ -37,15 +39,18 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
     },
   });
 
+  const { t } = useTranslation();
+
   const onSearchHandler = () => {
     setNotFound(false);
 
     getEmployee(getValues('userId'))
       .then((res) => {
-        append({
+        setSearchResult({
           userId: getValues('userId'),
-          name: res.fullname,
+          name: `${res.givenname} ${res.lastname}`,
           email: res.email,
+          orgTree: res.orgTree,
         });
       })
       .catch(() => {
@@ -56,13 +61,14 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
   return (
     <div>
       {!fields.length || multiple ?
-        <div className="mb-24">
+        <div>
           <FormLabel>{fields.length || multiple ? '' : 'Sök på användarnamn'}</FormLabel>
           <SearchField
             {...register('userId')}
             value={getValues('userId')}
             onChange={() => trigger()}
             onSearch={onSearchHandler}
+            onReset={() => setSearchResult(undefined)}
             placeholder="Sök"
           />
 
@@ -73,17 +79,39 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
           : null}
         </div>
       : null}
-      {fields.length ?
-        <>
-          <FormLabel>{fields.length === 1 ? 'Tillagd mottagare' : 'Tillagda mottagare'}</FormLabel>
-          <Divider />
+      {searchResult ?
+        <div className="border-1 border-divider rounded-button p-16 my-16">
+          <p>
+            <strong>{searchResult.name}</strong> ({searchResult.userId})
+          </p>
+          <p>{searchResult.email}</p>
+          <p>{getEmployeeDepartment(searchResult.orgTree)}</p>
+          <Button
+            className="mt-8"
+            onClick={() => {
+              append(searchResult);
+              setSearchResult(undefined);
+            }}
+          >
+            {t('common:add')}
+          </Button>
+        </div>
+      : fields.length ?
+        <div className="my-16">
           {fields.map((f: Mentor & { id: string; email: string }, index: number) => {
             return (
-              <div className="my-14" key={index}>
+              <div className="mt-24" key={index}>
                 <div className="flex justify-between mb-8 px-2">
-                  <div>
-                    <strong>{f.name}</strong> ({f.userId})<p>{f.email}</p>
+                  <div className="flex gap-8">
+                    <Avatar rounded />
+                    <div>
+                      <p className="m-0 p-0 text-small">
+                        {f.name} ({f.userId})
+                      </p>
+                      <p className="text-small">{f.email}</p>
+                    </div>
                   </div>
+
                   <Button
                     iconButton
                     inverted
@@ -95,11 +123,10 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
                     <Icon name="trash" />
                   </Button>
                 </div>
-                <Divider />
               </div>
             );
           })}
-        </>
+        </div>
       : null}
     </div>
   );
