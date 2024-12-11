@@ -38,12 +38,13 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const { t } = useTranslation();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { refresh: refreshChecklist } = useChecklist();
-  const { data: delegatedChecklists, refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
+  const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
     updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(() => {
       if (currentView === 0) {
-        delegatedChecklists ? refreshDelegatedChecklists() : refreshManagedChecklists();
+        refreshDelegatedChecklists();
+        refreshManagedChecklists();
       } else {
         refreshChecklist();
       }
@@ -52,7 +53,6 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
 
   const removeTask = () => {
     removeCustomTask(checklistId, task.id).then(() => {
-      delegatedChecklists ? refreshDelegatedChecklists() : refreshManagedChecklists();
       refreshChecklist();
     });
   };

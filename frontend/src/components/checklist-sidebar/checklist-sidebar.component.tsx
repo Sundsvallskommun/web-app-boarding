@@ -6,10 +6,9 @@ import { useManagedChecklists } from '@services/checklist-service/use-managed-ch
 import { useUserStore } from '@services/user-service/user-service';
 import { Avatar } from '@sk-web-gui/avatar';
 import Divider from '@sk-web-gui/divider';
-import { Link } from '@sk-web-gui/link';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, PopupMenu } from '@sk-web-gui/react';
-import React, { useEffect, useState } from 'react';
+import { Button } from '@sk-web-gui/react';
+import React, { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -45,7 +44,7 @@ export const ChecklistSidebar: React.FC = () => {
     data && (
       <div className="rounded bg-white border-1 border-divider py-24 px-24">
         <div className="flex gap-16">
-          <Avatar rounded />
+          <Avatar rounded initials={`${data.employee.firstName[0]}${data.employee.lastName[0]}`} />
           <div>
             <strong>{`${data.employee?.firstName} ${data.employee?.lastName} (${data.employee?.username})`}</strong>
             <p className="text-small my-0">{data.employee?.title ? data.employee?.title : ''}</p>

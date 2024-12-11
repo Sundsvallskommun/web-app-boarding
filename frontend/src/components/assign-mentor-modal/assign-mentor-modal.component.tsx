@@ -4,9 +4,8 @@ import { assignMentor, removeMentor } from '@services/checklist-service/checklis
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { Avatar } from '@sk-web-gui/avatar';
-import { Link } from '@sk-web-gui/link';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Modal, PopupMenu } from '@sk-web-gui/react';
+import { Button, Modal } from '@sk-web-gui/react';
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useUserStore } from '@services/user-service/user-service';
@@ -65,14 +64,17 @@ export const AssignMentorModal: React.FC = () => {
               <Avatar size="sm" rounded className="mr-8" />
               <p>{`${data?.mentor?.name}`}</p>
             </div>
-            <Button iconButton name="trash" size="sm" inverted onClick={() => removeAssignedMentor()}>
-              <Icon name="trash" />
-            </Button>
+            {isManager && (
+              <Button iconButton name="trash" size="sm" inverted onClick={() => removeAssignedMentor()}>
+                <Icon name="trash" />
+              </Button>
+            )}
           </div>
-        : <Button variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
+        : isManager ?
+          <Button variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
             Lägg till mentor
           </Button>
-        }
+        : <p>Det finns ingen tillagd mentor</p>}
 
         <Modal
           show={isOpen}
