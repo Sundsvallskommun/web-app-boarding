@@ -65,7 +65,14 @@ export const AssignMentorModal: React.FC = () => {
               <p>{`${data?.mentor?.name}`}</p>
             </div>
             {isManager && (
-              <Button iconButton name="trash" size="sm" inverted onClick={() => removeAssignedMentor()}>
+              <Button
+                iconButton
+                name="trash"
+                size="sm"
+                variant="tertiary"
+                showBackground={false}
+                onClick={() => removeAssignedMentor()}
+              >
                 <Icon name="trash" />
               </Button>
             )}

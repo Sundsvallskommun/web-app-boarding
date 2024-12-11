@@ -85,7 +85,8 @@ export const ChecklistSidebar: React.FC = () => {
                           iconButton
                           name="trash"
                           size="sm"
-                          inverted
+                          variant="tertiary"
+                          showBackground={false}
                           onClick={() => removeDelegation(data.id, email).then(() => onUpdate())}
                         >
                           <Icon name="trash" />
