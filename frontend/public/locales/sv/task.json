@@ -1,5 +1,14 @@
 {
   "errors": {
     "heading": "Du måste skriva en rubrik"
-  }
+  },
+  "add_activity" : "Lägg till aktivitet",
+  "edit_activity" : "Redigera aktivitet",
+  "choose_phase" : "Välj fas",
+  "heading" : "Rubrik (obligatorisk)",
+  "text" : "Brödtext",
+  "mark_all_activities_as_completed" : "Markera alla aktiviteter som klar",
+  "activities_completed" : "{{first}} av {{second}} aktiviteter slutförda",
+  "complete_by" : "Slutför senast {{date}}",
+  "of" : "av"
 }
