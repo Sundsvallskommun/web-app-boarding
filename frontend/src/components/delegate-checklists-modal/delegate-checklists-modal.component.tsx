@@ -65,14 +65,14 @@ export const DelegateMultipleChecklistsModal: React.FC<DelegateMultipleChecklist
     <FormProvider {...methods}>
       <Modal
         show={isOpen}
-        onClose={() => closeHandler()}
+        onClose={closeHandler}
         className="w-[70rem] p-32"
-        label={<h4 className="text-label-medium">Tilldela introduktion</h4>}
+        label={<h4 className="text-label-medium">{t('delegation:assign_introduction')}</h4>}
       >
         <Modal.Content>
-          <p>Tilldela personer som ansvarar för delar av introduktionen.</p>
+          <p>{t('delegation:assign_introduction_description')}</p>
 
-          <FormLabel>Sök på användarnamn</FormLabel>
+          <FormLabel>{t('common:search_by_username')}</FormLabel>
           <SearchEmployeeComponent multiple={true} />
         </Modal.Content>
 
@@ -82,7 +82,7 @@ export const DelegateMultipleChecklistsModal: React.FC<DelegateMultipleChecklist
           </Button>
 
           <Button disabled={!recipients?.length || !checklistIds?.length} onClick={() => onSubmit()}>
-            Tilldela
+            {t('delegation:assign')}
           </Button>
         </Modal.Footer>
       </Modal>

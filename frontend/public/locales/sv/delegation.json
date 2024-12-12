@@ -1,5 +1,8 @@
 {
   "errors": {
     "conflict": "Det gick inte att delegera till {{user}}"
-  }
+  },
+  "assign" : "Tilldela",
+  "assign_introduction" : "Tilldela introduktion",
+  "assign_introduction_description" : "Tilldela personer som ansvarar för delar av introduktionen."
 }

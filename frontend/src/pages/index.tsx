@@ -1,10 +1,8 @@
 import { DelegateMultipleChecklistsModal } from '@components/delegate-checklists-modal/delegate-checklists-modal.component';
 import { OngoingChecklistsTable } from '@components/ongoing-checklists-table/ongoing-checklists-table.component';
-import { useAppContext } from '@contexts/app.context';
 import DefaultLayout from '@layouts/default-layout/default-layout.component';
 import Main from '@layouts/main/main.component';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
-import { Spinner } from '@sk-web-gui/spinner';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -55,8 +53,11 @@ export function Index() {
                       {checklist.employee.firstName} {checklist.employee.lastName}
                     </strong>
                     <p className="text-small my-0">
-                      <Icon name="check" size="1.8rem" className="align-top" /> {countAllCompletedTasks(checklist)} av{' '}
-                      {countAllTasks(checklist)} aktiviteter slutförda
+                      <Icon name="check" size="1.8rem" className="align-top mr-6" />
+                      {t('task:activities_completed', {
+                        first: countAllCompletedTasks(checklist),
+                        second: countAllTasks(checklist),
+                      })}
                     </p>
                   </div>
                 </div>
@@ -88,7 +89,10 @@ export function Index() {
 
             {delegatedChecklists.length ?
               <div className="py-24">
-                <h2 className="mb-16">Delegerade introduktioner</h2>
+                <h2 className="mb-16">{t('common:assigned_introductions')}</h2>
+                <p className="mb-16">
+                  {t('checklists:you_got_assigned_introductions', { count: delegatedChecklists?.length })}
+                </p>
                 {delegatedChecklists ?
                   <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
                 : null}
@@ -107,7 +111,7 @@ export function Index() {
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists'])),
+    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists', 'delegation', 'task'])),
   },
 });
 

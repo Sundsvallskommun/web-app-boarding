@@ -24,6 +24,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
+import { useTranslation } from 'react-i18next';
 
 export const CheckList: React.FC = () => {
   const {
@@ -36,6 +37,7 @@ export const CheckList: React.FC = () => {
   const [currentPhase, setCurrentPhase] = useState<number>(0);
   const [currentView, setCurrentView] = useState<number>(0);
   const [isUserChecklist, setIsUserChecklist] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const { data: managedChecklists, refresh: refreshManagedChecklists } = useManagedChecklists();
   const {
@@ -104,22 +106,22 @@ export const CheckList: React.FC = () => {
           <Spinner />
         : <div>
             {loaded && !data ?
-              <h2>Du har ingen pågående introduktion.</h2>
+              <h2>{t('common:no_introduction')}</h2>
             : data && (
                 <div>
                   <h1 className="text-h1-md mb-40">
-                    Introduktion för {data?.employee?.firstName} {data?.employee?.lastName}
+                    {t('common:introduction_of')} {data?.employee?.firstName} {data?.employee?.lastName}
                   </h1>
                   {!isUserChecklist ?
                     <div className="flex gap-16 my-24 justify-between">
                       <div className="flex">
-                        <strong>Visa checklista för </strong>
+                        <strong>{t('common:show_introduction_of')} </strong>
                         <RadioButton.Group inline className="mx-16">
                           <RadioButton checked={currentView === 0} value={0} onChange={() => setCurrentView(0)}>
-                            Chef
+                            {t('common:manager')}
                           </RadioButton>
                           <RadioButton checked={currentView === 1} value={1} onChange={() => setCurrentView(1)}>
-                            Anställd
+                            {t('common:employee')}
                           </RadioButton>
                         </RadioButton.Group>
                       </div>
@@ -156,12 +158,23 @@ export const CheckList: React.FC = () => {
                         <h2 className="mb-24 text-h2-md"> {data?.phases[currentPhase]?.name}</h2>
                         <div className="flex mb-24 gap-16">
                           <div>
-                            <Icon name="check" className="align-sub" size="2rem" />{' '}
-                            <strong>{countTasks(data?.phases[currentPhase])}</strong> aktiviteter klara
+                            <Icon name="check" className="align-sub mr-6" size="2rem" />
+                            {t('task:activities_completed', {
+                              first:
+                                currentView === 0 ?
+                                  countCompletedManagerTasks(data?.phases[currentPhase])
+                                : countCompletedEmployeeTasks(data?.phases[currentPhase]),
+                              second:
+                                currentView === 0 ?
+                                  countManagerTasks(data?.phases[currentPhase])
+                                : countEmployeeTasks(data?.phases[currentPhase]),
+                            })}
                           </div>
                           <div>
-                            <Icon name="alarm-clock" className="align-sub" size="2rem" /> Slutför senast{' '}
-                            {setTimeToBeCompleted(data?.startDate, data?.phases[currentPhase]?.timeToComplete)}
+                            <Icon name="alarm-clock" className="align-sub mr-6" size="2rem" />
+                            {t('task:complete_by', {
+                              date: setTimeToBeCompleted(data?.startDate, data?.phases[currentPhase]?.timeToComplete),
+                            })}
                           </div>
                         </div>
 
@@ -187,7 +200,7 @@ export const CheckList: React.FC = () => {
                               )
                             }
                           />
-                          <span className="text-small">Markera alla aktiviteter som klar</span>
+                          <span className="text-small">{t('task:mark_all_activities_as_completed')}</span>
                         </div>
 
                         {data?.phases[currentPhase]?.tasks.map((task) => {
@@ -237,7 +250,15 @@ export const CheckList: React.FC = () => {
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists', 'delegation', 'task'])),
+    ...(await serverSideTranslations(locale, [
+      'common',
+      'layout',
+      'crud',
+      'checklists',
+      'delegation',
+      'task',
+      'mentor',
+    ])),
   },
 });
 

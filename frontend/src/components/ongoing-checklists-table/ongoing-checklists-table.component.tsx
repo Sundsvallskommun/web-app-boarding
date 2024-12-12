@@ -6,8 +6,8 @@ import { getChecklistStatusLabel } from '@utils/get-checklist-status';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Divider from '@sk-web-gui/divider';
 import { DelegateMultipleChecklistsModal } from '@components/delegate-checklists-modal/delegate-checklists-modal.component';
+import { useTranslation } from 'react-i18next';
 
 interface OngoingChecklistsTableProps {
   data: EmployeeChecklist[];
@@ -23,6 +23,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
   const [sortColumn, setSortColumn] = React.useState<string>('employee.firstName');
   const [sortOrder, setSortOrder] = React.useState(SortMode.ASC);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const { checked, checkAll } = methods.watch();
 
@@ -128,7 +129,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 sortOrder={sortOrder}
                 onClick={() => handleSorting('employee.firstName')}
               >
-                Anställd
+                {t('common:employee')}
               </Table.SortButton>
             </Table.HeaderColumn>
 
@@ -139,7 +140,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                   sortOrder={sortOrder}
                   onClick={() => handleSorting('manager.firstName')}
                 >
-                  Chef
+                  {t('manager')}
                 </Table.SortButton>
               </Table.HeaderColumn>
             )}
@@ -150,7 +151,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 sortOrder={sortOrder}
                 onClick={() => handleSorting('managerStatus')}
               >
-                Status chef
+                {t('common:manager_status')}
               </Table.SortButton>
             </Table.HeaderColumn>
 
@@ -160,7 +161,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 sortOrder={sortOrder}
                 onClick={() => handleSorting('employeeStatus')}
               >
-                Status anställd
+                {t('common:employee_status')}
               </Table.SortButton>
             </Table.HeaderColumn>
 
@@ -170,7 +171,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 sortOrder={sortOrder}
                 onClick={() => handleSorting('startDate')}
               >
-                Anställningsdatum
+                {t('common:start_date')}
               </Table.SortButton>
             </Table.HeaderColumn>
 
@@ -183,7 +184,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
             <Table.Footer className="flex justify-start">
               <div className="w-1/3">
                 <label className="sk-table-bottom-section-label pr-3" htmlFor="pagiPageSize">
-                  Rader per sida
+                  {t('common:rows_per_page')}
                 </label>
 
                 <Input
@@ -220,7 +221,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
           <div className="flex w-full justify-center">
             <div className="absolute bottom-40 rounded-button bg-inverted-background-content text-white font-bold py-16 px-24 flex">
               <span className="content-center mr-8">
-                {checked.length} {checked.length > 1 ? 'anställda valda' : 'anställd vald'}
+                {checked.length} {checked.length > 1 ? t('common:selected_other') : t('common:selected_one')}
               </span>
 
               <Button
@@ -235,7 +236,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                   onClose={closeHandler}
                   isOpen={isOpen}
                 />
-                Tilldela checklista
+                {t('delegation:assign_introduction')}
               </Button>
 
               <Button

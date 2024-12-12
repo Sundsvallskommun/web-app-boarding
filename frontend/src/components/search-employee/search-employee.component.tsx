@@ -62,7 +62,7 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
     <div>
       {!fields.length || multiple ?
         <div>
-          <FormLabel>{fields.length || multiple ? '' : 'Sök på användarnamn'}</FormLabel>
+          <FormLabel>{fields.length || multiple ? '' : t('common:search_by_username')}</FormLabel>
           <SearchField
             {...register('userId')}
             value={getValues('userId')}
@@ -74,7 +74,7 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
 
           {notFound ?
             <p className="text-error">
-              <Icon name="info" size="1.5rem" /> Sökningen gav ingen träff
+              <Icon name="info" size="1.5rem" /> {t('common:search_errors.not_found')}
             </p>
           : null}
         </div>

@@ -14,5 +14,6 @@
     "assign_mentor" : "Lägg till mentor för {{user}}",
     "no_mentor" : "Det finns ingen tillagd mentor"
   },
-  "delegated_employees": "Tilldelade medarbetare"
+  "delegated_employees": "Tilldelade medarbetare",
+  "you_got_assigned_introductions" : "Du har fått {{count}} introduktioner tilldelade till dig"
 }

@@ -52,12 +52,12 @@ export const ChecklistSidebar: React.FC = () => {
         </div>
 
         <div className="my-16">
-          <strong>E-postadress</strong>
+          <strong>{t('common:email')}</strong>
           <p className="m-0">{data.employee.email}</p>
         </div>
 
         <div className="my-8">
-          <strong>Anställningsdatum</strong>
+          <strong>{t('common:start_date')}</strong>
           <p className="m-0">{data.startDate}</p>
         </div>
 
@@ -97,7 +97,7 @@ export const ChecklistSidebar: React.FC = () => {
                 </div>
 
                 <Button variant="tertiary" onClick={openHandler} size="sm">
-                  Tilldela checklista
+                  {t('delegation:assign_introduction')}
                 </Button>
 
                 <FormProvider {...methods}>

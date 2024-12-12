@@ -55,7 +55,7 @@ export const AssignMentorModal: React.FC = () => {
 
   return (
     <FormProvider {...methods}>
-      <FormLabel>Mentor</FormLabel>
+      <FormLabel>{t('mentor:mentor')}</FormLabel>
 
       <div>
         {data?.mentor ?
@@ -79,9 +79,9 @@ export const AssignMentorModal: React.FC = () => {
           </div>
         : isManager ?
           <Button variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
-            Lägg till mentor
+            {t('mentor:add')}
           </Button>
-        : <p>Det finns ingen tillagd mentor</p>}
+        : <p>{t('mentor:not_added')}</p>}
 
         <Modal
           show={isOpen}
@@ -94,10 +94,7 @@ export const AssignMentorModal: React.FC = () => {
           }
         >
           <Modal.Content>
-            <p>
-              Lägg till en mentor för {data?.employee.firstName} {data?.employee.lastName}. Mentorn kan hjälpa till i
-              introduktionen.
-            </p>
+            <p>{t('mentor:add_description', { user: `${data?.employee.firstName} ${data?.employee.lastName}` })}</p>
 
             <SearchEmployeeComponent multiple={false} />
           </Modal.Content>
