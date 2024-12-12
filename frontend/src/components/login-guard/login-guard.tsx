@@ -20,16 +20,11 @@ export const LoginGuard: React.FC<{ children?: React.ReactNode }> = ({ children 
     return <LoaderFullScreen />;
   }
 
-  // Routes by permissions
-  // if (
-  //   (router.pathname == '/route-by-permission' && !user.permissions.canEditSystemMessages)
-  // ) {
-  //   router.push('/');
-  //   return <LoaderFullScreen />;
-  // }
-
-  if (user?.username && !user?.permissions?.isManager && query?.userId !== user?.username) {
+  if (user?.username && !user?.permissions?.isManager && query?.userId !== user?.username && user?.role !== 'admin') {
     router.push(`/${user.username}`);
+  }
+  if (router.pathname.startsWith('/admin') && user?.role !== 'admin') {
+    router.push('/');
   }
 
   return <>{children}</>;

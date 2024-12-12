@@ -13,6 +13,7 @@
   "add" : "Lägg till",
   "ongoing_introductions": "pågående introduktioner",
   "welcome": "välkommen",
+  "start": "start",
   "search_by_username" : "Sök på användarnamn",
   "search_errors" : {
     "not_found" : "Sökningen gav ingen träff"

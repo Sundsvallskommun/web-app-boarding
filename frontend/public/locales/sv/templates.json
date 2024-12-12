@@ -1,0 +1,9 @@
+{
+    "name": "mall",
+    "name_one": "mall",
+    "name_zero": "mallar",
+    "name_other": "mallar",
+    "count_one": "{{count}} mall",
+    "count_zero": "{{count}} mallar",
+    "count_other": "{{count}} mallar"
+  }
