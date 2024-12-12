@@ -1,0 +1,15 @@
+{
+    "data": {
+        "name": "Urban Användare",
+        "firstName": "Urban",
+        "lastName": "Andvändare",
+        "username": "urb01anv",
+        "permissions": {
+            "canEditAdmin": false,
+            "canViewAdmin": false,
+            "isManager": false
+        },
+        "role": "user"
+    },
+    "message": "success"
+}
