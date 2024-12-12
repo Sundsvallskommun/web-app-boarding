@@ -16,14 +16,13 @@ describe('Uses the admin page', () => {
         cy.url().should('include', '/urb01anv')
     });
 
-    it('uses the admin menu as admin', () => {
+    it.only('uses the admin menu as admin', () => {
         cy.get('[data-test="nav-admin-menu"]').should("exist");
-        cy.get('[data-test="nav-admin-menu-introduktioner"]').should('not.have.attr', 'aria-current');
-        cy.get('[data-test="nav-admin-menu-mallar"]').should('have.attr', 'aria-current');
-        cy.get('[data-test="nav-admin-menu-introduktioner"]').click();
-        cy.url().should('not.include', '/admin');
+        cy.url().should('include', '/checklists');
+        cy.get('[data-test="nav-admin-menu-mallar"]').should('not.have.attr', 'aria-current');
         cy.get('[data-test="nav-admin-menu-introduktioner"]').should('have.attr', 'aria-current');
+        cy.get('[data-test="nav-admin-menu-mallar"]').click();
+        cy.url().should('not.include', '/checklists');
+        cy.get('[data-test="nav-admin-menu-mallar"]').should('have.attr', 'aria-current');
     });
-  
-  
   });

@@ -18,6 +18,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ headerSubtitle, headerTi
   const user = useUserStore(useShallow((state) => state.user));
   const router = useRouter();
   const { t } = useTranslation();
+  const showAdminMenu = router.pathname.startsWith('/admin') && user?.role === 'admin';
 
   const handleLogoClick = () => {
     router.push(logoLinkHref);
@@ -34,7 +35,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ headerSubtitle, headerTi
       wrapperClasses="py-6 z-10"
     >
       <div className="flex justify-end gap-24 items-center">
-        {user?.role === 'admin' && (
+        {showAdminMenu && (
           <>
             <AdminMenu />
             <Divider orientation="vertical" />

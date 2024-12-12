@@ -14,7 +14,7 @@ export default function AdminLayoutComponent({
   headerTitle,
   headerSubtitle,
   children,
-  logoLinkHref = '/',
+  logoLinkHref = '/admin',
 }: DefaultLayoutProps) {
   const layoutTitle = `${process.env.NEXT_PUBLIC_APP_NAME}${headerSubtitle ? ` - ${headerSubtitle}` : ''}`;
   const fullTitle = postTitle ? `${layoutTitle} - ${postTitle}` : `${layoutTitle}`;
