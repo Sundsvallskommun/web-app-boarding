@@ -15,7 +15,7 @@ export const Admin: React.FC = () => {
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ['common', 'example', 'layout', 'admin'])),
+    ...(await serverSideTranslations(locale, ['common', 'example', 'layout', 'admin', 'checklists', 'templates'])),
   },
 });
 

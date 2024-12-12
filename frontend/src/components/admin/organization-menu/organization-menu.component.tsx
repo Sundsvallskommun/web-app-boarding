@@ -13,8 +13,6 @@ interface OrganizationMenuProps {
 export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ current, setCurrent }) => {
   const { data, loaded } = useOrgTree([2669, 2725, 13]);
 
-  const { t } = useTranslation();
-
   const renderChildren = (organizations: OrgTree[]) => {
     return organizations.map((org) => (
       <MenuVertical.Item key={org.orgId} menuIndex={org.orgId}>
@@ -35,7 +33,6 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ current, set
     loaded && (
       <MenuVertical.Provider current={current} setCurrent={setCurrent}>
         <MenuVertical.Sidebar>
-          <MenuVertical.Label>{t('admin:menu.orgtree')}</MenuVertical.Label>
           <MenuVertical className="!pr-0 !pl-0">{renderChildren(data)}</MenuVertical>
         </MenuVertical.Sidebar>
       </MenuVertical.Provider>

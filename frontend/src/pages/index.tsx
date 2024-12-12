@@ -27,41 +27,44 @@ export function Index() {
   };
 
   return (
-    managedChecklistsLoaded && (
-      <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
-        <Main>
-          <div className="py-10 px-10 2xl:px-0">
-            <h2 className="my-16">{capitalize(t('checklists:ongoing_checklists'))}</h2>
-            <p className="mb-16">{t('checklists:you_got_ongoing_checklists', { count: managedChecklists?.length })}</p>
+    <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
+      <Main>
+        {managedChecklistsLoaded && (
+          <>
+            <div className="py-10 px-10 2xl:px-0">
+              <h2 className="my-16">{capitalize(t('checklists:ongoing_checklists'))}</h2>
+              <p className="mb-16">
+                {t('checklists:you_got_ongoing_checklists', { count: managedChecklists?.length })}
+              </p>
 
-            {managedChecklists ?
-              <FormProvider {...methods}>
-                <OngoingChecklistsTable data={managedChecklists} delegatedChecklists={false} />
-              </FormProvider>
-            : <Spinner />}
+              {managedChecklists ?
+                <FormProvider {...methods}>
+                  <OngoingChecklistsTable data={managedChecklists} delegatedChecklists={false} />
+                </FormProvider>
+              : <Spinner />}
 
-            {delegatedChecklists.length ?
-              <div className="py-24">
-                <h2 className="mb-16">Delegerade introduktioner</h2>
-                {managedChecklists ?
-                  <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
-                : <Spinner />}
-              </div>
-            : null}
-          </div>
-
-          <FormProvider {...methods}>
-            <DelegateMultipleChecklistsModal checklistIds={checked} onClose={closeHandler} isOpen={isOpen} />
-          </FormProvider>
-        </Main>
-      </DefaultLayout>
-    )
+              {delegatedChecklists.length ?
+                <div className="py-24">
+                  <h2 className="mb-16">Delegerade introduktioner</h2>
+                  {managedChecklists ?
+                    <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
+                  : <Spinner />}
+                </div>
+              : null}
+            </div>
+            <FormProvider {...methods}>
+              <DelegateMultipleChecklistsModal checklistIds={checked} onClose={closeHandler} isOpen={isOpen} />
+            </FormProvider>
+          </>
+        )}
+      </Main>
+    </DefaultLayout>
   );
 }
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists'])),
+    ...(await serverSideTranslations(locale, ['common', 'layout', 'crud', 'checklists', 'templates'])),
   },
 });
 
