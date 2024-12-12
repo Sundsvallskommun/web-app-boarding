@@ -106,7 +106,7 @@ export const CheckList: React.FC = () => {
           <Spinner />
         : <div>
             {loaded && !data ?
-              <h2>{t('common:no_introduction')}</h2>
+              <h2>{t('common:no_introductions')}</h2>
             : data && (
                 <div>
                   <h1 className="text-h1-md mb-40">

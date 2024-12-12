@@ -83,7 +83,6 @@ export const ChecklistSidebar: React.FC = () => {
 
                         <Button
                           iconButton
-                          name="trash"
                           size="sm"
                           variant="tertiary"
                           showBackground={false}

@@ -67,7 +67,6 @@ export const AssignMentorModal: React.FC = () => {
             {isManager && (
               <Button
                 iconButton
-                name="trash"
                 size="sm"
                 variant="tertiary"
                 showBackground={false}
