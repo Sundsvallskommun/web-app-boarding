@@ -1,0 +1,6 @@
+{
+  "mentor" : "Mentor",
+  "add" : "Lägg till mentor",
+  "not_added" : "Det finns ingen tillagd mentor",
+  "add_description" : "Lägg till en mentor för {{user}}. Mentorn kan hjälpa till i introduktionen."
+}

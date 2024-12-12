@@ -4,17 +4,24 @@ import { assignMentor, removeMentor } from '@services/checklist-service/checklis
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { Avatar } from '@sk-web-gui/avatar';
-import { Link } from '@sk-web-gui/link';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Modal } from '@sk-web-gui/react';
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useUserStore } from '@services/user-service/user-service';
+import { useShallow } from 'zustand/react/shallow';
+import { useTranslation } from 'react-i18next';
+import { FormLabel } from '@sk-web-gui/forms';
 
 export const AssignMentorModal: React.FC = () => {
+  const {
+    permissions: { isManager },
+  } = useUserStore(useShallow((state) => state.user));
   const methods = useForm();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { data, refresh } = useChecklist();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
+  const { t } = useTranslation();
 
   const openHandler = () => {
     setIsOpen(true);
@@ -25,6 +32,7 @@ export const AssignMentorModal: React.FC = () => {
   const closeHandler = () => {
     refresh();
     refreshManagedChecklists();
+    methods.setValue('recipients', '');
 
     setIsOpen(false);
   };
@@ -47,26 +55,45 @@ export const AssignMentorModal: React.FC = () => {
 
   return (
     <FormProvider {...methods}>
+      <FormLabel>{t('mentor:mentor')}</FormLabel>
+
       <div>
         {data?.mentor ?
-          <div className="flex gap-8">
-            <Avatar size="sm" rounded />
-            <p>{`${data?.mentor?.name} (${data?.mentor?.userId})`}</p>
-            <Button iconButton name="trash" size="sm" inverted onClick={() => removeAssignedMentor()}>
-              <Icon name="trash" />
-            </Button>
+          <div className="flex justify-between mt-8">
+            <div className="flex">
+              <Avatar size="sm" rounded className="mr-8" />
+              <p>{`${data?.mentor?.name}`}</p>
+            </div>
+            {isManager && (
+              <Button
+                iconButton
+                size="sm"
+                variant="tertiary"
+                showBackground={false}
+                onClick={() => removeAssignedMentor()}
+              >
+                <Icon name="trash" />
+              </Button>
+            )}
           </div>
-        : <p className="text-small cursor-pointer">
-            <Link onClick={openHandler}>
-              <Icon name="plus" size="1.5rem" className="mr-4" />
-              Lägg till mentor
-            </Link>
-          </p>
-        }
+        : isManager ?
+          <Button variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
+            {t('mentor:add')}
+          </Button>
+        : <p>{t('mentor:not_added')}</p>}
 
-        <Modal show={isOpen} onClose={closeHandler} className="w-[70rem] p-32" label={<h4>Lägg till mentor</h4>}>
+        <Modal
+          show={isOpen}
+          onClose={closeHandler}
+          className="w-[60rem] p-32"
+          label={
+            <h4 className="text-label-medium">
+              {t('checklists:mentor.assign_mentor', { user: `${data?.employee.firstName} ${data?.employee.lastName}` })}
+            </h4>
+          }
+        >
           <Modal.Content>
-            <p className="pb-8">Utse en mentor.</p>
+            <p>{t('mentor:add_description', { user: `${data?.employee.firstName} ${data?.employee.lastName}` })}</p>
 
             <SearchEmployeeComponent multiple={false} />
           </Modal.Content>
@@ -78,7 +105,7 @@ export const AssignMentorModal: React.FC = () => {
                 closeHandler();
               }}
             >
-              Avbryt
+              {t('common:cancel')}
             </Button>
             <Button
               variant="primary"
@@ -87,7 +114,7 @@ export const AssignMentorModal: React.FC = () => {
                 onSubmit();
               }}
             >
-              Lägg till
+              {t('common:add')}
             </Button>
           </Modal.Footer>
         </Modal>

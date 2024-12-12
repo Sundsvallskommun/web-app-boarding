@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { EditTaskModal } from '@components/edit-task-modal/edit-task-modal.component';
 import { useTranslation } from 'next-i18next';
 import { useChecklist } from '@services/checklist-service/use-checklist';
+import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 
 const isChecked = (fulfilmentStatus: string) => {
   switch (fulfilmentStatus) {
@@ -37,10 +38,12 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const { t } = useTranslation();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { refresh: refreshChecklist } = useChecklist();
+  const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
     updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(() => {
       if (currentView === 0) {
+        refreshDelegatedChecklists();
         refreshManagedChecklists();
       } else {
         refreshChecklist();
@@ -50,7 +53,6 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
 
   const removeTask = () => {
     removeCustomTask(checklistId, task.id).then(() => {
-      refreshManagedChecklists();
       refreshChecklist();
     });
   };

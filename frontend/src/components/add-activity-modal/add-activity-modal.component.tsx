@@ -13,6 +13,7 @@ import * as yup from 'yup';
 import { shallow } from 'zustand/shallow';
 import { CustomTaskCreateRequest } from '@data-contracts/backend/data-contracts';
 import ReactQuill from 'react-quill';
+import { useTranslation } from 'react-i18next';
 
 let formSchema = yup.object({
   heading: yup.string().min(1, 'Du måste skriva en rubrik').required('Du måste skriva en rubrik'),
@@ -28,6 +29,7 @@ export const AddActivityModal: React.FC = () => {
   const { data, refresh } = useChecklist();
   const [richText, setRichText] = useState<string>('');
   const quillRef = useRef<ReactQuill>(null);
+  const { t } = useTranslation();
 
   const formControl = useForm({
     defaultValues: {
@@ -84,16 +86,21 @@ export const AddActivityModal: React.FC = () => {
   return (
     <div>
       <Button variant="primary" color="vattjom" onClick={openHandler} inverted>
-        <Icon name="plus" size="18px" /> Lägg till aktivitet
+        <Icon name="plus" size="18px" /> {t('task:add_activity')}
       </Button>
 
-      <Modal show={isOpen} onClose={closeHandler} className="w-[70rem] p-32" label={<h4>Lägg till aktivitet</h4>}>
+      <Modal
+        show={isOpen}
+        onClose={closeHandler}
+        className="w-[70rem] p-32"
+        label={<h4 className="text-label-medium">{t('task:add_activity')}</h4>}
+      >
         <Modal.Content>
           <FormControl className="w-full">
             <FormLabel>Fas (obligatorisk)</FormLabel>
             <Select {...register('phaseId')} onBlur={() => trigger('phaseId')}>
               <Select.Option value="" disabled>
-                Välj fas
+                {t('task:choose_phase')}
               </Select.Option>
               {data?.phases?.map((phase) => {
                 return (
@@ -109,7 +116,7 @@ export const AddActivityModal: React.FC = () => {
               </FormErrorMessage>
             )}
 
-            <FormLabel className="mt-16">Rubrik (obligatorisk)</FormLabel>
+            <FormLabel className="mt-16">{t('task:heading')}</FormLabel>
             <Input {...register('heading', { required: true })} onBlur={() => trigger('heading')} />
             {errors.heading && (
               <FormErrorMessage className="text-error">
@@ -121,7 +128,7 @@ export const AddActivityModal: React.FC = () => {
             <FormLabel>Länk</FormLabel>
             <Input {...register('link')} className="mb-16" />*/}
 
-            <FormLabel className="mt-16">Brödtext</FormLabel>
+            <FormLabel className="mt-16">{t('task:text')}</FormLabel>
             <RichTextEditor
               ref={quillRef}
               containerLabel="text"
@@ -135,7 +142,7 @@ export const AddActivityModal: React.FC = () => {
 
         <Modal.Footer className="justify-end">
           <Button variant="secondary" onClick={closeHandler}>
-            Avbryt
+            {t('common:cancel')}
           </Button>
           <Button
             disabled={!phaseId || !heading}
@@ -143,7 +150,7 @@ export const AddActivityModal: React.FC = () => {
               onSubmit();
             }}
           >
-            Lägg till
+            {t('common:add')}
           </Button>
         </Modal.Footer>
       </Modal>

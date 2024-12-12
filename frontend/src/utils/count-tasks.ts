@@ -1,4 +1,28 @@
-import { EmployeeChecklistPhase } from '@data-contracts/backend/data-contracts';
+import {
+  EmployeeChecklist,
+  EmployeeChecklistPhase,
+  EmployeeChecklistTask,
+} from '@data-contracts/backend/data-contracts';
+
+export const countAllTasks = (checklist: EmployeeChecklist) => {
+  let sum = 0;
+
+  checklist.phases.map((phase: EmployeeChecklistPhase) => {
+    phase.tasks.map((task: EmployeeChecklistTask) => sum++);
+  });
+
+  return sum;
+};
+
+export const countAllCompletedTasks = (checklist: EmployeeChecklist) => {
+  let sum = 0;
+
+  checklist.phases.map((phase: EmployeeChecklistPhase) => {
+    phase.tasks.map((task) => (task.fulfilmentStatus === 'TRUE' ? sum++ : null));
+  });
+
+  return sum;
+};
 
 export const countManagerTasks = (phase: EmployeeChecklistPhase) => {
   let count = 0;

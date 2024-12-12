@@ -6,8 +6,8 @@ import { getChecklistStatusLabel } from '@utils/get-checklist-status';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Divider from '@sk-web-gui/divider';
 import { DelegateMultipleChecklistsModal } from '@components/delegate-checklists-modal/delegate-checklists-modal.component';
+import { useTranslation } from 'react-i18next';
 
 interface OngoingChecklistsTableProps {
   data: EmployeeChecklist[];
@@ -23,6 +23,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
   const [sortColumn, setSortColumn] = React.useState<string>('employee.firstName');
   const [sortOrder, setSortOrder] = React.useState(SortMode.ASC);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const { checked, checkAll } = methods.watch();
 
@@ -89,6 +90,11 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
               </div>
             </div>
           </Table.Column>
+          {delegatedChecklists && (
+            <Table.Column>
+              {d.manager.firstName} {d.manager.lastName}
+            </Table.Column>
+          )}
           <Table.Column>{getChecklistStatusLabel(d, true)}</Table.Column>
           <Table.Column>{getChecklistStatusLabel(d, false)}</Table.Column>
           <Table.Column>{d.startDate}</Table.Column>
@@ -123,9 +129,21 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 sortOrder={sortOrder}
                 onClick={() => handleSorting('employee.firstName')}
               >
-                Anställd
+                {t('common:employee')}
               </Table.SortButton>
             </Table.HeaderColumn>
+
+            {delegatedChecklists && (
+              <Table.HeaderColumn aria-sort={sortColumn === 'manager.firstName' ? sortOrder : 'none'}>
+                <Table.SortButton
+                  isActive={sortColumn === 'manager.firstName'}
+                  sortOrder={sortOrder}
+                  onClick={() => handleSorting('manager.firstName')}
+                >
+                  {t('manager')}
+                </Table.SortButton>
+              </Table.HeaderColumn>
+            )}
 
             <Table.HeaderColumn aria-sort={sortColumn === 'managerStatus' ? sortOrder : 'none'}>
               <Table.SortButton
@@ -133,7 +151,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 sortOrder={sortOrder}
                 onClick={() => handleSorting('managerStatus')}
               >
-                Status chef
+                {t('common:manager_status')}
               </Table.SortButton>
             </Table.HeaderColumn>
 
@@ -143,7 +161,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 sortOrder={sortOrder}
                 onClick={() => handleSorting('employeeStatus')}
               >
-                Status anställd
+                {t('common:employee_status')}
               </Table.SortButton>
             </Table.HeaderColumn>
 
@@ -153,7 +171,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 sortOrder={sortOrder}
                 onClick={() => handleSorting('startDate')}
               >
-                Anställningsdatum
+                {t('common:start_date')}
               </Table.SortButton>
             </Table.HeaderColumn>
 
@@ -166,7 +184,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
             <Table.Footer className="flex justify-start">
               <div className="w-1/3">
                 <label className="sk-table-bottom-section-label pr-3" htmlFor="pagiPageSize">
-                  Rader per sida
+                  {t('common:rows_per_page')}
                 </label>
 
                 <Input
@@ -203,27 +221,35 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
           <div className="flex w-full justify-center">
             <div className="absolute bottom-40 rounded-button bg-inverted-background-content text-white font-bold py-16 px-24 flex">
               <span className="content-center mr-8">
-                {checked.length} {checked.length > 1 ? 'valda' : 'vald'}
+                {checked.length} {checked.length > 1 ? t('common:selected_other') : t('common:selected_one')}
               </span>
+
               <Button
                 className="mx-16"
-                onClick={() => {
-                  methods.setValue('checkAll', false);
-                  methods.setValue('checked', []);
-                }}
                 variant="secondary"
+                leftIcon={<Icon name="user-plus" />}
+                onClick={() => setIsOpen(true)}
                 inverted
               >
-                Avmarkera alla
-              </Button>
-              <Divider className="mx-16 my-0 mr-32 bg-inverted-divider" orientation="vertical" />
-              <Button color="primary" onClick={() => setIsOpen(true)} inverted>
                 <DelegateMultipleChecklistsModal
                   checklistIds={methods.getValues('checked')}
                   onClose={closeHandler}
                   isOpen={isOpen}
                 />
+                {t('delegation:assign_introduction')}
               </Button>
+
+              <Button
+                iconButton
+                leftIcon={<Icon name="x" />}
+                onClick={() => {
+                  methods.setValue('checkAll', false);
+                  methods.setValue('checked', []);
+                }}
+                variant="tertiary"
+                showBackground={false}
+                inverted
+              ></Button>
             </div>
           </div>
         : null}

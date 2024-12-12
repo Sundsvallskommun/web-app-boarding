@@ -10,6 +10,24 @@
   "remove": "Ta bort",
   "save": "Spara",
   "cancel": "Avbryt",
+  "add" : "Lägg till",
   "ongoing_introductions": "pågående introduktioner",
-  "welcome": "välkommen"
+  "welcome": "välkommen",
+  "search_by_username" : "Sök på användarnamn",
+  "search_errors" : {
+    "not_found" : "Sökningen gav ingen träff"
+  },
+  "email" : "E-postadress",
+  "start_date" : "Anställningsdatum",
+  "employee" : "Anställd",
+  "manager" : "Chef",
+  "employee_status" : "Status anställd",
+  "manager_status" : "Status chef",
+  "selected_one" : "anställd vald",
+  "selected_other" : "anställda valda",
+  "rows_per_page" : "Rader per sida",
+  "no_introductions" : "Du har ingen pågående introduktion",
+  "introduction_of" : "Introduktion för",
+  "show_introduction_of" : "Visa introduktion för",
+  "assigned_introductions" : "Tilldelade introduktioner"
 }
