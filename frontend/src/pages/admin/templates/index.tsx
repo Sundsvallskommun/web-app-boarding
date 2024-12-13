@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 
-export const Admin: React.FC = () => {
+export const Templates: React.FC = () => {
   const { t } = useTranslation();
   return (
     <AdminLayout title={`${t('common:title')} - ${t('common:admin')}`}>
@@ -19,4 +19,4 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   },
 });
 
-export default Admin;
+export default Templates;
