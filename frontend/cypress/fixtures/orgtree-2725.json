@@ -1,226 +1,209 @@
 {
-    "data": {
-        "organizationId": "1",
-        "orgId": 11,
-        "treeLevel": 1,
-        "orgName": "Org2",
-        "orgNameShort": "Org2",
+  "data": {
+    "organizationId": "1",
+    "orgId": 11,
+    "treeLevel": 1,
+    "orgName": "Org2",
+    "orgNameShort": "Org2",
+    "abbreviation": null,
+    "orgDisplayName": "Org2",
+    "parentId": -1,
+    "isLeafLevel": false,
+    "responsibilityCode": null,
+    "responsibilityList": null,
+    "organizations": [
+      {
+        "organizationId": "3",
+        "orgId": 13,
+        "treeLevel": 2,
+        "orgName": "Org2 AO Org2",
+        "orgNameShort": "Org2 AO Org2",
         "abbreviation": null,
-        "orgDisplayName": "Org2",
-        "parentId": -1,
+        "orgDisplayName": "Org2 AO Org2",
+        "parentId": 2,
         "isLeafLevel": false,
         "responsibilityCode": null,
         "responsibilityList": null,
         "organizations": [
-            {
-                "organizationId": "2",
-                "orgId": 12,
-                "treeLevel": 2,
-                "orgName": "Org2",
-                "orgNameShort": "Org2",
+          {
+            "organizationId": "4",
+            "orgId": 14,
+            "treeLevel": 3,
+            "orgName": "Org2  Drift",
+            "orgNameShort": "Org2  Drift",
+            "abbreviation": null,
+            "orgDisplayName": "Org2  Drift",
+            "parentId": 3,
+            "isLeafLevel": false,
+            "responsibilityCode": null,
+            "responsibilityList": null,
+            "organizations": [
+              {
+                "organizationId": "5",
+                "orgId": 15,
+                "treeLevel": 4,
+                "orgName": "Org2 Drift",
+                "orgNameShort": "Org2 Drift",
                 "abbreviation": null,
-                "orgDisplayName": "Org2",
-                "parentId": 1,
+                "orgDisplayName": "Org2 Drift",
+                "parentId": 4,
                 "isLeafLevel": false,
                 "responsibilityCode": null,
                 "responsibilityList": null,
                 "organizations": [
-                    {
-                        "organizationId": "3",
-                        "orgId": 13,
-                        "treeLevel": 3,
-                        "orgName": "Org2 AO Org2",
-                        "orgNameShort": "Org2 AO Org2",
-                        "abbreviation": null,
-                        "orgDisplayName": "Org2 AO Org2",
-                        "parentId": 2,
-                        "isLeafLevel": false,
-                        "responsibilityCode": null,
-                        "responsibilityList": null,
-                        "organizations": [
-                            {
-                                "organizationId": "4",
-                                "orgId": 14,
-                                "treeLevel": 4,
-                                "orgName": "Org2  Drift",
-                                "orgNameShort": "Org2  Drift",
-                                "abbreviation": null,
-                                "orgDisplayName": "Org2  Drift",
-                                "parentId": 3,
-                                "isLeafLevel": false,
-                                "responsibilityCode": null,
-                                "responsibilityList": null,
-                                "organizations": [
-                                    {
-                                        "organizationId": "5",
-                                        "orgId": 15,
-                                        "treeLevel": 5,
-                                        "orgName": "Org2 Drift",
-                                        "orgNameShort": "Org2 Drift",
-                                        "abbreviation": null,
-                                        "orgDisplayName": "Org2 Drift",
-                                        "parentId": 4,
-                                        "isLeafLevel": false,
-                                        "responsibilityCode": null,
-                                        "responsibilityList": null,
-                                        "organizations": [
-                                            {
-                                                "organizationId": "6",
-                                                "orgId": 16,
-                                                "treeLevel": 6,
-                                                "orgName": "Org2 Drift",
-                                                "orgNameShort": "Org2 Drift",
-                                                "abbreviation": null,
-                                                "orgDisplayName": "Org2 Drift",
-                                                "parentId": 5,
-                                                "isLeafLevel": true,
-                                                "responsibilityCode": null,
-                                                "responsibilityList": null,
-                                                "organizations": null
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "organizationId": "7",
-                                "orgId": 17,
-                                "treeLevel": 4,
-                                "orgName": "Org2 AO Org2",
-                                "orgNameShort": "Org2 AO Org2",
-                                "abbreviation": null,
-                                "orgDisplayName": "Org2 AO Org2",
-                                "parentId": 3,
-                                "isLeafLevel": false,
-                                "responsibilityCode": null,
-                                "responsibilityList": null,
-                                "organizations": [
-                                    {
-                                        "organizationId": "8",
-                                        "orgId": 18,
-                                        "treeLevel": 5,
-                                        "orgName": "Org2 AO Org2",
-                                        "orgNameShort": "Org2 AO Org2",
-                                        "abbreviation": null,
-                                        "orgDisplayName": "Org2 AO Org2",
-                                        "parentId": 7,
-                                        "isLeafLevel": false,
-                                        "responsibilityCode": null,
-                                        "responsibilityList": null,
-                                        "organizations": [
-                                            {
-                                                "organizationId": "9",
-                                                "orgId": 19,
-                                                "treeLevel": 6,
-                                                "orgName": "Org2 AO",
-                                                "orgNameShort": "Org2 AO",
-                                                "abbreviation": null,
-                                                "orgDisplayName": "Org2 AO",
-                                                "parentId": 8,
-                                                "isLeafLevel": true,
-                                                "responsibilityCode": null,
-                                                "responsibilityList": null,
-                                                "organizations": null
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "organizationId": "10",
-                                "orgId": 110,
-                                "treeLevel": 4,
-                                "orgName": "Org2 Företagsälj",
-                                "orgNameShort": "Org2 Företagsälj",
-                                "abbreviation": null,
-                                "orgDisplayName": "Org2 Företagsälj",
-                                "parentId": 3,
-                                "isLeafLevel": false,
-                                "responsibilityCode": null,
-                                "responsibilityList": null,
-                                "organizations": [
-                                    {
-                                        "organizationId": "11",
-                                        "orgId": 111,
-                                        "treeLevel": 5,
-                                        "orgName": "Org2 Företagsälj",
-                                        "orgNameShort": "Org2 Företagsälj",
-                                        "abbreviation": null,
-                                        "orgDisplayName": "Org2 Företagsälj",
-                                        "parentId": 10,
-                                        "isLeafLevel": false,
-                                        "responsibilityCode": null,
-                                        "responsibilityList": null,
-                                        "organizations": [
-                                            {
-                                                "organizationId": "12",
-                                                "orgId": 112,
-                                                "treeLevel": 6,
-                                                "orgName": "Org2 Företagsälj",
-                                                "orgNameShort": "Org2 Företagsälj",
-                                                "abbreviation": null,
-                                                "orgDisplayName": "Org2 Företagsälj",
-                                                "parentId": 11,
-                                                "isLeafLevel": true,
-                                                "responsibilityCode": null,
-                                                "responsibilityList": null,
-                                                "organizations": null
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "organizationId": "13",
-                                "orgId": 113,
-                                "treeLevel": 4,
-                                "orgName": "Org2 Platskontor Ort2",
-                                "orgNameShort": "Org2 Platskontor Ort2",
-                                "abbreviation": null,
-                                "orgDisplayName": "Org2 Platskontor Ort2",
-                                "parentId": 3,
-                                "isLeafLevel": false,
-                                "responsibilityCode": null,
-                                "responsibilityList": null,
-                                "organizations": [
-                                    {
-                                        "organizationId": "14",
-                                        "orgId": 114,
-                                        "treeLevel": 5,
-                                        "orgName": "Org2 Platskontor Ort2",
-                                        "orgNameShort": "Org2 Platskontor Ort2",
-                                        "abbreviation": null,
-                                        "orgDisplayName": "Org2 Platskontor Ort2",
-                                        "parentId": 13,
-                                        "isLeafLevel": false,
-                                        "responsibilityCode": null,
-                                        "responsibilityList": null,
-                                        "organizations": [
-                                            {
-                                                "organizationId": "15",
-                                                "orgId": 115,
-                                                "treeLevel": 6,
-                                                "orgName": "Org2 Platskontor Ort2",
-                                                "orgNameShort": "Org2 Platskontor Ort2",
-                                                "abbreviation": null,
-                                                "orgDisplayName": "Org2 Platskontor Ort2",
-                                                "parentId": 14,
-                                                "isLeafLevel": true,
-                                                "responsibilityCode": null,
-                                                "responsibilityList": null,
-                                                "organizations": null
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                           
-                         
-                        ]
-                    }
+                  {
+                    "organizationId": "6",
+                    "orgId": 16,
+                    "treeLevel": 5,
+                    "orgName": "Org2 Drift",
+                    "orgNameShort": "Org2 Drift",
+                    "abbreviation": null,
+                    "orgDisplayName": "Org2 Drift",
+                    "parentId": 5,
+                    "isLeafLevel": true,
+                    "responsibilityCode": null,
+                    "responsibilityList": null,
+                    "organizations": null
+                  }
                 ]
-            }
+              }
+            ]
+          },
+          {
+            "organizationId": "7",
+            "orgId": 17,
+            "treeLevel": 3,
+            "orgName": "Org2 AO Org2",
+            "orgNameShort": "Org2 AO Org2",
+            "abbreviation": null,
+            "orgDisplayName": "Org2 AO Org2",
+            "parentId": 3,
+            "isLeafLevel": false,
+            "responsibilityCode": null,
+            "responsibilityList": null,
+            "organizations": [
+              {
+                "organizationId": "8",
+                "orgId": 18,
+                "treeLevel": 4,
+                "orgName": "Org2 AO Org2",
+                "orgNameShort": "Org2 AO Org2",
+                "abbreviation": null,
+                "orgDisplayName": "Org2 AO Org2",
+                "parentId": 7,
+                "isLeafLevel": false,
+                "responsibilityCode": null,
+                "responsibilityList": null,
+                "organizations": [
+                  {
+                    "organizationId": "9",
+                    "orgId": 19,
+                    "treeLevel": 5,
+                    "orgName": "Org2 AO",
+                    "orgNameShort": "Org2 AO",
+                    "abbreviation": null,
+                    "orgDisplayName": "Org2 AO",
+                    "parentId": 8,
+                    "isLeafLevel": true,
+                    "responsibilityCode": null,
+                    "responsibilityList": null,
+                    "organizations": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "organizationId": "10",
+            "orgId": 110,
+            "treeLevel": 3,
+            "orgName": "Org2 Företagsälj",
+            "orgNameShort": "Org2 Företagsälj",
+            "abbreviation": null,
+            "orgDisplayName": "Org2 Företagsälj",
+            "parentId": 3,
+            "isLeafLevel": false,
+            "responsibilityCode": null,
+            "responsibilityList": null,
+            "organizations": [
+              {
+                "organizationId": "11",
+                "orgId": 111,
+                "treeLevel": 4,
+                "orgName": "Org2 Företagsälj",
+                "orgNameShort": "Org2 Företagsälj",
+                "abbreviation": null,
+                "orgDisplayName": "Org2 Företagsälj",
+                "parentId": 10,
+                "isLeafLevel": false,
+                "responsibilityCode": null,
+                "responsibilityList": null,
+                "organizations": [
+                  {
+                    "organizationId": "12",
+                    "orgId": 112,
+                    "treeLevel": 5,
+                    "orgName": "Org2 Företagsälj",
+                    "orgNameShort": "Org2 Företagsälj",
+                    "abbreviation": null,
+                    "orgDisplayName": "Org2 Företagsälj",
+                    "parentId": 11,
+                    "isLeafLevel": true,
+                    "responsibilityCode": null,
+                    "responsibilityList": null,
+                    "organizations": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "organizationId": "13",
+            "orgId": 113,
+            "treeLevel": 3,
+            "orgName": "Org2 Platskontor Ort2",
+            "orgNameShort": "Org2 Platskontor Ort2",
+            "abbreviation": null,
+            "orgDisplayName": "Org2 Platskontor Ort2",
+            "parentId": 3,
+            "isLeafLevel": false,
+            "responsibilityCode": null,
+            "responsibilityList": null,
+            "organizations": [
+              {
+                "organizationId": "14",
+                "orgId": 114,
+                "treeLevel": 4,
+                "orgName": "Org2 Platskontor Ort2",
+                "orgNameShort": "Org2 Platskontor Ort2",
+                "abbreviation": null,
+                "orgDisplayName": "Org2 Platskontor Ort2",
+                "parentId": 13,
+                "isLeafLevel": false,
+                "responsibilityCode": null,
+                "responsibilityList": null,
+                "organizations": [
+                  {
+                    "organizationId": "15",
+                    "orgId": 115,
+                    "treeLevel": 5,
+                    "orgName": "Org2 Platskontor Ort2",
+                    "orgNameShort": "Org2 Platskontor Ort2",
+                    "abbreviation": null,
+                    "orgDisplayName": "Org2 Platskontor Ort2",
+                    "parentId": 14,
+                    "isLeafLevel": true,
+                    "responsibilityCode": null,
+                    "responsibilityList": null,
+                    "organizations": null
+                  }
+                ]
+              }
+            ]
+          }
         ]
-    },
-    "message": "success"
+      }
+    ]
+  },
+  "message": "success"
 }

@@ -1,226 +1,209 @@
 {
-    "data": {
-        "organizationId": "1",
-        "orgId": 21,
-        "treeLevel": 1,
-        "orgName": "Org3",
-        "orgNameShort": "Org3",
+  "data": {
+    "organizationId": "1",
+    "orgId": 21,
+    "treeLevel": 1,
+    "orgName": "Org3",
+    "orgNameShort": "Org3",
+    "abbreviation": null,
+    "orgDisplayName": "Org3",
+    "parentId": -1,
+    "isLeafLevel": false,
+    "responsibilityCode": null,
+    "responsibilityList": null,
+    "organizations": [
+      {
+        "organizationId": "3",
+        "orgId": 23,
+        "treeLevel": 2,
+        "orgName": "Org3 AO Org3",
+        "orgNameShort": "Org3 AO Org3",
         "abbreviation": null,
-        "orgDisplayName": "Org3",
-        "parentId": -1,
+        "orgDisplayName": "Org3 AO Org3",
+        "parentId": 21,
         "isLeafLevel": false,
         "responsibilityCode": null,
         "responsibilityList": null,
         "organizations": [
-            {
-                "organizationId": "2",
-                "orgId": 22,
-                "treeLevel": 2,
-                "orgName": "Org3",
-                "orgNameShort": "Org3",
+          {
+            "organizationId": "4",
+            "orgId": 24,
+            "treeLevel": 3,
+            "orgName": "Org3  Drift",
+            "orgNameShort": "Org3  Drift",
+            "abbreviation": null,
+            "orgDisplayName": "Org3  Drift",
+            "parentId": 3,
+            "isLeafLevel": false,
+            "responsibilityCode": null,
+            "responsibilityList": null,
+            "organizations": [
+              {
+                "organizationId": "5",
+                "orgId": 25,
+                "treeLevel": 4,
+                "orgName": "Org3 Drift",
+                "orgNameShort": "Org3 Drift",
                 "abbreviation": null,
-                "orgDisplayName": "Org3",
-                "parentId": 1,
+                "orgDisplayName": "Org3 Drift",
+                "parentId": 4,
                 "isLeafLevel": false,
                 "responsibilityCode": null,
                 "responsibilityList": null,
                 "organizations": [
-                    {
-                        "organizationId": "3",
-                        "orgId": 23,
-                        "treeLevel": 3,
-                        "orgName": "Org3 AO Org3",
-                        "orgNameShort": "Org3 AO Org3",
-                        "abbreviation": null,
-                        "orgDisplayName": "Org3 AO Org3",
-                        "parentId": 2,
-                        "isLeafLevel": false,
-                        "responsibilityCode": null,
-                        "responsibilityList": null,
-                        "organizations": [
-                            {
-                                "organizationId": "4",
-                                "orgId": 24,
-                                "treeLevel": 4,
-                                "orgName": "Org3  Drift",
-                                "orgNameShort": "Org3  Drift",
-                                "abbreviation": null,
-                                "orgDisplayName": "Org3  Drift",
-                                "parentId": 3,
-                                "isLeafLevel": false,
-                                "responsibilityCode": null,
-                                "responsibilityList": null,
-                                "organizations": [
-                                    {
-                                        "organizationId": "5",
-                                        "orgId": 25,
-                                        "treeLevel": 5,
-                                        "orgName": "Org3 Drift",
-                                        "orgNameShort": "Org3 Drift",
-                                        "abbreviation": null,
-                                        "orgDisplayName": "Org3 Drift",
-                                        "parentId": 4,
-                                        "isLeafLevel": false,
-                                        "responsibilityCode": null,
-                                        "responsibilityList": null,
-                                        "organizations": [
-                                            {
-                                                "organizationId": "6",
-                                                "orgId": 26,
-                                                "treeLevel": 6,
-                                                "orgName": "Org3 Drift",
-                                                "orgNameShort": "Org3 Drift",
-                                                "abbreviation": null,
-                                                "orgDisplayName": "Org3 Drift",
-                                                "parentId": 5,
-                                                "isLeafLevel": true,
-                                                "responsibilityCode": null,
-                                                "responsibilityList": null,
-                                                "organizations": null
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "organizationId": "7",
-                                "orgId": 27,
-                                "treeLevel": 4,
-                                "orgName": "Org3 AO Org3",
-                                "orgNameShort": "Org3 AO Org3",
-                                "abbreviation": null,
-                                "orgDisplayName": "Org3 AO Org3",
-                                "parentId": 3,
-                                "isLeafLevel": false,
-                                "responsibilityCode": null,
-                                "responsibilityList": null,
-                                "organizations": [
-                                    {
-                                        "organizationId": "8",
-                                        "orgId": 28,
-                                        "treeLevel": 5,
-                                        "orgName": "Org3 AO Org3",
-                                        "orgNameShort": "Org3 AO Org3",
-                                        "abbreviation": null,
-                                        "orgDisplayName": "Org3 AO Org3",
-                                        "parentId": 7,
-                                        "isLeafLevel": false,
-                                        "responsibilityCode": null,
-                                        "responsibilityList": null,
-                                        "organizations": [
-                                            {
-                                                "organizationId": "9",
-                                                "orgId": 29,
-                                                "treeLevel": 6,
-                                                "orgName": "Org3 AO",
-                                                "orgNameShort": "Org3 AO",
-                                                "abbreviation": null,
-                                                "orgDisplayName": "Org3 AO",
-                                                "parentId": 8,
-                                                "isLeafLevel": true,
-                                                "responsibilityCode": null,
-                                                "responsibilityList": null,
-                                                "organizations": null
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "organizationId": "10",
-                                "orgId": 210,
-                                "treeLevel": 4,
-                                "orgName": "Org3 Företagsälj",
-                                "orgNameShort": "Org3 Företagsälj",
-                                "abbreviation": null,
-                                "orgDisplayName": "Org3 Företagsälj",
-                                "parentId": 3,
-                                "isLeafLevel": false,
-                                "responsibilityCode": null,
-                                "responsibilityList": null,
-                                "organizations": [
-                                    {
-                                        "organizationId": "11",
-                                        "orgId": 211,
-                                        "treeLevel": 5,
-                                        "orgName": "Org3 Företagsälj",
-                                        "orgNameShort": "Org3 Företagsälj",
-                                        "abbreviation": null,
-                                        "orgDisplayName": "Org3 Företagsälj",
-                                        "parentId": 10,
-                                        "isLeafLevel": false,
-                                        "responsibilityCode": null,
-                                        "responsibilityList": null,
-                                        "organizations": [
-                                            {
-                                                "organizationId": "12",
-                                                "orgId": 212,
-                                                "treeLevel": 6,
-                                                "orgName": "Org3 Företagsälj",
-                                                "orgNameShort": "Org3 Företagsälj",
-                                                "abbreviation": null,
-                                                "orgDisplayName": "Org3 Företagsälj",
-                                                "parentId": 11,
-                                                "isLeafLevel": true,
-                                                "responsibilityCode": null,
-                                                "responsibilityList": null,
-                                                "organizations": null
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "organizationId": "13",
-                                "orgId": 213,
-                                "treeLevel": 4,
-                                "orgName": "Org3 Platskontor Ort2",
-                                "orgNameShort": "Org3 Platskontor Ort2",
-                                "abbreviation": null,
-                                "orgDisplayName": "Org3 Platskontor Ort2",
-                                "parentId": 3,
-                                "isLeafLevel": false,
-                                "responsibilityCode": null,
-                                "responsibilityList": null,
-                                "organizations": [
-                                    {
-                                        "organizationId": "14",
-                                        "orgId": 214,
-                                        "treeLevel": 5,
-                                        "orgName": "Org3 Platskontor Ort2",
-                                        "orgNameShort": "Org3 Platskontor Ort2",
-                                        "abbreviation": null,
-                                        "orgDisplayName": "Org3 Platskontor Ort2",
-                                        "parentId": 13,
-                                        "isLeafLevel": false,
-                                        "responsibilityCode": null,
-                                        "responsibilityList": null,
-                                        "organizations": [
-                                            {
-                                                "organizationId": "15",
-                                                "orgId": 215,
-                                                "treeLevel": 6,
-                                                "orgName": "Org3 Platskontor Ort2",
-                                                "orgNameShort": "Org3 Platskontor Ort2",
-                                                "abbreviation": null,
-                                                "orgDisplayName": "Org3 Platskontor Ort2",
-                                                "parentId": 14,
-                                                "isLeafLevel": true,
-                                                "responsibilityCode": null,
-                                                "responsibilityList": null,
-                                                "organizations": null
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                           
-                         
-                        ]
-                    }
+                  {
+                    "organizationId": "6",
+                    "orgId": 26,
+                    "treeLevel": 5,
+                    "orgName": "Org3 Drift",
+                    "orgNameShort": "Org3 Drift",
+                    "abbreviation": null,
+                    "orgDisplayName": "Org3 Drift",
+                    "parentId": 5,
+                    "isLeafLevel": true,
+                    "responsibilityCode": null,
+                    "responsibilityList": null,
+                    "organizations": null
+                  }
                 ]
-            }
+              }
+            ]
+          },
+          {
+            "organizationId": "7",
+            "orgId": 27,
+            "treeLevel": 3,
+            "orgName": "Org3 AO Org3",
+            "orgNameShort": "Org3 AO Org3",
+            "abbreviation": null,
+            "orgDisplayName": "Org3 AO Org3",
+            "parentId": 3,
+            "isLeafLevel": false,
+            "responsibilityCode": null,
+            "responsibilityList": null,
+            "organizations": [
+              {
+                "organizationId": "8",
+                "orgId": 28,
+                "treeLevel": 4,
+                "orgName": "Org3 AO Org3",
+                "orgNameShort": "Org3 AO Org3",
+                "abbreviation": null,
+                "orgDisplayName": "Org3 AO Org3",
+                "parentId": 7,
+                "isLeafLevel": false,
+                "responsibilityCode": null,
+                "responsibilityList": null,
+                "organizations": [
+                  {
+                    "organizationId": "9",
+                    "orgId": 29,
+                    "treeLevel": 5,
+                    "orgName": "Org3 AO",
+                    "orgNameShort": "Org3 AO",
+                    "abbreviation": null,
+                    "orgDisplayName": "Org3 AO",
+                    "parentId": 8,
+                    "isLeafLevel": true,
+                    "responsibilityCode": null,
+                    "responsibilityList": null,
+                    "organizations": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "organizationId": "10",
+            "orgId": 210,
+            "treeLevel": 3,
+            "orgName": "Org3 Företagsälj",
+            "orgNameShort": "Org3 Företagsälj",
+            "abbreviation": null,
+            "orgDisplayName": "Org3 Företagsälj",
+            "parentId": 3,
+            "isLeafLevel": false,
+            "responsibilityCode": null,
+            "responsibilityList": null,
+            "organizations": [
+              {
+                "organizationId": "11",
+                "orgId": 211,
+                "treeLevel": 4,
+                "orgName": "Org3 Företagsälj",
+                "orgNameShort": "Org3 Företagsälj",
+                "abbreviation": null,
+                "orgDisplayName": "Org3 Företagsälj",
+                "parentId": 10,
+                "isLeafLevel": false,
+                "responsibilityCode": null,
+                "responsibilityList": null,
+                "organizations": [
+                  {
+                    "organizationId": "12",
+                    "orgId": 212,
+                    "treeLevel": 5,
+                    "orgName": "Org3 Företagsälj",
+                    "orgNameShort": "Org3 Företagsälj",
+                    "abbreviation": null,
+                    "orgDisplayName": "Org3 Företagsälj",
+                    "parentId": 11,
+                    "isLeafLevel": true,
+                    "responsibilityCode": null,
+                    "responsibilityList": null,
+                    "organizations": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "organizationId": "13",
+            "orgId": 213,
+            "treeLevel": 3,
+            "orgName": "Org3 Platskontor Ort2",
+            "orgNameShort": "Org3 Platskontor Ort2",
+            "abbreviation": null,
+            "orgDisplayName": "Org3 Platskontor Ort2",
+            "parentId": 3,
+            "isLeafLevel": false,
+            "responsibilityCode": null,
+            "responsibilityList": null,
+            "organizations": [
+              {
+                "organizationId": "14",
+                "orgId": 214,
+                "treeLevel": 4,
+                "orgName": "Org3 Platskontor Ort2",
+                "orgNameShort": "Org3 Platskontor Ort2",
+                "abbreviation": null,
+                "orgDisplayName": "Org3 Platskontor Ort2",
+                "parentId": 13,
+                "isLeafLevel": false,
+                "responsibilityCode": null,
+                "responsibilityList": null,
+                "organizations": [
+                  {
+                    "organizationId": "15",
+                    "orgId": 215,
+                    "treeLevel": 5,
+                    "orgName": "Org3 Platskontor Ort2",
+                    "orgNameShort": "Org3 Platskontor Ort2",
+                    "abbreviation": null,
+                    "orgDisplayName": "Org3 Platskontor Ort2",
+                    "parentId": 14,
+                    "isLeafLevel": true,
+                    "responsibilityCode": null,
+                    "responsibilityList": null,
+                    "organizations": null
+                  }
+                ]
+              }
+            ]
+          }
         ]
-    },
-    "message": "success"
+      }
+    ]
+  },
+  "message": "success"
 }
