@@ -24,10 +24,10 @@ export const OrgTemplate: React.FC = () => {
     >
       {loading ?
         <LoaderFullScreen />
-      : <>
-          <h1 className="text-h2-sm md:text-h2-md xl:text-h2-lg">
+      : <div className="flex flex-col gap-30">
+          <h2 className="text-h2-sm md:text-h2-md xl:text-h2-lg m-0">
             {capitalize(t('templates:templates_for_org', { org: data?.organizationName }))}
-          </h1>
+          </h2>
           {loaded && (
             <div className="flex flex-wrap">
               {data?.checklists?.map((template) => (
@@ -35,7 +35,7 @@ export const OrgTemplate: React.FC = () => {
               ))}
             </div>
           )}
-        </>
+        </div>
       }
     </AdminLayout>
   );

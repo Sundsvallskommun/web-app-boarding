@@ -13,10 +13,16 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, orgId }) =
   const { t } = useTranslation();
   return (
     <Link href={`/admin/templates/${orgId}/${template.id}`} passHref legacyBehavior>
-      <Card layout="horizontal" href={`/admin/templates/edit/${template.id}`} useHoverEffect className="max-w-[31.2em]">
+      <Card
+        layout="horizontal"
+        href={`/admin/templates/edit/${template.id}`}
+        useHoverEffect
+        className="max-w-[31.2em]"
+        data-test={`template-card-${template.id}`}
+      >
         <Card.Body>
           <Card.Header>
-            <h2 className="text-h3-sm md:text-h3-md xl:text-h3-lg mb-8">{template.displayName}</h2>
+            <h3 className="text-h3-sm md:text-h3-md xl:text-h3-lg mb-8">{template.displayName}</h3>
           </Card.Header>
           <Card.Text className="flex flex-col gap-8">
             <ul className="flex flex-col gap-8 text-dark-secondary">
