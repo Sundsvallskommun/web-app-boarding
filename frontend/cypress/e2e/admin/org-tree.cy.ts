@@ -27,4 +27,25 @@ describe('Uses the organization tree', () => {
       cy.get('a[data-menuindex="24"]').should('have.attr', 'aria-haspopup').and('eq', 'true');
     });
   });
+
+  it('filters the organization tree', () => {
+    cy.visit('http://localhost:3000/admin/templates');
+    cy.get('[data-test="organization-tree"]').within(() => {
+      cy.get('a[data-menuindex="1"]').should('be.visible');
+      cy.get('a[data-menuindex="11"]').should('be.visible');
+      cy.get('a[data-menuindex="21"]').should('be.visible');
+    });
+    cy.get('[data-test="orgtree-filter"]').type('org2');
+    cy.get('[data-test="organization-tree"]').within(() => {
+      cy.get('a[data-menuindex="1"]').should('not.exist');
+      cy.get('a[data-menuindex="11"]').should('be.visible');
+      cy.get('a[data-menuindex="21"]').should('not.exist');
+    });
+    cy.get('[data-test="orgtree-filter"]').clear().type('företagsälj');
+    cy.get('[data-test="organization-tree"]').within(() => {
+      cy.get('a[data-menuindex="21"]').next().click();
+      cy.get('a[data-menuindex="23"]').next().click();
+      cy.get('a[data-menuindex="210"]').should('be.visible');
+    });
+  });
 });
