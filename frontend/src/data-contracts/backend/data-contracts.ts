@@ -326,6 +326,20 @@ export interface EmployeeApiResponse {
   message: string;
 }
 
+export interface Template {
+  id: string;
+  name: string;
+  displayName: string;
+  version: number;
+  lifeCycle: 'CREATED' | 'ACTIVE' | 'DEPRECATED' | 'RETIRED';
+  /** @pattern \d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d.\d+Z? */
+  created: string;
+  /** @pattern \d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d.\d+Z? */
+  updated: string;
+  lastSavedBy: string;
+  phases: Phase[];
+}
+
 export interface OrgTree {
   organizationId: string;
   orgId: number;
@@ -335,7 +349,24 @@ export interface OrgTree {
   organizations?: OrgTree[];
 }
 
+export interface OrgTemplate {
+  id: string;
+  organizationName: string;
+  organizationNumber: number;
+  checklists: Template[];
+  communicationChannels: 'EMAIL' | 'NO_COMMUNICATION';
+  /** @pattern \d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d.\d+Z? */
+  created: string;
+  /** @pattern \d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d.\d+Z? */
+  updated: string;
+}
+
 export interface OrgTreeApiResponse {
   data: OrgTree;
+  message: string;
+}
+
+export interface OrgTemplateApiResponse {
+  data: OrgTemplate;
   message: string;
 }

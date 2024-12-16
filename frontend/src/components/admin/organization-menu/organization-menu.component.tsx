@@ -1,17 +1,23 @@
 import { OrgTree } from '@data-contracts/backend/data-contracts';
 import { useOrgTree } from '@services/organization-service';
-import { MenuVertical } from '@sk-web-gui/react';
-import { useTranslation } from 'react-i18next';
 import { MenuIndex } from '@sk-web-gui/menu-vertical/dist/types/menu-vertical-context';
-import { Dispatch, SetStateAction } from 'react';
+import { MenuVertical } from '@sk-web-gui/react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
-interface OrganizationMenuProps {
-  current?: MenuIndex;
-  setCurrent?: Dispatch<SetStateAction<MenuIndex>>;
-}
+interface OrganizationMenuProps {}
 
-export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ current, setCurrent }) => {
+export const OrganizationMenu: React.FC<OrganizationMenuProps> = () => {
+  const [current, setCurrent] = useState<MenuIndex>();
   const { data, loaded } = useOrgTree([2669, 2725, 13]);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (router?.query?.orgid) {
+      setCurrent(parseInt(router.query.orgid as string, 10));
+    }
+  }, [router]);
 
   const renderChildren = (organizations: OrgTree[]) => {
     return organizations.map((org) => (
@@ -19,11 +25,11 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ current, set
         {org.organizations && org.organizations?.length > 0 ?
           <MenuVertical>
             <MenuVertical.SubmenuButton>
-              <a href="#">{org.orgDisplayName}</a>
+              <Link href={`/admin/templates/${org.orgId}`}>{org.orgDisplayName}</Link>
             </MenuVertical.SubmenuButton>
             {renderChildren(org.organizations)}
           </MenuVertical>
-        : <a href="#">{org.orgDisplayName}</a>}
+        : <Link href={`/admin/templates/${org.orgId}`}>{org.orgDisplayName}</Link>}
       </MenuVertical.Item>
     ));
   };
@@ -33,7 +39,9 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ current, set
     loaded && (
       <MenuVertical.Provider current={current} setCurrent={setCurrent}>
         <MenuVertical.Sidebar>
-          <MenuVertical className="!pr-0 !pl-0">{renderChildren(data)}</MenuVertical>
+          <MenuVertical className="!pr-0 !pl-0" data-test="organization-tree">
+            {renderChildren(data)}
+          </MenuVertical>
         </MenuVertical.Sidebar>
       </MenuVertical.Provider>
     )

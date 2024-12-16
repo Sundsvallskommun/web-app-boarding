@@ -9,12 +9,42 @@
  * ---------------------------------------------------------------
  */
 
-/** Model for a mentor on an employee checklist */
-export interface Mentor {
-  /** The user-id of the mentor */
-  userId: string;
-  /** The name of the mentor */
-  name: string;
+/** Model for a phase item in the sort order structure */
+export interface PhaseItem {
+  /**
+   * The id for the item
+   * @example "283cec0f-b6eb-473c-9dbb-d97a959a8144"
+   */
+  id?: string;
+  /**
+   * The sort order position for the item
+   * @format int32
+   * @example 1
+   */
+  position: number;
+  /** List containing sort order for the task items connected to the phase */
+  taskOrder?: TaskItem[];
+}
+
+/** Model for custom sort order request */
+export interface SortorderRequest {
+  /** List containing sort order for phase items */
+  phaseOrder?: PhaseItem[];
+}
+
+/** Model for a task item in the sort order structure */
+export interface TaskItem {
+  /**
+   * The id for the item
+   * @example "283cec0f-b6eb-473c-9dbb-d97a959a8144"
+   */
+  id?: string;
+  /**
+   * The sort order position for the item
+   * @format int32
+   * @example 1
+   */
+  position: number;
 }
 
 export interface Problem {
@@ -120,197 +150,12 @@ export interface Violation {
   message?: string;
 }
 
-/** Model for a employee specific checklist */
-export interface EmployeeChecklist {
-  /**
-   * The id of the employee checklist
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
-  id?: string;
-  /** Model for a stakeholder (employee or manager) to an employee checklist */
-  employee?: Stakeholder;
-  /** Model for a stakeholder (employee or manager) to an employee checklist */
-  manager?: Stakeholder;
-  /** Signal if all tasks in the checklist has been completed or not */
-  completed?: boolean;
-  /** Signal if the checklist is locked or not */
-  locked?: boolean;
-  /** Model for a mentor on an employee checklist */
-  mentor?: Mentor;
-  /** Contains the email to the delegate(s) if the checklist is delegated */
-  delegatedTo?: string[];
-  /** Phases in the checklist */
-  phases?: EmployeeChecklistPhase[];
-  /**
-   * The created date and time of the checklist
-   * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
-   */
-  created?: string;
-  /**
-   * The last update date and time of the checklist
-   * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
-   */
-  updated?: string;
-  /**
-   * The date when the fulfilment of the checklist was started
-   * @format date
-   * @example "2023-11-22"
-   */
-  startDate?: string;
-  /**
-   * The date when the fulfilment of the checklist was finished
-   * @format date
-   * @example "2023-11-22"
-   */
-  endDate?: string;
-  /**
-   * The expiration date of the checklist
-   * @format date
-   * @example "2023-11-22"
-   */
-  expirationDate?: string;
-}
-
-/** Model for a employee checklist phase */
-export interface EmployeeChecklistPhase {
-  /**
-   * The id of the phase
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
-  id?: string;
-  /**
-   * The name of the phase
-   * @example "Första veckan"
-   */
-  name?: string;
-  /**
-   * The body text of the phase
-   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
-   */
-  bodyText?: string;
-  /**
-   * The time to complete the phase
-   * @example "P1M"
-   */
-  timeToComplete?: string;
-  /**
-   * The sort order for the phase
-   * @format int32
-   * @example 1
-   */
-  sortOrder?: number;
-  /** Tasks in the phase */
-  tasks?: EmployeeChecklistTask[];
-}
-
-/** Model for a employee checklist task */
-export interface EmployeeChecklistTask {
-  /**
-   * The id of the task
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
-  id?: string;
-  /**
-   * The heading of the task
-   * @example "Bjud på fika"
-   */
-  heading?: string;
-  /**
-   * The body text of the task
-   * @example "Detta är en beskrivning av ett uppdrag"
-   */
-  text?: string;
-  /**
-   * The sort order for the task
-   * @format int32
-   */
-  sortOrder?: number;
-  /** The role type of the task */
-  roleType?: RoleType;
-  /** The question type of the task */
-  questionType?: QuestionType;
-  /** Tells if the task is only applies to the current checklist or not */
-  customTask?: boolean;
-  /**
-   * The task response text
-   * @example "Jag har bjudit på fika"
-   */
-  responseText?: string;
-  /** The status of the task fulfilment */
-  fulfilmentStatus?: FulfilmentStatus;
-  /**
-   * The date and time the task was last updated
-   * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
-   */
-  updated?: string;
-  /**
-   * Identifier for the person that last updated the task
-   * @example "joe01doe"
-   */
-  updatedBy?: string;
-}
-
-/**
- * The status of the task fulfilment
- * @example "TRUE"
- */
-export enum FulfilmentStatus {
-  EMPTY = 'EMPTY',
-  TRUE = 'TRUE',
-  FALSE = 'FALSE',
-}
-
-/** The question type of the task */
-export enum QuestionType {
-  YES_OR_NO = 'YES_OR_NO',
-  YES_OR_NO_WITH_TEXT = 'YES_OR_NO_WITH_TEXT',
-  COMPLETED_OR_NOT_RELEVANT = 'COMPLETED_OR_NOT_RELEVANT',
-  COMPLETED_OR_NOT_RELEVANT_WITH_TEXT = 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT',
-}
-
-/** The role type of the task */
-export enum RoleType {
-  NEW_EMPLOYEE = 'NEW_EMPLOYEE',
-  NEW_MANAGER = 'NEW_MANAGER',
-  MANAGER_FOR_NEW_EMPLOYEE = 'MANAGER_FOR_NEW_EMPLOYEE',
-  MANAGER_FOR_NEW_MANAGER = 'MANAGER_FOR_NEW_MANAGER',
-}
-
-/** Model for a stakeholder (employee or manager) to an employee checklist */
-export interface Stakeholder {
-  /**
-   * The person id for the stakeholder
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
-  id?: string;
-  /**
-   * The first name for the stakeholder
-   * @example "John"
-   */
-  firstName?: string;
-  /**
-   * The last name for the stakeholder
-   * @example "Doe"
-   */
-  lastName?: string;
-  /**
-   * The email address for the stakeholder
-   * @example "email.address@noreply.com"
-   */
-  email?: string;
-  /**
-   * The username for the stakeholder
-   * @example "abc12def"
-   */
-  username?: string;
-  /**
-   * The job title for the stakeholder (if applicable)
-   * @example "Skoladministratör (Sundsvalls kommun)"
-   */
-  title?: string;
+/** Model for a mentor on an employee checklist */
+export interface Mentor {
+  /** The user-id of the mentor */
+  userId: string;
+  /** The name of the mentor */
+  name: string;
 }
 
 /** The permission needed to administrate the phase */
@@ -394,6 +239,14 @@ export interface CustomTaskCreateRequest {
   createdBy: string;
 }
 
+/** The question type of the task */
+export enum QuestionType {
+  YES_OR_NO = 'YES_OR_NO',
+  YES_OR_NO_WITH_TEXT = 'YES_OR_NO_WITH_TEXT',
+  COMPLETED_OR_NOT_RELEVANT = 'COMPLETED_OR_NOT_RELEVANT',
+  COMPLETED_OR_NOT_RELEVANT_WITH_TEXT = 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT',
+}
+
 /** Model for custom task */
 export interface CustomTask {
   /**
@@ -434,6 +287,14 @@ export interface CustomTask {
   updated?: string;
   /** The id of the user that last modified the custom task */
   lastSavedBy?: string;
+}
+
+/** The role type of the task */
+export enum RoleType {
+  NEW_EMPLOYEE = 'NEW_EMPLOYEE',
+  NEW_MANAGER = 'NEW_MANAGER',
+  MANAGER_FOR_NEW_EMPLOYEE = 'MANAGER_FOR_NEW_EMPLOYEE',
+  MANAGER_FOR_NEW_MANAGER = 'MANAGER_FOR_NEW_MANAGER',
 }
 
 /** Model for employee checklist triggering detailed status */
@@ -742,6 +603,61 @@ export interface EmployeeChecklistTaskUpdateRequest {
   updatedBy: string;
 }
 
+/** The status of the task fulfilment */
+export enum FulfilmentStatus {
+  EMPTY = 'EMPTY',
+  TRUE = 'TRUE',
+  FALSE = 'FALSE',
+}
+
+/** Model for a employee checklist task */
+export interface EmployeeChecklistTask {
+  /**
+   * The id of the task
+   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
+   */
+  id?: string;
+  /**
+   * The heading of the task
+   * @example "Bjud på fika"
+   */
+  heading?: string;
+  /**
+   * The body text of the task
+   * @example "Detta är en beskrivning av ett uppdrag"
+   */
+  text?: string;
+  /**
+   * The sort order for the task
+   * @format int32
+   */
+  sortOrder?: number;
+  /** The role type of the task */
+  roleType?: RoleType;
+  /** The question type of the task */
+  questionType?: QuestionType;
+  /** Tells if the task is only applies to the current checklist or not */
+  customTask?: boolean;
+  /**
+   * The task response text
+   * @example "Jag har bjudit på fika"
+   */
+  responseText?: string;
+  /** The status of the task fulfilment */
+  fulfilmentStatus?: FulfilmentStatus;
+  /**
+   * The date and time the task was last updated
+   * @format date-time
+   * @example "2023-11-22T15:30:00+03:00"
+   */
+  updated?: string;
+  /**
+   * Identifier for the person that last updated the task
+   * @example "joe01doe"
+   */
+  updatedBy?: string;
+}
+
 /** Model for update request on an employee checklist phase */
 export interface EmployeeChecklistPhaseUpdateRequest {
   /** The status of the task fulfilment */
@@ -751,6 +667,38 @@ export interface EmployeeChecklistPhaseUpdateRequest {
    * @example "joe01doe"
    */
   updatedBy: string;
+}
+
+/** Model for a employee checklist phase */
+export interface EmployeeChecklistPhase {
+  /**
+   * The id of the phase
+   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
+   */
+  id?: string;
+  /**
+   * The name of the phase
+   * @example "Första veckan"
+   */
+  name?: string;
+  /**
+   * The body text of the phase
+   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
+   */
+  bodyText?: string;
+  /**
+   * The time to complete the phase
+   * @example "P1M"
+   */
+  timeToComplete?: string;
+  /**
+   * The sort order for the phase
+   * @format int32
+   * @example 1
+   */
+  sortOrder?: number;
+  /** Tasks in the phase */
+  tasks?: EmployeeChecklistTask[];
 }
 
 /** Model for custom task update request */
@@ -845,6 +793,93 @@ export enum CorrespondenceStatus {
   NOT_SENT = 'NOT_SENT',
   ERROR = 'ERROR',
   WILL_NOT_SEND = 'WILL_NOT_SEND',
+}
+
+/** Model for a employee specific checklist */
+export interface EmployeeChecklist {
+  /**
+   * The id of the employee checklist
+   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
+   */
+  id?: string;
+  /** Model for a stakeholder (employee or manager) to an employee checklist */
+  employee?: Stakeholder;
+  /** Model for a stakeholder (employee or manager) to an employee checklist */
+  manager?: Stakeholder;
+  /** Signal if all tasks in the checklist has been completed or not */
+  completed?: boolean;
+  /** Signal if the checklist is locked or not */
+  locked?: boolean;
+  /** Model for a mentor on an employee checklist */
+  mentor?: Mentor;
+  /** Contains the email to the delegate(s) if the checklist is delegated */
+  delegatedTo?: string[];
+  /** Phases in the checklist */
+  phases?: EmployeeChecklistPhase[];
+  /**
+   * The created date and time of the checklist
+   * @format date-time
+   * @example "2023-11-22T15:30:00+03:00"
+   */
+  created?: string;
+  /**
+   * The last update date and time of the checklist
+   * @format date-time
+   * @example "2023-11-22T15:30:00+03:00"
+   */
+  updated?: string;
+  /**
+   * The date when the fulfilment of the checklist was started
+   * @format date
+   * @example "2023-11-22"
+   */
+  startDate?: string;
+  /**
+   * The date when the fulfilment of the checklist was finished
+   * @format date
+   * @example "2023-11-22"
+   */
+  endDate?: string;
+  /**
+   * The expiration date of the checklist
+   * @format date
+   * @example "2023-11-22"
+   */
+  expirationDate?: string;
+}
+
+/** Model for a stakeholder (employee or manager) to an employee checklist */
+export interface Stakeholder {
+  /**
+   * The person id for the stakeholder
+   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
+   */
+  id?: string;
+  /**
+   * The first name for the stakeholder
+   * @example "John"
+   */
+  firstName?: string;
+  /**
+   * The last name for the stakeholder
+   * @example "Doe"
+   */
+  lastName?: string;
+  /**
+   * The email address for the stakeholder
+   * @example "email.address@noreply.com"
+   */
+  email?: string;
+  /**
+   * The username for the stakeholder
+   * @example "abc12def"
+   */
+  username?: string;
+  /**
+   * The job title for the stakeholder (if applicable)
+   * @example "Skoladministratör (Sundsvalls kommun)"
+   */
+  title?: string;
 }
 
 /** Model for delegated employee checklist response */

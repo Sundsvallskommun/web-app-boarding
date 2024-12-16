@@ -41,7 +41,7 @@ export default function AdminLayoutComponent({
           </a>
         </NextLink>
 
-        <PageHeader headerSubtitle={headerSubtitle} headerTitle={headerTitle} logoLinkHref={logoLinkHref} />
+        <PageHeader headerSubtitle={headerSubtitle} headerTitle={headerTitle || title} logoLinkHref={logoLinkHref} />
 
         <div className="main-container w-full h-full flex">
           <AdminSidebar />
