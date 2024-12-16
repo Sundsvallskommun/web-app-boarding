@@ -14,6 +14,7 @@ export default function AdminSidebar() {
         <h1 className="text-label-medium m-0">{capitalize(t('templates:name_other'))}</h1>
 
         <SearchField
+          data-test="orgtree-filter"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onReset={() => setValue('')}
