@@ -14,7 +14,6 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = () => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(router.query);
     if (router?.query?.orgid) {
       setCurrent(parseInt(router.query.orgid as string, 10));
     }
@@ -40,7 +39,9 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = () => {
     loaded && (
       <MenuVertical.Provider current={current} setCurrent={setCurrent}>
         <MenuVertical.Sidebar>
-          <MenuVertical className="!pr-0 !pl-0">{renderChildren(data)}</MenuVertical>
+          <MenuVertical className="!pr-0 !pl-0" data-test="organization-tree">
+            {renderChildren(data)}
+          </MenuVertical>
         </MenuVertical.Sidebar>
       </MenuVertical.Provider>
     )
