@@ -1,3 +1,4 @@
+import { TemplateCard } from '@components/admin/template-card/template-card.component';
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
 import AdminLayout from '@layouts/admin-layout/admin-layout.component';
 import { useOrgTemplate } from '@services/organization-service';
@@ -10,19 +11,30 @@ import { capitalize } from 'underscore.string';
 export const OrgTemplate: React.FC = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { orgid } = router.query;
+  const query = router.query;
+  const orgid = Array.isArray(query?.orgid) ? query.orgid[0] : query.orgid || '';
 
   const { data, loaded, loading } = useOrgTemplate(parseInt(orgid as string, 10));
 
   return (
-    <AdminLayout title={`${t('common:title')} - ${t('common:admin')}`}>
+    <AdminLayout
+      title={`${t('templates:templates_for_org', { org: data?.organizationName })} - ${t('common:title')} - ${t('common:admin')}`}
+      postTitle={t('templates:templates_for_org', { org: data?.organizationName })}
+      headerTitle={`${t('common:title')} - ${t('common:admin')}`}
+    >
       {loading ?
         <LoaderFullScreen />
       : <>
           <h1 className="text-h2-sm md:text-h2-md xl:text-h2-lg">
-            {capitalize(t('common:ongoing_introductions'))} {orgid}
+            {capitalize(t('templates:templates_for_org', { org: data?.organizationName }))}
           </h1>
-          {loaded && <p>{data?.organizationName}</p>}
+          {loaded && (
+            <div className="flex flex-wrap">
+              {data?.checklists?.map((template) => (
+                <TemplateCard orgId={orgid} template={template} key={template.id} />
+              ))}
+            </div>
+          )}
         </>
       }
     </AdminLayout>

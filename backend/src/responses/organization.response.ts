@@ -15,6 +15,9 @@ export class OrgTree implements OrganizationTree {
   @IsString()
   @IsOptional()
   orgDisplayName?: string;
+  @IsString()
+  @IsOptional()
+  orgName?: string;
   @IsNumber()
   parentId?: number;
   @ValidateNested({ each: true })
