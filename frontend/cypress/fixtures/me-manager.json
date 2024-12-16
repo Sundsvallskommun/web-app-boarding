@@ -1,0 +1,15 @@
+{
+  "data": {
+    "name": "Anna Chef",
+    "firstName": "Anna",
+    "lastName": "Chef",
+    "username": "ann01che",
+    "permissions": {
+      "canEditAdmin": false,
+      "canViewAdmin": false,
+      "isManager": true
+    },
+    "role": "user"
+  },
+  "message": "success"
+}
