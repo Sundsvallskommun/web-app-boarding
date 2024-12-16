@@ -10,6 +10,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { useShallow } from 'zustand/react/shallow';
 import { apiService } from './api-service';
+import { findOrgInTree } from '@utils/find-org-in-tree';
 
 const getOrgTree = (orgId: number) => {
   return apiService.get<OrgTreeApiResponse>(`/org/${orgId}/tree`).then((res) => {
@@ -53,32 +54,34 @@ const useOrgTreeStore = create(
   )
 );
 
-export const useOrgTree = (organizations: number[]) => {
+export const useOrgTree = (organizations?: number[]) => {
   const [data, setData, loaded, setLoaded, loading, setLoading] = useOrgTreeStore(
     useShallow((state) => [state.data, state.setData, state.loaded, state.setLoaded, state.loading, state.setLoading])
   );
   const orgstring = useMemo(() => JSON.stringify(organizations), [organizations]);
 
   useEffect(() => {
-    setLoading(true);
-    let newData = data;
-    for (let index = 0; index < organizations.length; index++) {
-      if (!Object.keys(data).includes(organizations[index].toString())) {
-        getOrgTree(organizations[index])
-          .then((res) => {
-            if (res) {
-              newData = { ...newData, [organizations[index]]: res };
-              setData(newData);
-            }
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+    if (organizations && organizations.length > 0) {
+      setLoading(true);
+      let newData = data;
+      for (let index = 0; index < organizations.length; index++) {
+        if (!Object.keys(data).includes(organizations[index].toString())) {
+          getOrgTree(organizations[index])
+            .then((res) => {
+              if (res) {
+                newData = { ...newData, [organizations[index]]: res };
+                setData(newData);
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
       }
+      setData(newData);
+      setLoaded(true);
+      setLoading(false);
     }
-    setData(newData);
-    setLoaded(true);
-    setLoading(false);
   }, [orgstring]);
 
   return { data: Object.values(data), loaded, loading };
@@ -88,6 +91,7 @@ export const useOrgTemplate = (orgid: number) => {
   const [data, setData] = useState<OrgTemplate | null>(null);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const { data: orgTree } = useOrgTree();
 
   useEffect(() => {
     setLoading(true);
@@ -104,6 +108,21 @@ export const useOrgTemplate = (orgid: number) => {
         setLoading(false);
       })
       .catch(() => {
+        const fromOrgTree = findOrgInTree(orgTree, orgid);
+        console.log('🚀 ~ useEffect ~ fromOrgTree:', fromOrgTree);
+        console.log(orgTree);
+        if (fromOrgTree) {
+          setData({
+            id: fromOrgTree.organizationId,
+            organizationName: fromOrgTree.orgName || fromOrgTree.orgDisplayName || '',
+            organizationNumber: fromOrgTree.orgId,
+            checklists: [],
+            communicationChannels: 'NO_COMMUNICATION',
+            created: '',
+            updated: '',
+          });
+          setLoaded(true);
+        }
         setLoading(false);
       });
   }, [orgid]);
