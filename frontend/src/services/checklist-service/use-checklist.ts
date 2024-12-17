@@ -29,9 +29,7 @@ export const useChecklist = (
       setLoading(true);
       handleGetOne(() => getChecklistAsEmployee(_username))
         .then((res) => {
-          if (res) {
-            setData(res);
-          }
+          setData(res || null);
           setLoaded(true);
           setLoading(false);
         })
