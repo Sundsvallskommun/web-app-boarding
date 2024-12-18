@@ -54,6 +54,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
 
   const {
     register,
+    setFocus,
     setValue,
     reset,
     watch,
@@ -71,6 +72,9 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
       updatedBy: user.username,
       sortOrder: 0,
     });
+    setTimeout(() => {
+      setFocus('heading');
+    }, 0);
   }, [task]);
 
   const onSubmit: SubmitHandler<CustomTaskUpdateRequest> = (data) => {
