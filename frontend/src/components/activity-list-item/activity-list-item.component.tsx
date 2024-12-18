@@ -85,7 +85,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                   <span
                     className="my-0 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:ml-lg [&>ol]:ml-lg"
                     dangerouslySetInnerHTML={{
-                      __html: sanitized(task.text),
+                      __html: sanitized(task.text).replace('<a', "<a class='underline' target='_blank'"),
                     }}
                   ></span>
                 </p>
