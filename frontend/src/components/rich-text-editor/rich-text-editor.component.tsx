@@ -17,7 +17,7 @@ export const RichTextEditor = React.forwardRef<
     containerLabel?: string;
   }
 >(({ value, onChange, isMaximizable = false, readOnly = false, containerLabel = '' }, ref) => {
-  const simpleOptions = [['bold'], ['italic'], [{ list: 'bullet' }], [{ list: 'ordered' }]];
+  const simpleOptions = [['bold'], ['italic'], [{ list: 'bullet' }], [{ list: 'ordered' }], ['link']];
 
   const internalRef = useRef<typeof ReactQuill>();
 
