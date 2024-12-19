@@ -101,7 +101,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
               <FormLabel showRequired={false} className="mt-16">
                 {t('task:heading')}
               </FormLabel>
-              <Input {...register('heading')} />
+              <Input {...register('heading')} data-cy="edit-activity-heading" />
               {errors.heading && (
                 <FormErrorMessage className="text-error">
                   <Icon size="1.5rem" name="info" /> {errors.heading?.message}
@@ -115,7 +115,9 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
 
             <FormControl className="w-full">
               <FormLabel className="mt-16">{t('task:text')}</FormLabel>
-              <RichTextEditor containerLabel="text" value={text} onChange={onRichTextChange} />
+              <div data-cy="edit-activity-text">
+                <RichTextEditor containerLabel="text" value={text} onChange={onRichTextChange} />
+              </div>
             </FormControl>
           </Modal.Content>
 
@@ -130,7 +132,9 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
             >
               {t('common:cancel')}
             </Button>
-            <Button type="submit">{t('common:save')}</Button>
+            <Button data-cy="save-edited-activity" type="submit">
+              {t('common:save')}
+            </Button>
           </Modal.Footer>
         </form>
       </FormProvider>

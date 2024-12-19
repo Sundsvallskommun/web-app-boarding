@@ -85,7 +85,7 @@ export const AddActivityModal: React.FC = () => {
 
   return (
     <div>
-      <Button variant="primary" color="vattjom" onClick={openHandler} inverted>
+      <Button variant="primary" color="vattjom" onClick={openHandler} inverted data-cy="add-activity-button">
         <Icon name="plus" size="18px" /> {t('task:add_activity')}
       </Button>
 
@@ -98,7 +98,7 @@ export const AddActivityModal: React.FC = () => {
         <Modal.Content>
           <FormControl className="w-full">
             <FormLabel>Fas (obligatorisk)</FormLabel>
-            <Select {...register('phaseId')} onBlur={() => trigger('phaseId')}>
+            <Select {...register('phaseId')} onBlur={() => trigger('phaseId')} data-cy="add-activity-phase-select">
               <Select.Option value="" disabled>
                 {t('task:choose_phase')}
               </Select.Option>
@@ -117,9 +117,13 @@ export const AddActivityModal: React.FC = () => {
             )}
 
             <FormLabel className="mt-16">{t('task:heading')}</FormLabel>
-            <Input {...register('heading', { required: true })} onBlur={() => trigger('heading')} />
+            <Input
+              {...register('heading', { required: true })}
+              onBlur={() => trigger('heading')}
+              data-cy="add-activity-heading"
+            />
             {errors.heading && (
-              <FormErrorMessage className="text-error">
+              <FormErrorMessage className="text-error" data-cy="add-activity-heading-error">
                 <Icon size="1.5rem" name="info" /> {errors.heading?.message}
               </FormErrorMessage>
             )}
@@ -129,22 +133,25 @@ export const AddActivityModal: React.FC = () => {
             <Input {...register('link')} className="mb-16" />*/}
 
             <FormLabel className="mt-16">{t('task:text')}</FormLabel>
-            <RichTextEditor
-              ref={quillRef}
-              containerLabel="text"
-              value={richText}
-              onChange={(value) => {
-                return onRichTextChange(value);
-              }}
-            />
+            <div className="mb-16" data-cy="add-activity-text">
+              <RichTextEditor
+                ref={quillRef}
+                containerLabel="text"
+                value={richText}
+                onChange={(value) => {
+                  return onRichTextChange(value);
+                }}
+              />
+            </div>
           </FormControl>
         </Modal.Content>
 
-        <Modal.Footer className="justify-end">
+        <Modal.Footer>
           <Button variant="secondary" onClick={closeHandler}>
             {t('common:cancel')}
           </Button>
           <Button
+            data-cy="add-new-activity-button"
             disabled={!phaseId || !heading}
             onClick={() => {
               onSubmit();

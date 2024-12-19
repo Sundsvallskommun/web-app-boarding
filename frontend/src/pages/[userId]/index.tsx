@@ -116,11 +116,21 @@ export const CheckList: React.FC = () => {
                     <div className="flex gap-16 my-24 justify-between">
                       <div className="flex">
                         <strong>{t('common:show_introduction_of')} </strong>
-                        <RadioButton.Group inline className="mx-16">
-                          <RadioButton checked={currentView === 0} value={0} onChange={() => setCurrentView(0)}>
+                        <RadioButton.Group inline className="mx-16" data-cy="radio-button-group">
+                          <RadioButton
+                            checked={currentView === 0}
+                            value={0}
+                            onChange={() => setCurrentView(0)}
+                            data-cy="radio-button-manager-view"
+                          >
                             {t('common:manager')}
                           </RadioButton>
-                          <RadioButton checked={currentView === 1} value={1} onChange={() => setCurrentView(1)}>
+                          <RadioButton
+                            checked={currentView === 1}
+                            value={1}
+                            onChange={() => setCurrentView(1)}
+                            data-cy="radio-button-employee-view"
+                          >
                             {t('common:employee')}
                           </RadioButton>
                         </RadioButton.Group>
@@ -132,18 +142,18 @@ export const CheckList: React.FC = () => {
 
                   <div className="flex gap-40">
                     <div className="w-full rounded bg-white border-1 border-divider">
-                      <MenuBar current={currentPhase} className="w-full">
+                      <MenuBar current={currentPhase} className="w-full" data-cy="phase-menu-bar">
                         {data?.phases.map((phase, index) => {
                           return (
                             currentView === 0 && countManagerTasks(phase) > 0 ?
                               <MenuBar.Item key={index}>
-                                <Button onClick={() => setCurrentPhase(index)}>
+                                <Button onClick={() => setCurrentPhase(index)} data-cy="phase-menu-bar-button">
                                   {phase.name} ({countTasks(data?.phases[index])})
                                 </Button>
                               </MenuBar.Item>
                             : currentView === 1 && countEmployeeTasks(phase) > 0 ?
                               <MenuBar.Item key={index}>
-                                <Button onClick={() => setCurrentPhase(index)}>
+                                <Button onClick={() => setCurrentPhase(index)} data-cy="phase-menu-bar-button">
                                   {phase.name} ({countTasks(data?.phases[index])})
                                 </Button>
                               </MenuBar.Item>
@@ -182,6 +192,7 @@ export const CheckList: React.FC = () => {
 
                         <div className="p-16 mt-16">
                           <Checkbox
+                            data-cy="complete-all-activities"
                             className="pr-20"
                             checked={
                               currentView === 0 ?

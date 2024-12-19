@@ -6,22 +6,33 @@ import { useManagedChecklists } from '@services/checklist-service/use-managed-ch
 import { Avatar } from '@sk-web-gui/avatar';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Modal } from '@sk-web-gui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useUserStore } from '@services/user-service/user-service';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslation } from 'react-i18next';
 import { FormLabel } from '@sk-web-gui/forms';
+import { useRouter } from 'next/router';
 
 export const AssignMentorModal: React.FC = () => {
   const {
+    username,
     permissions: { isManager },
   } = useUserStore(useShallow((state) => state.user));
   const methods = useForm();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isUserIntroduction, setIsUserIntroduction] = useState<boolean>();
   const { data, refresh } = useChecklist();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { t } = useTranslation();
+  const router = useRouter();
+  const { query } = router;
+
+  useEffect(() => {
+    if (username === query?.userId) {
+      setIsUserIntroduction(true);
+    }
+  }, []);
 
   const openHandler = () => {
     setIsOpen(true);
@@ -57,15 +68,16 @@ export const AssignMentorModal: React.FC = () => {
     <FormProvider {...methods}>
       <FormLabel>{t('mentor:mentor')}</FormLabel>
 
-      <div>
+      <div data-cy="mentor-content">
         {data?.mentor ?
           <div className="flex justify-between mt-8">
             <div className="flex">
               <Avatar size="sm" rounded className="mr-8" />
               <p>{`${data?.mentor?.name}`}</p>
             </div>
-            {isManager && (
+            {isManager && !isUserIntroduction && (
               <Button
+                data-cy="remove-assigned-mentor-button"
                 iconButton
                 size="sm"
                 variant="tertiary"
@@ -76,8 +88,8 @@ export const AssignMentorModal: React.FC = () => {
               </Button>
             )}
           </div>
-        : isManager ?
-          <Button variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
+        : isManager && !isUserIntroduction ?
+          <Button data-cy="add-mentor-button" variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
             {t('mentor:add')}
           </Button>
         : <p>{t('mentor:not_added')}</p>}
@@ -108,6 +120,7 @@ export const AssignMentorModal: React.FC = () => {
               {t('common:cancel')}
             </Button>
             <Button
+              data-cy="assign-mentor-button"
               variant="primary"
               disabled={!fields?.length}
               onClick={() => {

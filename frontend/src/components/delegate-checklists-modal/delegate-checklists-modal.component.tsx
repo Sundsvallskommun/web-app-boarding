@@ -81,7 +81,11 @@ export const DelegateMultipleChecklistsModal: React.FC<DelegateMultipleChecklist
             {t('common:cancel')}
           </Button>
 
-          <Button disabled={!recipients?.length || !checklistIds?.length} onClick={() => onSubmit()}>
+          <Button
+            data-cy="assign-delegations-button"
+            disabled={!recipients?.length || !checklistIds?.length}
+            onClick={() => onSubmit()}
+          >
             {t('delegation:assign')}
           </Button>
         </Modal.Footer>

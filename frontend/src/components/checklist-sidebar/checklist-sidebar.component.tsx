@@ -42,7 +42,7 @@ export const ChecklistSidebar: React.FC = () => {
 
   return (
     data && (
-      <div className="rounded bg-white border-1 border-divider py-24 px-24">
+      <div className="rounded bg-white border-1 border-divider py-24 px-24" data-cy="sidebar">
         <div className="flex gap-16">
           <Avatar rounded initials={`${data.employee.firstName[0]}${data.employee.lastName[0]}`} />
           <div>
@@ -68,20 +68,21 @@ export const ChecklistSidebar: React.FC = () => {
         </div>
 
         {isManager ?
-          <>
+          <div>
             {data?.employee.username !== username && (
-              <div>
+              <div data-cy="delegated-to-content">
                 <div className="my-8">
                   <strong>{t('checklists:delegated_employees')}</strong>
 
                   {data.delegatedTo?.map((email, index) => {
                     return (
-                      <div key={index} className="flex justify-between mb-16 mt-8">
+                      <div data-cy={`delegated-to-${index}`} key={index} className="flex justify-between mb-16 mt-8">
                         <div>
                           <Avatar size="sm" className="mr-4" rounded /> {email}
                         </div>
 
                         <Button
+                          data-cy={`remove-delegation-icon-${index}`}
                           iconButton
                           size="sm"
                           variant="tertiary"
@@ -95,7 +96,7 @@ export const ChecklistSidebar: React.FC = () => {
                   })}
                 </div>
 
-                <Button variant="tertiary" onClick={openHandler} size="sm">
+                <Button data-cy="delegate-introduction-button" variant="tertiary" onClick={openHandler} size="sm">
                   {t('delegation:assign_introduction')}
                 </Button>
 
@@ -104,7 +105,7 @@ export const ChecklistSidebar: React.FC = () => {
                 </FormProvider>
               </div>
             )}
-          </>
+          </div>
         : null}
       </div>
     )
