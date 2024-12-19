@@ -6,9 +6,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-interface OrganizationMenuProps {}
+interface OrganizationMenuProps {
+  searchValue: string;
+}
 
-export const OrganizationMenu: React.FC<OrganizationMenuProps> = () => {
+export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue }) => {
   const [current, setCurrent] = useState<MenuIndex>();
   const { data, loaded } = useOrgTree([2669, 2725, 13]);
   const router = useRouter();
@@ -18,6 +20,33 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = () => {
       setCurrent(parseInt(router.query.orgid as string, 10));
     }
   }, [router]);
+
+  const filterData = (orgs: OrgTree[]) => {
+    let hasMatch = false;
+    const data = orgs.reduce((tree: OrgTree[], org: OrgTree) => {
+      if (org.organizations && org.organizations.length > 0) {
+        const children = filterData(org.organizations);
+        if (children.hasMatch) {
+          hasMatch = true;
+          const newOrg: OrgTree = { ...org, organizations: children.data };
+          return [...tree, newOrg];
+        }
+      }
+      if (
+        searchValue
+          .toLowerCase()
+          .split(' ')
+          .some((word) => org.orgDisplayName?.toLowerCase().includes(word))
+      ) {
+        hasMatch = true;
+        return [...tree, { ...org, organizations: undefined }];
+      }
+      return tree;
+    }, []);
+    return { data, hasMatch };
+  };
+
+  const { data: filteredData } = filterData(data);
 
   const renderChildren = (organizations: OrgTree[]) => {
     return organizations.map((org) => (
@@ -35,12 +64,11 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = () => {
   };
 
   return (
-    data?.length > 2 &&
-    loaded && (
+    data?.length > 2 && (
       <MenuVertical.Provider current={current} setCurrent={setCurrent}>
         <MenuVertical.Sidebar>
           <MenuVertical className="!pr-0 !pl-0" data-test="organization-tree">
-            {renderChildren(data)}
+            {renderChildren(filteredData)}
           </MenuVertical>
         </MenuVertical.Sidebar>
       </MenuVertical.Provider>
