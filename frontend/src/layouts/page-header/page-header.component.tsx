@@ -64,13 +64,13 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ headerSubtitle, headerTi
                 ],
               }
             : {
-                label: capitalize(t('common:introduction_zero')),
+                label: capitalize(t('common:introduction_other')),
                 elements: [
                   {
-                    label: capitalize(t('common:introduction_zero')),
+                    label: capitalize(t('common:introduction_other')),
                     element: () => (
                       <Link key={'introduction'} href={`/`}>
-                        <Icon icon={<User2 />} /> {capitalize(t('common:introduction_zero'))}
+                        <Icon icon={<User2 />} /> {capitalize(t('common:introduction_other'))}
                       </Link>
                     ),
                   },
