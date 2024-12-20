@@ -7,7 +7,7 @@ import { useUserStore } from '@services/user-service/user-service';
 import { FormControl, FormErrorMessage, FormLabel, Input } from '@sk-web-gui/forms';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Modal, Select } from '@sk-web-gui/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { shallow } from 'zustand/shallow';
@@ -45,6 +45,7 @@ export const AddActivityModal: React.FC = () => {
 
   const {
     register,
+    setFocus,
     setValue,
     getValues,
     trigger,
@@ -65,6 +66,12 @@ export const AddActivityModal: React.FC = () => {
     setRichText('');
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setFocus('phaseId');
+    }, 0);
+  }, [isOpen]);
 
   const onSubmit = () => {
     data &&
