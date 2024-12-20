@@ -237,11 +237,6 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 onClick={() => setIsOpen(true)}
                 inverted
               >
-                <DelegateMultipleChecklistsModal
-                  checklistIds={methods.getValues('checked')}
-                  onClose={closeHandler}
-                  isOpen={isOpen}
-                />
                 {t('delegation:assign_introduction')}
               </Button>
 
@@ -257,6 +252,12 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 showBackground={false}
                 inverted
               ></Button>
+
+              <DelegateMultipleChecklistsModal
+                checklistIds={methods.getValues('checked')}
+                onClose={closeHandler}
+                isOpen={isOpen}
+              />
             </div>
           </div>
         : null}
