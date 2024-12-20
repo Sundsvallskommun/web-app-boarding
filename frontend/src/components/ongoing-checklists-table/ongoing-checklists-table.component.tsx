@@ -78,7 +78,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
         <Table.Row key={`row-${idx}`} className="bg-background-content">
           {!delegatedChecklists && (
             <Table.Column>
-              <Checkbox {...methods.register('checked')} value={d.id} />
+              <Checkbox {...methods.register('checked')} value={d.id} data-cy={`delegation-checkbox-${d.id}`} />
             </Table.Column>
           )}
           <Table.Column>
@@ -100,6 +100,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
           <Table.Column>{d.startDate}</Table.Column>
           <Table.Column className="justify-end">
             <Button
+              data-cy={`table-row-button-${idx}`}
               iconButton
               onClick={() => {
                 router.push(`/${d.employee.username}`);
@@ -119,7 +120,11 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
           <Table.Header className="bg-background-content border-1 border-b-inverted-secondary-outline-hover">
             {!delegatedChecklists && (
               <Table.HeaderColumn>
-                <Checkbox {...methods.register('checkAll')} onClick={handleCheckAll} />
+                <Checkbox
+                  {...methods.register('checkAll')}
+                  onClick={handleCheckAll}
+                  data-cy="check-all-introductions"
+                />
               </Table.HeaderColumn>
             )}
 
@@ -218,13 +223,14 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
           )}
         </Table>
         {checked?.length ?
-          <div className="flex w-full justify-center">
+          <div className="flex w-full justify-center" data-cy="delegation-popup">
             <div className="absolute bottom-40 rounded-button bg-inverted-background-content text-white font-bold py-16 px-24 flex">
-              <span className="content-center mr-8">
+              <span className="content-center mr-8" data-cy="delegation-popup-introductions-count">
                 {checked.length} {checked.length > 1 ? t('common:selected_other') : t('common:selected_one')}
               </span>
 
               <Button
+                data-cy="delegate-multiple-introductions"
                 className="mx-16"
                 variant="secondary"
                 leftIcon={<Icon name="user-plus" />}
@@ -240,6 +246,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
               </Button>
 
               <Button
+                data-cy="uncheck-all-introductions"
                 iconButton
                 leftIcon={<Icon name="x" />}
                 onClick={() => {

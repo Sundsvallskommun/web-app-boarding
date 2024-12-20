@@ -64,6 +64,7 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
         <div>
           <FormLabel>{fields.length || multiple ? '' : t('common:search_by_username')}</FormLabel>
           <SearchField
+            data-cy="search-employee-input"
             {...register('userId')}
             value={getValues('userId')}
             onChange={() => trigger()}
@@ -80,13 +81,14 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
         </div>
       : null}
       {searchResult ?
-        <div className="border-1 border-divider rounded-button p-16 my-16">
+        <div className="border-1 border-divider rounded-button p-16 my-16" data-cy="search-result-card">
           <p>
             <strong>{searchResult.name}</strong> ({searchResult.userId})
           </p>
           <p>{searchResult.email}</p>
           <p>{getEmployeeDepartment(searchResult.orgTree)}</p>
           <Button
+            data-cy="add-search-result-button"
             className="mt-8"
             onClick={() => {
               append(searchResult);
@@ -113,6 +115,7 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
                   </div>
 
                   <Button
+                    data-cy="remove-selected-user-button"
                     iconButton
                     inverted
                     onClick={() => {

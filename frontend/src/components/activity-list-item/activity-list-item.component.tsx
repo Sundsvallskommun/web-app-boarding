@@ -70,6 +70,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
       <div className="my-4 flex p-16">
         <div className="w-full mt-8 flex items-start">
           <Checkbox
+            data-cy={`id-${task.id}`}
             checked={isChecked(task.fulfilmentStatus)}
             value={task.fulfilmentStatus}
             className="pr-3"
@@ -104,17 +105,25 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                 <div className="relative w-min h-[3.2rem]">
                   <PopupMenu>
                     <PopupMenu.Button iconButton variant="tertiary" size="sm" showBackground={false}>
-                      <Icon name="ellipsis-vertical" />
+                      <Icon name="ellipsis-vertical" data-cy="edit-custom-activity-popup-menu" />
                     </PopupMenu.Button>
                     <PopupMenu.Panel>
                       <PopupMenu.Items>
                         <PopupMenu.Item>
-                          <Button leftIcon={<Icon name="pen" />} onClick={() => openHandler()}>
+                          <Button
+                            leftIcon={<Icon name="pen" />}
+                            onClick={() => openHandler()}
+                            data-cy="edit-custom-activity-popup-menu-edit"
+                          >
                             {t('common:edit')}
                           </Button>
                         </PopupMenu.Item>
                         <PopupMenu.Item>
-                          <Button leftIcon={<Icon name="trash" />} onClick={() => removeTask()}>
+                          <Button
+                            leftIcon={<Icon name="trash" />}
+                            onClick={() => removeTask()}
+                            data-cy="edit-custom-activity-popup-menu-remove"
+                          >
                             {t('common:remove')}
                           </Button>
                         </PopupMenu.Item>

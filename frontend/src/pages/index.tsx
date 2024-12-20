@@ -40,8 +40,11 @@ export function Index() {
       <Main>
         <div className="py-10 px-10 2xl:px-0">
           {checklist && checklistLoaded ?
-            <div className="flex justify-between border-1 border-divider rounded-button bg-background-content px-16 pt-16 pb-16 mb-40 w-1/3">
-              <div className="flex">
+            <div
+              className="flex justify-between border-1 border-divider rounded-button bg-background-content px-16 pt-16 pb-16 mb-40 w-1/3"
+              data-cy="user-introduction"
+            >
+              <div className="flex" data-cy="employee-checklist-card">
                 <Avatar
                   rounded
                   initials={`${checklist.employee.firstName[0]}${checklist.employee.lastName[0]}`}
@@ -63,6 +66,7 @@ export function Index() {
 
               <div>
                 <Button
+                  data-cy="user-introduction-button"
                   iconButton
                   leftIcon={<Icon name="arrow-right" />}
                   onClick={() => {
@@ -80,9 +84,11 @@ export function Index() {
                 {t('checklists:you_got_ongoing_checklists', { count: managedChecklists?.length })}
               </p>
 
-              <FormProvider {...methods}>
-                <OngoingChecklistsTable data={managedChecklists} delegatedChecklists={false} />
-              </FormProvider>
+              <div data-cy="managed-checklists-table">
+                <FormProvider {...methods}>
+                  <OngoingChecklistsTable data={managedChecklists} delegatedChecklists={false} />
+                </FormProvider>
+              </div>
             </>
           : null}
 
@@ -93,7 +99,9 @@ export function Index() {
                 {t('checklists:you_got_assigned_introductions', { count: delegatedChecklists?.length })}
               </p>
               {delegatedChecklists ?
-                <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
+                <div data-cy="delegated-checklists-table">
+                  <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
+                </div>
               : null}
             </div>
           : null}

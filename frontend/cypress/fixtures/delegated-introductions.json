@@ -1,0 +1,611 @@
+{
+  "data": {
+    "employeeChecklists": [
+      {
+        "id": "aaaanaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        "employee": {
+          "id": "aaaaaaaa-aaaa-aaaa-anaa-aaaaaaaaaaaa",
+          "firstName": "Manne",
+          "lastName": "New Manager",
+          "email": "new.manager@noreply.com",
+          "username": "man01man",
+          "title": "Chef över adminstratörer"
+        },
+        "manager": {
+          "id": "aaaaaaaa-aaaa-nnaa-aaaa-aaaaaaaaaaaa",
+          "firstName": "Bobby",
+          "lastName": "Boss",
+          "email": "bobby.boss@noreply.com",
+          "username": "bob01bos"
+        },
+        "completed": false,
+        "locked": false,
+        "mentor" : {
+          "userId": "ann01che",
+          "name": "Anna Chef"
+        },
+        "delegatedTo": [
+          "ann01che@example.com"
+        ],
+        "phases": [
+          {
+            "id": "aaaaaaaa-aaaa-aaaa-ayaa-aaaaaaaaaaaa",
+            "name": "Inför första arbetsdagen",
+            "bodyText": "Syftet med introduktionen är att ge din nya medarbetare all den information, kunskap och kontaktnät som den  behöver för att så snabbt möjligt komma in i sin nya roll och bli produktiv. Inför en introduktion är det mycket att förbereda. Ta stöd av checklistan när du planerar introduktionen av din nya medarbetare.",
+            "timeToComplete": "P-1D",
+            "sortOrder": 1,
+            "tasks": [
+              {
+                "id": "aaaaaaaa-aaaa-aaay-aaaa-aaaaaaaaaaaa",
+                "heading": "Inför första arbetsdagen, Aktivitet 1",
+                "text": "Inför första arbetsdagen, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-16T11:19:32.188825+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaayaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "heading": "Inför första arbetsdagen, Aktivitet 2",
+                "text": "Inför första arbetsdagen, Aktivitet 2",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-16T11:19:32.186079+01:00",
+                "updatedBy": "ann01che"
+              }
+            ]
+          },
+          {
+            "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaayaa",
+            "name": "Första dagen",
+            "bodyText": "",
+            "timeToComplete": "P1D",
+            "sortOrder": 2,
+            "tasks": [
+              {
+                "id": "aaaasaaa-aaaa-aaaa-aaaa-aaaaaaaaayaa",
+                "heading": "Första dagen, Aktivitet 1",
+                "text": "Första dagen, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "FALSE",
+                "updated": "2024-12-16T11:19:42.362381+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaaaaaa-aaaa-aava-aaaa-aaaaaaaaayaa",
+                "heading": "Visa lokaler",
+                "text": "<ul><li>Lunchrum, toalett, vilorum, ev skåp, omklädningsrum och dusch</li><li>Kopiering och postfack utifrån behov</li><li>Informera om dagliga gemensamma aktiviteter så som förmiddagskaffe, lunchtider etc.</li><li>Parkering</li></ul>",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-16T11:19:43.608471+01:00",
+                "updatedBy": "bob01bos"
+              }
+            ]
+          },
+          {
+            "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaauaaaaa",
+            "name": "Ny chef",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "sortOrder": 5,
+            "tasks": [
+              {
+                "id": "aaaaauaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "heading": "Ny chef, Aktivitet 1",
+                "text": "Ny chef, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-10T13:56:51.060621+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaauaaa",
+                "heading": "Ny chef, Aktivitet 2",
+                "text": "Ny chef, Aktivitet 2",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-11T08:27:17.188391+01:00",
+                "updatedBy": "ann01che"
+              }
+            ]
+          },
+          {
+            "id": "aaaaauaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+            "name": "Om din anställning",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "sortOrder": 9,
+            "tasks": [
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaauaaaaaa",
+                "heading": "Om din anställning, Aktivitet 1",
+                "text": "Om din anställning, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-11T08:27:20.677539+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaaaaaa-aaaa-aaau-aaaa-aaaaaaaaaaaa",
+                "heading": "Om din anställning, Aktivitet 2",
+                "text": "Om din anställning, Aktivitet 2",
+                "sortOrder": 4,
+                "roleType": "NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false
+              }
+            ]
+          },
+          {
+            "id": "aauaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+            "name": "Nyanställd chef",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "sortOrder": 14,
+            "tasks": [
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaiaaaaaaaaa",
+                "heading": "Nyanställd chef, Aktivitet 1",
+                "text": "Nyanställd chef, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "FALSE",
+                "updated": "2024-12-09T10:39:46.805966+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaaaaaa-aiaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "heading": "Nyanställd chef, Aktivitet 2",
+                "text": "Nyanställd chef, Aktivitet 2",
+                "sortOrder": 2,
+                "roleType": "NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false
+              }
+            ]
+          }
+        ],
+        "created": "2024-11-21T13:41:05.901492+01:00",
+        "updated": "2024-12-16T11:18:20.917682+01:00",
+        "startDate": "2024-12-10",
+        "endDate": "2025-06-10",
+        "expirationDate": "2025-09-10"
+      },
+      {
+        "id": "bbbbbbbb-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        "employee": {
+          "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaraa",
+          "firstName": "Elon",
+          "lastName": "New Employee-One",
+          "email": "new.employee.one@noreply.com",
+          "username": "emp01emp",
+          "title": "Skoladministratör"
+        },
+        "manager": {
+          "id": "aaaaaaaa-aaaa-raaa-aaaa-aaaaaaaaaaaa",
+          "firstName": "Bobby",
+          "lastName": "Boss",
+          "email": "bobby.boss@noreply.com",
+          "username": "bob01bos"
+        },
+        "completed": false,
+        "locked": false,
+        "mentor" : {
+          "userId": "ann01che",
+          "name": "Anna Chef"
+        },
+        "delegatedTo": [
+          "ann01che@noreply.com"
+        ],
+        "phases": [
+          {
+            "id": "aaaaaaaa-aaaa-aawa-aaaa-aaaaaaaaaaaa",
+            "name": "Inför första arbetsdagen",
+            "bodyText": "Syftet med introduktionen är att ge din nya medarbetare all den information, kunskap och kontaktnät som den  behöver för att så snabbt möjligt komma in i sin nya roll och bli produktiv. Inför en introduktion är det mycket att förbereda. Ta stöd av checklistan när du planerar introduktionen av din nya medarbetare.",
+            "timeToComplete": "P-1D",
+            "sortOrder": 1,
+            "tasks": [
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaawa",
+                "heading": "Inför första arbetsdagen, Aktivitet 1",
+                "text": "Inför första arbetsdagen, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-16T11:19:32.188825+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aawaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "heading": "Inför första arbetsdagen, Aktivitet 2",
+                "text": "Inför första arbetsdagen, Aktivitet 2",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-16T11:19:32.186079+01:00",
+                "updatedBy": "ann01che"
+              }
+            ]
+          },
+          {
+            "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaxaaa",
+            "name": "Första dagen",
+            "bodyText": "",
+            "timeToComplete": "P1D",
+            "sortOrder": 2,
+            "tasks": [
+              {
+                "id": "aaaaxaaa-aaaa-aaaa-aaaa-aaaaaaaaayaa",
+                "heading": "Första dagen, Aktivitet 1",
+                "text": "Första dagen, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "FALSE",
+                "updated": "2024-12-16T11:19:42.362381+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaxaayaa",
+                "heading": "Visa lokaler",
+                "text": "<ul><li>Lunchrum, toalett, vilorum, ev skåp, omklädningsrum och dusch</li><li>Kopiering och postfack utifrån behov</li><li>Informera om dagliga gemensamma aktiviteter så som förmiddagskaffe, lunchtider etc.</li><li>Parkering</li></ul>",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-16T11:19:43.608471+01:00",
+                "updatedBy": "bob01bos"
+              }
+            ]
+          },
+          {
+            "id": "aaaaxaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+            "name": "Ny chef",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "sortOrder": 5,
+            "tasks": [
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaxaaaa",
+                "heading": "Ny chef, Aktivitet 1",
+                "text": "Ny chef, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-10T13:56:51.060621+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaaakaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "heading": "Ny chef, Aktivitet 2",
+                "text": "Ny chef, Aktivitet 2",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-11T08:27:17.188391+01:00",
+                "updatedBy": "ann01che"
+              }
+            ]
+          },
+          {
+            "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaakaaaaaaa",
+            "name": "Om din anställning",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "sortOrder": 9,
+            "tasks": [
+              {
+                "id": "aaaaaaaa-aaka-aaaa-aaaa-aaaaaaaaaaaa",
+                "heading": "Om din anställning, Aktivitet 1",
+                "text": "Om din anställning, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-11T08:27:20.677539+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-akaa-aaaaaaaaaaaa",
+                "heading": "Om din anställning, Aktivitet 2",
+                "text": "Om din anställning, Aktivitet 2",
+                "sortOrder": 4,
+                "roleType": "NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false
+              }
+            ]
+          },
+          {
+            "id": "aaaaaaak-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+            "name": "Nyanställd chef",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "sortOrder": 14,
+            "tasks": [
+              {
+                "id": "aaagaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "heading": "Nyanställd chef, Aktivitet 1",
+                "text": "Nyanställd chef, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "FALSE",
+                "updated": "2024-12-09T10:39:46.805966+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaaaaaa-aaaa-aaag-aaaa-aaaaaaaaaaaa",
+                "heading": "Nyanställd chef, Aktivitet 2",
+                "text": "Nyanställd chef, Aktivitet 2",
+                "sortOrder": 2,
+                "roleType": "NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false
+              }
+            ]
+          }
+        ],
+        "created": "2024-11-21T13:43:10.502212+01:00",
+        "updated": "2024-12-12T08:55:50.237902+01:00",
+        "startDate": "2024-12-14",
+        "endDate": "2026-12-14",
+        "expirationDate": "2027-03-14"
+      },
+      {
+        "id": "aaaaaaga-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        "employee": {
+          "id": "5af9dcf2-95d5-4149-92e3-8eb4188555f5",
+          "firstName": "Anton",
+          "lastName": "New Employee-Two",
+          "email": "new.employee.two@noreply.com",
+          "username": "emp02emp",
+          "title": "Skoladministratör"
+        },
+        "manager": {
+          "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaagaa",
+          "firstName": "Manne",
+          "lastName": "New Manager",
+          "email": "new.manager@noreply.com",
+          "username": "man01man"
+        },
+        "completed": false,
+        "locked": false,
+        "mentor" : {
+          "userId": "ann01che",
+          "name": "Anna Chef"
+        },
+        "delegatedTo": [
+          "ann01che@noreply.com"
+        ],
+        "phases": [
+          {
+            "id": "aaaaadaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+            "name": "Inför första arbetsdagen",
+            "bodyText": "Syftet med introduktionen är att ge din nya medarbetare all den information, kunskap och kontaktnät som den  behöver för att så snabbt möjligt komma in i sin nya roll och bli produktiv. Inför en introduktion är det mycket att förbereda. Ta stöd av checklistan när du planerar introduktionen av din nya medarbetare.",
+            "timeToComplete": "P-1D",
+            "sortOrder": 1,
+            "tasks": [
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-adaa-aaaaaaaaaaaa",
+                "heading": "Inför första arbetsdagen, Aktivitet 1",
+                "text": "Inför första arbetsdagen, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-16T11:19:32.188825+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "adaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "heading": "Inför första arbetsdagen, Aktivitet 2",
+                "text": "Inför första arbetsdagen, Aktivitet 2",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-16T11:19:32.186079+01:00",
+                "updatedBy": "ann01che"
+              }
+            ]
+          },
+          {
+            "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaafaaaaaaa",
+            "name": "Första dagen",
+            "bodyText": "",
+            "timeToComplete": "P1D",
+            "sortOrder": 2,
+            "tasks": [
+              {
+                "id": "aaaaafaa-aaaa-aaaa-aaaa-aaaaaaaaayaa",
+                "heading": "Första dagen, Aktivitet 1",
+                "text": "Första dagen, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "FALSE",
+                "updated": "2024-12-16T11:19:42.362381+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaafaaaayaa",
+                "heading": "Visa lokaler",
+                "text": "<ul><li>Lunchrum, toalett, vilorum, ev skåp, omklädningsrum och dusch</li><li>Kopiering och postfack utifrån behov</li><li>Informera om dagliga gemensamma aktiviteter så som förmiddagskaffe, lunchtider etc.</li><li>Parkering</li></ul>",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-16T11:19:43.608471+01:00",
+                "updatedBy": "bob01bos"
+              }
+            ]
+          },
+          {
+            "id": "aaaaaaaa-aaaa-afaa-aaaa-aaaaaaaaaaaa",
+            "name": "Ny chef",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "sortOrder": 5,
+            "tasks": [
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aafaaaaaaaaa",
+                "heading": "Ny chef, Aktivitet 1",
+                "text": "Ny chef, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-10T13:56:51.060621+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "acaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "heading": "Ny chef, Aktivitet 2",
+                "text": "Ny chef, Aktivitet 2",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-11T08:27:17.188391+01:00",
+                "updatedBy": "ann01che"
+              }
+            ]
+          },
+          {
+            "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaacaaaaaaa",
+            "name": "Om din anställning",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "sortOrder": 9,
+            "tasks": [
+              {
+                "id": "aaaaaaaa-aaaa-aaac-aaaa-aaaaaaaaaaaa",
+                "heading": "Om din anställning, Aktivitet 1",
+                "text": "Om din anställning, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "TRUE",
+                "updated": "2024-12-11T08:27:20.677539+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaacaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "heading": "Om din anställning, Aktivitet 2",
+                "text": "Om din anställning, Aktivitet 2",
+                "sortOrder": 4,
+                "roleType": "NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false
+              }
+            ]
+          },
+          {
+            "id": "ccaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+            "name": "Nyanställd chef",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "sortOrder": 14,
+            "tasks": [
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaccaaaaaa",
+                "heading": "Nyanställd chef, Aktivitet 1",
+                "text": "Nyanställd chef, Aktivitet 1",
+                "sortOrder": 1,
+                "roleType": "NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false,
+                "responseText": "",
+                "fulfilmentStatus": "FALSE",
+                "updated": "2024-12-09T10:39:46.805966+01:00",
+                "updatedBy": "ann01che"
+              },
+              {
+                "id": "aaaaaaaa-aaaa-aaaa-ccaa-aaaaaaaaaaaa",
+                "heading": "Nyanställd chef, Aktivitet 2",
+                "text": "Nyanställd chef, Aktivitet 2",
+                "sortOrder": 2,
+                "roleType": "NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "customTask": false
+              }
+            ]
+          }
+        ],
+        "created": "2024-11-21T13:43:10.502212+01:00",
+        "updated": "2024-12-10T14:32:19.083799+01:00",
+        "startDate": "2024-12-14",
+        "endDate": "2026-12-14",
+        "expirationDate": "2027-03-14"
+      }
+    ]
+  },
+  "status": 200,
+  "message": "success"
+}
