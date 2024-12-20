@@ -156,6 +156,7 @@ export const CheckList: React.FC = () => {
 
                       <div className="py-24 px-40">
                         <h2 className="mb-24 text-h2-md"> {data?.phases[currentPhase]?.name}</h2>
+                        <p className="mb-md">{data?.phases[currentPhase]?.bodyText}</p>
                         <div className="flex mb-24 gap-16">
                           <div>
                             <Icon name="check" className="align-sub mr-6" size="2rem" />
