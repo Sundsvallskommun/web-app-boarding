@@ -128,12 +128,14 @@ describe('Employee introduction as manager', () => {
 
     cy.get('[data-cy="delegated-to-0"]').should('exist').contains('anv01anv@example.com');
     cy.get('[data-cy="remove-delegation-icon-0"]').should('exist').click();
+    cy.get('button').contains('Ta bort').should('have.css', 'color', 'rgb(254, 226, 226)').click();
   });
 
   it('can add and remove mentor', () => {
     cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse).as('searchEmployee');
     cy.intercept('DELETE', '**/api/employee-checklists/**/mentor', removeAssignedMentorResponse);
     cy.get('[data-cy="remove-assigned-mentor-button"]').should('exist').click();
+    cy.get('button').contains('Ta bort').should('have.css', 'color', 'rgb(254, 226, 226)').click();
     cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroductionWithoutMentor);
     cy.intercept('PUT', '**/api/employee-checklists/**/mentor', assignMentorResponse);
 
