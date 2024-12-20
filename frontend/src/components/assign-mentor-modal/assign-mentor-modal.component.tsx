@@ -5,8 +5,8 @@ import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { Avatar } from '@sk-web-gui/avatar';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Modal } from '@sk-web-gui/react';
-import React, { useEffect, useState } from 'react';
+import { Button, Modal, useConfirm } from '@sk-web-gui/react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useUserStore } from '@services/user-service/user-service';
 import { useShallow } from 'zustand/react/shallow';
@@ -27,6 +27,7 @@ export const AssignMentorModal: React.FC = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { query } = router;
+  const confirm = useConfirm();
 
   useEffect(() => {
     if (username === query?.userId) {
@@ -57,12 +58,26 @@ export const AssignMentorModal: React.FC = () => {
     });
   };
 
-  const removeAssignedMentor = () => {
-    data &&
-      removeMentor(data.id).then(() => {
-        closeHandler();
-      });
-  };
+  const handleRemoveAssignedMentor = useCallback(
+    () => () => {
+      confirm
+        .showConfirmation(
+          t('mentor:confirmation.title', { user: data?.mentor.name }),
+          t('mentor:confirmation.text', { user: data?.mentor.name }),
+          t('common:remove'),
+          t('common:cancel'),
+          'error'
+        )
+        .then((confirmed) => {
+          if (confirmed && data) {
+            removeMentor(data.id).then(() => {
+              closeHandler();
+            });
+          }
+        });
+    },
+    [data, confirm]
+  );
 
   return (
     <FormProvider {...methods}>
@@ -82,7 +97,7 @@ export const AssignMentorModal: React.FC = () => {
                 size="sm"
                 variant="tertiary"
                 showBackground={false}
-                onClick={() => removeAssignedMentor()}
+                onClick={handleRemoveAssignedMentor()}
               >
                 <Icon name="trash" />
               </Button>
