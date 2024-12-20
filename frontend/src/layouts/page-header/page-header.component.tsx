@@ -1,7 +1,7 @@
 import { AdminMenu } from '@components/admin/admin-menu/admin-menu.component';
 import { useUserStore } from '@services/user-service/user-service';
 import { Divider, Header, Icon, Link, UserMenu } from '@sk-web-gui/react';
-import { LogOut } from 'lucide-react';
+import { LogOut, User2, UserCog } from 'lucide-react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ headerSubtitle, headerTi
   const router = useRouter();
   const { t } = useTranslation();
   const showAdminMenu = router.pathname.startsWith('/admin') && user?.role === 'admin';
+
+  const isAdmin = () => {
+    return user.role === 'admin';
+  };
 
   const handleLogoClick = () => {
     router.push(logoLinkHref);
@@ -45,6 +49,33 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ headerSubtitle, headerTi
           initials={`${user.firstName[0]}${user.lastName[0]}`}
           menuTitle={`${user.name} (${user.username})`}
           menuGroups={[
+            isAdmin() && !showAdminMenu ?
+              {
+                label: capitalize(t('common:administration')),
+                elements: [
+                  {
+                    label: capitalize(t('common:administration')),
+                    element: () => (
+                      <Link key={'administration'} href={`/admin`}>
+                        <Icon icon={<UserCog />} /> {capitalize(t('common:administration'))}
+                      </Link>
+                    ),
+                  },
+                ],
+              }
+            : {
+                label: capitalize(t('common:introduction_other')),
+                elements: [
+                  {
+                    label: capitalize(t('common:introduction_other')),
+                    element: () => (
+                      <Link key={'introduction'} href={`/`}>
+                        <Icon icon={<User2 />} /> {capitalize(t('common:introduction_other'))}
+                      </Link>
+                    ),
+                  },
+                ],
+              },
             {
               label: capitalize(t('common:logout')),
               elements: [
