@@ -31,8 +31,6 @@ describe('Employee introduction as employee', () => {
     cy.get('[data-cy="phase-menu-bar"]').contains('Om din anställning');
     cy.get('[data-cy="phase-menu-bar-button"]').contains('Nyanställd chef').should('exist').click();
 
-    cy.get('[data-cy="complete-all-activities"]').should('exist').check({ force: true });
-
     managerAsEmployeeIntroduction.data.phases[1].tasks.map((task) => {
       const updateFulfilmentStatusResponse = {
         id: task.id,
@@ -48,5 +46,6 @@ describe('Employee introduction as employee', () => {
       };
       cy.intercept('PATCH', '**/api/employee-checklists/**/tasks/**', updateFulfilmentStatusResponse);
     });
+    cy.get('[data-cy="complete-all-activities"]').should('exist').check({ force: true });
   });
 });
