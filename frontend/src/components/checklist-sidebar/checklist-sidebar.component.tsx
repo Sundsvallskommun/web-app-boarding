@@ -7,8 +7,8 @@ import { useUserStore } from '@services/user-service/user-service';
 import { Avatar } from '@sk-web-gui/avatar';
 import Divider from '@sk-web-gui/divider';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button } from '@sk-web-gui/react';
-import React, { useState } from 'react';
+import { Button, useConfirm } from '@sk-web-gui/react';
+import React, { useCallback, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,7 @@ export const ChecklistSidebar: React.FC = () => {
 
   const methods = useForm();
   const { t } = useTranslation();
+  const confirm = useConfirm();
 
   const openHandler = () => {
     setIsOpen(true);
@@ -39,6 +40,25 @@ export const ChecklistSidebar: React.FC = () => {
     onUpdate();
     setIsOpen(false);
   };
+
+  const handleRemoveDelegation = useCallback(
+    (email: string) => () => {
+      confirm
+        .showConfirmation(
+          t('delegation:confirmation.title'),
+          t('delegation:confirmation.text', { user: email }),
+          t('common:remove'),
+          t('common:cancel'),
+          'error'
+        )
+        .then((confirmed) => {
+          if (confirmed && data) {
+            removeDelegation(data.id, email).then(() => onUpdate());
+          }
+        });
+    },
+    [data, confirm]
+  );
 
   return (
     data && (
@@ -87,7 +107,7 @@ export const ChecklistSidebar: React.FC = () => {
                           size="sm"
                           variant="tertiary"
                           showBackground={false}
-                          onClick={() => removeDelegation(data.id, email).then(() => onUpdate())}
+                          onClick={handleRemoveDelegation(email)}
                         >
                           <Icon name="trash" />
                         </Button>

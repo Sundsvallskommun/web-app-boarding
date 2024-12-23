@@ -2,5 +2,9 @@
   "mentor" : "Mentor",
   "add" : "Lägg till mentor",
   "not_added" : "Det finns ingen tillagd mentor",
-  "add_description" : "Lägg till en mentor för {{user}}. Mentorn kan hjälpa till i introduktionen."
+  "add_description" : "Lägg till en mentor för {{user}}. Mentorn kan hjälpa till i introduktionen.",
+  "confirmation": {
+    "title": "Ta bort {{user}}?",
+    "text": "{{user}} kommer inte längre vara mentor och ha tillgång till introduktionen. Aktiviteter som {{user}} har gjort kommer att ligga kvar."
+  }
 }
