@@ -345,6 +345,7 @@ export interface OrgTree {
   orgId: number;
   treeLevel: number;
   orgDisplayName?: string;
+  orgName?: string;
   parentId: number;
   organizations?: OrgTree[];
 }

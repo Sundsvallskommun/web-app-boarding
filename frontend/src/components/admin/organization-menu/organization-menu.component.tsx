@@ -36,7 +36,7 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue 
         searchValue
           .toLowerCase()
           .split(' ')
-          .some((word) => org.orgDisplayName?.toLowerCase().includes(word))
+          .some((word) => org.orgName?.toLowerCase().includes(word) || org.orgDisplayName?.toLowerCase().includes(word))
       ) {
         hasMatch = true;
         return [...tree, { ...org, organizations: undefined }];
@@ -54,11 +54,11 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue 
         {org.organizations && org.organizations?.length > 0 ?
           <MenuVertical>
             <MenuVertical.SubmenuButton>
-              <Link href={`/admin/templates/${org.orgId}`}>{org.orgDisplayName}</Link>
+              <Link href={`/admin/templates/${org.orgId}`}>{org.orgName}</Link>
             </MenuVertical.SubmenuButton>
             {renderChildren(org.organizations)}
           </MenuVertical>
-        : <Link href={`/admin/templates/${org.orgId}`}>{org.orgDisplayName}</Link>}
+        : <Link href={`/admin/templates/${org.orgId}`}>{org.orgName}</Link>}
       </MenuVertical.Item>
     ));
   };
