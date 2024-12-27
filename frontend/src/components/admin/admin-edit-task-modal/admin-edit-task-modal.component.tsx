@@ -123,19 +123,21 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
 
   return (
     <Modal
+      data-cy="edit-task-modal"
       show={isOpen}
       onClose={closeHandler}
       className="w-[70rem] p-32"
       label={<h4 className="text-label-medium">{t('task:edit_activity')}</h4>}
     >
       <FormProvider {...formControl}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} data-cy="edit-task-form">
           <Modal.Content className="mb-24">
             <Input type="hidden" value="ADMIN" {...register('permission')} />
             <RadioButton.Group inline>
               {['NEW_EMPLOYEE', 'NEW_MANAGER', 'MANAGER_FOR_NEW_EMPLOYEE', 'MANAGER_FOR_NEW_MANAGER'].map(
                 (roleType) => (
                   <RadioButton
+                    data-cy="role-type-radio-button"
                     defaultChecked={task?.roleType === roleType}
                     value={roleType}
                     onChange={() => setValue('roleType', roleType as TaskUpdateRequest['roleType'])}
@@ -149,7 +151,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
               <FormLabel showRequired={false} className="mt-16">
                 {t('task:heading')}
               </FormLabel>
-              <Input {...register('heading')} />
+              <Input data-cy="activity-heading-input" {...register('heading')} />
               {errors.heading && (
                 <FormErrorMessage className="text-error">
                   <Icon size="1.5rem" name="info" /> {errors.heading?.message}
@@ -160,21 +162,27 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
               <FormLabel showRequired={false} className="mt-16">
                 {t('task:heading_reference')}
               </FormLabel>
-              <Input {...register('headingReference')} />
+              <Input data-cy="activity-heading-reference-input" {...register('headingReference')} />
               {errors.headingReference && (
                 <FormErrorMessage className="text-error">
                   <Icon size="1.5rem" name="info" /> {errors.headingReference?.message}
                 </FormErrorMessage>
               )}
             </FormControl>
-            <FormControl className="w-full">
+            <FormControl className="w-full" data-cy="activity-description">
               <FormLabel className="mt-16">{t('task:text')}</FormLabel>
-              <RichTextEditor containerLabel="text" value={text || ''} onChange={onRichTextChange} />
+              <RichTextEditor
+                data-cy="activity-description-input"
+                containerLabel="text"
+                value={text || ''}
+                onChange={onRichTextChange}
+              />
             </FormControl>
           </Modal.Content>
 
           <Modal.Footer className="justify-end">
             <Button
+              data-cy="activity-cancel-button"
               variant="secondary"
               onClick={() => {
                 setValue('heading', task?.heading || '');
@@ -184,7 +192,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
             >
               {t('common:cancel')}
             </Button>
-            <Button type="submit" onClick={handleSubmit(onSubmit, onError)}>
+            <Button data-cy="activity-save-button" type="submit" onClick={handleSubmit(onSubmit, onError)}>
               {t('common:save')}
             </Button>
           </Modal.Footer>

@@ -4,6 +4,8 @@
   },
   "add_activity": "Lägg till aktivitet",
   "edit_activity": "Redigera aktivitet",
+  "remove_activity": "Ta bort aktivitet",
+  "remove_activity_text": "Är du säker på att du vill ta bort aktiviteten?",
   "choose_phase": "Välj fas",
   "heading": "Rubrik (obligatorisk)",
   "heading_reference": "Länk",

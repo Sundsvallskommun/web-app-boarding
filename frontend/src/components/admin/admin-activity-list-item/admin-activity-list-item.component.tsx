@@ -4,7 +4,7 @@ import { useChecklist } from '@services/checklist-service/use-checklist';
 import sanitized from '@services/sanitizer-service';
 import { useUserStore } from '@services/user-service/user-service';
 import LucideIcon, { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Label, Link, PopupMenu } from '@sk-web-gui/react';
+import { Button, Label, Link, PopupMenu, useConfirm } from '@sk-web-gui/react';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { shallow } from 'zustand/shallow';
@@ -26,6 +26,7 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);
+  const confirm = useConfirm();
 
   const onRemoveTask = () => {
     removeTask(templateId, phaseId, task.id).then(() => {
@@ -42,7 +43,7 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full" data-cy={`activity-list-item-${index}`}>
       <div className="my-12 flex p-12">
         <div className="w-full flex items-start">
           <div className="flex gap-8">
@@ -106,18 +107,47 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
             <div className=" flex flex-col items-center">
               <div className="relative w-min h-[3.2rem]">
                 <PopupMenu>
-                  <PopupMenu.Button iconButton variant="tertiary" size="sm" showBackground={false}>
+                  <PopupMenu.Button
+                    data-cy={`task-menu-button`}
+                    iconButton
+                    variant="tertiary"
+                    size="sm"
+                    showBackground={false}
+                  >
                     <Icon name="ellipsis-vertical" />
                   </PopupMenu.Button>
                   <PopupMenu.Panel>
                     <PopupMenu.Items>
                       <PopupMenu.Item>
-                        <Button leftIcon={<Icon name="pen" />} onClick={() => openHandler()}>
+                        <Button
+                          data-cy="activity-edit-button"
+                          leftIcon={<Icon name="pen" />}
+                          onClick={() => openHandler()}
+                        >
                           {t('common:edit')}
                         </Button>
                       </PopupMenu.Item>
                       <PopupMenu.Item>
-                        <Button leftIcon={<Icon name="trash" />} onClick={() => onRemoveTask()}>
+                        <Button
+                          data-cy="activity-remove-button"
+                          leftIcon={<Icon name="trash" />}
+                          onClick={() =>
+                            confirm
+                              .showConfirmation(
+                                t('task:remove_activity'),
+                                t('task:remove_activity_text'),
+                                t('common:remove'),
+                                t('common:cancel'),
+                                'error'
+                              )
+                              .then((confirmed) => {
+                                if (confirmed) {
+                                  onRemoveTask();
+                                }
+                              })
+                          }
+                          // onClick2={() => onRemoveTask()}
+                        >
                           {t('common:remove')}
                         </Button>
                       </PopupMenu.Item>
