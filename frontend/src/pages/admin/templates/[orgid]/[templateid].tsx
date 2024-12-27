@@ -86,11 +86,11 @@ export const EditTemplate = () => {
         thisPhase.tasks[thisIndex as number] = previousTask;
         thisPhase.tasks[(thisIndex as number) - 1] = thisTask;
       }
-      setData({ ...checklist });
+      // setData({ ...checklist });
       // SAVING SORTORDER IS NOT WORKING
-      // const newSortorder = getSortorder(checklist);
-      // await setSortorder(orgid as string, newSortorder);
-      // await refresh(templateid as string);
+      const newSortorder = getSortorder(checklist);
+      await setSortorder(orgid as string, newSortorder);
+      await refresh(templateid as string);
     }
   };
 
@@ -104,57 +104,53 @@ export const EditTemplate = () => {
         thisPhase.tasks[thisIndex as number] = nextTask;
         thisPhase.tasks[(thisIndex as number) + 1] = thisTask;
       }
-      setData({ ...checklist });
-      // SAVING SORTORDER IS NOT WORKING
-      // const newSortorder = getSortorder(checklist);
-      // await setSortorder(orgid as string, newSortorder);
-      // await refresh(templateid as string);
+      // setData({ ...checklist });
+      // SAVING SORTORDER IS NOT WORKING IN API??
+      const newSortorder = getSortorder(checklist);
+      await setSortorder(orgid as string, newSortorder);
+      await refresh(templateid as string);
     }
   };
 
   const filteredTasks = useCallback(
     (data: Checklist, roleTypes: string[]) => {
-      console.log('calculating filtered tasks');
-      return (
-        data?.phases
-          // ?.filter((phase) => phase.tasks?.some((task) => roleTypes.includes(task.roleType)))
-          .sort((a, b) => a.sortOrder - b.sortOrder)
-          .map((phase, index) => (
-            <div key={phase.id} className="py-20 px-20 mb-48" data-cy={`phase-section-${index}`}>
-              <h3 className="mb-12 text-h3-md"> {phase.name}</h3>
-              <ol className="w-full pl-8 list-decimal">
-                {phase.tasks
-                  ?.filter((task) => roleTypes.includes(task.roleType))
-                  .map((task, index, list) => (
-                    <AdminActivityListItem
-                      key={task.id}
-                      task={task}
-                      templateId={data.id}
-                      phaseId={phase.id}
-                      index={index}
-                      items={list.length}
-                      moveUp={(task: Task) => moveUp(task, data)}
-                      moveDown={(task: Task) => moveDown(task, data)}
-                    />
-                  ))}
-              </ol>
-              <Button
-                size="lg"
-                className="mt-8 ml-24"
-                data-cy={`add-activity-button`}
-                leftIcon={<LucideIcon name="plus" />}
-                variant="tertiary"
-                color="info"
-                onClick={() => {
-                  setPhaseId(phase.id);
-                  setIsOpen(true);
-                }}
-              >
-                {t('task:add_activity')}
-              </Button>
-            </div>
-          ))
-      );
+      return data?.phases
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .map((phase, index) => (
+          <div key={phase.id} className="py-20 px-20 mb-48" data-cy={`phase-section-${index}`}>
+            <h3 className="mb-12 text-h3-md"> {phase.name}</h3>
+            <ol className="w-full pl-8 list-decimal">
+              {phase.tasks
+                ?.filter((task) => roleTypes.includes(task.roleType))
+                .map((task, index, list) => (
+                  <AdminActivityListItem
+                    key={task.id}
+                    task={task}
+                    templateId={data.id}
+                    phaseId={phase.id}
+                    index={index}
+                    items={list.length}
+                    moveUp={(task: Task) => moveUp(task, data)}
+                    moveDown={(task: Task) => moveDown(task, data)}
+                  />
+                ))}
+            </ol>
+            <Button
+              size="lg"
+              className="mt-8 ml-24"
+              data-cy={`add-activity-button`}
+              leftIcon={<LucideIcon name="plus" />}
+              variant="tertiary"
+              color="info"
+              onClick={() => {
+                setPhaseId(phase.id);
+                setIsOpen(true);
+              }}
+            >
+              {t('task:add_activity')}
+            </Button>
+          </div>
+        ));
     },
     [data]
   );
