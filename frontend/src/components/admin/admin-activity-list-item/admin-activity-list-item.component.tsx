@@ -51,7 +51,9 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
               iconButton
               data-cy="move-up"
               disabled={index === 0}
+              inverted={index === 0}
               variant="tertiary"
+              showBackground={false}
               size="sm"
               color="info"
               onClick={() => {
@@ -64,7 +66,9 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
               iconButton
               data-cy="move-down"
               disabled={index === items - 1}
+              inverted={index === items - 1}
               variant="tertiary"
+              showBackground={false}
               size="sm"
               color="info"
               onClick={() => {

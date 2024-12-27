@@ -49,7 +49,7 @@ describe('Uses the template overview', () => {
     });
   });
 
-  it.only('allows editing task', () => {
+  it('allows editing task', () => {
     cy.visit('http://localhost:3000/admin/templates/13/4b955690-f49d-4116-8c94-6076d93c6303');
     cy.get('h2').should('include.text', 'Grund för checklista');
     cy.get('[data-cy="template-menu-bar-item-0"]').within(() => {

@@ -141,6 +141,7 @@ export const EditTemplate = () => {
               data-cy={`add-activity-button`}
               leftIcon={<LucideIcon name="plus" />}
               variant="tertiary"
+              showBackground={false}
               color="info"
               onClick={() => {
                 setPhaseId(phase.id);
