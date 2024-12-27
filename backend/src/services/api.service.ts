@@ -119,6 +119,7 @@ class ApiService {
   }
 
   public async delete<T>(config: AxiosRequestConfig, user: ClientUser): Promise<ApiResponse<T>> {
+    logger.info(`MAKING DELETE REQUEST TO URL: ${config.baseURL || ''}/${config.url}`);
     return this.request<T>({ ...config, method: 'DELETE' }, user);
   }
 }

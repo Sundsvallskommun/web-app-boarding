@@ -36,7 +36,12 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, orgId }) =
               </li>
             </ul>
             <Label rounded color="tertiary" inverted className="grow-0 w-fit">
-              {t('templates:count_activities', { count: template.phases?.length })}
+              {t('templates:count_activities', {
+                count: template.phases.reduce(
+                  (accumulator, currentPhase) => accumulator + (currentPhase?.tasks?.length || 0),
+                  0
+                ),
+              })}
             </Label>
           </Card.Text>
         </Card.Body>

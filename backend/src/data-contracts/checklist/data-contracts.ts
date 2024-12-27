@@ -48,14 +48,14 @@ export interface TaskItem {
 }
 
 export interface Problem {
+  title?: string;
+  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
   parameters?: Record<string, object>;
   status?: StatusType;
-  title?: string;
-  detail?: string;
 }
 
 export interface StatusType {
@@ -83,10 +83,10 @@ export interface ConstraintViolationProblem {
   violations?: Violation[];
   title?: string;
   message?: string;
+  detail?: string;
   /** @format uri */
   instance?: string;
   parameters?: Record<string, object>;
-  detail?: string;
   suppressed?: {
     stackTrace?: {
       classLoaderName?: string;
@@ -119,14 +119,14 @@ export interface ThrowableProblem {
     nativeMethod?: boolean;
   }[];
   message?: string;
+  title?: string;
+  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
   parameters?: Record<string, object>;
   status?: StatusType;
-  title?: string;
-  detail?: string;
   suppressed?: {
     stackTrace?: {
       classLoaderName?: string;
@@ -224,6 +224,11 @@ export interface CustomTaskCreateRequest {
    */
   heading: string;
   /**
+   * Optional reference to use as value for the headings anchor element
+   * @example "http://www.google.com"
+   */
+  headingReference?: string;
+  /**
    * The body text of the task
    * @example "Detta är en beskrivning av ett uppdrag"
    */
@@ -235,7 +240,10 @@ export interface CustomTaskCreateRequest {
    * @format int32
    */
   sortOrder: number;
-  /** The id of the user creating the custom task */
+  /**
+   * The id of the user creating the custom task
+   * @example "joe01doe"
+   */
   createdBy: string;
 }
 
@@ -259,6 +267,11 @@ export interface CustomTask {
    * @example "Bjud på fika"
    */
   heading?: string;
+  /**
+   * Reference to use as value for the headings anchor element (if present)
+   * @example "http://www.google.com"
+   */
+  headingReference?: string;
   /**
    * The body text of the task
    * @example "Detta är en beskrivning av ett uppdrag"
@@ -285,7 +298,10 @@ export interface CustomTask {
    * @example "2023-11-22T15:30:00+03:00"
    */
   updated?: string;
-  /** The id of the user that last modified the custom task */
+  /**
+   * The id of the user that last modified the custom task
+   * @example "joe01doe"
+   */
   lastSavedBy?: string;
 }
 
@@ -348,6 +364,11 @@ export interface TaskCreateRequest {
    */
   heading: string;
   /**
+   * Optional reference to use as value for the headings anchor element
+   * @example "http://www.google.com"
+   */
+  headingReference?: string;
+  /**
    * The body text of the task
    * @example "Body text of the task"
    */
@@ -364,7 +385,10 @@ export interface TaskCreateRequest {
   permission: Permission;
   /** The question type of the task */
   questionType: QuestionType;
-  /** The id of the user creating the task */
+  /**
+   * The id of the user creating the task
+   * @example "joe01doe"
+   */
   createdBy: string;
 }
 
@@ -458,6 +482,11 @@ export interface Task {
    */
   heading?: string;
   /**
+   * Reference to use as value for the headings anchor element (if present)
+   * @example "http://www.google.com"
+   */
+  headingReference?: string;
+  /**
    * The body text of the task
    * @example "Detta är en beskrivning av ett uppdrag"
    */
@@ -486,7 +515,10 @@ export interface Task {
    * @example "2023-11-22T15:30:00+03:00"
    */
   updated?: string;
-  /** The id of the user that last modified the task */
+  /**
+   * The id of the user that last modified the task
+   * @example "joe01doe"
+   */
   lastSavedBy?: string;
 }
 
@@ -623,6 +655,11 @@ export interface EmployeeChecklistTask {
    */
   heading?: string;
   /**
+   * Reference to use as value for the headings anchor element (if present)
+   * @example "http://www.google.com"
+   */
+  headingReference?: string;
+  /**
    * The body text of the task
    * @example "Detta är en beskrivning av ett uppdrag"
    */
@@ -709,6 +746,11 @@ export interface CustomTaskUpdateRequest {
    */
   heading?: string;
   /**
+   * Optional reference to use as value for the headings anchor element
+   * @example "http://www.google.com"
+   */
+  headingReference?: string;
+  /**
    * The body text of the task
    * @example "Detta är en beskrivning av ett uppdrag"
    */
@@ -720,7 +762,10 @@ export interface CustomTaskUpdateRequest {
    * @format int32
    */
   sortOrder?: number;
-  /** The id of the user updating the custom task */
+  /**
+   * The id of the user updating the custom task
+   * @example "joe01doe"
+   */
   updatedBy: string;
 }
 
@@ -739,6 +784,11 @@ export interface ChecklistUpdateRequest {
 export interface TaskUpdateRequest {
   /** The name of the task */
   heading?: string;
+  /**
+   * Optional reference to use as value for the headings anchor element
+   * @example "http://www.google.com"
+   */
+  headingReference?: string;
   /** The body text of the task */
   text?: string;
   /**
@@ -753,7 +803,10 @@ export interface TaskUpdateRequest {
   permission?: Permission;
   /** The question type of the task */
   questionType?: QuestionType;
-  /** The id of the user updating the task */
+  /**
+   * The id of the user updating the task
+   * @example "joe01doe"
+   */
   updatedBy: string;
 }
 

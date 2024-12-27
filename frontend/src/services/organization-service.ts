@@ -94,37 +94,37 @@ export const useOrgTemplate = (orgid: number) => {
   const { data: orgTree } = useOrgTree();
 
   useEffect(() => {
-    setLoading(true);
     if (data?.organizationNumber !== orgid) {
       setData(null);
       setLoaded(false);
+      setLoading(true);
+      getOrgTemplate(orgid)
+        .then((res) => {
+          if (res) {
+            setData(res);
+            setLoaded(true);
+          }
+          setLoading(false);
+        })
+        .catch(() => {
+          const fromOrgTree = findOrgInTree(orgTree, orgid);
+          console.log('🚀 ~ useEffect ~ fromOrgTree:', fromOrgTree);
+          console.log(orgTree);
+          if (fromOrgTree) {
+            setData({
+              id: fromOrgTree.organizationId,
+              organizationName: fromOrgTree.orgName || fromOrgTree.orgDisplayName || '',
+              organizationNumber: fromOrgTree.orgId,
+              checklists: [],
+              communicationChannels: 'NO_COMMUNICATION',
+              created: '',
+              updated: '',
+            });
+            setLoaded(true);
+          }
+          setLoading(false);
+        });
     }
-    getOrgTemplate(orgid)
-      .then((res) => {
-        if (res) {
-          setData(res);
-          setLoaded(true);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        const fromOrgTree = findOrgInTree(orgTree, orgid);
-        console.log('🚀 ~ useEffect ~ fromOrgTree:', fromOrgTree);
-        console.log(orgTree);
-        if (fromOrgTree) {
-          setData({
-            id: fromOrgTree.organizationId,
-            organizationName: fromOrgTree.orgName || fromOrgTree.orgDisplayName || '',
-            organizationNumber: fromOrgTree.orgId,
-            checklists: [],
-            communicationChannels: 'NO_COMMUNICATION',
-            created: '',
-            updated: '',
-          });
-          setLoaded(true);
-        }
-        setLoading(false);
-      });
   }, [orgid]);
 
   return { data, loaded, loading };
