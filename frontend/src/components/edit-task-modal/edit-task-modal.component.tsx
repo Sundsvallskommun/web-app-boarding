@@ -117,7 +117,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
             </FormControl>
 
             <FormLabel className="mt-16">{t('task:link')}</FormLabel>
-            <Input {...register('headingReference')} />
+            <Input {...register('headingReference')} data-cy="add-activity-heading-reference" />
             <p className="text-small my-0">{t('task:link_description')}</p>
 
             <FormControl className="w-full">

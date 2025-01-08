@@ -138,7 +138,7 @@ export const AddActivityModal: React.FC = () => {
             )}
 
             <FormLabel className="mt-16">{t('task:link')}</FormLabel>
-            <Input {...register('headingReference')} onBlur={() => trigger('heading')} />
+            <Input {...register('headingReference')} data-cy="add-activity-heading-reference" />
             <p className="text-small my-0">{t('task:link_description')}</p>
 
             <FormLabel className="mt-16">{t('task:text')}</FormLabel>

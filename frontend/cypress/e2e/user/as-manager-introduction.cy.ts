@@ -80,6 +80,7 @@ describe('Employee introduction as manager', () => {
     cy.get('[data-cy="add-activity-text"]').should('exist').type('Beskrivning av ny aktivitet');
     cy.get('[data-cy="add-activity-heading-error"]').should('exist').contains('Du måste skriva en rubrik');
     cy.get('[data-cy="add-activity-heading"]').should('exist').type('Ny aktivitet');
+    cy.get('[data-cy="add-activity-heading-reference"]').should('exist').type('https://www.google.com');
     cy.get('[data-cy="add-new-activity-button"]').contains('Lägg till').click();
   });
 
@@ -94,6 +95,7 @@ describe('Employee introduction as manager', () => {
     cy.get('[data-cy="edit-custom-activity-popup-menu-edit"]').should('exist').click();
     cy.get('[data-cy="edit-activity-heading"]').should('exist').clear().type('Redigerad aktivitet');
     cy.get('[data-cy="edit-activity-text"]').should('exist').type('Redigerad text');
+    cy.get('[data-cy="add-activity-heading-reference"]').should('exist').clear().type('https://www.google.se');
     cy.get('[data-cy="save-edited-activity"]').should('exist').click();
 
     cy.get('[data-cy="edit-custom-activity-popup-menu"]').should('exist').click();
