@@ -56,6 +56,7 @@ export interface EmployeeChecklistPhase {
 export interface EmployeeChecklistTask {
   id: string;
   heading: string;
+  headingReference?: string;
   text: string;
   sortOrder: number;
   roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
@@ -113,6 +114,7 @@ export interface OrganizationCreateRequest {
 export interface CustomTask {
   id: string;
   heading: string;
+  headingReference?: string;
   text: string;
   sortOrder: number;
   roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
@@ -161,7 +163,8 @@ export interface PhaseCreateRequest {
 
 export interface TaskCreateRequest {
   heading: string;
-  text: string;
+  headingReference?: string;
+  text?: string;
   sortOrder: number;
   roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   permission: 'SUPERADMIN' | 'ADMIN';
@@ -191,6 +194,11 @@ export interface Checklist {
   phases: Phase[];
 }
 
+export interface ChecklistApiResponse {
+  data: Checklist;
+  message: string;
+}
+
 export interface Organization {
   id: string;
   organizationName: string;
@@ -218,6 +226,7 @@ export interface Phase {
 export interface Task {
   id: string;
   heading: string;
+  headingReference?: string;
   text: string;
   sortOrder: string;
   roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
@@ -246,7 +255,8 @@ export interface EmployeeChecklistPhaseUpdateRequest {
 
 export interface CustomTaskUpdateRequest {
   heading: string;
-  text: string;
+  headingReference?: string;
+  text?: string;
   questionType:
     | 'YES_OR_NO'
     | 'YES_OR_NO_WITH_TEXT'
@@ -274,7 +284,8 @@ export interface PhaseUpdateRequest {
 
 export interface TaskUpdateRequest {
   heading: string;
-  text: string;
+  headingReference?: string;
+  text?: string;
   sortOrder: number;
   roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   permission: 'SUPERADMIN' | 'ADMIN';
@@ -338,6 +349,21 @@ export interface Template {
   updated: string;
   lastSavedBy: string;
   phases: Phase[];
+}
+
+export interface CTaskItem {
+  id: string;
+  position: number;
+}
+
+export interface CPhaseItem {
+  id?: string;
+  position: number;
+  taskOrder: CTaskItem[];
+}
+
+export interface SortorderRequest {
+  phaseOrder: CPhaseItem[];
 }
 
 export interface OrgTree {

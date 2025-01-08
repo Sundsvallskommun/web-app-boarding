@@ -12,6 +12,10 @@
   "count_activities_other": "{{count}} aktiviteter",
   "properties": {
     "updated": "Senast ändrad",
+    "updated_by": "Senast ändrad av",
     "version": "Version"
-  }
+  },
+  "created": "Utkast",
+  "active": "Aktiv",
+  "deprecated": "Inaktiv"
 }
