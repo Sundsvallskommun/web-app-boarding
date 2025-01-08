@@ -1,9 +1,21 @@
 {
-    "name": "mall",
-    "name_one": "mall",
-    "name_zero": "mallar",
-    "name_other": "mallar",
-    "count_one": "{{count}} mall",
-    "count_zero": "{{count}} mallar",
-    "count_other": "{{count}} mallar"
-  }
+  "name": "mall",
+  "name_one": "mall",
+  "name_zero": "mallar",
+  "name_other": "mallar",
+  "count_one": "{{count}} mall",
+  "count_zero": "{{count}} mallar",
+  "count_other": "{{count}} mallar",
+  "templates_for_org": "Mallar för {{org}}",
+  "count_activities_zero": "{{count}} aktiviteter",
+  "count_activities_one": "{{count}} aktivitet",
+  "count_activities_other": "{{count}} aktiviteter",
+  "properties": {
+    "updated": "Senast ändrad",
+    "updated_by": "Senast ändrad av",
+    "version": "Version"
+  },
+  "created": "Utkast",
+  "active": "Aktiv",
+  "deprecated": "Inaktiv"
+}

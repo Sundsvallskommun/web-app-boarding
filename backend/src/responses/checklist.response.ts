@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import ApiResponse from '@interfaces/api-service.interface';
 import { Type } from 'class-transformer';
 import {
@@ -33,6 +33,8 @@ import {
   CorrespondenceStatus,
   Correspondence as CorrespondenceType,
   DelegatedEmployeeChecklistResponse as DelegatedEmployeeChecklistResponseType,
+  EmployeeChecklist as IEmployeeChecklist,
+  EmployeeChecklistTask as IEmployeeChecklistTask,
 } from '../data-contracts/checklist/data-contracts';
 
 export class Stakeholder implements StakeholderType {
@@ -75,12 +77,13 @@ export class EmployeeChecklistPhase implements EmployeeChecklistPhase {
   tasks?: EmployeeChecklistTask[];
 }
 
-export class EmployeeChecklistTask implements EmployeeChecklistTask {
+export class EmployeeChecklistTask implements IEmployeeChecklistTask {
   @IsString()
   id?: string;
   @IsString()
   heading?: string;
   @IsString()
+  @IsOptional()
   headingReference?: string;
   @IsString()
   text?: string;
@@ -117,7 +120,7 @@ export class CustomTaskCreateRequest implements CustomTaskCreateRequestType {
   createdBy: string;
 }
 
-export class EmployeeChecklist implements EmployeeChecklist {
+export class EmployeeChecklist implements IEmployeeChecklist {
   @IsString()
   id?: string;
   @ValidateNested()
@@ -175,6 +178,7 @@ export class CustomTask implements CustomTaskType {
   @IsString()
   heading?: string;
   @IsString()
+  @IsOptional()
   headingReference?: string;
   @IsString()
   text?: string;
@@ -249,8 +253,10 @@ export class TaskCreateRequest implements TaskCreateRequestType {
   @IsString()
   heading: string;
   @IsString()
-  headingReference?: string;
+  @IsOptional()
+  headingReference: string;
   @IsString()
+  @IsOptional()
   text?: string;
   @IsNumber()
   sortOrder: number;
@@ -294,6 +300,14 @@ export class Checklist implements ChecklistType {
   @ValidateNested({ each: true })
   @Type(() => Phase)
   phases?: Phase[];
+}
+
+export class ChecklistApiResponse implements ApiResponse<Checklist> {
+  @ValidateNested()
+  @Type(() => Checklist)
+  data: Checklist;
+  @IsString()
+  message: string;
 }
 
 export class Organization implements OrganizationType {
@@ -347,6 +361,7 @@ export class Task implements TaskType {
   @IsString()
   heading?: string;
   @IsString()
+  @IsOptional()
   headingReference?: string;
   @IsString()
   text?: string;
@@ -388,8 +403,10 @@ export class CustomTaskUpdateRequest implements CustomTaskUpdateRequestType {
   @IsString()
   heading?: string;
   @IsString()
+  @IsOptional()
   headingReference?: string;
   @IsString()
+  @IsOptional()
   text?: string;
   @IsEnum(QuestionType)
   questionType?: QuestionType;
@@ -429,8 +446,10 @@ export class TaskUpdateRequest implements TaskUpdateRequestType {
   @IsString()
   heading?: string;
   @IsString()
+  @IsOptional()
   headingReference?: string;
   @IsString()
+  @IsOptional()
   text?: string;
   @IsNumber()
   sortOrder?: number;

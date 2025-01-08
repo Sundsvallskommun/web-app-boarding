@@ -3,7 +3,7 @@ import { removeCustomTask, updateTaskFulfilmentStatus } from '@services/checklis
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import sanitized from '@services/sanitizer-service';
 import { useUserStore } from '@services/user-service/user-service';
-import { Button, Checkbox, Label, PopupMenu } from '@sk-web-gui/react';
+import { Button, Checkbox, Label, Link, PopupMenu } from '@sk-web-gui/react';
 import { shallow } from 'zustand/shallow';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import React, { useState } from 'react';
@@ -88,13 +88,12 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                   <Icon size="1.5rem" name="external-link" />
                 </>
               : <span className="mr-3 text-large">{task.heading}</span>}
-
               <div className="pr-40">
                 <p>
                   <span
                     className="my-0 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:ml-lg [&>ol]:ml-lg [&>*>a]:underline"
                     dangerouslySetInnerHTML={{
-                      __html: sanitized(task.text).replace('<a', "<a target='_blank'"),
+                      __html: sanitized(task.text || '').replace('<a', "<a target='_blank'"),
                     }}
                   ></span>
                 </p>

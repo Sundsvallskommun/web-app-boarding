@@ -1,0 +1,227 @@
+{
+  "data": {
+    "id": "4b955690-f49d-4116-8c94-6076d93c6303",
+    "name": "ROOT_CHECKLIST_SUNDSVALLS_KOMMUN",
+    "displayName": "Grund för checklista",
+    "version": 1,
+    "lifeCycle": "ACTIVE",
+    "created": "2024-11-21T12:00:50.997571+01:00",
+    "updated": "2024-11-21T13:37:13.998063+01:00",
+    "lastSavedBy": "bar11baz",
+    "phases": [
+      {
+        "id": "e819872c-84d2-4468-b5c5-dd862c0df1c4",
+        "name": "Inför första dagen",
+        "bodyText": "Syftet med introduktionen är att ge din nya medarbetare all den information, kunskap och kontaktnät som den  behöver för att så snabbt möjligt komma in i sin nya roll och bli produktiv. Inför en introduktion är det mycket att förbereda. Ta stöd av checklistan när du planerar introduktionen av din nya medarbetare.",
+        "timeToComplete": "P-1D",
+        "permission": "SUPERADMIN",
+        "sortOrder": 1,
+        "tasks": [
+          {
+            "id": "da59bbfa-f064-4f34-8f61-76647fec3852",
+            "heading": "Du som chef ansvarar för introduktionen för din nya medarbetare",
+            "text": "<p>Vid behov kan du utse någon annan, exempelvis en fadder, för planering av delar i introduktionen.</p>",
+            "sortOrder": 0,
+            "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+            "questionType": "COMPLETED_OR_NOT_RELEVANT",
+            "permission": "ADMIN",
+            "created": "2024-11-21T12:13:48.550325+01:00",
+            "updated": "2024-12-23T10:19:41.916788+01:00",
+            "lastSavedBy": "foo00bar"
+          },
+          {
+            "id": "6d546699-ef5f-4b03-8063-d7831ddbfbea",
+            "heading": "Upprätta ett introduktionsschema och välkomna din medarbetare",
+            "text": "Planera introduktionen och avsätt tid i din kalender för introduktionen. Skicka ett välkomstbrev till din nya medarbetare med information om var och när ni ska mötas den första arbetsdagen. Bifoga introduktionsschema för de första 3 veckorna.",
+            "sortOrder": 2,
+            "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+            "questionType": "COMPLETED_OR_NOT_RELEVANT",
+            "permission": "SUPERADMIN",
+            "created": "2024-11-21T12:15:03.008748+01:00",
+            "lastSavedBy": "bar11baz"
+          },
+          {
+            "id": "9e134e0d-4e19-4642-92b3-c6a175c5e0f0",
+            "heading": "Utse en fadder",
+            "text": "<p>Fadder är en person som hjälper den nya medarbetaren med praktiska frågor under den första tiden.<br>Faddern har extra ansvar för att introducera den nya medarbetaren i sociala sammanhang.</p>",
+            "sortOrder": 3,
+            "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+            "questionType": "COMPLETED_OR_NOT_RELEVANT",
+            "permission": "SUPERADMIN",
+            "created": "2024-11-21T12:15:49.686778+01:00",
+            "lastSavedBy": "bar11baz"
+          }
+        ],
+        "created": "2024-11-21T11:43:30.233792+01:00",
+        "updated": "2024-12-18T09:21:51.844748+01:00",
+        "lastSavedBy": "quu22qux"
+      },
+      {
+        "id": "d1ea1756-0105-406b-943f-ac4d4de58f93",
+        "name": "Första dagen",
+        "bodyText": "",
+        "timeToComplete": "P1D",
+        "permission": "SUPERADMIN",
+        "sortOrder": 2,
+        "tasks": [
+          {
+            "id": "025e17fd-48e2-42db-9b3e-31b65b3f77e5",
+            "heading": "Den anställdes första dag",
+            "headingReference": "",
+            "text": "<p>Den anställdes första dag beskrivs här.</p>",
+            "sortOrder": 0,
+            "roleType": "NEW_EMPLOYEE",
+            "questionType": "YES_OR_NO",
+            "permission": "ADMIN",
+            "created": "2024-12-23T14:48:39.33115+01:00",
+            "lastSavedBy": "foo00bar"
+          },
+          {
+            "id": "22effc70-5679-4ebe-b8c3-68b08c6da511",
+            "heading": "Ny aktivitet för chef till ny anställd",
+            "headingReference": "",
+            "text": "<p>Testar</p>",
+            "sortOrder": 0,
+            "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+            "questionType": "YES_OR_NO",
+            "permission": "ADMIN",
+            "created": "2024-12-23T14:32:22.300669+01:00",
+            "lastSavedBy": "foo00bar"
+          },
+          {
+            "id": "141237c6-e704-4fe7-a97f-086b33d19f5b",
+            "heading": "Möt upp din nya medarbetare vid entrén",
+            "text": "Presentera närmaste kollegor, övriga arbetskamrater, fadder.",
+            "sortOrder": 1,
+            "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+            "questionType": "COMPLETED_OR_NOT_RELEVANT",
+            "permission": "SUPERADMIN",
+            "created": "2024-11-21T12:30:14.561809+01:00",
+            "lastSavedBy": "bar11baz"
+          }
+        ],
+        "created": "2024-11-21T11:44:59.665961+01:00",
+        "lastSavedBy": "bar11baz"
+      },
+      {
+        "id": "d88b8753-49af-4cb6-936c-8fbb26d21361",
+        "name": "Första veckan",
+        "bodyText": "",
+        "timeToComplete": "P1W",
+        "permission": "SUPERADMIN",
+        "sortOrder": 3,
+        "created": "2024-11-21T11:47:13.938767+01:00",
+        "lastSavedBy": "bar11baz"
+      },
+      {
+        "id": "972da6d8-203f-4198-81f9-bdcf78d2b13d",
+        "name": "Ny chef",
+        "bodyText": "",
+        "timeToComplete": "P6M",
+        "permission": "SUPERADMIN",
+        "sortOrder": 5,
+        "tasks": [
+          {
+            "id": "05ace0bb-c87f-4447-9a1c-d0abcd781700",
+            "heading": "Gå igenom chefsavtal och chefsuppdraget",
+            "text": "",
+            "sortOrder": 1,
+            "roleType": "MANAGER_FOR_NEW_MANAGER",
+            "questionType": "COMPLETED_OR_NOT_RELEVANT",
+            "permission": "SUPERADMIN",
+            "created": "2024-11-21T12:36:11.079047+01:00",
+            "lastSavedBy": "bar11baz"
+          },
+          {
+            "id": "96647a71-f592-41cc-a185-50718b46d021",
+            "heading": "Gå igenom fördelning av arbetsmiljöuppgifter",
+            "text": "<p>Säkerställ att chef har undertecknat och känner sig trygg i uppgiften. Fördelning av uppgifter utifrån uppdrag finns som bilaga 1 till riktlinjen i systematiskt arbetsmiljöarbete.</p><p>Information om systematiskt arbetsmiljöarbete hittar du<a href=\"https://intranat.sundsvall.se/inloggad/s/anstallning-och-arbetsmiljo/arbetsmiljo-friskvard-och-halsa/arbetsmiljoarbete/systematiskt-arbetsmiljoarbete\">här</a></p>",
+            "sortOrder": 2,
+            "roleType": "MANAGER_FOR_NEW_MANAGER",
+            "questionType": "COMPLETED_OR_NOT_RELEVANT",
+            "permission": "SUPERADMIN",
+            "created": "2024-11-21T12:37:29.776362+01:00",
+            "lastSavedBy": "bar11baz"
+          }
+        ],
+        "created": "2024-11-21T11:48:01.245365+01:00",
+        "lastSavedBy": "bar11baz"
+      },
+      {
+        "id": "9e8cce99-d5b6-4ef4-b7ca-3f351665a157",
+        "name": "Uppföljning",
+        "bodyText": "Du behöver kontinuerligt följa upp introduktionen för att se hur din medarbetare trivs och kommit in i arbetet. En rekommendation är att du följer upp minst en gång i månaden, gärna oftare.",
+        "timeToComplete": "P6M",
+        "permission": "SUPERADMIN",
+        "sortOrder": 6,
+        "created": "2024-11-21T11:48:38.123495+01:00",
+        "lastSavedBy": "bar11baz"
+      },
+      {
+        "id": "931d51ff-2a41-4899-996e-25cca375dac7",
+        "name": "1. Om din anställning",
+        "bodyText": "",
+        "timeToComplete": "P6M",
+        "permission": "SUPERADMIN",
+        "sortOrder": 9,
+        "tasks": [
+          {
+            "id": "d1cc6dca-0bd2-4f80-8d5d-98abf3d2a3b2",
+            "heading": "Skyldigheter som anställd",
+            "headingReference": "https://intranat.sundsvall.se/inloggad/s/anstallning-och-arbetsmiljo/ny-pa-jobbet/introduktion-for-dig-som-ar-nyanstalld/om-din-anstallning#skyldighetersomanstalld",
+            "text": "<p>Test</p>",
+            "sortOrder": 0,
+            "roleType": "NEW_EMPLOYEE",
+            "questionType": "COMPLETED_OR_NOT_RELEVANT",
+            "permission": "ADMIN",
+            "created": "2024-11-21T12:42:23.029182+01:00",
+            "updated": "2024-12-23T10:36:40.561583+01:00",
+            "lastSavedBy": "foo00bar"
+          },
+          {
+            "id": "a414c99f-b2bb-49a2-8f6d-83753722d29b",
+            "heading": "Din arbetsmiljö",
+            "headingReference": "https://intranat.sundsvall.se/inloggad/s/anstallning-och-arbetsmiljo/ny-pa-jobbet/introduktion-for-dig-som-ar-nyanstalld/om-din-anstallning#dinarbetsmiljo",
+            "text": "",
+            "sortOrder": 2,
+            "roleType": "NEW_EMPLOYEE",
+            "questionType": "COMPLETED_OR_NOT_RELEVANT",
+            "permission": "SUPERADMIN",
+            "created": "2024-11-21T12:43:15.349305+01:00",
+            "updated": "2024-12-23T13:01:39.332417+01:00",
+            "lastSavedBy": "foo00bar"
+          }
+        ],
+        "created": "2024-11-21T11:54:26.309918+01:00",
+        "lastSavedBy": "bar11baz"
+      },
+      {
+        "id": "92432ee3-6295-493e-a4ff-d84db4e6e995",
+        "name": "6. Nyanställd chef",
+        "bodyText": "",
+        "timeToComplete": "P6M",
+        "permission": "SUPERADMIN",
+        "sortOrder": 14,
+        "tasks": [
+          {
+            "id": "a6b93008-4444-4e43-b395-90b33b41793e",
+            "heading": "Obligatorisk Chefsintroduktion",
+            "headingReference": "http://https://intranat.sundsvall.se/inloggad/s/motesplatser-och-kompetensutveckling/kompetensutveckling/sundsvalls-kommuns-kurskatalog/chef-och-ledare/chefsintroduktion",
+            "text": "<p>Foo</p><p><br></p><p><a href=\"https://www.example.com\" rel=\"noopener noreferrer\" target=\"_blank\">https://www.example.com</a></p>",
+            "sortOrder": 1,
+            "roleType": "NEW_MANAGER",
+            "questionType": "COMPLETED_OR_NOT_RELEVANT",
+            "permission": "SUPERADMIN",
+            "created": "2024-11-21T12:52:04.211913+01:00",
+            "updated": "2024-12-23T11:01:59.920175+01:00",
+            "lastSavedBy": "foo00bar"
+          }
+        ],
+        "created": "2024-11-21T11:55:16.163658+01:00",
+        "lastSavedBy": "bar11baz"
+      }
+    ]
+  },
+  "status": 200,
+  "message": "success"
+}

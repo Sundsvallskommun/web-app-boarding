@@ -4,5 +4,9 @@
   },
   "assign" : "Tilldela",
   "assign_introduction" : "Tilldela introduktion",
-  "assign_introduction_description" : "Tilldela personer som ansvarar för delar av introduktionen."
+  "assign_introduction_description" : "Tilldela personer som ansvarar för delar av introduktionen.",
+  "confirmation": {
+    "title": "Ta bort delegering?",
+    "text": "{{user}} kommer inte längre att ha tillgång till introduktionen. Aktiviteter som {{user}} har gjort kommer att ligga kvar."
+  }
 }
