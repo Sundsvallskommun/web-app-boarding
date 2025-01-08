@@ -38,7 +38,7 @@ export const AddActivityModal: React.FC = () => {
       questionType: 'YES_OR_NO',
       phaseId: '',
       createdBy: '',
-      sortOrder: 0,
+      sortOrder: data?.phases[0].tasks.length,
     },
     resolver: yupResolver(formSchema),
   });
@@ -105,10 +105,13 @@ export const AddActivityModal: React.FC = () => {
         <Modal.Content>
           <FormControl className="w-full">
             <FormLabel>Fas (obligatorisk)</FormLabel>
-            <Select {...register('phaseId')} onBlur={() => trigger('phaseId')} data-cy="add-activity-phase-select">
-              <Select.Option value="" disabled>
-                {t('task:choose_phase')}
-              </Select.Option>
+            <Select
+              {...register('phaseId')}
+              data-cy="add-activity-phase-select"
+              onChange={(e) => {
+                data && setValue('sortOrder', data?.phases[e.currentTarget.selectedIndex].tasks.length);
+              }}
+            >
               {data?.phases?.map((phase) => {
                 return (
                   <Select.Option key={`employee-${phase.id}`} value={phase.id}>
@@ -126,7 +129,9 @@ export const AddActivityModal: React.FC = () => {
             <FormLabel className="mt-16">{t('task:heading')}</FormLabel>
             <Input
               {...register('heading', { required: true })}
-              onBlur={() => trigger('heading')}
+              onBlur={() => {
+                trigger();
+              }}
               data-cy="add-activity-heading"
             />
             {errors.heading && (

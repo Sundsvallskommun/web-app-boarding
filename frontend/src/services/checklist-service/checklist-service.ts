@@ -119,7 +119,7 @@ export const addCustomTask: (
     heading: taskData.heading,
     text: taskData.text,
     questionType: taskData.questionType,
-    sortOrder: 0,
+    sortOrder: taskData.sortOrder,
     createdBy: username,
   };
 
