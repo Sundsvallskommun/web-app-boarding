@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 let formSchema = yup.object({
   heading: yup.string().min(1, 'Du måste skriva en rubrik').required('Du måste skriva en rubrik'),
+  headingReference: yup.string(),
   text: yup.string(),
   questionType: yup.string(),
   phaseId: yup.string().required('Du måste välja en fas'),
@@ -34,6 +35,7 @@ export const AddActivityModal: React.FC = () => {
   const formControl = useForm({
     defaultValues: {
       heading: '',
+      headingReference: '',
       text: '',
       questionType: 'YES_OR_NO',
       phaseId: '',
@@ -135,9 +137,9 @@ export const AddActivityModal: React.FC = () => {
               </FormErrorMessage>
             )}
 
-            {/* TODO missing in API?
-            <FormLabel>Länk</FormLabel>
-            <Input {...register('link')} className="mb-16" />*/}
+            <FormLabel className="mt-16">{t('task:link')}</FormLabel>
+            <Input {...register('headingReference')} onBlur={() => trigger('heading')} />
+            <p className="text-small my-0">{t('task:link_description')}</p>
 
             <FormLabel className="mt-16">{t('task:text')}</FormLabel>
             <div className="mb-16" data-cy="add-activity-text">

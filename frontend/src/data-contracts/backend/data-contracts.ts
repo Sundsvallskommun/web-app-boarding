@@ -56,6 +56,7 @@ export interface EmployeeChecklistPhase {
 export interface EmployeeChecklistTask {
   id: string;
   heading: string;
+  headingReference: string;
   text: string;
   sortOrder: number;
   roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
@@ -73,6 +74,7 @@ export interface EmployeeChecklistTask {
 
 export interface CustomTaskCreateRequest {
   heading: string;
+  headingReference: string;
   text: string;
   questionType:
     | 'YES_OR_NO'
@@ -113,6 +115,7 @@ export interface OrganizationCreateRequest {
 export interface CustomTask {
   id: string;
   heading: string;
+  headingReference: string;
   text: string;
   sortOrder: number;
   roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
@@ -161,6 +164,7 @@ export interface PhaseCreateRequest {
 
 export interface TaskCreateRequest {
   heading: string;
+  headingReference: string;
   text: string;
   sortOrder: number;
   roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
@@ -218,6 +222,7 @@ export interface Phase {
 export interface Task {
   id: string;
   heading: string;
+  headingReference: string;
   text: string;
   sortOrder: string;
   roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
@@ -246,6 +251,7 @@ export interface EmployeeChecklistPhaseUpdateRequest {
 
 export interface CustomTaskUpdateRequest {
   heading: string;
+  headingReference: string;
   text: string;
   questionType:
     | 'YES_OR_NO'
@@ -274,6 +280,7 @@ export interface PhaseUpdateRequest {
 
 export interface TaskUpdateRequest {
   heading: string;
+  headingReference: string;
   text: string;
   sortOrder: number;
   roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';

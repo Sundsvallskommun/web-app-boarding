@@ -117,6 +117,7 @@ export const addCustomTask: (
 ) => {
   const customTaskData: CustomTaskCreateRequest = {
     heading: taskData.heading,
+    headingReference: taskData.headingReference,
     text: taskData.text,
     questionType: taskData.questionType,
     sortOrder: 0,
@@ -141,6 +142,7 @@ export const updateCustomTask: (
 ) => Promise<CustomTask> = async (checklistId: string, taskId: string, taskData: CustomTaskUpdateRequest) => {
   const taskUpdateRequest: CustomTaskUpdateRequest = {
     heading: taskData.heading,
+    headingReference: taskData.headingReference,
     text: taskData.text,
     questionType: taskData.questionType,
     sortOrder: taskData.sortOrder,

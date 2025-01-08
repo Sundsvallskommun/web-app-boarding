@@ -81,6 +81,8 @@ export class EmployeeChecklistTask implements EmployeeChecklistTask {
   @IsString()
   heading?: string;
   @IsString()
+  headingReference?: string;
+  @IsString()
   text?: string;
   @IsNumber()
   sortOrder?: number;
@@ -103,6 +105,8 @@ export class EmployeeChecklistTask implements EmployeeChecklistTask {
 export class CustomTaskCreateRequest implements CustomTaskCreateRequestType {
   @IsString()
   heading: string;
+  @IsString()
+  headingReference?: string;
   @IsString()
   text?: string;
   @IsEnum(QuestionType)
@@ -170,6 +174,8 @@ export class CustomTask implements CustomTaskType {
   id?: string;
   @IsString()
   heading?: string;
+  @IsString()
+  headingReference?: string;
   @IsString()
   text?: string;
   @IsNumber()
@@ -242,6 +248,8 @@ export class PhaseCreateRequest implements PhaseCreateRequestType {
 export class TaskCreateRequest implements TaskCreateRequestType {
   @IsString()
   heading: string;
+  @IsString()
+  headingReference?: string;
   @IsString()
   text?: string;
   @IsNumber()
@@ -339,6 +347,8 @@ export class Task implements TaskType {
   @IsString()
   heading?: string;
   @IsString()
+  headingReference?: string;
+  @IsString()
   text?: string;
   @IsString()
   sortOrder?: number;
@@ -378,6 +388,8 @@ export class CustomTaskUpdateRequest implements CustomTaskUpdateRequestType {
   @IsString()
   heading?: string;
   @IsString()
+  headingReference?: string;
+  @IsString()
   text?: string;
   @IsEnum(QuestionType)
   questionType?: QuestionType;
@@ -416,6 +428,8 @@ export class PhaseUpdateRequest implements PhaseUpdateRequestType {
 export class TaskUpdateRequest implements TaskUpdateRequestType {
   @IsString()
   heading?: string;
+  @IsString()
+  headingReference?: string;
   @IsString()
   text?: string;
   @IsNumber()

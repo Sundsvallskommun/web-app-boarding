@@ -80,7 +80,15 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
           />
           <div className="pl-20 pr-80 w-full">
             <div className={task.fulfilmentStatus === 'TRUE' ? 'text-dark-disabled' : ''}>
-              <span className="mr-3 text-large">{task.heading}</span>
+              {task.headingReference ?
+                <>
+                  <a className="text-large underline mr-4" href={task.headingReference} target="_blank">
+                    {task.heading}
+                  </a>
+                  <Icon size="1.5rem" name="external-link" />
+                </>
+              : <span className="mr-3 text-large">{task.heading}</span>}
+
               <div className="pr-40">
                 <p>
                   <span
