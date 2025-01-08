@@ -9,6 +9,8 @@
   "choose_phase": "Välj fas",
   "heading": "Rubrik (obligatorisk)",
   "heading_reference": "Länk",
+  "link": "Länk",
+  "link_description": "Ange hela webbadressen du vill länka till. Exempel: https://www.exempel.se",
   "new_employee": "Ny anställd",
   "new_manager": "Ny chef",
   "manager_for_new_employee": "Chef för ny anställd",

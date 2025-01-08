@@ -109,6 +109,8 @@ export class CustomTaskCreateRequest implements CustomTaskCreateRequestType {
   @IsString()
   heading: string;
   @IsString()
+  headingReference?: string;
+  @IsString()
   text?: string;
   @IsEnum(QuestionType)
   questionType: QuestionType;

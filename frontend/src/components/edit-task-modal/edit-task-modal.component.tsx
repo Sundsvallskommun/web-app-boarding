@@ -32,6 +32,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
 
   let formSchema = yup.object({
     heading: yup.string().min(1, t('task:errors.heading')).required(t('task:errors.heading')),
+    headingReference: yup.string().required(),
     text: yup.string().required(),
     questionType: yup
       .mixed<CustomTaskUpdateRequest['questionType']>()
@@ -44,6 +45,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
   const formControl = useForm({
     defaultValues: {
       heading: '',
+      headingReference: '',
       text: '',
       questionType: 'YES_OR_NO' as CustomTaskUpdateRequest['questionType'],
       updatedBy: '',
@@ -67,6 +69,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
   useEffect(() => {
     reset({
       heading: task.heading,
+      headingReference: task.headingReference,
       text: task.text,
       questionType: task.questionType,
       updatedBy: user.username,
@@ -113,9 +116,9 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
               )}
             </FormControl>
 
-            {/* TODO missing in API?
-            <FormLabel>Länk</FormLabel>
-            <Input {...register('link')} className="mb-16" />*/}
+            <FormLabel className="mt-16">{t('task:link')}</FormLabel>
+            <Input {...register('headingReference')} data-cy="add-activity-heading-reference" />
+            <p className="text-small my-0">{t('task:link_description')}</p>
 
             <FormControl className="w-full">
               <FormLabel className="mt-16">{t('task:text')}</FormLabel>

@@ -61,6 +61,7 @@ export const employeeIntroduction = {
           {
             id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaagajjaaaaa',
             heading: 'Om din anställning, Egen aktivitet',
+            headingReference: 'https://www.google.com',
             text: 'Egen aktivitet',
             sortOrder: 2,
             roleType: 'NEW_EMPLOYEE',

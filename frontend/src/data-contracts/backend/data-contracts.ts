@@ -74,6 +74,7 @@ export interface EmployeeChecklistTask {
 
 export interface CustomTaskCreateRequest {
   heading: string;
+  headingReference: string;
   text: string;
   questionType:
     | 'YES_OR_NO'
