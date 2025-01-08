@@ -141,7 +141,7 @@ export const CheckList: React.FC = () => {
                   : null}
 
                   <div className="flex gap-40">
-                    <div className="w-full rounded bg-white border-1 border-divider">
+                    <div className="w-full rounded bg-background-content border-1 border-divider">
                       <MenuBar current={currentPhase} className="w-full" data-cy="phase-menu-bar">
                         {data?.phases.map((phase, index) => {
                           return (
