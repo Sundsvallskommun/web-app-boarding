@@ -62,7 +62,7 @@ export const ChecklistSidebar: React.FC = () => {
 
   return (
     data && (
-      <div className="rounded bg-white border-1 border-divider py-24 px-24" data-cy="sidebar">
+      <div className="rounded bg-background-content border-1 border-divider py-24 px-24" data-cy="sidebar">
         <div className="flex gap-16">
           <Avatar rounded initials={`${data.employee.firstName[0]}${data.employee.lastName[0]}`} />
           <div>

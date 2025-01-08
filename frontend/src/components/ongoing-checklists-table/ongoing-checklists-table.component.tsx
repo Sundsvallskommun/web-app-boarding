@@ -224,7 +224,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
         </Table>
         {checked?.length ?
           <div className="flex w-full justify-center" data-cy="delegation-popup">
-            <div className="absolute bottom-40 rounded-button bg-inverted-background-content text-white font-bold py-16 px-24 flex">
+            <div className="absolute bottom-40 rounded-button bg-inverted-background-content text-background-content font-bold py-16 px-24 flex">
               <span className="content-center mr-8" data-cy="delegation-popup-introductions-count">
                 {checked.length} {checked.length > 1 ? t('common:selected_other') : t('common:selected_one')}
               </span>
@@ -233,11 +233,10 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
                 data-cy="delegate-multiple-introductions"
                 className="mx-16"
                 variant="secondary"
-                leftIcon={<Icon name="user-plus" />}
                 onClick={() => setIsOpen(true)}
                 inverted
               >
-                {t('delegation:assign_introduction')}
+                {checked.length > 1 ? t('delegation:assign_introduction_other') : t('delegation:assign_introduction')}
               </Button>
 
               <Button
