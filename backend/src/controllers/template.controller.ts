@@ -45,7 +45,6 @@ export class TemplateController {
   @UseBefore(authMiddleware)
   async setSortorder(@Req() req: RequestWithUser, @Param('orgid') orgId: string, @Body() data: ISortorderRequest): Promise<ISortorderRequest> {
     const url = `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/sortorder/${orgId}`;
-    console.log('data', JSON.stringify(data));
     return this.apiService.put<SortorderRequest, ISortorderRequest>({ url, data }, req.user).then(response => data);
   }
 

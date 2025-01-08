@@ -108,8 +108,6 @@ export const useOrgTemplate = (orgid: number) => {
         })
         .catch(() => {
           const fromOrgTree = findOrgInTree(orgTree, orgid);
-          console.log('🚀 ~ useEffect ~ fromOrgTree:', fromOrgTree);
-          console.log(orgTree);
           if (fromOrgTree) {
             setData({
               id: fromOrgTree.organizationId,

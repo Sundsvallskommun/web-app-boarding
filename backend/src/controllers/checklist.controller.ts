@@ -70,7 +70,6 @@ export class ChecklistController {
       throw new HttpException(400, 'Bad request');
     }
     const url = `/${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/employee-checklists/delegated-to/${req.user.username}`;
-    console.log('url', url);
     const res = await this.apiService.get<DelegatedEmployeeChecklistResponse>({ url }, req.user);
 
     return { data: res.data, status: res.status, message: 'success' };
