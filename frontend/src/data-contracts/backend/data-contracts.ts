@@ -147,7 +147,6 @@ export interface ChecklistCreateRequest {
   name: string;
   displayName: string;
   organizationNumber: number;
-  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
   createdBy: string;
 }
 
@@ -390,6 +389,11 @@ export interface OrgTemplate {
 
 export interface OrgTreeApiResponse {
   data: OrgTree;
+  message: string;
+}
+
+export interface OrganizationApiResponse {
+  data: OrgTemplate;
   message: string;
 }
 

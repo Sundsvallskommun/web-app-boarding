@@ -1,24 +1,23 @@
 import { AdminActivityListItem } from '@components/admin/admin-activity-list-item/admin-activity-list-item.component';
 import { AdminEditTaskModal } from '@components/admin/admin-edit-task-modal/admin-edit-task-modal.component';
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
-import {
-  Checklist,
-  SortorderRequest,
-  Task,
-  TaskCreateRequest,
-  TaskUpdateRequest,
-} from '@data-contracts/backend/data-contracts';
+import { Checklist, SortorderRequest, Task } from '@data-contracts/backend/data-contracts';
 import { RoleType } from '@data-contracts/RoleType';
 import AdminLayout from '@layouts/admin-layout/admin-layout.component';
-import { setSortorder, useTemplate } from '@services/template-service/template-service';
+import { useOrgTemplates } from '@services/organization-service';
+import {
+  activateTemplate,
+  createNewVersion,
+  setSortorder,
+  useTemplate,
+} from '@services/template-service/template-service';
 import { getUser, useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
-import { Button, Label, MenuBar } from '@sk-web-gui/react';
-import { set } from 'cypress/types/lodash';
+import { Button, Label, MenuBar, useConfirm, useSnackbar } from '@sk-web-gui/react';
 import dayjs from 'dayjs';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { shallow } from 'zustand/shallow';
@@ -29,10 +28,13 @@ export const EditTemplate = () => {
   const { templateid, orgid } = router.query;
   const user = useUserStore((s) => s.user, shallow);
   const { data, setData, refresh, loaded, loading } = useTemplate(templateid as string);
+  const { data: orgData } = useOrgTemplates(parseInt(orgid as string, 10));
   const [currentView, setCurrentView] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [phaseId, setPhaseId] = useState<string>();
   const [lastSavedByName, setLastSavedByName] = useState<string>('');
+  const confirm = useConfirm();
+  const toastMessage = useSnackbar();
 
   const openHandler = () => {
     setIsOpen(true);
@@ -112,6 +114,63 @@ export const EditTemplate = () => {
     }
   };
 
+  const onActivate = () => {
+    confirm
+      .showConfirmation(
+        t('templates:activate.title'),
+        t('templates:activate.text'),
+        t('templates:activate.confirm'),
+        t('common:cancel'),
+        'error'
+      )
+      .then((confirmed) => {
+        if (confirmed && data) {
+          activateTemplate(data.id)
+            .then(() => {
+              refresh(templateid as string);
+              closeHandler();
+            })
+            .catch((e) => {
+              toastMessage({
+                position: 'bottom',
+                closeable: false,
+                message: t('templates:activate.error'),
+                status: 'error',
+              });
+            });
+        }
+      });
+  };
+
+  const onNewVersion = () => {
+    confirm
+      .showConfirmation(
+        t('templates:new_version.title'),
+        t('templates:new_version.text'),
+        t('templates:new_version:confirm'),
+        t('common:cancel'),
+        'error'
+      )
+      .then((confirmed) => {
+        if (confirmed && data) {
+          createNewVersion(data.id)
+            .then((checklist) => {
+              console.log('new version:', checklist);
+              router.push(`/admin/templates/${orgid}/${checklist?.id}`);
+              closeHandler();
+            })
+            .catch((e) => {
+              toastMessage({
+                position: 'bottom',
+                closeable: false,
+                message: t('templates:new_version.error'),
+                status: 'error',
+              });
+            });
+        }
+      });
+  };
+
   const filteredTasks = useCallback(
     (data: Checklist, roleTypes: string[]) => {
       return data?.phases
@@ -172,7 +231,7 @@ export const EditTemplate = () => {
       title={`${t('common:title')} - ${t('common:admin')}`}
       headerTitle={`${t('common:title')} - ${t('common:admin')}`}
     >
-      {loading ?
+      {loading || !data ?
         <LoaderFullScreen />
       : <div className="max-w-[104rem]">
           <h2 className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">{capitalize(data?.displayName || '')}</h2>
@@ -202,7 +261,7 @@ export const EditTemplate = () => {
                     data?.lifeCycle === 'ACTIVE' ? 'gronsta'
                     : data?.lifeCycle === 'CREATED' ?
                       'vattjom'
-                    : 'juniskar'
+                    : ''
                   }
                 >
                   {data?.lifeCycle === 'ACTIVE' ?
@@ -211,6 +270,18 @@ export const EditTemplate = () => {
                     t('templates:created')
                   : t('templates:deprecated')}
                 </Label>
+                {data?.lifeCycle === 'CREATED' ?
+                  <Button size="sm" color="vattjom" onClick={onActivate}>
+                    Aktivera mall
+                  </Button>
+                : (
+                  data?.lifeCycle === 'ACTIVE' &&
+                  orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
+                ) ?
+                  <Button size="sm" color="vattjom" onClick={onNewVersion}>
+                    Skapa ny version
+                  </Button>
+                : null}
               </div>
               <div className="w-full rounded-16 bg-white shadow-custom border-divider pb-24">
                 {currentView === 0 ?

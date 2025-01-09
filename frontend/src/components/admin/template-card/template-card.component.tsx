@@ -31,6 +31,21 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, orgId }) =
                 {` ${dayjs(template.updated).format('D MMM YYYY')}`}
               </li>
               <li>
+                <Label
+                  className="mr-md"
+                  color={
+                    template?.lifeCycle === 'ACTIVE' ? 'gronsta'
+                    : template?.lifeCycle === 'CREATED' ?
+                      'vattjom'
+                    : ''
+                  }
+                >
+                  {template?.lifeCycle === 'ACTIVE' ?
+                    t('templates:active')
+                  : template?.lifeCycle === 'CREATED' ?
+                    t('templates:created')
+                  : t('templates:deprecated')}
+                </Label>
                 <span className="font-bold">{`${t('templates:properties.version')}:`}</span>
                 {` ${template.version}`}
               </li>
