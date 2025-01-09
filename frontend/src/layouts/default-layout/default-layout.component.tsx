@@ -2,16 +2,13 @@ import { PageHeader } from '@layouts/page-header/page-header.component';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useUserStore } from '@services/user-service/user-service';
 import Breadcrumb from '@sk-web-gui/breadcrumb';
-import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Header, Link } from '@sk-web-gui/react';
-import { UserMenu } from '@sk-web-gui/user-menu';
 import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/router';
 import { capitalize } from 'underscore.string';
 import { shallow } from 'zustand/shallow';
+import React from 'react';
 
 export interface DefaultLayoutProps {
   children: React.ReactNode;
@@ -66,9 +63,9 @@ export default function DefaultLayout({
       <div>
         <PageHeader headerSubtitle={headerSubtitle} headerTitle={headerTitle || title} logoLinkHref={logoLinkHref} />
 
-        <div className="main-container flex-grow relative w-full flex flex-col pt-20">
+        <div className="main-container flex-grow relative w-full flex flex-col pt-20 2xl:px-80 xl:px-72 lg:px-30 md:px-10">
           {pathname !== '/' && user.permissions.isManager ?
-            <div className="w-full md:px-32">
+            <div className="w-full">
               <Breadcrumb className="container ">
                 <Breadcrumb.Item>
                   <Breadcrumb.Link href="../">{capitalize(t('common:start'))}</Breadcrumb.Link>
@@ -88,7 +85,7 @@ export default function DefaultLayout({
       {preContent && preContent}
 
       <div className={`main-container flex-grow relative w-full flex flex-col`}>
-        <div className="main-content-padding">{children}</div>
+        <div className="main-content-padding 2xl:px-80 xl:px-72 lg:px-30 md:px-10">{children}</div>
       </div>
 
       {postContent && postContent}
