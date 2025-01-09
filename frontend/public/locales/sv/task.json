@@ -19,5 +19,6 @@
   "mark_all_activities_as_completed": "Markera alla aktiviteter som klar",
   "activities_completed": "{{first}} av {{second}} aktiviteter slutförda",
   "complete_by": "Slutför senast {{date}}",
-  "of": "av"
+  "of": "av",
+  "fulfilled_by" : "Markerad av {{user}}"
 }

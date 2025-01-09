@@ -104,6 +104,12 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                   Egen aktivitet
                 </Label>
               )}
+              {task.fulfilmentStatus === 'TRUE' && (
+                <p className="text-small text-primary mt-8">
+                  <Icon className="align-middle mr-5" name="check" size="1.5rem" />
+                  {t('task:fulfilled_by', { user: task.updatedBy })}
+                </p>
+              )}
             </div>
           </div>
           <div>
