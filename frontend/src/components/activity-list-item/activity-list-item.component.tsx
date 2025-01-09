@@ -3,7 +3,7 @@ import { removeCustomTask, updateTaskFulfilmentStatus } from '@services/checklis
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import sanitized from '@services/sanitizer-service';
 import { useUserStore } from '@services/user-service/user-service';
-import { Button, Checkbox, Label, Link, PopupMenu } from '@sk-web-gui/react';
+import { Button, Checkbox, Label, PopupMenu } from '@sk-web-gui/react';
 import { shallow } from 'zustand/shallow';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import React, { useState } from 'react';
@@ -29,11 +29,12 @@ interface ActivityListItemProps {
   task: EmployeeChecklistTask;
   checklistId: string;
   currentView: number;
+  isUserChecklist: boolean;
 }
 
 export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const user = useUserStore((s) => s.user, shallow);
-  const { task, checklistId, currentView } = props;
+  const { task, checklistId, currentView, isUserChecklist } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
@@ -107,7 +108,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
             </div>
           </div>
           <div>
-            {task.customTask && (
+            {task.customTask && !isUserChecklist && (
               <div className=" flex flex-col items-center">
                 <div className="relative w-min h-[3.2rem]">
                   <PopupMenu>
