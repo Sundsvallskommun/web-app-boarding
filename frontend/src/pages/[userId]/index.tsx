@@ -247,7 +247,7 @@ export const CheckList: React.FC = () => {
                     </div>
 
                     <div className="w-5/12">
-                      <ChecklistSidebar />
+                      <ChecklistSidebar isUserChecklist={isUserChecklist} />
                     </div>
                   </div>
                 </div>

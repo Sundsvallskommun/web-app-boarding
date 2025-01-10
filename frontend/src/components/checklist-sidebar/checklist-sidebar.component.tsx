@@ -13,10 +13,13 @@ import { useShallow } from 'zustand/react/shallow';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-export const ChecklistSidebar: React.FC = () => {
+interface ChecklistSidebarProps {
+  isUserChecklist: boolean;
+}
+
+export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserChecklist: isUserChecklist }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const {
-    username,
     permissions: { isManager },
   } = useUserStore(useShallow((state) => state.user));
 
@@ -87,35 +90,38 @@ export const ChecklistSidebar: React.FC = () => {
           <AssignMentorModal />
         </div>
 
-        {isManager ?
-          <div>
-            {data?.employee.username !== username && (
-              <div data-cy="delegated-to-content">
-                <div className="my-8">
-                  <strong>{t('checklists:delegated_employees')}</strong>
+        <div data-cy="delegated-to-content">
+          <div className="my-8">
+            <strong>{t('checklists:delegated_employees')}</strong>
 
-                  {data.delegatedTo?.map((email, index) => {
-                    return (
-                      <div data-cy={`delegated-to-${index}`} key={index} className="flex justify-between mb-16 mt-8">
-                        <div>
-                          <Avatar size="sm" className="mr-4" rounded /> {email}
-                        </div>
+            {data?.delegatedTo?.length &&
+              data.delegatedTo?.map((email, index) => {
+                return (
+                  <div data-cy={`delegated-to-${index}`} key={index} className="flex justify-between mb-16 mt-8">
+                    <div>
+                      <Avatar size="sm" className="mr-4" rounded /> {email}
+                    </div>
 
-                        <Button
-                          data-cy={`remove-delegation-icon-${index}`}
-                          iconButton
-                          size="sm"
-                          variant="tertiary"
-                          showBackground={false}
-                          onClick={handleRemoveDelegation(email)}
-                        >
-                          <Icon name="trash" />
-                        </Button>
-                      </div>
-                    );
-                  })}
-                </div>
+                    {isManager && !isUserChecklist && (
+                      <Button
+                        data-cy={`remove-delegation-icon-${index}`}
+                        iconButton
+                        size="sm"
+                        variant="tertiary"
+                        showBackground={false}
+                        onClick={handleRemoveDelegation(email)}
+                      >
+                        <Icon name="trash" />
+                      </Button>
+                    )}
+                  </div>
+                );
+              })}
 
+            {!data?.delegatedTo?.length && isUserChecklist && <p className="pb-8">{t('delegation:no_assignments')}</p>}
+
+            {isManager && !isUserChecklist && (
+              <div className="mt-8">
                 <Button data-cy="delegate-introduction-button" variant="tertiary" onClick={openHandler} size="sm">
                   {t('delegation:assign_introduction')}
                 </Button>
@@ -126,7 +132,7 @@ export const ChecklistSidebar: React.FC = () => {
               </div>
             )}
           </div>
-        : null}
+        </div>
       </div>
     )
   );
