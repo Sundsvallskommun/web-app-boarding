@@ -14,12 +14,12 @@ export const AdminMenu = () => {
     : undefined;
 
   return (
-    <MenuBar current={current} data-test="nav-admin-menu">
+    <MenuBar current={current} data-cy="nav-admin-menu">
       <MenuBar.Item wrapper={<Link href="/admin/checklists" legacyBehavior passHref />}>
-        <a data-test="nav-admin-menu-introduktioner">{capitalize(t('checklists:name_other'))}</a>
+        <a data-cy="nav-admin-menu-introduktioner">{capitalize(t('checklists:name_other'))}</a>
       </MenuBar.Item>
       <MenuBar.Item wrapper={<Link href="/admin/templates" legacyBehavior passHref />}>
-        <a data-test="nav-admin-menu-mallar">{capitalize(t('templates:name_other'))}</a>
+        <a data-cy="nav-admin-menu-mallar">{capitalize(t('templates:name_other'))}</a>
       </MenuBar.Item>
     </MenuBar>
   );

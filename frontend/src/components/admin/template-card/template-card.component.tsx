@@ -18,7 +18,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, orgId }) =
         href={`/admin/templates/edit/${template.id}`}
         useHoverEffect
         className="max-w-[31.2em]"
-        data-test={`template-card-${template.id}`}
+        data-cy={`template-card-${template.id}`}
       >
         <Card.Body>
           <Card.Header>

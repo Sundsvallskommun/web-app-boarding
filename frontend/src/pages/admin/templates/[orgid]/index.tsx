@@ -95,7 +95,7 @@ export const OrgTemplate: React.FC = () => {
                     <Button
                       size="lg"
                       className="mt-8 ml-24"
-                      data-cy={`add-activity-button`}
+                      data-cy={`create-template-button`}
                       leftIcon={<LucideIcon name="plus" />}
                       variant="tertiary"
                       showBackground={false}

@@ -1,3 +1,5 @@
+import { searchEmployeeResponse } from 'cypress/fixtures/managed-introductions';
+
 describe('Uses the organization templates', () => {
   beforeEach(() => {
     cy.intercept('GET', '**/api/me', { fixture: 'me-admin.json' });
@@ -5,21 +7,72 @@ describe('Uses the organization templates', () => {
     cy.intercept('GET', '**/api/org/2725/tree', { fixture: 'orgtree-2725.json' });
     cy.intercept('GET', '**/api/org/2669/tree', { fixture: 'orgtree-2669.json' });
     cy.intercept('GET', '**/api/org/21/template', { statusCode: 404 });
-    cy.intercept('GET', '**/api/org/1/template', { fixture: 'templates-1.json' });
+    cy.intercept('GET', '**/api/org/13/template', { fixture: 'templates-org-13.json' });
+    cy.intercept('GET', '**/api/org/2775/template', { fixture: 'templates-org-2775.json' });
+    cy.intercept('GET', '**/api/org/2669/template', { fixture: 'templates-org-2669.json' });
+    cy.intercept('GET', '**/api/templates/4b955690-f49d-4116-8c94-6076d93c6303', {
+      fixture: 'template-4b955690.json',
+    }).as('getTemplate');
+    cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse);
     cy.viewport('macbook-15');
   });
 
-  it('uses the org tree navigation', () => {
+  it('navigates to organization with multiple template versions', () => {
     cy.visit('http://localhost:3000/admin/templates');
-    cy.get('[data-test="organization-tree"]').within(() => {
-      cy.get('a[data-menuindex="1"]').click();
+    cy.get('[data-cy="organization-tree"]').within(() => {
+      cy.get('a[data-menuindex="13"]').contains('Org 13').click();
     });
-    cy.get('h2').should('include.text', 'Org1');
-    cy.get('[data-test="template-card-1"]').within(($this) => {
+    cy.get('h2').should('include.text', 'Org 13');
+    cy.get('[data-cy^="template-card-"]').should('have.length', 3);
+    cy.get('[data-cy="template-card-00000000-f49d-4116-8c94-6076d93c6303"]').within(($this) => {
       cy.contains('Grund för checklista');
       cy.contains('21 Nov 2024');
-      cy.contains('9 aktiviteter');
+      cy.contains('Utkast');
+      cy.contains('Version: 3');
+      cy.contains('0 aktiviteter');
+    });
+    cy.get('[data-cy="template-card-11111111-f49d-4116-8c94-6076d93c6303"]').within(($this) => {
+      cy.contains('Grund för checklista');
+      cy.contains('21 Nov 2024');
+      cy.contains('Inaktiv');
+      cy.contains('Version: 1');
+      cy.contains('0 aktiviteter');
+    });
+    cy.get('[data-cy="template-card-4b955690-f49d-4116-8c94-6076d93c6303"]').within(($this) => {
+      cy.contains('Grund för checklista');
+      cy.contains('21 Nov 2024');
+      cy.contains('Aktiv');
+      cy.contains('Version: 2');
+      cy.contains('17 aktiviteter');
       cy.wrap($this).click();
     });
+    cy.wait('@getTemplate');
+    cy.get('[data-cy="template-name"]').should('include.text', 'Grund för checklista');
+  });
+
+  it('navigates to organization with a single template version', () => {
+    cy.visit('http://localhost:3000/admin/templates');
+    cy.get('[data-cy="organization-tree"]').within(() => {
+      cy.get('a[data-menuindex="2775"]').contains('Org 2775').click();
+    });
+    cy.get('h2').should('include.text', 'Org 2775');
+    cy.get('[data-cy^="template-card-"]').should('have.length', 1);
+    cy.get('[data-cy="template-card-4b955690-f49d-4116-8c94-6076d93c6303"]').within(($this) => {
+      cy.contains('Grund för checklista');
+      cy.contains('21 Nov 2024');
+      cy.contains('Aktiv');
+      cy.contains('Version: 2');
+      cy.contains('17 aktiviteter');
+    });
+  });
+
+  it('navigates to organization with no template', () => {
+    cy.visit('http://localhost:3000/admin/templates');
+    cy.get('[data-cy="organization-tree"]').within(() => {
+      cy.get('a[data-menuindex="2669"]').contains('Org 2669').click();
+    });
+    cy.get('h2').should('include.text', 'Org 2669');
+    cy.get('[data-cy^="template-card-"]').should('have.length', 0);
+    cy.get('[data-cy="create-template-button"]').should('exist');
   });
 });

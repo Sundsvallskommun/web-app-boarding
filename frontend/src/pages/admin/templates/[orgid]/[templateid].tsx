@@ -234,7 +234,9 @@ export const EditTemplate = () => {
       {loading || !data ?
         <LoaderFullScreen />
       : <div className="max-w-[104rem]">
-          <h2 className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">{capitalize(data?.displayName || '')}</h2>
+          <h2 data-cy="template-name" className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">
+            {capitalize(data?.displayName || '')}
+          </h2>
           {loaded && (
             <>
               <div className="flex gap-40 mb-24 text-small">
