@@ -227,6 +227,7 @@ export const CheckList: React.FC = () => {
                                   task={task}
                                   checklistId={data?.id}
                                   currentView={currentView}
+                                  isUserChecklist={isUserChecklist}
                                 />
                               );
                             }
@@ -238,6 +239,7 @@ export const CheckList: React.FC = () => {
                                   task={task}
                                   checklistId={data?.id}
                                   currentView={currentView}
+                                  isUserChecklist={isUserChecklist}
                                 />
                               );
                             }
