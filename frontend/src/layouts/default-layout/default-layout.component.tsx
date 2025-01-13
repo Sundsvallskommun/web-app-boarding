@@ -84,8 +84,10 @@ export default function DefaultLayout({
 
       {preContent && preContent}
 
-      <div className={`main-container flex-grow relative w-full flex flex-col`}>
-        <div className="container main-content-padding max-width-content w-full">{children}</div>
+      <div
+        className={`main-container flex-grow relative w-full flex flex-col 2xl:px-80 xl:px-80 lg:px-32 md:px-24 px-4`}
+      >
+        <div className="container max-width-content w-full">{children}</div>
       </div>
 
       {postContent && postContent}
