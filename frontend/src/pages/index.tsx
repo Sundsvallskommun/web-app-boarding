@@ -38,7 +38,7 @@ export function Index() {
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
-        <div className="py-10 px-10 2xl:px-0">
+        <div className="py-10">
           {checklist && checklistLoaded ?
             <div
               className="flex justify-between border-1 border-divider rounded-button bg-background-content px-16 pt-16 pb-16 mb-40 w-1/3"

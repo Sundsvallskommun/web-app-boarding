@@ -63,7 +63,7 @@ export default function DefaultLayout({
       <div>
         <PageHeader headerSubtitle={headerSubtitle} headerTitle={headerTitle || title} logoLinkHref={logoLinkHref} />
 
-        <div className="main-container flex-grow relative w-full flex flex-col pt-20 2xl:px-80 xl:px-72 lg:px-30 md:px-10">
+        <div className="main-container flex-grow relative w-full flex flex-col pt-20">
           {pathname !== '/' && user.permissions.isManager ?
             <div className="w-full">
               <Breadcrumb className="container ">
@@ -84,9 +84,7 @@ export default function DefaultLayout({
 
       {preContent && preContent}
 
-      <div
-        className={`main-container flex-grow relative w-full flex flex-col 2xl:px-80 xl:px-80 lg:px-32 md:px-24 px-4`}
-      >
+      <div className={`main-container flex-grow relative w-full flex flex-col`}>
         <div className="container max-width-content w-full">{children}</div>
       </div>
 
