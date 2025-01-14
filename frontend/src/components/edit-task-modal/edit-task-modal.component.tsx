@@ -73,7 +73,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
       text: task.text,
       questionType: task.questionType,
       updatedBy: user.username,
-      sortOrder: 0,
+      sortOrder: task.sortOrder,
     });
     setTimeout(() => {
       setFocus('heading');
