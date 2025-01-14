@@ -19,10 +19,11 @@ interface AdminActivityListItemProps {
   items: number;
   moveUp: (task: Task) => void;
   moveDown: (task: Task) => void;
+  allowDelete?: boolean;
 }
 
 export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (props) => {
-  const { task, templateId, phaseId, index, items, moveUp, moveDown } = props;
+  const { task, templateId, phaseId, index, items, moveUp, moveDown, allowDelete = false } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);
@@ -131,30 +132,31 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
                           {t('common:edit')}
                         </Button>
                       </PopupMenu.Item>
-                      <PopupMenu.Item>
-                        <Button
-                          data-cy="activity-remove-button"
-                          leftIcon={<Icon name="trash" />}
-                          onClick={() =>
-                            confirm
-                              .showConfirmation(
-                                t('task:remove_activity'),
-                                t('task:remove_activity_text'),
-                                t('common:remove'),
-                                t('common:cancel'),
-                                'error'
-                              )
-                              .then((confirmed) => {
-                                if (confirmed) {
-                                  onRemoveTask();
-                                }
-                              })
-                          }
-                          // onClick2={() => onRemoveTask()}
-                        >
-                          {t('common:remove')}
-                        </Button>
-                      </PopupMenu.Item>
+                      {allowDelete ?
+                        <PopupMenu.Item>
+                          <Button
+                            data-cy="activity-remove-button"
+                            leftIcon={<Icon name="trash" />}
+                            onClick={() =>
+                              confirm
+                                .showConfirmation(
+                                  t('task:remove_activity'),
+                                  t('task:remove_activity_text'),
+                                  t('common:remove'),
+                                  t('common:cancel'),
+                                  'error'
+                                )
+                                .then((confirmed) => {
+                                  if (confirmed) {
+                                    onRemoveTask();
+                                  }
+                                })
+                            }
+                          >
+                            {t('common:remove')}
+                          </Button>
+                        </PopupMenu.Item>
+                      : null}
                     </PopupMenu.Items>
                   </PopupMenu.Panel>
                 </PopupMenu>

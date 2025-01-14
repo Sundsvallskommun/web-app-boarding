@@ -226,8 +226,6 @@ export class ChecklistCreateRequest implements ChecklistCreateRequestType {
   displayName: string;
   @IsNumber()
   organizationNumber: number;
-  @IsEnum(RoleType)
-  roleType: RoleType;
   @IsString()
   createdBy: string;
 }

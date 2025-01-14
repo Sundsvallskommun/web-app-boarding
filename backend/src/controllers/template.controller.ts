@@ -1,9 +1,9 @@
 import { APIS, MUNICIPALITY_ID } from '@/config';
 import { Checklist, SortorderRequest as ISortorderRequest, Task as TaskType } from '@/data-contracts/checklist/data-contracts';
 import { RequestWithUser } from '@/interfaces/auth.interface';
-import { ChecklistApiResponse, Task, TaskCreateRequest, TaskUpdateRequest } from '@/responses/checklist.response';
+import { ChecklistApiResponse, ChecklistCreateRequest, Task, TaskCreateRequest, TaskUpdateRequest } from '@/responses/checklist.response';
 import { SortorderRequest } from '@/responses/template.response';
-import ApiResponse from '@interfaces/api-service.interface';
+import { apiURL } from '@/utils/util';
 import authMiddleware from '@middlewares/auth.middleware';
 import ApiService from '@services/api.service';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Req, UseBefore } from 'routing-controllers';
@@ -88,5 +88,38 @@ export class TemplateController {
   ): Promise<{ status: number }> {
     const url = `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/checklists/${checklistId}/phases/${phaseId}/tasks/${taskId}`;
     return await this.apiService.delete<{ status: number }>({ url }, req.user);
+  }
+
+  @Post('/templates')
+  @OpenAPI({ summary: 'Create a new template for organization' })
+  @ResponseSchema(ChecklistApiResponse)
+  async createTemplate(@Req() req: RequestWithUser, @Body() data: ChecklistCreateRequest): Promise<ResponseData<Checklist>> {
+    const baseURL = apiURL(`${this.checklist.name}/${this.checklist.version}`);
+    const url = `${MUNICIPALITY_ID}/checklists`;
+
+    const res = await this.apiService.post<never, ChecklistCreateRequest>({ url, baseURL, data }, req.user);
+
+    return { data: res.data, status: res.status, message: 'success' };
+  }
+
+  @Patch('/templates/:id/activate')
+  @OpenAPI({ summary: 'Activate checklist template' })
+  @ResponseSchema(ChecklistApiResponse)
+  async activateChecklist(@Req() req: RequestWithUser, @Param('id') id: string): Promise<ResponseData<Checklist>> {
+    const url = `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/checklists/${id}/activate`;
+    const res = await this.apiService.patch<Checklist, never>({ url }, req.user);
+
+    return { data: res.data, status: res.status, message: 'success' };
+  }
+
+  @Post('/templates/:id/version')
+  @OpenAPI({ summary: 'Create new version of checklist template' })
+  @ResponseSchema(ChecklistApiResponse)
+  async createNewVersion(@Req() req: RequestWithUser, @Param('id') id: string): Promise<ResponseData<Checklist>> {
+    const baseURL = apiURL(`${this.checklist.name}/${this.checklist.version}`);
+    const url = `${MUNICIPALITY_ID}/checklists/${id}/version`;
+    const res = await this.apiService.post<Checklist, never>({ url, baseURL }, req.user);
+
+    return { data: res.data, status: res.status, message: 'success' };
   }
 }

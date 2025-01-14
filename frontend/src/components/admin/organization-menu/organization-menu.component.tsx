@@ -67,7 +67,7 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue 
     data?.length > 2 && (
       <MenuVertical.Provider current={current} setCurrent={setCurrent}>
         <MenuVertical.Sidebar>
-          <MenuVertical className="!pr-0 !pl-0" data-test="organization-tree">
+          <MenuVertical className="!pr-0 !pl-0" data-cy="organization-tree">
             {renderChildren(filteredData)}
           </MenuVertical>
         </MenuVertical.Sidebar>
