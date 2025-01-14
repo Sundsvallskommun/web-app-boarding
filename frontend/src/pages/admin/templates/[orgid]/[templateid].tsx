@@ -194,21 +194,23 @@ export const EditTemplate = () => {
                   />
                 ))}
             </ol>
-            <Button
-              size="lg"
-              className="mt-8 ml-24"
-              data-cy={`add-activity-button`}
-              leftIcon={<LucideIcon name="plus" />}
-              variant="tertiary"
-              showBackground={false}
-              color="info"
-              onClick={() => {
-                setPhaseId(phase.id);
-                setIsOpen(true);
-              }}
-            >
-              {t('task:add_activity')}
-            </Button>
+            {data.lifeCycle === 'CREATED' ?
+              <Button
+                size="lg"
+                className="mt-8 ml-24"
+                data-cy={`add-activity-button`}
+                leftIcon={<LucideIcon name="plus" />}
+                variant="tertiary"
+                showBackground={false}
+                color="info"
+                onClick={() => {
+                  setPhaseId(phase.id);
+                  setIsOpen(true);
+                }}
+              >
+                {t('task:add_activity')}
+              </Button>
+            : null}
           </div>
         ));
     },
