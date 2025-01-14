@@ -1,27 +1,21 @@
 import { AdminActivityListItem } from '@components/admin/admin-activity-list-item/admin-activity-list-item.component';
 import { AdminEditTaskModal } from '@components/admin/admin-edit-task-modal/admin-edit-task-modal.component';
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
-import {
-  Checklist,
-  SortorderRequest,
-  Task,
-  TaskCreateRequest,
-  TaskUpdateRequest,
-} from '@data-contracts/backend/data-contracts';
+import { Checklist, SortorderRequest, Task } from '@data-contracts/backend/data-contracts';
 import { RoleType } from '@data-contracts/RoleType';
 import AdminLayout from '@layouts/admin-layout/admin-layout.component';
 import { setSortorder, useTemplate } from '@services/template-service/template-service';
 import { getUser, useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
 import { Button, Label, MenuBar } from '@sk-web-gui/react';
-import { set } from 'cypress/types/lodash';
 import dayjs from 'dayjs';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { shallow } from 'zustand/shallow';
+import AdminTemplateSidebar from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
 
 export const EditTemplate = () => {
   const { t } = useTranslation();
@@ -29,6 +23,7 @@ export const EditTemplate = () => {
   const { templateid, orgid } = router.query;
   const user = useUserStore((s) => s.user, shallow);
   const { data, setData, refresh, loaded, loading } = useTemplate(templateid as string);
+
   const [currentView, setCurrentView] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [phaseId, setPhaseId] = useState<string>();
@@ -174,51 +169,55 @@ export const EditTemplate = () => {
     >
       {loading ?
         <LoaderFullScreen />
-      : <div className="max-w-[104rem]">
-          <h2 className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">{capitalize(data?.displayName || '')}</h2>
-          {loaded && (
-            <>
-              <div className="flex gap-40 mb-24 text-small">
-                <div>
-                  <span className="font-bold">{t('templates:properties.updated_by')}</span> {lastSavedByName} (
-                  {data?.lastSavedBy}) {dayjs(data?.updated).format('YYYY-MM-DD, HH:mm')}
+      : <div className="flex w-full">
+          <div className="w-full pt-40">
+            <h2 className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">{capitalize(data?.displayName || '')}</h2>
+            {loaded && (
+              <>
+                <div className="flex gap-40 mb-24 text-small">
+                  <div>
+                    <span className="font-bold">{t('templates:properties.updated_by')}</span> {lastSavedByName} (
+                    {data?.lastSavedBy}) {dayjs(data?.updated).format('YYYY-MM-DD, HH:mm')}
+                  </div>
+                  <div>
+                    <span className="font-bold">{t('templates:properties.version')}</span> {data?.version}
+                  </div>
                 </div>
-                <div>
-                  <span className="font-bold">{t('templates:properties.version')}</span> {data?.version}
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <MenuBar current={currentView} className="w-full">
-                  <MenuBar.Item data-cy={`template-menu-bar-item-0`}>
-                    <Button onClick={() => setCurrentView(0)}>Chef</Button>
-                  </MenuBar.Item>
-                  <MenuBar.Item data-cy={`template-menu-bar-item-1`}>
-                    <Button onClick={() => setCurrentView(1)}>Anställd</Button>
-                  </MenuBar.Item>
-                </MenuBar>
-                <Label
-                  className="mx-md"
-                  color={
-                    data?.lifeCycle === 'ACTIVE' ? 'gronsta'
+                <div className="flex justify-between items-center">
+                  <MenuBar current={currentView} className="w-full">
+                    <MenuBar.Item data-cy={`template-menu-bar-item-0`}>
+                      <Button onClick={() => setCurrentView(0)}>Chef</Button>
+                    </MenuBar.Item>
+                    <MenuBar.Item data-cy={`template-menu-bar-item-1`}>
+                      <Button onClick={() => setCurrentView(1)}>Anställd</Button>
+                    </MenuBar.Item>
+                  </MenuBar>
+                  <Label
+                    className="mx-md"
+                    color={
+                      data?.lifeCycle === 'ACTIVE' ? 'gronsta'
+                      : data?.lifeCycle === 'CREATED' ?
+                        'vattjom'
+                      : 'juniskar'
+                    }
+                  >
+                    {data?.lifeCycle === 'ACTIVE' ?
+                      t('templates:active')
                     : data?.lifeCycle === 'CREATED' ?
-                      'vattjom'
-                    : 'juniskar'
-                  }
-                >
-                  {data?.lifeCycle === 'ACTIVE' ?
-                    t('templates:active')
-                  : data?.lifeCycle === 'CREATED' ?
-                    t('templates:created')
-                  : t('templates:deprecated')}
-                </Label>
-              </div>
-              <div className="w-full rounded-16 bg-white shadow-custom border-divider pb-24">
-                {currentView === 0 ?
-                  data && filteredTasks(data, [RoleType.MANAGER_FOR_NEW_EMPLOYEE, RoleType.MANAGER_FOR_NEW_MANAGER])
-                : data && filteredTasks(data, [RoleType.NEW_EMPLOYEE, RoleType.NEW_MANAGER])}
-              </div>
-            </>
-          )}
+                      t('templates:created')
+                    : t('templates:deprecated')}
+                  </Label>
+                </div>
+                <div className="w-full rounded-16 bg-white shadow-custom border-divider pb-24">
+                  {currentView === 0 ?
+                    data && filteredTasks(data, [RoleType.MANAGER_FOR_NEW_EMPLOYEE, RoleType.MANAGER_FOR_NEW_MANAGER])
+                  : data && filteredTasks(data, [RoleType.NEW_EMPLOYEE, RoleType.NEW_MANAGER])}
+                </div>
+              </>
+            )}
+          </div>
+
+          <AdminTemplateSidebar />
         </div>
       }
       {isOpen && phaseId && (

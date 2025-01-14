@@ -12,20 +12,18 @@ import { useShallow } from 'zustand/react/shallow';
 import { apiService } from './api-service';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 
-const getOrgTree = (orgId: number) => {
-  return apiService.get<OrgTreeApiResponse>(`/org/${orgId}/tree`).then((res) => {
-    if (res) {
-      return res.data.data;
-    }
-  });
+export const getOrgTree = async (orgId: number) => {
+  const res = await apiService.get<OrgTreeApiResponse>(`/org/${orgId}/tree`);
+  if (res) {
+    return res.data.data;
+  }
 };
 
-const getOrgTemplate = (orgId: number) => {
-  return apiService.get<OrgTemplateApiResponse>(`/org/${orgId}/template`).then((res) => {
-    if (res) {
-      return res.data.data;
-    }
-  });
+export const getOrgTemplate = async (orgId: number) => {
+  const res = await apiService.get<OrgTemplateApiResponse>(`/org/${orgId}/template`);
+  if (res) {
+    return res.data.data;
+  }
 };
 
 interface OrgTreeStore {

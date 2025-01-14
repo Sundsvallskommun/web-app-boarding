@@ -24,7 +24,7 @@ export const OrgTemplate: React.FC = () => {
     >
       {loading ?
         <LoaderFullScreen />
-      : <div className="flex flex-col gap-30">
+      : <div className="mt-40 flex flex-col gap-30">
           <h2 className="text-h2-sm md:text-h2-md xl:text-h2-lg m-0">
             {capitalize(t('templates:templates_for_org', { org: data?.organizationName }))}
           </h2>
