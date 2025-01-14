@@ -191,6 +191,7 @@ export const EditTemplate = () => {
                     items={list.length}
                     moveUp={(task: Task) => moveUp(task, data)}
                     moveDown={(task: Task) => moveDown(task, data)}
+                    allowDelete={data.lifeCycle === 'CREATED'}
                   />
                 ))}
             </ol>
