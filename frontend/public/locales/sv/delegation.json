@@ -9,5 +9,6 @@
   "confirmation": {
     "title": "Ta bort delegering?",
     "text": "{{user}} kommer inte längre att ha tillgång till introduktionen. Aktiviteter som {{user}} har gjort kommer att ligga kvar."
-  }
+  },
+  "no_assignments" : "Det finns inga tilldelade medarbetare"
 }
