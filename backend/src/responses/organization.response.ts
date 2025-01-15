@@ -59,6 +59,13 @@ export class OrganizationsApiResponse implements ApiResponse<OrganizationType[]>
   @IsString()
   message: string;
 }
+export class OrganizationApiResponse implements ApiResponse<OrgTemplate[]> {
+  @ValidateNested()
+  @Type(() => OrgTemplate)
+  data: OrgTemplate[];
+  @IsString()
+  message: string;
+}
 
 export class OrgTemplateApiResponse implements ApiResponse<OrgTemplate> {
   @ValidateNested()

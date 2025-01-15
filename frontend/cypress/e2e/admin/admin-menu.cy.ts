@@ -13,17 +13,17 @@ describe('Uses the admin page', () => {
     cy.intercept('GET', '**/api/me', { fixture: 'me-user.json' });
     cy.intercept('GET', '**/api/employee-checklists/employee/urb01anv', { fixture: 'employee-checklist-none.json' });
     cy.intercept('GET', '**/api/employee-checklists/delegated-to/urb01anv', { statusCode: 404 });
-    cy.get('[data-test="nav-admin-menu"]').should('not.exist');
+    cy.get('[data-cy="nav-admin-menu"]').should('not.exist');
     cy.url().should('include', '/urb01anv');
   });
 
   it('uses the admin menu as admin', () => {
-    cy.get('[data-test="nav-admin-menu"]').should('exist');
+    cy.get('[data-cy="nav-admin-menu"]').should('exist');
     cy.url().should('include', '/checklists');
-    cy.get('[data-test="nav-admin-menu-mallar"]').should('not.have.attr', 'aria-current');
-    cy.get('[data-test="nav-admin-menu-introduktioner"]').should('have.attr', 'aria-current');
-    cy.get('[data-test="nav-admin-menu-mallar"]').click();
+    cy.get('[data-cy="nav-admin-menu-mallar"]').should('not.have.attr', 'aria-current');
+    cy.get('[data-cy="nav-admin-menu-introduktioner"]').should('have.attr', 'aria-current');
+    cy.get('[data-cy="nav-admin-menu-mallar"]').click();
     cy.url().should('not.include', '/checklists');
-    cy.get('[data-test="nav-admin-menu-mallar"]').should('have.attr', 'aria-current');
+    cy.get('[data-cy="nav-admin-menu-mallar"]').should('have.attr', 'aria-current');
   });
 });

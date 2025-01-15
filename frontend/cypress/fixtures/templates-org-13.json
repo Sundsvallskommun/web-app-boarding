@@ -1,0 +1,517 @@
+{
+  "data": {
+    "id": "1",
+    "organizationName": "Org 13",
+    "organizationNumber": 13,
+    "checklists": [
+      {
+        "id": "4b955690-f49d-4116-8c94-6076d93c6303",
+        "name": "ROOT_CHECKLIST_ORG_!",
+        "displayName": "Grund för checklista",
+        "version": 2,
+        "lifeCycle": "ACTIVE",
+        "created": "2024-11-21T12:00:50.997571+01:00",
+        "updated": "2024-11-21T13:37:13.998063+01:00",
+        "lastSavedBy": "ann01adm",
+        "phases": [
+          {
+            "id": "1-1",
+            "name": "Inför första arbetsdagen",
+            "bodyText": "Första steg att utföra",
+            "timeToComplete": "P-1D",
+            "permission": "SUPERADMIN",
+            "sortOrder": 1,
+            "tasks": [
+              {
+                "id": "1-1-1",
+                "heading": "Du som chef ansvarar för introduktionen för din nya medarbetare",
+                "text": "Vid behov kan du utse någon annan, exempelvis en fadder, för planering av delar i introduktionen.",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:13:48.550325+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-1-2",
+                "heading": "Upprätta ett introduktionsschema och välkomna din medarbetare",
+                "text": "Planera introduktionen och avsätt tid i din kalender för introduktionen. Skicka ett välkomstbrev till din nya medarbetare med information om var och när ni ska mötas den första arbetsdagen. Bifoga introduktionsschema för de första 3 veckorna.",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:15:03.008748+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-1-3",
+                "heading": "Utse en fadder",
+                "text": "Fadder är en person som hjälper den nya medarbetaren med praktiska frågor under den första tiden.<br>Faddern har extra ansvar för att introducera den nya medarbetaren i sociala sammanhang.",
+                "sortOrder": 3,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:15:49.686778+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-1-4",
+                "heading": "Förbered arbetsplats, utifrån verksamhetens behov",
+                "text": "",
+                "sortOrder": 4,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:16:16.458439+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-1-5",
+                "heading": "Lägg till din nya medarbetare i aktuella mejlgrupper, Teams och samarbetsrum samt bjud in till möten efter behov",
+                "text": "Idag kan det göras 7 dagar före första dagen då användarkonto skapas och chef får ett mail om detta. Under första kvartal 2024 kan detta göras fyra veckor före första dagen.",
+                "sortOrder": 12,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:19:33.160655+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-1-6",
+                "heading": "Informera verksamheten om din nya medarbetare",
+                "text": "",
+                "sortOrder": 13,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:20:01.32368+01:00",
+                "lastSavedBy": "ann01adm"
+              }
+            ],
+            "created": "2024-11-21T11:43:30.233792+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-2",
+            "name": "Första dagen",
+            "bodyText": "",
+            "timeToComplete": "P1D",
+            "permission": "SUPERADMIN",
+            "sortOrder": 2,
+            "tasks": [
+              {
+                "id": "1-2-1",
+                "heading": "Möt upp din nya medarbetare vid entrén",
+                "text": "Presentera närmaste kollegor, övriga arbetskamrater, fadder.",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:30:14.561809+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-2-2",
+                "heading": "Visa lokaler",
+                "text": "<ul><li>Lunchrum, toalett, vilorum, ev skåp, omklädningsrum och dusch</li><li>Kopiering och postfack utifrån behov</li><li>Informera om dagliga gemensamma aktiviteter så som förmiddagskaffe, lunchtider etc.</li><li>Parkering</li></ul>",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:31:02.447909+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-2-3",
+                "heading": "Introduktion om hantering av olycka och brand",
+                "text": "<ul><li>Rutin vid utrymning; nödutgångar, återsamlingsplats, brandredskap</li><li>1:a hjälpen utrustning, hjärtstartare</li><li>Överfallslarm, vid behov</li></ul>",
+                "sortOrder": 3,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:31:31.851959+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-2-4",
+                "heading": "Gå igenom praktiska rutiner",
+                "text": "<ul><li>Informera om arbetstider, ledigheter med mera</li><li>Hämta ut passerkort, Visa hur passersystemet fungerar utöver arbetstid</li><li>Larm, informera om vilka larmtider som gäller för fastigheten</li><li>Posthantering, kopering ,scanning, dokumentförstörare</li><li>Lokalbokning</li><li>Ev arbetskläder, friskvård</li></ul>",
+                "sortOrder": 4,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:31:54.507132+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-2-5",
+                "heading": "Informera om vem som är arbetsplatsens skyddsombud och vilka som är fackliga representanter",
+                "text": "",
+                "sortOrder": 5,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:32:17.828988+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-2-6",
+                "heading": "Information lön och arbetstid (lönesystem)",
+                "text": "<ul><li>Visa hur medarbetaren anmäler frånvaro</li><li>Visa hur medarbetaren lägger in närmast anhörig i systemet</li><li>Kontrollera att person- och adressuppgifter stämmer i lönesystemet</li></ul>.&nbsp;",
+                "sortOrder": 6,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:33:08.385729+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-2-7",
+                "heading": "Introducera medarbetarens digitala checklista",
+                "text": "Informera om arbetet med digital checklista och att medarbetaren har tillgång till en checklista med egna aktiviteter för introduktion.",
+                "sortOrder": 7,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:33:46.752696+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-2-8",
+                "heading": "Planera uppföljningssamtal",
+                "text": "Boka in uppföljningssamtal efter en vecka och informera din nya medarbetare om att hen förväntas utföra aktiviteter enligt medarbetarens checklista.",
+                "sortOrder": 8,
+                "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:34:09.079239+01:00",
+                "lastSavedBy": "ann01adm"
+              }
+            ],
+            "created": "2024-11-21T11:44:59.665961+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-3",
+            "name": "Första veckan",
+            "bodyText": "",
+            "timeToComplete": "P1W",
+            "permission": "SUPERADMIN",
+            "sortOrder": 3,
+            "created": "2024-11-21T11:47:13.938767+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-4",
+            "name": "Första månaden",
+            "bodyText": "",
+            "timeToComplete": "P1M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 4,
+            "created": "2024-11-21T11:47:28.189051+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-5",
+            "name": "Ny chef",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 5,
+            "tasks": [
+              {
+                "id": "1-5-1",
+                "heading": "Gå igenom chefsavtal och chefsuppdraget",
+                "text": "",
+                "sortOrder": 1,
+                "roleType": "MANAGER_FOR_NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:36:11.079047+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-5-2",
+                "heading": "Gå igenom fördelning av arbetsmiljöuppgifter",
+                "text": "Säkerställ att chef har undertecknat och känner sig trygg i uppgiften. Fördelning av uppgifter utifrån uppdrag finns som bilaga 1 till riktlinjen i systematiskt arbetsmiljöarbete.",
+                "sortOrder": 2,
+                "roleType": "MANAGER_FOR_NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:37:29.776362+01:00",
+                "lastSavedBy": "ann01adm"
+              },
+              {
+                "id": "1-5-3",
+                "heading": "Introducera till stödfunktionerna HR, IT, Ekonomi,Kommunikation samt Chefsstöd på inloggad",
+                "text": "Informera om HR-partners roll och vem som blir chefens personliga kontakt.",
+                "sortOrder": 3,
+                "roleType": "MANAGER_FOR_NEW_MANAGER",
+                "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                "permission": "SUPERADMIN",
+                "created": "2024-11-21T12:38:05.71007+01:00",
+                "lastSavedBy": "ann01adm"
+              }
+            ],
+            "created": "2024-11-21T11:48:01.245365+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-6",
+            "name": "Uppföljning",
+            "bodyText": "Du behöver kontinuerligt följa upp introduktionen för att se hur din medarbetare trivs och kommit in i arbetet. En rekommendation är att du följer upp minst en gång i månaden, gärna oftare.",
+            "timeToComplete": "P6M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 6,
+            "created": "2024-11-21T11:48:38.123495+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-7",
+            "name": "Trivsel",
+            "bodyText": "I fritextrutor behöver du bocka för \"klar\" för att innehållet ska sparas",
+            "timeToComplete": "P9M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 7,
+            "created": "2024-11-21T11:57:10.290319+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-8",
+            "name": "Har den anställde fått den information, och kunskap som behövs för att",
+            "bodyText": "",
+            "timeToComplete": "P27M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 8,
+            "created": "2024-11-21T11:52:48.46413+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-9",
+            "name": "Information till dig som är nyanställd",
+            "bodyText": "Syftet med introduktionen är att ge dig som ny medarbetare all den information, kunskap och kontaktnät som du behöver för att så snabbt möjligt komma in i din nya roll och bli produktiv. Gå igenom varje avsnitt och klarmarkera utförda aktiviteter. När alla aktiviteter i ett avsnitt är klarmarkerade öppnas nästa avsnitt.",
+            "timeToComplete": "P6M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 8,
+            "created": "2024-11-21T11:53:51.219384+01:00",
+            "lastSavedBy": "ann01adm"
+          }
+        ]
+      },
+      {
+        "id": "00000000-f49d-4116-8c94-6076d93c6303",
+        "name": "ROOT_CHECKLIST_ORG_!",
+        "displayName": "Grund för checklista",
+        "version": 3,
+        "lifeCycle": "CREATED",
+        "created": "2024-11-21T12:00:50.997571+01:00",
+        "updated": "2024-11-21T13:37:13.998063+01:00",
+        "lastSavedBy": "ann01adm",
+        "phases": [
+          {
+            "id": "1-1",
+            "name": "Inför första arbetsdagen",
+            "bodyText": "Första steg att utföra",
+            "timeToComplete": "P-1D",
+            "permission": "SUPERADMIN",
+            "sortOrder": 1,
+            "tasks": [],
+            "created": "2024-11-21T11:43:30.233792+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-2",
+            "name": "Första dagen",
+            "bodyText": "",
+            "timeToComplete": "P1D",
+            "permission": "SUPERADMIN",
+            "sortOrder": 2,
+            "tasks": [],
+            "created": "2024-11-21T11:44:59.665961+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-3",
+            "name": "Första veckan",
+            "bodyText": "",
+            "timeToComplete": "P1W",
+            "permission": "SUPERADMIN",
+            "sortOrder": 3,
+            "created": "2024-11-21T11:47:13.938767+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-4",
+            "name": "Första månaden",
+            "bodyText": "",
+            "timeToComplete": "P1M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 4,
+            "created": "2024-11-21T11:47:28.189051+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-5",
+            "name": "Ny chef",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 5,
+            "tasks": [],
+            "created": "2024-11-21T11:48:01.245365+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-6",
+            "name": "Uppföljning",
+            "bodyText": "Du behöver kontinuerligt följa upp introduktionen för att se hur din medarbetare trivs och kommit in i arbetet. En rekommendation är att du följer upp minst en gång i månaden, gärna oftare.",
+            "timeToComplete": "P6M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 6,
+            "created": "2024-11-21T11:48:38.123495+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-7",
+            "name": "Trivsel",
+            "bodyText": "I fritextrutor behöver du bocka för \"klar\" för att innehållet ska sparas",
+            "timeToComplete": "P9M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 7,
+            "created": "2024-11-21T11:57:10.290319+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-8",
+            "name": "Har den anställde fått den information, och kunskap som behövs för att",
+            "bodyText": "",
+            "timeToComplete": "P27M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 8,
+            "created": "2024-11-21T11:52:48.46413+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-9",
+            "name": "Information till dig som är nyanställd",
+            "bodyText": "Syftet med introduktionen är att ge dig som ny medarbetare all den information, kunskap och kontaktnät som du behöver för att så snabbt möjligt komma in i din nya roll och bli produktiv. Gå igenom varje avsnitt och klarmarkera utförda aktiviteter. När alla aktiviteter i ett avsnitt är klarmarkerade öppnas nästa avsnitt.",
+            "timeToComplete": "P6M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 8,
+            "created": "2024-11-21T11:53:51.219384+01:00",
+            "lastSavedBy": "ann01adm"
+          }
+        ]
+      },
+      {
+        "id": "11111111-f49d-4116-8c94-6076d93c6303",
+        "name": "ROOT_CHECKLIST_ORG_!",
+        "displayName": "Grund för checklista",
+        "version": 1,
+        "lifeCycle": "DEPRECATED",
+        "created": "2024-11-21T12:00:50.997571+01:00",
+        "updated": "2024-11-21T13:37:13.998063+01:00",
+        "lastSavedBy": "ann01adm",
+        "phases": [
+          {
+            "id": "1-1",
+            "name": "Inför första arbetsdagen",
+            "bodyText": "Första steg att utföra",
+            "timeToComplete": "P-1D",
+            "permission": "SUPERADMIN",
+            "sortOrder": 1,
+            "tasks": [],
+            "created": "2024-11-21T11:43:30.233792+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-2",
+            "name": "Första dagen",
+            "bodyText": "",
+            "timeToComplete": "P1D",
+            "permission": "SUPERADMIN",
+            "sortOrder": 2,
+            "tasks": [],
+            "created": "2024-11-21T11:44:59.665961+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-3",
+            "name": "Första veckan",
+            "bodyText": "",
+            "timeToComplete": "P1W",
+            "permission": "SUPERADMIN",
+            "sortOrder": 3,
+            "created": "2024-11-21T11:47:13.938767+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-4",
+            "name": "Första månaden",
+            "bodyText": "",
+            "timeToComplete": "P1M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 4,
+            "created": "2024-11-21T11:47:28.189051+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-5",
+            "name": "Ny chef",
+            "bodyText": "",
+            "timeToComplete": "P6M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 5,
+            "tasks": [],
+            "created": "2024-11-21T11:48:01.245365+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-6",
+            "name": "Uppföljning",
+            "bodyText": "Du behöver kontinuerligt följa upp introduktionen för att se hur din medarbetare trivs och kommit in i arbetet. En rekommendation är att du följer upp minst en gång i månaden, gärna oftare.",
+            "timeToComplete": "P6M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 6,
+            "created": "2024-11-21T11:48:38.123495+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-7",
+            "name": "Trivsel",
+            "bodyText": "I fritextrutor behöver du bocka för \"klar\" för att innehållet ska sparas",
+            "timeToComplete": "P9M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 7,
+            "created": "2024-11-21T11:57:10.290319+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-8",
+            "name": "Har den anställde fått den information, och kunskap som behövs för att",
+            "bodyText": "",
+            "timeToComplete": "P27M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 8,
+            "created": "2024-11-21T11:52:48.46413+01:00",
+            "lastSavedBy": "ann01adm"
+          },
+          {
+            "id": "1-9",
+            "name": "Information till dig som är nyanställd",
+            "bodyText": "Syftet med introduktionen är att ge dig som ny medarbetare all den information, kunskap och kontaktnät som du behöver för att så snabbt möjligt komma in i din nya roll och bli produktiv. Gå igenom varje avsnitt och klarmarkera utförda aktiviteter. När alla aktiviteter i ett avsnitt är klarmarkerade öppnas nästa avsnitt.",
+            "timeToComplete": "P6M",
+            "permission": "SUPERADMIN",
+            "sortOrder": 8,
+            "created": "2024-11-21T11:53:51.219384+01:00",
+            "lastSavedBy": "ann01adm"
+          }
+        ]
+      }
+    ],
+    "communicationChannels": ["NO_COMMUNICATION"],
+    "created": "2024-11-21T12:00:36.405963+01:00"
+  },
+  "message": "success"
+}

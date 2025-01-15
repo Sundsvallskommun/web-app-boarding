@@ -17,5 +17,23 @@
   },
   "created": "Utkast",
   "active": "Aktiv",
-  "deprecated": "Inaktiv"
+  "deprecated": "Inaktiv",
+  "create": {
+    "title": "Skapa mall",
+    "text": "En ny mall skapas.",
+    "confirm": "Skapa",
+    "error": "Det gick inte att skapa mallen"
+  },
+  "activate": {
+    "title": "Aktivera mall?",
+    "text": "Denna mall aktiveras och den tidigare aktiva mallen inaktiveras.",
+    "confirm": "Aktivera",
+    "error": "Det gick inte att aktivera mallen."
+  },
+  "new_version": {
+    "title": "Skapa ny version?",
+    "text": "Ett nytt utkast av denna mall skapas.",
+    "confirm": "Skapa ny version",
+    "error": "Det gick inte att skapa en ny version av mallen."
+  }
 }

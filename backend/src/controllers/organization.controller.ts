@@ -1,9 +1,9 @@
 import { OrganizationTree } from '@/data-contracts/mdviewer/data-contracts';
 import { HttpException } from '@/exceptions/HttpException';
 import { RequestWithUser } from '@/interfaces/auth.interface';
-import { Organization } from '@/responses/checklist.response';
-import { OrganizationsApiResponse, OrgTemplateApiResponse, OrgTreeApiResponse } from '@/responses/organization.response';
-import ApiService from '@/services/api.service';
+import { Organization, OrganizationCreateRequest } from '@/responses/checklist.response';
+import { OrganizationApiResponse, OrganizationsApiResponse, OrgTemplateApiResponse, OrgTreeApiResponse } from '@/responses/organization.response';
+import ApiService, { ApiResponse } from '@/services/api.service';
 import { APIS, MUNICIPALITY_ID } from '@config';
 import authMiddleware from '@middlewares/auth.middleware';
 import { Response } from 'express';
@@ -36,6 +36,72 @@ export class OrganizationController {
     try {
       const data = await this.apiService.get<OrganizationTree>({ url: `${this.mdviewer.name}/${this.mdviewer.version}/${orgId}/orgtree` }, req.user);
       return response.send({ data: data.data, message: 'success' });
+    } catch (e) {
+      throw new HttpException(e?.status || 500, e?.message || 'Internal server error');
+    }
+  }
+
+  @Get('/org/:orgId')
+  @OpenAPI({
+    summary: 'Get organization by id',
+  })
+  @ResponseSchema(OrganizationApiResponse)
+  @UseBefore(authMiddleware)
+  async getOrganization(
+    @Req() req: RequestWithUser,
+    @Param('orgId') orgId: number,
+    @Res() response: Response<OrganizationApiResponse>,
+  ): Promise<Response<OrganizationApiResponse>> {
+    const { name } = req.user;
+    if (!name) {
+      throw new HttpException(400, 'Bad Request');
+    }
+
+    try {
+      const data = await this.apiService.get<Organization[]>(
+        {
+          url: `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/organizations`,
+          params: {
+            organizationFilter: orgId,
+          },
+        },
+        req.user,
+      );
+      if (data?.data) {
+        return response.send({ data: data.data, message: 'success' });
+      } else {
+        throw new HttpException(404, 'Could not find organization');
+      }
+    } catch (e) {
+      throw new HttpException(e?.status || 500, e?.message || 'Internal server error');
+    }
+  }
+
+  @Post('/org')
+  @OpenAPI({
+    summary: 'Create an organization',
+  })
+  @ResponseSchema(ApiResponse<OrganizationCreateRequest>)
+  @UseBefore(authMiddleware)
+  async createOrganization(
+    @Req() req: RequestWithUser,
+    @Body() data: OrganizationCreateRequest,
+    @Res() response: Response<ApiResponse<OrganizationCreateRequest>>,
+  ): Promise<Response<ApiResponse<OrganizationCreateRequest>>> {
+    const { name } = req.user;
+    if (!name) {
+      throw new HttpException(400, 'Bad Request');
+    }
+
+    try {
+      const res = await this.apiService.post<never, OrganizationCreateRequest>(
+        {
+          url: `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/organizations`,
+          data,
+        },
+        req.user,
+      );
+      return response.send({ data, message: 'success', status: res.status });
     } catch (e) {
       throw new HttpException(e?.status || 500, e?.message || 'Internal server error');
     }

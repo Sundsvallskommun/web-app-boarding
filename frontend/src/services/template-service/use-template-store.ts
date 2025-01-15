@@ -18,7 +18,7 @@ export const useTemplateStore = create<
 >((set) => ({
   data: null,
   loaded: false,
-  loading: false,
+  loading: true,
   setData: (data) => set(() => ({ data })),
   setLoaded: (loaded) => set(() => ({ loaded })),
   setLoading: (loading) => set(() => ({ loading })),
