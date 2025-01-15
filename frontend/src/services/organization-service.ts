@@ -1,5 +1,5 @@
 import {
-  Organization,
+  OrganizationsApiResponse,
   OrgTemplate,
   OrgTemplateApiResponse,
   OrgTree,
@@ -24,6 +24,27 @@ export const getOrgTemplate = async (orgId: number) => {
   if (res) {
     return res.data.data;
   }
+};
+
+export const getOrgTemplates = async (orgIds: number[]) => {
+  const res = await apiService.post<OrganizationsApiResponse>(`/org/templates/`, orgIds);
+  if (res) {
+    return res.data.data;
+  }
+};
+
+export const getParentChain = (orgTree: OrgTree[], orgId: number) => {
+  const org = findOrgInTree(orgTree, orgId);
+  if (org) {
+    const chain = [org];
+    let parent = findOrgInTree(orgTree, org.parentId);
+    while (parent) {
+      chain.unshift(parent);
+      parent = findOrgInTree(orgTree, parent.parentId);
+    }
+    return chain;
+  }
+  return [];
 };
 
 interface OrgTreeStore {
