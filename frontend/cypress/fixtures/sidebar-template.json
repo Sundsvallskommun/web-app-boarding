@@ -1,0 +1,72 @@
+{
+  "data": [
+    {
+      "id": "11-11-11-11-11",
+      "organizationName": "Org 2775",
+      "organizationNumber": 2775,
+      "checklists": [
+        {
+          "id": "111-111-111-111-111",
+          "name": "CHECKLIST_ORG_2775",
+          "displayName": "Grund för checklista Org 2775",
+          "version": 1,
+          "lifeCycle": "ACTIVE",
+          "created": "2025-01-16T08:30:13.655547+01:00",
+          "lastSavedBy": "ann01adm",
+          "phases": [
+            {
+              "id": "1-1-1-1-1",
+              "name": "Inför första dagen",
+              "bodyText": "Ta stöd av checklistan när du planerar introduktionen av din nya medarbetare.",
+              "timeToComplete": "P-1D",
+              "permission": "SUPERADMIN",
+              "sortOrder": 1,
+              "created": "2024-11-21T11:43:30.233792+01:00",
+              "updated": "2024-12-18T09:21:51.844748+01:00",
+              "lastSavedBy": "ann01adm",
+              "tasks": [
+                {
+                  "id": "1-1-1",
+                  "heading": "Du som chef ansvarar för introduktionen för din nya medarbetare",
+                  "text": "Vid behov kan du utse någon annan, exempelvis en fadder, för planering av delar i introduktionen.",
+                  "sortOrder": 1,
+                  "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                  "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                  "permission": "SUPERADMIN",
+                  "created": "2024-11-21T12:13:48.550325+01:00",
+                  "lastSavedBy": "ann01adm"
+                }]
+            },
+            {
+              "id": "222-222-222-222-222",
+              "name": "Första dagen",
+              "bodyText": "",
+              "timeToComplete": "P1D",
+              "permission": "SUPERADMIN",
+              "sortOrder": 2,
+              "created": "2024-11-21T11:44:59.665961+01:00",
+              "lastSavedBy": "ann01adm",
+              "tasks": [
+                {
+                  "id": "2-2-2",
+                  "heading": "Du som chef ansvarar för introduktionen för din nya medarbetare",
+                  "text": "Vid behov kan du utse någon annan, exempelvis en fadder, för planering av delar i introduktionen.",
+                  "sortOrder": 1,
+                  "roleType": "MANAGER_FOR_NEW_EMPLOYEE",
+                  "questionType": "COMPLETED_OR_NOT_RELEVANT",
+                  "permission": "SUPERADMIN",
+                  "created": "2024-11-21T12:13:48.550325+01:00",
+                  "lastSavedBy": "ann01adm"
+                }]
+            }
+          ]
+        }
+      ],
+      "communicationChannels": [
+        "EMAIL"
+      ],
+      "created": "2025-01-16T08:30:13.598453+01:00"
+    }
+  ],
+  "message": "success"
+}

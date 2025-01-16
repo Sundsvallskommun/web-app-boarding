@@ -35,5 +35,9 @@
     "text": "Ett nytt utkast av denna mall skapas.",
     "confirm": "Skapa ny version",
     "error": "Det gick inte att skapa en ny version av mallen."
-  }
+  },
+  "other_level_activities" : "Aktiviteter från andra nivåer",
+  "go_to_template" : "Gå till mall",
+  "fetching_other_levels" : "Hämtar andra nivåer..",
+  "no_templates_available" : "Inga mallar tillgängliga"
 }

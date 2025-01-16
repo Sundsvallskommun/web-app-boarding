@@ -24,14 +24,14 @@ describe('Uses the organization templates', () => {
     });
     cy.get('h2').should('include.text', 'Org 13');
     cy.get('[data-cy^="template-card-"]').should('have.length', 3);
-    cy.get('[data-cy="template-card-00000000-f49d-4116-8c94-6076d93c6303"]').within(($this) => {
+    cy.get('[data-cy="template-card-00000000-f49d-4116-8c94-6076d93c6303"]').within(() => {
       cy.contains('Grund för checklista');
       cy.contains('21 Nov 2024');
       cy.contains('Utkast');
       cy.contains('Version: 3');
       cy.contains('0 aktiviteter');
     });
-    cy.get('[data-cy="template-card-11111111-f49d-4116-8c94-6076d93c6303"]').within(($this) => {
+    cy.get('[data-cy="template-card-11111111-f49d-4116-8c94-6076d93c6303"]').within(() => {
       cy.contains('Grund för checklista');
       cy.contains('21 Nov 2024');
       cy.contains('Inaktiv');
@@ -57,7 +57,7 @@ describe('Uses the organization templates', () => {
     });
     cy.get('h2').should('include.text', 'Org 2775');
     cy.get('[data-cy^="template-card-"]').should('have.length', 1);
-    cy.get('[data-cy="template-card-4b955690-f49d-4116-8c94-6076d93c6303"]').within(($this) => {
+    cy.get('[data-cy="template-card-4b955690-f49d-4116-8c94-6076d93c6303"]').within(() => {
       cy.contains('Grund för checklista');
       cy.contains('21 Nov 2024');
       cy.contains('Aktiv');
@@ -74,5 +74,28 @@ describe('Uses the organization templates', () => {
     cy.get('h2').should('include.text', 'Org 2669');
     cy.get('[data-cy^="template-card-"]').should('have.length', 0);
     cy.get('[data-cy="create-template-button"]').should('exist');
+  });
+
+  it('displays template sidebar correctly', () => {
+    cy.intercept('POST', '**/api/org/templates', { fixture: 'sidebar-template.json' }).as('getUpperLevelTemplates');
+
+    cy.visit('http://localhost:3000/admin/templates');
+    cy.get('[data-cy="organization-tree"]').within(() => {
+      cy.get('a[data-menuindex="2775"]').contains('Org 2775').click();
+      cy.get('a[data-menuindex="13"]').contains('Org2 AO Org2').click();
+    });
+
+    cy.get('[data-cy="template-card-4b955690-f49d-4116-8c94-6076d93c6303"]').click();
+    cy.wait('@getUpperLevelTemplates');
+
+    cy.get('[data-cy="template-accordion-0"]')
+      .should('exist')
+      .within(() => {
+        cy.get('.sk-icon .lucide-plus').should('exist').click();
+        cy.get('[data-cy="template-accordion-item-0"]').should('exist').contains('Inför första dagen');
+        cy.get('[data-cy="template-accordion-item-0"]').should('exist').contains('Första dagen');
+        cy.get('[data-cy="template-link-0"]').should('exist').click();
+        cy.wait('@getTemplate');
+      });
   });
 });
