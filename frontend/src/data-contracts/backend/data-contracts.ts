@@ -393,6 +393,11 @@ export interface OrgTreeApiResponse {
   message: string;
 }
 
+export interface OrganizationsApiResponse {
+  data: Organization[];
+  message: string;
+}
+
 export interface OrganizationApiResponse {
   data: OrgTemplate;
   message: string;

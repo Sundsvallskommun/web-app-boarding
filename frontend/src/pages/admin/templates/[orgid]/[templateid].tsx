@@ -21,6 +21,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { shallow } from 'zustand/shallow';
+import AdminTemplateSidebar from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
 
 export const EditTemplate = () => {
   const { t } = useTranslation();
@@ -236,65 +237,70 @@ export const EditTemplate = () => {
     >
       {loading || !data ?
         <LoaderFullScreen />
-      : <div className="max-w-[104rem]">
-          <h2 data-cy="template-name" className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">
-            {capitalize(data?.displayName || '')}
-          </h2>
-          {loaded && (
-            <>
-              <div className="flex gap-40 mb-24 text-small">
+      : <div className="flex w-full">
+          <div className="w-full pt-40">
+            <h2 data-cy="template-name" className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">
+              {capitalize(data?.displayName || '')}
+            </h2>
+            {loaded && (
+              <>
                 <div>
-                  <span className="font-bold">{t('templates:properties.updated_by')}</span> {lastSavedByName} (
-                  {data?.lastSavedBy}) {dayjs(data?.updated).format('YYYY-MM-DD, HH:mm')}
+                  <div className="flex gap-40 mb-24 text-small">
+                    <div>
+                      <span className="font-bold">{t('templates:properties.updated_by')}</span> {lastSavedByName} (
+                      {data?.lastSavedBy}) {dayjs(data?.updated).format('YYYY-MM-DD, HH:mm')}
+                    </div>
+                    <div>
+                      <span className="font-bold">{t('templates:properties.version')}</span> {data?.version}
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <MenuBar current={currentView} className="w-full">
+                      <MenuBar.Item data-cy={`template-menu-bar-item-0`}>
+                        <Button onClick={() => setCurrentView(0)}>Chef</Button>
+                      </MenuBar.Item>
+                      <MenuBar.Item data-cy={`template-menu-bar-item-1`}>
+                        <Button onClick={() => setCurrentView(1)}>Anställd</Button>
+                      </MenuBar.Item>
+                    </MenuBar>
+                    <Label
+                      className="mx-md"
+                      color={
+                        data?.lifeCycle === 'ACTIVE' ? 'gronsta'
+                        : data?.lifeCycle === 'CREATED' ?
+                          'vattjom'
+                        : 'juniskar'
+                      }
+                    >
+                      {data?.lifeCycle === 'ACTIVE' ?
+                        t('templates:active')
+                      : data?.lifeCycle === 'CREATED' ?
+                        t('templates:created')
+                      : t('templates:deprecated')}
+                    </Label>
+                    {data?.lifeCycle === 'CREATED' ?
+                      <Button size="sm" color="vattjom" onClick={onActivate}>
+                        Aktivera mall
+                      </Button>
+                    : (
+                      data?.lifeCycle === 'ACTIVE' &&
+                      orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
+                    ) ?
+                      <Button size="sm" color="vattjom" onClick={onNewVersion}>
+                        Skapa ny version
+                      </Button>
+                    : null}
+                  </div>
+                  <div className="w-full rounded-16 bg-white shadow-custom border-divider pb-24">
+                    {currentView === 0 ?
+                      data && filteredTasks(data, [RoleType.MANAGER_FOR_NEW_EMPLOYEE, RoleType.MANAGER_FOR_NEW_MANAGER])
+                    : data && filteredTasks(data, [RoleType.NEW_EMPLOYEE, RoleType.NEW_MANAGER])}
+                  </div>
                 </div>
-                <div>
-                  <span className="font-bold">{t('templates:properties.version')}</span> {data?.version}
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <MenuBar current={currentView} className="w-full">
-                  <MenuBar.Item data-cy={`template-menu-bar-item-0`}>
-                    <Button onClick={() => setCurrentView(0)}>Chef</Button>
-                  </MenuBar.Item>
-                  <MenuBar.Item data-cy={`template-menu-bar-item-1`}>
-                    <Button onClick={() => setCurrentView(1)}>Anställd</Button>
-                  </MenuBar.Item>
-                </MenuBar>
-                <Label
-                  className="mx-md"
-                  color={
-                    data?.lifeCycle === 'ACTIVE' ? 'gronsta'
-                    : data?.lifeCycle === 'CREATED' ?
-                      'vattjom'
-                    : ''
-                  }
-                >
-                  {data?.lifeCycle === 'ACTIVE' ?
-                    t('templates:active')
-                  : data?.lifeCycle === 'CREATED' ?
-                    t('templates:created')
-                  : t('templates:deprecated')}
-                </Label>
-                {data?.lifeCycle === 'CREATED' ?
-                  <Button size="sm" color="vattjom" onClick={onActivate}>
-                    Aktivera mall
-                  </Button>
-                : (
-                  data?.lifeCycle === 'ACTIVE' &&
-                  orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
-                ) ?
-                  <Button size="sm" color="vattjom" onClick={onNewVersion}>
-                    Skapa ny version
-                  </Button>
-                : null}
-              </div>
-              <div className="w-full rounded-16 bg-white shadow-custom border-divider pb-24">
-                {currentView === 0 ?
-                  data && filteredTasks(data, [RoleType.MANAGER_FOR_NEW_EMPLOYEE, RoleType.MANAGER_FOR_NEW_MANAGER])
-                : data && filteredTasks(data, [RoleType.NEW_EMPLOYEE, RoleType.NEW_MANAGER])}
-              </div>
-            </>
-          )}
+              </>
+            )}
+          </div>
+          <AdminTemplateSidebar />
         </div>
       }
       {isOpen && phaseId && (

@@ -1,6 +1,7 @@
 import {
   Organization,
   OrganizationCreateRequest,
+  OrganizationsApiResponse,
   OrgTemplate,
   OrgTemplateApiResponse,
   OrgTree,
@@ -13,12 +14,39 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { useShallow } from 'zustand/react/shallow';
 import { ApiResponse, apiService } from './api-service';
 
-const getOrgTree = (orgId: number) => {
-  return apiService.get<OrgTreeApiResponse>(`/org/${orgId}/tree`).then((res) => {
-    if (res) {
-      return res.data.data;
+export const getOrgTree = async (orgId: number) => {
+  const res = await apiService.get<OrgTreeApiResponse>(`/org/${orgId}/tree`);
+  if (res) {
+    return res.data.data;
+  }
+};
+
+export const getOrgTemplate = async (orgId: number) => {
+  const res = await apiService.get<OrgTemplateApiResponse>(`/org/${orgId}/template`);
+  if (res) {
+    return res.data.data;
+  }
+};
+
+export const getOrgTemplates = async (orgIds: number[]) => {
+  const res = await apiService.post<OrganizationsApiResponse>(`/org/templates/`, orgIds);
+  if (res) {
+    return res.data.data;
+  }
+};
+
+export const getParentChain = (orgTree: OrgTree[], orgId: number) => {
+  const org = findOrgInTree(orgTree, orgId);
+  if (org) {
+    const chain = [org];
+    let parent = findOrgInTree(orgTree, org.parentId);
+    while (parent) {
+      chain.unshift(parent);
+      parent = findOrgInTree(orgTree, parent.parentId);
     }
-  });
+    return chain;
+  }
+  return [];
 };
 
 export const getOrganization = (orgId: number) => {
@@ -35,14 +63,6 @@ export const createOrganization = (orgData: OrganizationCreateRequest) => {
       return res.data.data;
     } else {
       throw new Error('Failed to create organization');
-    }
-  });
-};
-
-const getOrgTemplate = (orgId: number) => {
-  return apiService.get<OrgTemplateApiResponse>(`/org/${orgId}/template`).then((res) => {
-    if (res) {
-      return res.data.data;
     }
   });
 };

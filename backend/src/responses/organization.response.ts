@@ -1,10 +1,10 @@
-import { Checklist, CommunicationChannel, Organization } from '@/data-contracts/checklist/data-contracts';
+import { Checklist, CommunicationChannel, Organization as OrganizationType } from '@/data-contracts/checklist/data-contracts';
 import { OrganizationTree } from '@/data-contracts/mdviewer/data-contracts';
 import ApiResponse from '@/interfaces/api-service.interface';
 import { Type } from 'class-transformer';
 import { IsDateString, IsEnum, IsIn, IsInt, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Template } from './template.response';
-
+import { Organization } from './checklist.response';
 export class OrgTree implements OrganizationTree {
   @IsString()
   organizationId?: string;
@@ -52,6 +52,13 @@ export class OrgTreeApiResponse implements ApiResponse<OrgTree> {
   message: string;
 }
 
+export class OrganizationsApiResponse implements ApiResponse<OrganizationType[]> {
+  @ValidateNested({ each: true })
+  @Type(() => Organization)
+  data: Organization[];
+  @IsString()
+  message: string;
+}
 export class OrganizationApiResponse implements ApiResponse<OrgTemplate[]> {
   @ValidateNested()
   @Type(() => OrgTemplate)
