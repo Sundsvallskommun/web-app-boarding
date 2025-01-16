@@ -481,3 +481,62 @@ export class DelegatedEmployeeChecklistResponse implements DelegatedEmployeeChec
   @Type(() => EmployeeChecklist)
   employeeChecklists?: EmployeeChecklist[];
 }
+
+export class OngoingEmployeeChecklist {
+  @IsString()
+  employeeName?: string;
+  @IsString()
+  employeeUsername?: string;
+  @IsString()
+  managerName?: string;
+  @IsString()
+  departmentName?: string;
+  @IsArray()
+  @IsString({ each: true })
+  delegatedTo?: string[];
+  @IsString()
+  employmentDate?: string;
+  @IsString()
+  purgeDate?: string;
+}
+
+export class PagingMetaData {
+  @IsNumber()
+  page?: number;
+  @IsNumber()
+  limit?: number;
+  @IsNumber()
+  count?: number;
+  @IsNumber()
+  totalRecords?: number;
+  @IsNumber()
+  totalPages?: number;
+}
+
+export class OngoingEmployeeChecklists {
+  @Type(() => OngoingEmployeeChecklist)
+  checklists?: OngoingEmployeeChecklist[];
+  @Type(() => PagingMetaData)
+  _meta?: PagingMetaData;
+}
+
+export enum Direction {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
+export class OngoingEmployeeChecklistParameters {
+  @IsNumber()
+  page?: number;
+  @IsNumber()
+  limit?: number;
+  @IsArray()
+  @IsString({ each: true })
+  sortBy?: string[];
+  @IsEnum(Direction)
+  sortDirection?: Direction;
+  @IsString()
+  employeeName?: string;
+  @IsString()
+  municipalityId?: string;
+}

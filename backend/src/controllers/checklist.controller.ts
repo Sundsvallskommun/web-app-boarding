@@ -1,9 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Req, UseBefore } from 'routing-controllers';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, QueryParam, Req, UseBefore } from 'routing-controllers';
 import ApiService from '@services/api.service';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import authMiddleware from '@middlewares/auth.middleware';
 import {
-  Checklist,
   CustomTask,
   CustomTaskCreateRequest,
   CustomTaskUpdateRequest,
@@ -13,7 +12,7 @@ import {
   Mentor,
 } from '@/data-contracts/checklist/data-contracts';
 import { HttpException } from '@exceptions/HttpException';
-import { ChecklistApiResponse, DelegatedEmployeeChecklistResponse, EmployeeChecklistApiResponse } from '@/responses/checklist.response';
+import { DelegatedEmployeeChecklistResponse, EmployeeChecklistApiResponse, OngoingEmployeeChecklists } from '@/responses/checklist.response';
 import ApiResponse from '@interfaces/api-service.interface';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import { APIS, MUNICIPALITY_ID } from '@/config';
@@ -73,6 +72,23 @@ export class ChecklistController {
     const res = await this.apiService.get<DelegatedEmployeeChecklistResponse>({ url }, req.user);
 
     return { data: res.data, status: res.status, message: 'success' };
+  }
+
+  @Get('/employee-checklists/ongoing')
+  @OpenAPI({ summary: 'Fetch all ongoing checklists' })
+  @ResponseSchema(OngoingEmployeeChecklists)
+  @UseBefore(authMiddleware)
+  async getAllOngoingChecklists(
+    @Req() req: RequestWithUser,
+    @QueryParam('page') page: number,
+    @QueryParam('limit') limit: number,
+    @QueryParam('employeeName') employeeName: string,
+    @QueryParam('sortBy') sortBy: string,
+    @QueryParam('sortDirection') sortDirection: string,
+  ): Promise<ResponseData<OngoingEmployeeChecklists>> {
+    let url = `/${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/employee-checklists/ongoing?page=${page}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}&employeeName=${employeeName}&municipalityId=${MUNICIPALITY_ID}`;
+
+    return await this.apiService.get<OngoingEmployeeChecklists>({ url }, req.user);
   }
 
   @Patch('/employee-checklists/:employeeChecklistId/tasks/:taskId')
