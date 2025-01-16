@@ -18,7 +18,7 @@ interface OngoingIntroductionsForm {
 }
 
 export const AdminOngoingIntroductionsTable: React.FC = () => {
-  const { register, watch, setValue } = useForm<OngoingIntroductionsForm>({
+  const { register, watch, setValue, getValues } = useForm<OngoingIntroductionsForm>({
     defaultValues: {
       sortColumn: 'employeeName',
       sortOrder: SortMode.ASC,
@@ -51,11 +51,11 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
   const onResetHandler = () => {
     setValue('searchTerm', '');
     setIsDirty(false);
-    refresh();
+    refresh('');
   };
 
   const onSearchHandler = () => {
-    refresh();
+    refresh(getValues().searchTerm);
     setIsDirty(false);
   };
 
@@ -81,7 +81,7 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
   };
 
   useEffect(() => {
-    refresh();
+    refresh('');
   }, [pageSize, currentPage, sortOrder, sortColumn]);
 
   const dataRows = data.checklists

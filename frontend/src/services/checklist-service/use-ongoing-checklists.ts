@@ -19,7 +19,7 @@ export const useOngoingChecklists = (
   };
   loaded: boolean;
   loading: boolean;
-  refresh: () => void;
+  refresh: (query: string) => void;
 } => {
   const { permissions, username } = useUserStore(useShallow((state) => state.user));
   const { handleGetMany } = useCrudHelper('checklists');
@@ -27,10 +27,10 @@ export const useOngoingChecklists = (
     useShallow((state) => [state.data, state.setData, state.loaded, state.setLoaded, state.loading, state.setLoading])
   );
 
-  const refresh = () => {
+  const refresh = (query: string = '') => {
     if (permissions.canViewAdmin && username) {
       setLoading(true);
-      handleGetMany(() => getAllOngoingChecklists(currentPage, _pageSize, sortBy, sortDirection, searchTerm))
+      handleGetMany(() => getAllOngoingChecklists(currentPage, _pageSize, sortBy, sortDirection, query))
         .then((res) => {
           if (res) {
             setData({
@@ -61,7 +61,7 @@ export const useOngoingChecklists = (
 
   useEffect(() => {
     if (!loaded || !data) {
-      refresh();
+      refresh('');
     }
   }, [username, permissions.canViewAdmin]);
 
