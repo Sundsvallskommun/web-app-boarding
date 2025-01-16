@@ -1,6 +1,6 @@
 @layer components {
   .container {
-    @apply px-8 lg:px-0;
+      @apply xl:px-80 md:px-32 px-12;
   }
 
   .form-error-message {
