@@ -192,11 +192,11 @@ export const EditTemplate = () => {
                     items={list.length}
                     moveUp={(task: Task) => moveUp(task, data)}
                     moveDown={(task: Task) => moveDown(task, data)}
-                    allowDelete={data.lifeCycle === 'CREATED'}
+                    allowDelete={data.lifeCycle === 'CREATED' || data.lifeCycle === 'ACTIVE'}
                   />
                 ))}
             </ol>
-            {data.lifeCycle === 'CREATED' ?
+            {data.lifeCycle === 'CREATED' || data.lifeCycle === 'ACTIVE' ?
               <Button
                 size="lg"
                 className="mt-8 ml-24"
@@ -278,18 +278,20 @@ export const EditTemplate = () => {
                         t('templates:created')
                       : t('templates:deprecated')}
                     </Label>
-                    {data?.lifeCycle === 'CREATED' ?
-                      <Button size="sm" color="vattjom" onClick={onActivate}>
-                        Aktivera mall
-                      </Button>
-                    : (
-                      data?.lifeCycle === 'ACTIVE' &&
-                      orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
-                    ) ?
-                      <Button size="sm" color="vattjom" onClick={onNewVersion}>
-                        Skapa ny version
-                      </Button>
-                    : null}
+                    {
+                      data?.lifeCycle === 'CREATED' ?
+                        <Button size="sm" color="vattjom" onClick={onActivate}>
+                          {t('templates:activate.confirm')}
+                        </Button>
+                        // : (
+                        //   data?.lifeCycle === 'ACTIVE' &&
+                        //   orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
+                        // ) ?
+                        //   <Button size="sm" color="vattjom" onClick={onNewVersion}>
+                        //     {t('templates:new_version.confirm')}
+                        //   </Button>
+                      : null
+                    }
                   </div>
                   <div className="w-full rounded-16 bg-white shadow-custom border-divider pb-24">
                     {currentView === 0 ?
