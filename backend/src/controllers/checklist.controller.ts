@@ -86,7 +86,7 @@ export class ChecklistController {
     @QueryParam('sortBy') sortBy: string,
     @QueryParam('sortDirection') sortDirection: string,
   ): Promise<ResponseData<OngoingEmployeeChecklists>> {
-    let url = `/${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/employee-checklists/ongoing?page=${page}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}&employeeName=${employeeName}&municipalityId=${MUNICIPALITY_ID}`;
+    let url = `/${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/employee-checklists/ongoing?page=${page}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}&employeeName=${employeeName}`;
 
     return await this.apiService.get<OngoingEmployeeChecklists>({ url }, req.user);
   }
