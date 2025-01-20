@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useOngoingChecklists } from '@services/checklist-service/use-ongoing-checklists';
 import { Button, Input, Pagination, SearchField, SortMode, Table } from '@sk-web-gui/react';
 import { useRouter } from 'next/router';
@@ -84,38 +84,39 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
     refresh('');
   }, [pageSize, currentPage, sortOrder, sortColumn]);
 
-  const dataRows = data.checklists
-    .sort((a: OngoingEmployeeChecklist, b: OngoingEmployeeChecklist) => {
-      const order = sortOrder === SortMode.ASC ? -1 : 1;
-      return (
-        getDeepColumn(sortColumn, a) < getDeepColumn(sortColumn, b) ? order
-        : getDeepColumn(sortColumn, a) > getDeepColumn(sortColumn, b) ? order * -1
-        : 0
-      );
-    })
-    .slice((currentPage - 1) * pageSize, currentPage * pageSize)
-    .map((checklist: OngoingEmployeeChecklist, idx: number) => {
-      return (
-        <Table.Row key={`row-${idx}`} className="bg-background-content">
-          <Table.Column>{checklist.employeeName}</Table.Column>
-          <Table.Column>{checklist.employeeUsername}</Table.Column>
-          <Table.Column>{checklist.departmentName}</Table.Column>
-          <Table.Column>{checklist.managerName}</Table.Column>
-          <Table.Column>{dayjs(checklist.employmentDate).format('DD MMMM YYYY')}</Table.Column>
-          <Table.Column className="justify-end">
-            <Button
-              data-cy={`table-row-button-${idx}`}
-              iconButton
-              onClick={() => {
-                router.push(`/${checklist.employeeUsername}`);
-              }}
-            >
-              <Icon name="arrow-right" />
-            </Button>
-          </Table.Column>
-        </Table.Row>
-      );
-    });
+  const dataRows = useMemo(() => {
+    return data.checklists
+      .sort((a: OngoingEmployeeChecklist, b: OngoingEmployeeChecklist) => {
+        const order = sortOrder === SortMode.ASC ? -1 : 1;
+        return (
+          getDeepColumn(sortColumn, a) < getDeepColumn(sortColumn, b) ? order
+          : getDeepColumn(sortColumn, a) > getDeepColumn(sortColumn, b) ? order * -1
+          : 0
+        );
+      })
+      .map((checklist: OngoingEmployeeChecklist, idx: number) => {
+        return (
+          <Table.Row key={`row-${idx}`} className="bg-background-content">
+            <Table.Column>{checklist.employeeName}</Table.Column>
+            <Table.Column>{checklist.employeeUsername}</Table.Column>
+            <Table.Column>{checklist.departmentName}</Table.Column>
+            <Table.Column>{checklist.managerName}</Table.Column>
+            <Table.Column>{dayjs(checklist.employmentDate).format('DD MMMM YYYY')}</Table.Column>
+            <Table.Column className="justify-end">
+              <Button
+                data-cy={`table-row-button-${idx}`}
+                iconButton
+                onClick={() => {
+                  router.push(`/${checklist.employeeUsername}`);
+                }}
+              >
+                <Icon name="arrow-right" />
+              </Button>
+            </Table.Column>
+          </Table.Row>
+        );
+      });
+  }, [data, sortOrder, sortColumn]);
 
   return (
     <div>
@@ -205,46 +206,44 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
 
             <Table.Body>{dataRows.map((row) => row)}</Table.Body>
 
-            {data.checklists.length > 15 && (
-              <Table.Footer className="flex justify-start" data-cy="ongoing-introductions-table-footer">
-                <div className="w-1/3">
-                  <label className="sk-table-bottom-section-label pr-3" htmlFor="pagiPageSize">
-                    {t('common:rows_per_page')}
-                  </label>
+            <Table.Footer className="flex justify-start" data-cy="ongoing-introductions-table-footer">
+              <div className="w-1/3">
+                <label className="sk-table-bottom-section-label pr-3" htmlFor="pagiPageSize">
+                  {t('common:rows_per_page')}
+                </label>
 
-                  <Input
-                    {...register('pageSize')}
-                    hideExtra={false}
-                    size="sm"
-                    id="pagePageSize"
-                    type="number"
-                    min={1}
-                    max={100}
-                    className="max-w-[6.5rem]"
-                    value={`${pageSize}`}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                      event.target.value && setValue('pageSize', parseInt(event.target.value))
-                    }
-                  />
-                </div>
+                <Input
+                  {...register('pageSize')}
+                  hideExtra={false}
+                  size="sm"
+                  id="pagePageSize"
+                  type="number"
+                  min={1}
+                  max={100}
+                  className="max-w-[6.5rem]"
+                  value={`${pageSize}`}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    event.target.value && setValue('pageSize', parseInt(event.target.value))
+                  }
+                />
+              </div>
 
-                <div className="w-1/3">
-                  <Pagination
-                    {...register('currentPage')}
-                    className="sk-table-pagination"
-                    pages={Math.ceil(data._meta.totalRecords / pageSize)}
-                    activePage={currentPage}
-                    showConstantPages
-                    pagesAfter={1}
-                    pagesBefore={1}
-                    changePage={(page: number) => {
-                      setValue('currentPage', page);
-                    }}
-                    fitContainer
-                  />
-                </div>
-              </Table.Footer>
-            )}
+              <div className="w-1/3">
+                <Pagination
+                  {...register('currentPage')}
+                  className="sk-table-pagination"
+                  pages={Math.ceil(data._meta.totalRecords / pageSize)}
+                  activePage={currentPage}
+                  showConstantPages
+                  pagesAfter={1}
+                  pagesBefore={1}
+                  changePage={(page: number) => {
+                    setValue('currentPage', page);
+                  }}
+                  fitContainer
+                />
+              </div>
+            </Table.Footer>
           </Table>
         </div>
       }
