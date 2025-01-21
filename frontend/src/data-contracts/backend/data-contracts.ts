@@ -310,6 +310,38 @@ export interface DelegatedEmployeeChecklistResponse {
   employeeChecklists: EmployeeChecklist[];
 }
 
+export interface OngoingEmployeeChecklists {
+  checklists: OngoingEmployeeChecklist[];
+  _meta: PagingMetaData;
+}
+
+export interface OngoingEmployeeChecklist {
+  employeeName: string;
+  employeeUsername: string;
+  managerName: string;
+  departmentName: string;
+  delegatedTo: string[];
+  employmentDate: string;
+  purgeDate: string;
+}
+
+export interface PagingMetaData {
+  page: number;
+  limit: number;
+  count: number;
+  totalRecords: number;
+  totalPages: number;
+}
+
+export interface OngoingEmployeeChecklistParameters {
+  page: number;
+  limit: number;
+  sortBy: string[];
+  sortDirection: 'ASC' | 'DESC';
+  employeeName: string;
+  municipalityId: string;
+}
+
 export interface Employee {
   personid: string;
   givenname: string;

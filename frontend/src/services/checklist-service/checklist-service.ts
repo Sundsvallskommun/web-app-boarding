@@ -10,6 +10,7 @@ import {
   Task,
   Employee,
   CustomTaskUpdateRequest,
+  OngoingEmployeeChecklists,
 } from '@data-contracts/backend/data-contracts';
 
 export const getChecklistAsEmployee: (username: string) => Promise<EmployeeChecklist> = async (username: string) => {
@@ -240,6 +241,26 @@ export const getEmployee: (username: string) => Promise<Employee> = async (usern
     })
     .catch((e) => {
       console.error('Something went wrong when fetching employee.');
+      throw e;
+    });
+};
+
+export const getAllOngoingChecklists: (
+  currentPage: number,
+  limit: number,
+  sortBy: string,
+  sortDirection: string,
+  searchTerm?: string
+) => Promise<OngoingEmployeeChecklists> = async (currentPage, limit, sortBy, sortDirection, searchTerm) => {
+  let url = `/employee-checklists/ongoing?page=${currentPage}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}&employeeName=${searchTerm}`;
+
+  return apiService
+    .get<ApiResponse<OngoingEmployeeChecklists>>(url)
+    .then((response) => {
+      return response.data.data;
+    })
+    .catch((e) => {
+      console.error('Something went wrong when fetching ongoing checklists');
       throw e;
     });
 };

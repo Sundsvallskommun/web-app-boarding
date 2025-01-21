@@ -15,7 +15,9 @@
   "ongoing_introductions": "pågående introduktioner",
   "welcome": "välkommen",
   "start": "start",
+  "username" : "Användarnamn",
   "search_by_username" : "Sök på användarnamn",
+  "search_by_employee" : "Sök på anställd",
   "search_errors" : {
     "not_found" : "Sökningen gav ingen träff"
   },
@@ -31,5 +33,7 @@
   "no_introductions" : "Du har ingen pågående introduktion",
   "introduction_of" : "Introduktion för",
   "show_introduction_of" : "Visa introduktion för",
-  "assigned_introductions" : "Tilldelade introduktioner"
+  "assigned_introductions" : "Tilldelade introduktioner",
+  "department" : "Verksamhet",
+  "displayed_introductions": "Visar {{count}} introduktioner"
 }

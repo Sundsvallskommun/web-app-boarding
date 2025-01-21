@@ -848,6 +848,120 @@ export enum CorrespondenceStatus {
   WILL_NOT_SEND = 'WILL_NOT_SEND',
 }
 
+/** Model for summarized information for an ongoing employee checklist */
+export interface OngoingEmployeeChecklist {
+  /**
+   * The employee first name and last name concatenated
+   * @example "John Doe"
+   */
+  employeeName?: string;
+  /**
+   * The employee username
+   * @example "johndoe"
+   */
+  employeeUsername?: string;
+  /**
+   * The employees managers first name and last name concatenated
+   * @example "John Doe"
+   */
+  managerName?: string;
+  /**
+   * The organization name
+   * @example "Organization XYZ"
+   */
+  departmentName?: string;
+  /**
+   * The names of the person(s) which have been delegated the checklist
+   * @example "John Doe"
+   */
+  delegatedTo?: string[];
+  /**
+   * The employment date of the employee
+   * @format date
+   * @example "2021-01-01"
+   */
+  employmentDate?: string;
+  /**
+   * The purge date for the checklist
+   * @format date
+   * @example "2029-01-01"
+   */
+  purgeDate?: string;
+}
+
+/** Paged model with summarized information for all ongoing employee checklists */
+export interface OngoingEmployeeChecklists {
+  checklists?: OngoingEmployeeChecklist[];
+  /** PagingMetaData model */
+  _meta?: PagingMetaData;
+}
+
+/** PagingMetaData model */
+export interface PagingMetaData {
+  /**
+   * Current page
+   * @format int32
+   * @example 5
+   */
+  page?: number;
+  /**
+   * Displayed objects per page
+   * @format int32
+   * @example 20
+   */
+  limit?: number;
+  /**
+   * Displayed objects on current page
+   * @format int32
+   * @example 13
+   */
+  count?: number;
+  /**
+   * Total amount of hits based on provided search parameters
+   * @format int64
+   * @example 98
+   */
+  totalRecords?: number;
+  /**
+   * Total amount of pages based on provided search parameters
+   * @format int32
+   * @example 23
+   */
+  totalPages?: number;
+}
+
+/**
+ * The sort order direction
+ * @example "ASC"
+ */
+export enum Direction {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
+export interface OngoingEmployeeChecklistParameters {
+  /**
+   * Page number
+   * @format int32
+   * @min 1
+   * @default 1
+   * @example 1
+   */
+  page?: number;
+  /**
+   * Result size per page. Maximum allowed value is dynamically configured
+   * @format int32
+   * @min 1
+   * @example 15
+   */
+  limit?: number;
+  sortBy?: string[];
+  /** The sort order direction */
+  sortDirection?: Direction;
+  employeeName?: string;
+  municipalityId?: string;
+}
+
 /** Model for a employee specific checklist */
 export interface EmployeeChecklist {
   /**
