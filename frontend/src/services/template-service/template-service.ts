@@ -2,8 +2,10 @@ import {
   Checklist,
   ChecklistApiResponse,
   ChecklistCreateRequest,
+  Organization,
   OrganizationCreateRequest,
   OrgTree,
+  Phase,
   SortorderRequest,
   Task,
   TaskCreateRequest,
@@ -21,6 +23,38 @@ const getTemplate: (id: string) => Promise<Checklist | undefined> = (id) => {
   return apiService.get<ChecklistApiResponse>(`/templates/${id}`).then((res) => {
     if (res) {
       return res.data.data;
+    }
+  });
+};
+
+export interface TaskWithOrgId extends Task {
+  orgId: string;
+}
+
+export interface PhaseWithOrgId extends Phase {
+  tasks: TaskWithOrgId[];
+}
+
+export interface ChecklistWithOrgId extends Checklist {
+  phases: PhaseWithOrgId[];
+}
+
+const getMergedTemplate: (orgIds: string[]) => Promise<Checklist | undefined> = (orgIds) => {
+  return apiService.post<ApiResponse<Organization[]>>(`/org/templates/`, orgIds).then((res) => {
+    if (res) {
+      const orgs = res.data.data;
+      console.log('orgs', orgs);
+      const checklist = orgs[0].checklists[0];
+      // Add tasks from all phases in second checklist to corresponding phase in first checklist
+      const mergedPhases = checklist.phases.map((phase) => {
+        const org2Phase = orgs[1].checklists[0].phases.find((p) => p.id === phase.id);
+        if (org2Phase) {
+          const tasks = phase.tasks.concat(org2Phase.tasks.map((task) => ({ ...task, orgId: orgs[1].id })));
+          return { ...phase, tasks };
+        }
+        return phase;
+      });
+      return { ...checklist, phases: mergedPhases };
     }
   });
 };
@@ -192,6 +226,7 @@ export const useTemplate = (templateid: string) => {
       setLoading(true);
       getTemplate(templateid)
         .then((res) => {
+          console.log('res', res);
           if (res) {
             setData(res);
             setLoaded(true);

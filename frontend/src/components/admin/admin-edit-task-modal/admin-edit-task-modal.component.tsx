@@ -1,13 +1,16 @@
 import { RichTextEditor } from '@components/rich-text-editor/rich-text-editor.component';
 import { Task, TaskCreateRequest, TaskUpdateRequest } from '@data-contracts/backend/data-contracts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useOrgTreeStore } from '@services/organization-service';
 import { createTask, updateTask, useTemplate } from '@services/template-service/template-service';
 import { useUserStore } from '@services/user-service/user-service';
 import { FormControl, FormErrorMessage, FormLabel, Input, RadioButton } from '@sk-web-gui/forms';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Modal } from '@sk-web-gui/react';
+import { findOrgInTree } from '@utils/find-org-in-tree';
 import { useCrudHelper } from '@utils/use-crud-helpers';
 import { useTranslation } from 'next-i18next';
+import router from 'next/router';
 import React, { useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -23,7 +26,9 @@ interface AdminEditTaskModalProps {
 
 export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => {
   const { closeHandler, isOpen, task, templateId, phaseId } = props;
+  const { templateid, orgid } = router.query;
   const user = useUserStore((s) => s.user, shallow);
+  const { data: orgTreeData } = useOrgTreeStore();
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);
   const { handleUpdate, handleCreate } = useCrudHelper('task');
@@ -46,12 +51,15 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
     createdBy: yup.string().required(),
   });
 
+  const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid as string, 10));
+  const level = org?.treeLevel || 0;
+
   const formControl = useForm<TaskCreateRequest & TaskUpdateRequest>({
     defaultValues: {
       heading: '',
       headingReference: '',
       text: '',
-      sortOrder: 0,
+      sortOrder: 1000 * level,
       roleType: 'NEW_EMPLOYEE' as TaskUpdateRequest['roleType'],
       permission: 'SUPERADMIN' as TaskUpdateRequest['permission'],
       questionType: 'YES_OR_NO' as TaskUpdateRequest['questionType'],

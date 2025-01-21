@@ -233,6 +233,7 @@ export const removeMentor: (checklistId: string) => Promise<{ status: number }> 
 };
 
 export const getEmployee: (username: string) => Promise<Employee> = async (username: string) => {
+  console.log('getEmployee called for username: ', username);
   return apiService
     .get<ApiResponse<Employee>>(`/portalpersondata/personal/${username}`)
     .then((response) => {

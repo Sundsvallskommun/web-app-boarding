@@ -4,7 +4,7 @@ import LoaderFullScreen from '@components/loader/loader-fullscreen';
 import { Checklist, SortorderRequest, Task } from '@data-contracts/backend/data-contracts';
 import { RoleType } from '@data-contracts/RoleType';
 import AdminLayout from '@layouts/admin-layout/admin-layout.component';
-import { useOrgTemplates } from '@services/organization-service';
+import { useOrgTemplates, useOrgTreeStore } from '@services/organization-service';
 import {
   activateTemplate,
   createNewVersion,
@@ -14,6 +14,7 @@ import {
 import { getUser, useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
 import { Button, Label, MenuBar, useConfirm, useSnackbar } from '@sk-web-gui/react';
+import { findOrgInTree } from '@utils/find-org-in-tree';
 import dayjs from 'dayjs';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
@@ -29,6 +30,7 @@ export const EditTemplate = () => {
   const { templateid, orgid } = router.query;
   const user = useUserStore((s) => s.user, shallow);
   const { data, setData, refresh, loaded, loading } = useTemplate(templateid as string);
+  const { data: orgTreeData } = useOrgTreeStore();
   const { data: orgData } = useOrgTemplates(parseInt(orgid as string, 10));
   const [currentView, setCurrentView] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -62,6 +64,8 @@ export const EditTemplate = () => {
   };
 
   const getSortorder = (checklist: Checklist) => {
+    const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid as string, 10));
+    const level = org?.treeLevel || 0;
     const order: SortorderRequest = {
       phaseOrder: checklist.phases?.map((phase, index) => ({
         id: phase.id,
@@ -72,7 +76,7 @@ export const EditTemplate = () => {
             ?.sort((a, b) => parseInt(a.sortOrder, 10) - parseInt(b.sortOrder, 10))
             .map((task, index) => ({
               id: task.id,
-              position: index + 1,
+              position: 1000 * level + index + 1,
             })) || [],
       })),
     };
@@ -83,14 +87,12 @@ export const EditTemplate = () => {
     const thisPhase = checklist.phases?.find((phase) => phase.tasks?.some((t) => t.id === task.id));
     if (thisPhase) {
       const thisIndex = thisPhase?.tasks.findIndex((t) => t.id === task.id);
-      let thisTask = thisPhase?.tasks[thisIndex as number];
-      let previousTask = thisPhase?.tasks[(thisIndex as number) - 1];
+      const thisTask = thisPhase?.tasks[thisIndex as number];
+      const previousTask = thisPhase?.tasks[(thisIndex as number) - 1];
       if (thisTask && previousTask) {
         thisPhase.tasks[thisIndex as number] = previousTask;
         thisPhase.tasks[(thisIndex as number) - 1] = thisTask;
       }
-      // setData({ ...checklist });
-      // SAVING SORTORDER IS NOT WORKING
       const newSortorder = getSortorder(checklist);
       await setSortorder(orgid as string, newSortorder);
       await refresh(templateid as string);
@@ -98,17 +100,20 @@ export const EditTemplate = () => {
   };
 
   const moveDown = async (task: Task, checklist: Checklist) => {
-    const thisPhase = checklist.phases?.find((phase) => phase.tasks?.some((t) => t.id === task.id));
-    if (thisPhase) {
-      const thisIndex = thisPhase?.tasks.findIndex((t) => t.id === task.id);
-      const thisTask = thisPhase?.tasks[thisIndex as number];
-      const nextTask = thisPhase?.tasks[(thisIndex as number) + 1];
+    let phaseIndex = checklist.phases?.findIndex((phase) => phase.tasks?.some((t) => t.id === task.id));
+    let thisPhase = { ...checklist.phases?.[phaseIndex as number] };
+    if (thisPhase && thisPhase.tasks) {
+      const thisIndex = thisPhase?.tasks?.findIndex((t) => t.id === task.id);
+      const thisTask = { ...thisPhase?.tasks[thisIndex as number] };
+      const nextTask = { ...thisPhase?.tasks[(thisIndex as number) + 1] };
       if (thisTask && nextTask) {
+        const tempPosition = thisTask.sortOrder;
+        thisTask.sortOrder = nextTask.sortOrder;
+        nextTask.sortOrder = tempPosition;
         thisPhase.tasks[thisIndex as number] = nextTask;
         thisPhase.tasks[(thisIndex as number) + 1] = thisTask;
       }
-      // setData({ ...checklist });
-      // SAVING SORTORDER IS NOT WORKING IN API??
+      checklist.phases[phaseIndex as number] = thisPhase;
       const newSortorder = getSortorder(checklist);
       await setSortorder(orgid as string, newSortorder);
       await refresh(templateid as string);
