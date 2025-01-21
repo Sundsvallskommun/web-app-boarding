@@ -7,7 +7,6 @@ import ApiService, { ApiResponse } from '@/services/api.service';
 import { APIS, MUNICIPALITY_ID } from '@config';
 import authMiddleware from '@middlewares/auth.middleware';
 import { Response } from 'express';
-import qs from 'qs';
 import { Body, Controller, Get, Param, Post, Req, Res, UseBefore } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 

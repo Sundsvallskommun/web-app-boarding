@@ -113,7 +113,7 @@ export const useOrgTree = (organizations?: number[]) => {
               }
             })
             .catch((e) => {
-              console.log(e);
+              console.error(e);
             });
         }
       }

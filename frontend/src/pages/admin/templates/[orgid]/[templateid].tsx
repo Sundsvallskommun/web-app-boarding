@@ -83,42 +83,36 @@ export const EditTemplate = () => {
     return order;
   };
 
-  const moveUp = async (task: Task, checklist: Checklist) => {
-    const thisPhase = checklist.phases?.find((phase) => phase.tasks?.some((t) => t.id === task.id));
-    if (thisPhase) {
-      const thisIndex = thisPhase?.tasks.findIndex((t) => t.id === task.id);
-      const thisTask = thisPhase?.tasks[thisIndex as number];
-      const previousTask = thisPhase?.tasks[(thisIndex as number) - 1];
-      if (thisTask && previousTask) {
-        thisPhase.tasks[thisIndex as number] = previousTask;
-        thisPhase.tasks[(thisIndex as number) - 1] = thisTask;
-      }
-      const newSortorder = getSortorder(checklist);
-      await setSortorder(orgid as string, newSortorder);
-      await refresh(templateid as string);
-    }
-  };
+  async function moveTask(task: Task, checklist: Checklist, offset: -1 | 1) {
+    const phaseIndex = checklist.phases?.findIndex((phase) => phase.tasks?.some((t) => t.id === task.id));
+    if (phaseIndex == null || phaseIndex < 0) return;
 
-  const moveDown = async (task: Task, checklist: Checklist) => {
-    let phaseIndex = checklist.phases?.findIndex((phase) => phase.tasks?.some((t) => t.id === task.id));
-    let thisPhase = { ...checklist.phases?.[phaseIndex as number] };
-    if (thisPhase && thisPhase.tasks) {
-      const thisIndex = thisPhase?.tasks?.findIndex((t) => t.id === task.id);
-      const thisTask = { ...thisPhase?.tasks[thisIndex as number] };
-      const nextTask = { ...thisPhase?.tasks[(thisIndex as number) + 1] };
-      if (thisTask && nextTask) {
-        const tempPosition = thisTask.sortOrder;
-        thisTask.sortOrder = nextTask.sortOrder;
-        nextTask.sortOrder = tempPosition;
-        thisPhase.tasks[thisIndex as number] = nextTask;
-        thisPhase.tasks[(thisIndex as number) + 1] = thisTask;
-      }
-      checklist.phases[phaseIndex as number] = thisPhase;
-      const newSortorder = getSortorder(checklist);
-      await setSortorder(orgid as string, newSortorder);
-      await refresh(templateid as string);
-    }
-  };
+    const thisPhase = { ...checklist.phases[phaseIndex] };
+    if (!thisPhase.tasks) return;
+
+    const thisIndex = thisPhase.tasks.findIndex((t) => t.id === task.id);
+    if (thisIndex < 0) return;
+
+    const partnerIndex = thisIndex + offset;
+    if (partnerIndex < 0 || partnerIndex >= thisPhase.tasks.length) return;
+
+    const thisTask = { ...thisPhase.tasks[thisIndex] };
+    const otherTask = { ...thisPhase.tasks[partnerIndex] };
+    const tempOrder = thisTask.sortOrder;
+    thisTask.sortOrder = otherTask.sortOrder;
+    otherTask.sortOrder = tempOrder;
+    thisPhase.tasks[thisIndex] = otherTask;
+    thisPhase.tasks[partnerIndex] = thisTask;
+    checklist.phases[phaseIndex] = thisPhase;
+
+    const newSortorder = getSortorder(checklist);
+    await setSortorder(orgid as string, newSortorder);
+    await refresh(templateid as string);
+  }
+
+  const moveUp = (task: Task, checklist: Checklist) => moveTask(task, checklist, -1);
+
+  const moveDown = (task: Task, checklist: Checklist) => moveTask(task, checklist, 1);
 
   const onActivate = () => {
     confirm
@@ -161,7 +155,6 @@ export const EditTemplate = () => {
         if (confirmed && data) {
           createNewVersion(data.id)
             .then((checklist) => {
-              console.log('new version:', checklist);
               router.push(`/admin/templates/${orgid}/${checklist?.id}`);
               closeHandler();
             })

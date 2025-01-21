@@ -39,26 +39,6 @@ export interface ChecklistWithOrgId extends Checklist {
   phases: PhaseWithOrgId[];
 }
 
-const getMergedTemplate: (orgIds: string[]) => Promise<Checklist | undefined> = (orgIds) => {
-  return apiService.post<ApiResponse<Organization[]>>(`/org/templates/`, orgIds).then((res) => {
-    if (res) {
-      const orgs = res.data.data;
-      console.log('orgs', orgs);
-      const checklist = orgs[0].checklists[0];
-      // Add tasks from all phases in second checklist to corresponding phase in first checklist
-      const mergedPhases = checklist.phases.map((phase) => {
-        const org2Phase = orgs[1].checklists[0].phases.find((p) => p.id === phase.id);
-        if (org2Phase) {
-          const tasks = phase.tasks.concat(org2Phase.tasks.map((task) => ({ ...task, orgId: orgs[1].id })));
-          return { ...phase, tasks };
-        }
-        return phase;
-      });
-      return { ...checklist, phases: mergedPhases };
-    }
-  });
-};
-
 export const setSortorder: (orgId: string, sortOrderData: SortorderRequest) => Promise<SortorderRequest> = async (
   orgId,
   sortOrderData
@@ -199,7 +179,6 @@ export const createNewVersion: (templateId: string) => Promise<Checklist | undef
   return apiService
     .post<ApiResponse<Checklist>>(`/templates/${templateId}/version`, {})
     .then((response) => {
-      console.log('response for new version:', response);
       return response.data.data;
     })
     .catch((e) => {
@@ -226,7 +205,6 @@ export const useTemplate = (templateid: string) => {
       setLoading(true);
       getTemplate(templateid)
         .then((res) => {
-          console.log('res', res);
           if (res) {
             setData(res);
             setLoaded(true);

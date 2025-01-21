@@ -26,7 +26,6 @@ const getMe: () => Promise<ServiceResponse<User>> = () => {
 };
 
 export const getUser: (username: string) => Promise<ServiceResponse<Employee>> = (username) => {
-  console.log('getUser called for username: ', username);
   return apiService
     .get<ApiResponse<Employee>>(`portalpersondata/personal/${username}`)
     .then((res) => res.data)
