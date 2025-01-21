@@ -6,7 +6,11 @@ import {
 describe('Uses ongoing introductions', () => {
   beforeEach(() => {
     cy.intercept('GET', '**/api/me', { fixture: 'me-admin.json' });
-    cy.intercept('GET', '**/api/employee-checklists/ongoing*', adminOngoingIntroductions);
+    cy.intercept(
+      'GET',
+      '**/api/employee-checklists/ongoing?page=1&limit=15&sortBy=employeeName&sortDirection=ASC&employeeName=',
+      adminOngoingIntroductions
+    );
 
     cy.viewport('macbook-15');
     cy.visit('http://localhost:3000/admin');
@@ -19,18 +23,19 @@ describe('Uses ongoing introductions', () => {
       .contains(adminOngoingIntroductions.data._meta.count);
     cy.get('[data-cy="ongoing-introductions-table"]').should('exist');
     cy.get('[data-cy="ongoing-introductions-table-header"]').should('exist');
-    cy.get('[data-cy="ongoing-introductions-table-footer"]').should('not.exist');
+    cy.get('[data-cy="ongoing-introductions-table-footer"]').should('exist');
   });
 
-  it.only('can search for employee', () => {
+  it('can search for employee', () => {
     cy.intercept(
       'GET',
-      '**/api/employee-checklists/ongoing?page=1&limit=15&employeeName=Two',
+      '**/api/employee-checklists/ongoing?page=1&limit=15&sortBy=employeeName&sortDirection=ASC&employeeName=Two',
       adminOngoingIntroductionsSearchResponse
-    );
+    ).as('searchEmployee');
     cy.get('[data-cy="ongoing-introductions-table"]').should('exist');
     cy.get('[data-cy="ongoing-introductions-table-search-field"]').should('exist').type('Two');
     cy.get('button').should('exist').contains('Sök').click();
+    cy.wait('@searchEmployee');
 
     cy.get('[data-cy="ongoing-introductions-count"]')
       .should('exist')
