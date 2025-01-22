@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { shallow } from 'zustand/shallow';
 import AdminTemplateSidebar from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
+import { templateVersioningEnabled } from '@services/featureflag-service';
 
 export const EditTemplate = () => {
   const { t } = useTranslation();
@@ -190,11 +191,13 @@ export const EditTemplate = () => {
                     items={list.length}
                     moveUp={(task: Task) => moveUp(task, data)}
                     moveDown={(task: Task) => moveDown(task, data)}
-                    allowDelete={data.lifeCycle === 'CREATED'}
+                    allowDelete={
+                      data.lifeCycle === 'CREATED' || (!templateVersioningEnabled && data.lifeCycle === 'ACTIVE')
+                    }
                   />
                 ))}
             </ol>
-            {data.lifeCycle === 'CREATED' ?
+            {data.lifeCycle === 'CREATED' || (!templateVersioningEnabled && data.lifeCycle === 'ACTIVE') ?
               <Button
                 size="lg"
                 className="mt-8 ml-24"
@@ -278,14 +281,15 @@ export const EditTemplate = () => {
                     </Label>
                     {data?.lifeCycle === 'CREATED' ?
                       <Button size="sm" color="vattjom" onClick={onActivate}>
-                        Aktivera mall
+                        {t('templates:activate.confirm')}
                       </Button>
                     : (
+                      templateVersioningEnabled &&
                       data?.lifeCycle === 'ACTIVE' &&
                       orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
                     ) ?
                       <Button size="sm" color="vattjom" onClick={onNewVersion}>
-                        Skapa ny version
+                        {t('templates:new_version.confirm')}
                       </Button>
                     : null}
                   </div>
