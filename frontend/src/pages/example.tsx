@@ -10,7 +10,6 @@ import { capitalize } from 'underscore.string';
 export const Exempelsida: React.FC = () => {
   const user = useUserStore((s) => s.user);
   const { t } = useTranslation();
-  console.log('user', user);
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME} - ${t('example:title')}`}>
       <Main>

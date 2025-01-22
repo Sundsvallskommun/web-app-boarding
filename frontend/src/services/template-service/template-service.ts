@@ -2,8 +2,10 @@ import {
   Checklist,
   ChecklistApiResponse,
   ChecklistCreateRequest,
+  Organization,
   OrganizationCreateRequest,
   OrgTree,
+  Phase,
   SortorderRequest,
   Task,
   TaskCreateRequest,
@@ -24,6 +26,18 @@ const getTemplate: (id: string) => Promise<Checklist | undefined> = (id) => {
     }
   });
 };
+
+export interface TaskWithOrgId extends Task {
+  orgId: string;
+}
+
+export interface PhaseWithOrgId extends Phase {
+  tasks: TaskWithOrgId[];
+}
+
+export interface ChecklistWithOrgId extends Checklist {
+  phases: PhaseWithOrgId[];
+}
 
 export const setSortorder: (orgId: string, sortOrderData: SortorderRequest) => Promise<SortorderRequest> = async (
   orgId,
@@ -165,7 +179,6 @@ export const createNewVersion: (templateId: string) => Promise<Checklist | undef
   return apiService
     .post<ApiResponse<Checklist>>(`/templates/${templateId}/version`, {})
     .then((response) => {
-      console.log('response for new version:', response);
       return response.data.data;
     })
     .catch((e) => {
