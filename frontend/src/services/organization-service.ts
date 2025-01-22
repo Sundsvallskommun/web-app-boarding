@@ -28,8 +28,8 @@ export const getOrgTemplate = async (orgId: number) => {
   }
 };
 
-export const getOrgTemplates = async (orgIds: number[]) => {
-  const res = await apiService.post<OrganizationsApiResponse>(`/org/templates/`, orgIds);
+export const getOrgTemplates = async (originOrg: number, orgIds: number[]) => {
+  const res = await apiService.post<OrganizationsApiResponse>(`/org/templates/`, { originOrg, orgIds });
   if (res) {
     return res.data.data;
   }

@@ -30,7 +30,10 @@ export const AdminTemplateSidebar: React.FC<AdminTemplateSidebarProps> = (props)
 
   useEffect(() => {
     const chain = getParentChain(orgTree, Number(orgid));
-    getOrgTemplates(chain.map((org) => org.orgId)).then((res) => {
+    getOrgTemplates(
+      Number(orgid),
+      chain.map((org) => org.orgId)
+    ).then((res) => {
       if (res) {
         const templateData = res
           .filter((org) => org.organizationNumber !== Number(orgid))
