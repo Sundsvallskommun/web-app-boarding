@@ -21,16 +21,15 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
-import { shallow } from 'zustand/shallow';
-import AdminTemplateSidebar from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
+import { AdminTemplateSidebar } from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
 import { templateVersioningEnabled } from '@services/featureflag-service';
+import { shallow } from 'zustand/shallow';
 
 export const EditTemplate = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { templateid, orgid } = router.query;
-  const user = useUserStore((s) => s.user, shallow);
-  const { data, setData, refresh, loaded, loading } = useTemplate(templateid as string);
+  const { data, refresh, loaded, loading } = useTemplate(templateid as string);
   const { data: orgTreeData } = useOrgTreeStore();
   const { data: orgData } = useOrgTemplates(parseInt(orgid as string, 10));
   const [currentView, setCurrentView] = useState<number>(0);
@@ -39,10 +38,6 @@ export const EditTemplate = () => {
   const [lastSavedByName, setLastSavedByName] = useState<string>('');
   const confirm = useConfirm();
   const toastMessage = useSnackbar();
-
-  const openHandler = () => {
-    setIsOpen(true);
-  };
 
   const closeHandler = () => {
     setIsOpen(false);
@@ -131,7 +126,7 @@ export const EditTemplate = () => {
               refresh(templateid as string);
               closeHandler();
             })
-            .catch((e) => {
+            .catch(() => {
               toastMessage({
                 position: 'bottom',
                 closeable: false,
@@ -159,7 +154,7 @@ export const EditTemplate = () => {
               router.push(`/admin/templates/${orgid}/${checklist?.id}`);
               closeHandler();
             })
-            .catch((e) => {
+            .catch(() => {
               toastMessage({
                 position: 'bottom',
                 closeable: false,
@@ -302,7 +297,7 @@ export const EditTemplate = () => {
               </>
             )}
           </div>
-          <AdminTemplateSidebar />
+          <AdminTemplateSidebar currentView={currentView} />
         </div>
       }
       {isOpen && phaseId && (

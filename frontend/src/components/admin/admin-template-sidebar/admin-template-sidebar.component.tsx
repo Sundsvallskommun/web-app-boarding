@@ -5,8 +5,13 @@ import Divider from '@sk-web-gui/divider';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Accordion, Button } from '@sk-web-gui/react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { RoleType } from '@data-contracts/RoleType';
+
+interface AdminTemplateSidebarProps {
+  currentView: number;
+}
 
 interface SidebarOrgTemplate {
   orgName: string;
@@ -14,7 +19,8 @@ interface SidebarOrgTemplate {
   template: Checklist | undefined;
 }
 
-export default function AdminTemplateSidebar() {
+export const AdminTemplateSidebar: React.FC<AdminTemplateSidebarProps> = (props) => {
+  const { currentView } = props;
   const router = useRouter();
   const { orgid } = router.query;
   const { data: orgTree } = useOrgTree();
@@ -24,7 +30,10 @@ export default function AdminTemplateSidebar() {
 
   useEffect(() => {
     const chain = getParentChain(orgTree, Number(orgid));
-    getOrgTemplates(chain.map((org) => org.orgId)).then((res) => {
+    getOrgTemplates(
+      Number(orgid),
+      chain.map((org) => org.orgId)
+    ).then((res) => {
       if (res) {
         const templateData = res
           .filter((org) => org.organizationNumber !== Number(orgid))
@@ -61,28 +70,35 @@ export default function AdminTemplateSidebar() {
                     return (
                       <div className="gap-16 my-16" key={`${org.orgId}-${phase.id}-${index}`}>
                         <p className="text-label-medium mt-16">{phase.name}</p>
-                        {phase.tasks?.map((task, idx) => (
-                          <div key={`task-${index}-${idx}`}>
-                            <div className="my-16 ml-8">
-                              {task.headingReference ?
-                                <>
-                                  <a className="underline mr-4" href={task.headingReference} target="_blank">
-                                    {task.heading}
-                                  </a>
-                                  <Icon size="1.5rem" name="external-link" />
-                                </>
-                              : task.heading}
+                        {phase.tasks
+                          ?.filter((t) =>
+                            currentView === 0 ?
+                              t.roleType === RoleType.MANAGER_FOR_NEW_EMPLOYEE ||
+                              t.roleType === RoleType.MANAGER_FOR_NEW_MANAGER
+                            : t.roleType === RoleType.NEW_EMPLOYEE || t.roleType === RoleType.NEW_MANAGER
+                          )
+                          .map((task, idx) => (
+                            <div key={`task-${index}-${idx}`}>
+                              <div className="my-16 ml-8">
+                                {task.headingReference ?
+                                  <>
+                                    <a className="underline mr-4" href={task.headingReference} target="_blank">
+                                      {task.heading}
+                                    </a>
+                                    <Icon size="1.5rem" name="external-link" />
+                                  </>
+                                : task.heading}
 
-                              <p
-                                className="text-small my-0 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:ml-lg [&>ol]:ml-lg [&>*>a]:underline"
-                                dangerouslySetInnerHTML={{
-                                  __html: sanitized(task.text || '').replace('<a', "<a target='_blank'"),
-                                }}
-                              ></p>
+                                <p
+                                  className="text-small my-0 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:ml-lg [&>ol]:ml-lg [&>*>a]:underline"
+                                  dangerouslySetInnerHTML={{
+                                    __html: sanitized(task.text || '').replace('<a', "<a target='_blank'"),
+                                  }}
+                                ></p>
+                              </div>
+                              <Divider className="my-16" />
                             </div>
-                            <Divider className="my-16" />
-                          </div>
-                        ))}
+                          ))}
                       </div>
                     );
                   })}
@@ -109,4 +125,4 @@ export default function AdminTemplateSidebar() {
       : <h5 className="text-base">{t('templates:no_templates_available')}</h5>}
     </div>
   );
-}
+};

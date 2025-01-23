@@ -151,15 +151,16 @@ export class OrganizationController {
   @UseBefore(authMiddleware)
   async getOrgTemplates(
     @Req() req: RequestWithUser,
-    @Body() orgIds: string[],
+    @Body() body: { originOrg: string; orgIds: string[] },
     @Res() response: Response<OrganizationsApiResponse>,
   ): Promise<Response<OrganizationsApiResponse>> {
     const { name } = req.user;
-    if (!name || !orgIds) {
+    if (!name || !body.originOrg || !body.orgIds) {
       throw new HttpException(400, 'Bad Request');
     }
 
-    const query = orgIds.map(id => `organizationFilter=${id}`).join('&');
+    let query = body.orgIds.map(id => `organizationFilter=${id}`).join('&');
+    query += `&applySortFor=${body.originOrg}`;
 
     try {
       const data = await this.apiService.get<Organization[]>(
