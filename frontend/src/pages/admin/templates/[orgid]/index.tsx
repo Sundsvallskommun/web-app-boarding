@@ -53,7 +53,6 @@ export const OrgTemplate: React.FC = () => {
         if (confirmed) {
           createTemplate(orgid, orgTree, user)
             .then((res) => {
-              console.log('res:', res);
               if (res?.id) {
                 router.push(`/admin/templates/${orgid}/${res.id}`);
               }

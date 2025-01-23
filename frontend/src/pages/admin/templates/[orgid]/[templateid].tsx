@@ -4,16 +4,17 @@ import LoaderFullScreen from '@components/loader/loader-fullscreen';
 import { Checklist, SortorderRequest, Task } from '@data-contracts/backend/data-contracts';
 import { RoleType } from '@data-contracts/RoleType';
 import AdminLayout from '@layouts/admin-layout/admin-layout.component';
-import { useOrgTemplates } from '@services/organization-service';
+import { useOrgTemplates, useOrgTreeStore } from '@services/organization-service';
 import {
   activateTemplate,
   createNewVersion,
   setSortorder,
   useTemplate,
 } from '@services/template-service/template-service';
-import { getUser } from '@services/user-service/user-service';
+import { getUser, useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
 import { Button, Label, MenuBar, useConfirm, useSnackbar } from '@sk-web-gui/react';
+import { findOrgInTree } from '@utils/find-org-in-tree';
 import dayjs from 'dayjs';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
@@ -21,12 +22,15 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { AdminTemplateSidebar } from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
+import { templateVersioningEnabled } from '@services/featureflag-service';
+import { shallow } from 'zustand/shallow';
 
 export const EditTemplate = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { templateid, orgid } = router.query;
   const { data, refresh, loaded, loading } = useTemplate(templateid as string);
+  const { data: orgTreeData } = useOrgTreeStore();
   const { data: orgData } = useOrgTemplates(parseInt(orgid as string, 10));
   const [currentView, setCurrentView] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -56,6 +60,8 @@ export const EditTemplate = () => {
   };
 
   const getSortorder = (checklist: Checklist) => {
+    const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid as string, 10));
+    const level = org?.treeLevel || 0;
     const order: SortorderRequest = {
       phaseOrder: checklist.phases?.map((phase, index) => ({
         id: phase.id,
@@ -66,48 +72,43 @@ export const EditTemplate = () => {
             ?.sort((a, b) => parseInt(a.sortOrder, 10) - parseInt(b.sortOrder, 10))
             .map((task, index) => ({
               id: task.id,
-              position: index + 1,
+              position: 1000 * level + index + 1,
             })) || [],
       })),
     };
     return order;
   };
 
-  const moveUp = async (task: Task, checklist: Checklist) => {
-    const thisPhase = checklist.phases?.find((phase) => phase.tasks?.some((t) => t.id === task.id));
-    if (thisPhase) {
-      const thisIndex = thisPhase?.tasks.findIndex((t) => t.id === task.id);
-      let thisTask = thisPhase?.tasks[thisIndex as number];
-      let previousTask = thisPhase?.tasks[(thisIndex as number) - 1];
-      if (thisTask && previousTask) {
-        thisPhase.tasks[thisIndex as number] = previousTask;
-        thisPhase.tasks[(thisIndex as number) - 1] = thisTask;
-      }
-      // setData({ ...checklist });
-      // SAVING SORTORDER IS NOT WORKING
-      const newSortorder = getSortorder(checklist);
-      await setSortorder(orgid as string, newSortorder);
-      refresh(templateid as string);
-    }
-  };
+  async function moveTask(task: Task, checklist: Checklist, offset: -1 | 1) {
+    const phaseIndex = checklist.phases?.findIndex((phase) => phase.tasks?.some((t) => t.id === task.id));
+    if (phaseIndex == null || phaseIndex < 0) return;
 
-  const moveDown = async (task: Task, checklist: Checklist) => {
-    const thisPhase = checklist.phases?.find((phase) => phase.tasks?.some((t) => t.id === task.id));
-    if (thisPhase) {
-      const thisIndex = thisPhase?.tasks.findIndex((t) => t.id === task.id);
-      const thisTask = thisPhase?.tasks[thisIndex as number];
-      const nextTask = thisPhase?.tasks[(thisIndex as number) + 1];
-      if (thisTask && nextTask) {
-        thisPhase.tasks[thisIndex as number] = nextTask;
-        thisPhase.tasks[(thisIndex as number) + 1] = thisTask;
-      }
-      // setData({ ...checklist });
-      // SAVING SORTORDER IS NOT WORKING IN API??
-      const newSortorder = getSortorder(checklist);
-      await setSortorder(orgid as string, newSortorder);
-      refresh(templateid as string);
-    }
-  };
+    const thisPhase = { ...checklist.phases[phaseIndex] };
+    if (!thisPhase.tasks) return;
+
+    const thisIndex = thisPhase.tasks.findIndex((t) => t.id === task.id);
+    if (thisIndex < 0) return;
+
+    const partnerIndex = thisIndex + offset;
+    if (partnerIndex < 0 || partnerIndex >= thisPhase.tasks.length) return;
+
+    const thisTask = { ...thisPhase.tasks[thisIndex] };
+    const otherTask = { ...thisPhase.tasks[partnerIndex] };
+    const tempOrder = thisTask.sortOrder;
+    thisTask.sortOrder = otherTask.sortOrder;
+    otherTask.sortOrder = tempOrder;
+    thisPhase.tasks[thisIndex] = otherTask;
+    thisPhase.tasks[partnerIndex] = thisTask;
+    checklist.phases[phaseIndex] = thisPhase;
+
+    const newSortorder = getSortorder(checklist);
+    await setSortorder(orgid as string, newSortorder);
+    await refresh(templateid as string);
+  }
+
+  const moveUp = (task: Task, checklist: Checklist) => moveTask(task, checklist, -1);
+
+  const moveDown = (task: Task, checklist: Checklist) => moveTask(task, checklist, 1);
 
   const onActivate = () => {
     confirm
@@ -150,7 +151,6 @@ export const EditTemplate = () => {
         if (confirmed && data) {
           createNewVersion(data.id)
             .then((checklist) => {
-              console.log('new version:', checklist);
               router.push(`/admin/templates/${orgid}/${checklist?.id}`);
               closeHandler();
             })
@@ -186,11 +186,13 @@ export const EditTemplate = () => {
                     items={list.length}
                     moveUp={(task: Task) => moveUp(task, data)}
                     moveDown={(task: Task) => moveDown(task, data)}
-                    allowDelete={data.lifeCycle === 'CREATED'}
+                    allowDelete={
+                      data.lifeCycle === 'CREATED' || (!templateVersioningEnabled && data.lifeCycle === 'ACTIVE')
+                    }
                   />
                 ))}
             </ol>
-            {data.lifeCycle === 'CREATED' ?
+            {data.lifeCycle === 'CREATED' || (!templateVersioningEnabled && data.lifeCycle === 'ACTIVE') ?
               <Button
                 size="lg"
                 className="mt-8 ml-24"
@@ -274,14 +276,15 @@ export const EditTemplate = () => {
                     </Label>
                     {data?.lifeCycle === 'CREATED' ?
                       <Button size="sm" color="vattjom" onClick={onActivate}>
-                        Aktivera mall
+                        {t('templates:activate.confirm')}
                       </Button>
                     : (
+                      templateVersioningEnabled &&
                       data?.lifeCycle === 'ACTIVE' &&
                       orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
                     ) ?
                       <Button size="sm" color="vattjom" onClick={onNewVersion}>
-                        Skapa ny version
+                        {t('templates:new_version.confirm')}
                       </Button>
                     : null}
                   </div>

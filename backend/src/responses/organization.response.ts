@@ -5,6 +5,7 @@ import { Type } from 'class-transformer';
 import { IsDateString, IsEnum, IsIn, IsInt, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Template } from './template.response';
 import { Organization } from './checklist.response';
+
 export class OrgTree implements OrganizationTree {
   @IsString()
   organizationId?: string;
@@ -26,7 +27,7 @@ export class OrgTree implements OrganizationTree {
   organizations?: OrgTree[];
 }
 
-export class OrgTemplate implements Organization {
+export class OrgTemplate implements OrganizationType {
   @IsString()
   id?: string;
   @IsString()
@@ -52,17 +53,18 @@ export class OrgTreeApiResponse implements ApiResponse<OrgTree> {
   message: string;
 }
 
-export class OrganizationsApiResponse implements ApiResponse<OrganizationType[]> {
-  @ValidateNested({ each: true })
-  @Type(() => Organization)
-  data: Organization[];
-  @IsString()
-  message: string;
-}
 export class OrganizationApiResponse implements ApiResponse<OrgTemplate[]> {
   @ValidateNested()
   @Type(() => OrgTemplate)
   data: OrgTemplate[];
+  @IsString()
+  message: string;
+}
+
+export class OrganizationsApiResponse implements ApiResponse<OrganizationType[]> {
+  @ValidateNested()
+  @Type(() => Organization)
+  data: Organization[];
   @IsString()
   message: string;
 }
