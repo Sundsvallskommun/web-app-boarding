@@ -14,9 +14,19 @@ interface OngoingChecklistsTableProps {
   delegatedChecklists: boolean;
 }
 
+interface CheckedValues {
+  checked: string[];
+  checkAll: boolean;
+}
+
 export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (props) => {
   const { data, delegatedChecklists } = props;
-  const methods = useForm();
+  const methods = useForm<CheckedValues>({
+    defaultValues: {
+      checked: [],
+      checkAll: false,
+    },
+  });
   const router = useRouter();
   const [_pageSize, setPageSize] = React.useState<number>(12);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
