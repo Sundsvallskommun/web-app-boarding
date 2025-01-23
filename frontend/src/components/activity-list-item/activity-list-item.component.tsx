@@ -11,6 +11,7 @@ import { EditTaskModal } from '@components/edit-task-modal/edit-task-modal.compo
 import { useTranslation } from 'next-i18next';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
+import { useUserInformation } from '@services/user-service/use-user-information';
 
 const isChecked = (fulfilmentStatus: string) => {
   switch (fulfilmentStatus) {
@@ -40,6 +41,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { refresh: refreshChecklist } = useChecklist();
   const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
+  const { data: userInformation } = useUserInformation(task.updatedBy);
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
     updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(() => {
@@ -108,7 +110,15 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
               {task.fulfilmentStatus === 'TRUE' && (
                 <p className="text-small text-primary mt-8">
                   <Icon className="align-middle mr-5" name="check" size="1.5rem" />
-                  {t('task:fulfilled_by', { user: task.updatedBy })}
+                  {t('task:fulfilled_by', {
+                    user: userInformation?.map((userInfo) => {
+                      if (userInfo.username === task.updatedBy) {
+                        return userInfo.name;
+                      } else {
+                        return task.updatedBy;
+                      }
+                    }),
+                  })}
                 </p>
               )}
             </div>

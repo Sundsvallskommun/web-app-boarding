@@ -272,6 +272,7 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
       'delegation',
       'task',
       'mentor',
+      'user',
     ])),
   },
 });
