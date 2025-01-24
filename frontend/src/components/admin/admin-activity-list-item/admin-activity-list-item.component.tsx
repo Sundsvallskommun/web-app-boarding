@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 import { AdminEditTaskModal } from '../admin-edit-task-modal/admin-edit-task-modal.component';
 import { removeTask, useTemplate } from '@services/template-service/template-service';
+import router from 'next/router';
 
 interface AdminActivityListItemProps {
   task: Task;
@@ -24,13 +25,14 @@ interface AdminActivityListItemProps {
 
 export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (props) => {
   const { task, templateId, phaseId, index, items, moveUp, moveDown, allowDelete = false } = props;
+  const { templateid, orgid } = router.query;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);
   const confirm = useConfirm();
 
   const onRemoveTask = () => {
-    removeTask(templateId, phaseId, task.id).then(() => {
+    removeTask(orgid as string, templateId, phaseId, task.id).then(() => {
       refresh(templateId);
     });
   };

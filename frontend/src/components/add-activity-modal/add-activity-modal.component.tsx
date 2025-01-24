@@ -95,14 +95,14 @@ export const AddActivityModal: React.FC = () => {
   return (
     <div>
       <Button variant="primary" color="vattjom" onClick={openHandler} inverted data-cy="add-activity-button">
-        <Icon name="plus" size="18px" /> {t('task:add_activity')}
+        <Icon name="plus" size="18px" /> {t('task:create.title')}
       </Button>
 
       <Modal
         show={isOpen}
         onClose={closeHandler}
         className="w-[70rem] p-32"
-        label={<h4 className="text-label-medium">{t('task:add_activity')}</h4>}
+        label={<h4 className="text-label-medium">{t('task:create.title')}</h4>}
       >
         <Modal.Content>
           <FormControl className="w-full">

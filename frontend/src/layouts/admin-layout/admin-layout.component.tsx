@@ -2,7 +2,7 @@ import AdminSidebar from '@components/admin/admin-sidebar/admin-sidebar.componen
 import { DefaultLayoutProps } from '@layouts/default-layout/default-layout.component';
 import Main from '@layouts/main/main.component';
 import { PageHeader } from '@layouts/page-header/page-header.component';
-import { useUserStore } from '@services/user-service/user-service';
+import { isAdmin, useUserStore } from '@services/user-service/user-service';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +19,7 @@ export default function AdminLayoutComponent({
   const layoutTitle = `${process.env.NEXT_PUBLIC_APP_NAME}${headerSubtitle ? ` - ${headerSubtitle}` : ''}`;
   const fullTitle = postTitle ? `${layoutTitle} - ${postTitle}` : `${layoutTitle}`;
   const { t } = useTranslation();
-  const { role } = useUserStore(useShallow((state) => state.user));
+  const user = useUserStore(useShallow((state) => state.user));
   const setFocusToMain = () => {
     const contentElement = document.getElementById('content');
     if (contentElement) {
@@ -27,7 +27,7 @@ export default function AdminLayoutComponent({
     }
   };
 
-  return role !== 'admin' ?
+  return !isAdmin(user) ?
       <></>
     : <div className="DefaultLayout full-page-layout bg-background-100">
         <Head>

@@ -13,6 +13,9 @@ const handleSetUserResponse: (res: ApiResponse<User>) => User = (res) => ({
   username: res.data.username,
   role: res.data.role,
   permissions: res.data.permissions,
+  treeLevel: res.data.treeLevel,
+  organizationId: res.data.organizationId,
+  children: res.data.children,
 });
 
 const getMe: () => Promise<ServiceResponse<User>> = () => {
@@ -34,6 +37,8 @@ export const getUser: (username: string) => Promise<ServiceResponse<Employee>> =
       error: e.response?.status ?? 'UNKNOWN ERROR',
     }));
 };
+
+export const isAdmin = (user: User) => user.role === 'global_admin' || user.role === 'department_admin';
 
 interface State {
   user: User;

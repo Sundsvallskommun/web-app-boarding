@@ -5,6 +5,7 @@ import { Type } from 'class-transformer';
 import { IsDateString, IsEnum, IsIn, IsInt, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Template } from './template.response';
 import { Organization } from './checklist.response';
+import e from 'express';
 
 export class OrgTree implements OrganizationTree {
   @IsString()
@@ -62,7 +63,7 @@ export class OrganizationApiResponse implements ApiResponse<OrgTemplate[]> {
 }
 
 export class OrganizationsApiResponse implements ApiResponse<OrganizationType[]> {
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => Organization)
   data: Organization[];
   @IsString()

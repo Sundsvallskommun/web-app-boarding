@@ -1,6 +1,7 @@
 import { OrganizationTree } from '@/data-contracts/mdviewer/data-contracts';
 import { HttpException } from '@/exceptions/HttpException';
 import { RequestWithUser } from '@/interfaces/auth.interface';
+import { hasOrgPermissions } from '@/middlewares/permissions.middleware';
 import { Organization, OrganizationCreateRequest } from '@/responses/checklist.response';
 import { OrganizationApiResponse, OrganizationsApiResponse, OrgTemplateApiResponse, OrgTreeApiResponse } from '@/responses/organization.response';
 import ApiService, { ApiResponse } from '@/services/api.service';
@@ -77,12 +78,12 @@ export class OrganizationController {
     }
   }
 
-  @Post('/org')
+  @Post('/org/:orgId')
   @OpenAPI({
     summary: 'Create an organization',
   })
   @ResponseSchema(ApiResponse<OrganizationCreateRequest>)
-  @UseBefore(authMiddleware)
+  @UseBefore(authMiddleware, hasOrgPermissions)
   async createOrganization(
     @Req() req: RequestWithUser,
     @Body() data: OrganizationCreateRequest,
@@ -143,7 +144,7 @@ export class OrganizationController {
     }
   }
 
-  @Post('/org/templates')
+  @Post('/org/multiple/templates')
   @OpenAPI({
     summary: 'Get templates for multiple organization',
   })

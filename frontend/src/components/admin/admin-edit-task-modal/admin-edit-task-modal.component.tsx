@@ -6,7 +6,7 @@ import { createTask, updateTask, useTemplate } from '@services/template-service/
 import { useUserStore } from '@services/user-service/user-service';
 import { FormControl, FormErrorMessage, FormLabel, Input, RadioButton } from '@sk-web-gui/forms';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Modal } from '@sk-web-gui/react';
+import { Button, Modal, useSnackbar } from '@sk-web-gui/react';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 import { useCrudHelper } from '@utils/use-crud-helpers';
 import { useTranslation } from 'next-i18next';
@@ -32,6 +32,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);
   const { handleUpdate, handleCreate } = useCrudHelper('task');
+  const toastMessage = useSnackbar();
 
   let formSchema = yup.object({
     heading: yup.string().min(1, t('task:errors.heading')).required(t('task:errors.heading')),
@@ -102,22 +103,37 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
   const onSubmit: SubmitHandler<TaskUpdateRequest | TaskCreateRequest> = (data) => {
     if (task.id && task.id !== '') {
       handleUpdate(() => {
-        return updateTask(templateId, phaseId, task.id, data as TaskUpdateRequest)
+        return updateTask(orgid as string, templateId, phaseId, task.id, data as TaskUpdateRequest)
           .then(() => {
             refresh(templateId);
           })
           .catch(() => {
-            console.error('Something went wrong when updating custom task.');
+            console.error('Something went wrong when updating task.');
+            toastMessage({
+              position: 'bottom',
+              closeable: false,
+              message: t('task:update.error'),
+              status: 'error',
+            });
           });
       });
     } else {
       handleCreate(() => {
-        return createTask(templateId, phaseId, data as TaskCreateRequest)
+        if (!org?.orgId) {
+          return Promise.reject('Organization not found');
+        }
+        return createTask(org.orgId, templateId, phaseId, data as TaskCreateRequest)
           .then(() => {
             refresh(templateId);
           })
           .catch(() => {
-            console.error('Something went wrong when updating custom task.');
+            console.error('Something went wrong when creating task.');
+            toastMessage({
+              position: 'bottom',
+              closeable: false,
+              message: t('task:create.error'),
+              status: 'error',
+            });
           });
       });
     }
