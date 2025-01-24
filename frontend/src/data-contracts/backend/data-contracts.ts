@@ -12,6 +12,8 @@
 export interface Permissions {
   canEditAdmin: boolean;
   canViewAdmin: boolean;
+  canEditDepartment: boolean;
+  canViewDepartment: boolean;
   isManager: boolean;
 }
 
@@ -20,8 +22,11 @@ export interface User {
   firstName: string;
   lastName: string;
   username: string;
-  role: 'admin' | 'developer' | 'user';
+  role: 'global_admin' | 'department_admin' | 'developer' | 'user';
   permissions: Permissions;
+  treeLevel: number;
+  organizationId: number;
+  children: number[];
 }
 
 export interface UserApiResponse {
@@ -310,11 +315,6 @@ export interface DelegatedEmployeeChecklistResponse {
   employeeChecklists: EmployeeChecklist[];
 }
 
-export interface OngoingEmployeeChecklists {
-  checklists: OngoingEmployeeChecklist[];
-  _meta: PagingMetaData;
-}
-
 export interface OngoingEmployeeChecklist {
   employeeName: string;
   employeeUsername: string;
@@ -331,6 +331,11 @@ export interface PagingMetaData {
   count: number;
   totalRecords: number;
   totalPages: number;
+}
+
+export interface COngoingEmployeeChecklists {
+  checklists: OngoingEmployeeChecklist[];
+  _meta: PagingMetaData;
 }
 
 export interface OngoingEmployeeChecklistParameters {
@@ -425,13 +430,13 @@ export interface OrgTreeApiResponse {
   message: string;
 }
 
-export interface OrganizationsApiResponse {
-  data: Organization[];
+export interface OrganizationApiResponse {
+  data: OrgTemplate;
   message: string;
 }
 
-export interface OrganizationApiResponse {
-  data: OrgTemplate;
+export interface OrganizationsApiResponse {
+  data: Organization[];
   message: string;
 }
 

@@ -6,7 +6,8 @@ export type RoleADMapping = {
 
 const mapping: RoleADMapping = {};
 
-mapping[process.env.ADMIN_GROUP.toLocaleLowerCase()] = 'admin';
+mapping[process.env.ADMIN_GROUP.toLocaleLowerCase()] = 'global_admin';
+mapping[process.env.DEPARTMENT_ADMIN_GROUP.toLocaleLowerCase()] = 'department_admin';
 // Will this be needed?
 // mapping[process.env.SUPERADMIN_GROUP.toLocaleLowerCase()] = 'superadmin';
 mapping[process.env.DEVELOPER_GROUP.toLocaleLowerCase()] = 'developer';

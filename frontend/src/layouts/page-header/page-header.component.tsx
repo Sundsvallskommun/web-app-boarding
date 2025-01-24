@@ -1,5 +1,5 @@
 import { AdminMenu } from '@components/admin/admin-menu/admin-menu.component';
-import { useUserStore } from '@services/user-service/user-service';
+import { isAdmin, useUserStore } from '@services/user-service/user-service';
 import { Divider, Header, Icon, Link, UserMenu } from '@sk-web-gui/react';
 import { LogOut, User2, UserCog } from 'lucide-react';
 import NextLink from 'next/link';
@@ -18,11 +18,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ headerSubtitle, headerTi
   const user = useUserStore(useShallow((state) => state.user));
   const router = useRouter();
   const { t } = useTranslation();
-  const showAdminMenu = router.pathname.startsWith('/admin') && user?.role === 'admin';
 
-  const isAdmin = () => {
-    return user.role === 'admin';
-  };
+  const showAdminMenu = router.pathname.startsWith('/admin') && isAdmin(user);
 
   const handleLogoClick = () => {
     router.push(logoLinkHref);
@@ -49,7 +46,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ headerSubtitle, headerTi
           initials={`${user.firstName[0]}${user.lastName[0]}`}
           menuTitle={`${user.name} (${user.username})`}
           menuGroups={[
-            isAdmin() && !showAdminMenu ?
+            isAdmin(user) && !showAdminMenu ?
               {
                 label: capitalize(t('common:administration')),
                 elements: [

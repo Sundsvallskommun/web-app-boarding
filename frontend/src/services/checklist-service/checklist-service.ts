@@ -10,7 +10,7 @@ import {
   Task,
   Employee,
   CustomTaskUpdateRequest,
-  OngoingEmployeeChecklists,
+  COngoingEmployeeChecklists,
 } from '@data-contracts/backend/data-contracts';
 
 export const getChecklistAsEmployee: (username: string) => Promise<EmployeeChecklist> = async (username: string) => {
@@ -251,11 +251,11 @@ export const getAllOngoingChecklists: (
   sortBy: string,
   sortDirection: string,
   searchTerm?: string
-) => Promise<OngoingEmployeeChecklists> = async (currentPage, limit, sortBy, sortDirection, searchTerm) => {
+) => Promise<COngoingEmployeeChecklists> = async (currentPage, limit, sortBy, sortDirection, searchTerm) => {
   let url = `/employee-checklists/ongoing?page=${currentPage}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}&employeeName=${searchTerm}`;
 
   return apiService
-    .get<ApiResponse<OngoingEmployeeChecklists>>(url)
+    .get<ApiResponse<COngoingEmployeeChecklists>>(url)
     .then((response) => {
       return response.data.data;
     })

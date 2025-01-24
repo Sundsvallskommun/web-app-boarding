@@ -39,12 +39,13 @@ export interface ChecklistWithOrgId extends Checklist {
   phases: PhaseWithOrgId[];
 }
 
-export const setSortorder: (orgId: string, sortOrderData: SortorderRequest) => Promise<SortorderRequest> = async (
-  orgId,
-  sortOrderData
-) => {
+export const setSortorder: (
+  orgId: string,
+  templateId: string,
+  sortOrderData: SortorderRequest
+) => Promise<SortorderRequest> = async (orgId, templateId, sortOrderData) => {
   return apiService
-    .put<SortorderRequest>(`/templates/sortorder/${orgId}`, sortOrderData)
+    .put<SortorderRequest>(`/org/${orgId}/templates/${templateId}/sortorder`, sortOrderData)
     .then((response) => {
       return response.data;
     })
@@ -54,11 +55,12 @@ export const setSortorder: (orgId: string, sortOrderData: SortorderRequest) => P
     });
 };
 
-export const createTask: (templateId: string, phaseId: string, taskData: TaskCreateRequest) => Promise<Task> = async (
+export const createTask: (
+  orgId: number,
   templateId: string,
   phaseId: string,
   taskData: TaskCreateRequest
-) => {
+) => Promise<Task> = async (orgId, templateId, phaseId, taskData) => {
   const taskCreateRequest: TaskCreateRequest = {
     heading: taskData.heading,
     headingReference: taskData.headingReference,
@@ -71,7 +73,7 @@ export const createTask: (templateId: string, phaseId: string, taskData: TaskCre
   };
 
   return apiService
-    .post<ApiResponse<Task>>(`/templates/${templateId}/phases/${phaseId}/tasks`, taskCreateRequest)
+    .post<ApiResponse<Task>>(`/org/${orgId}/templates/${templateId}/phases/${phaseId}/tasks`, taskCreateRequest)
     .then((response) => {
       return response.data.data;
     })
@@ -82,11 +84,12 @@ export const createTask: (templateId: string, phaseId: string, taskData: TaskCre
 };
 
 export const updateTask: (
+  orgId: string,
   templateId: string,
   phaseId: string,
   taskId: string,
   taskData: TaskUpdateRequest
-) => Promise<Task> = async (templateId: string, phaseId: string, taskId: string, taskData: TaskUpdateRequest) => {
+) => Promise<Task> = async (orgId, templateId, phaseId, taskId, taskData) => {
   const taskUpdateRequest: TaskUpdateRequest = {
     heading: taskData.heading,
     headingReference: taskData.headingReference,
@@ -99,7 +102,10 @@ export const updateTask: (
   };
 
   return apiService
-    .patch<ApiResponse<Task>>(`/templates/${templateId}/phases/${phaseId}/tasks/${taskId}`, taskUpdateRequest)
+    .patch<ApiResponse<Task>>(
+      `/org/${orgId}/templates/${templateId}/phases/${phaseId}/tasks/${taskId}`,
+      taskUpdateRequest
+    )
     .then((response) => {
       return response.data.data;
     })
@@ -109,13 +115,14 @@ export const updateTask: (
     });
 };
 
-export const removeTask: (templateId: string, phaseId: string, taskId: string) => Promise<{ status: number }> = async (
+export const removeTask: (
+  orgId: string,
   templateId: string,
   phaseId: string,
   taskId: string
-) => {
+) => Promise<{ status: number }> = async (orgId, templateId, phaseId, taskId) => {
   return apiService
-    .delete<{ status: number }>(`/templates/${templateId}/phases/${phaseId}/tasks/${taskId}`)
+    .delete<{ status: number }>(`/org/${orgId}/templates/${templateId}/phases/${phaseId}/tasks/${taskId}`)
     .then((response) => {
       return { status: response.status };
     })
@@ -160,12 +167,17 @@ export const createTemplate: (
     organizationNumber: parseInt(orgId, 10),
     createdBy: user.username,
   };
-  return apiService.post<ApiResponse<Checklist>>(`/templates`, templateData).then((response) => response.data.data);
+  return apiService
+    .post<ApiResponse<Checklist>>(`/org/${orgId}/templates`, templateData)
+    .then((response) => response.data.data);
 };
 
-export const activateTemplate: (templateId: string) => Promise<Checklist | undefined> = async (templateId: string) => {
+export const activateTemplate: (orgId: string, templateId: string) => Promise<Checklist | undefined> = async (
+  orgId,
+  templateId
+) => {
   return apiService
-    .patch<Checklist>(`/templates/${templateId}/activate`, {})
+    .patch<Checklist>(`/org/${orgId}/templates/${templateId}/activate`, {})
     .then((response) => {
       return response.data;
     })
@@ -175,9 +187,12 @@ export const activateTemplate: (templateId: string) => Promise<Checklist | undef
     });
 };
 
-export const createNewVersion: (templateId: string) => Promise<Checklist | undefined> = async (templateId: string) => {
+export const createNewVersion: (orgId: string, templateId: string) => Promise<Checklist | undefined> = async (
+  orgId,
+  templateId
+) => {
   return apiService
-    .post<ApiResponse<Checklist>>(`/templates/${templateId}/version`, {})
+    .post<ApiResponse<Checklist>>(`/org/${orgId}/templates/${templateId}/version`, {})
     .then((response) => {
       return response.data.data;
     })

@@ -21,7 +21,7 @@ export class EmployeeController {
   @OpenAPI({ summary: 'Fetch employee' })
   @ResponseSchema(EmployeeApiResponse)
   @UseBefore(authMiddleware)
-  async getChecklistsAsManager(@Req() req: RequestWithUser, @Param('username') username: string): Promise<ResponseData<PortalPersonData>> {
+  async getEmployeeData(@Req() req: RequestWithUser, @Param('username') username: string): Promise<ResponseData<PortalPersonData>> {
     if (!req.user.username) {
       throw new HttpException(400, 'Bad request');
     }

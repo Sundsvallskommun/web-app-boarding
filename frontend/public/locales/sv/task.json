@@ -2,6 +2,16 @@
   "errors": {
     "heading": "Du måste skriva en rubrik"
   },
+  "create": {
+    "title": "Lägg till aktivitet",
+    "confirm": "Spara",
+    "error": "Det gick inte att spara aktiviteten"
+  },
+  "update": {
+    "title": "Redigera aktivitet",
+    "confirm": "Spara",
+    "error": "Det gick inte att spara aktiviteten"
+  },
   "add_activity": "Lägg till aktivitet",
   "edit_activity": "Redigera aktivitet",
   "remove_activity": "Ta bort aktivitet?",
@@ -20,5 +30,5 @@
   "activities_completed": "{{first}} av {{second}} aktiviteter slutförda",
   "complete_by": "Slutför senast {{date}}",
   "of": "av",
-  "fulfilled_by" : "Markerad av {{user}}"
+  "fulfilled_by": "Markerad av {{user}}"
 }
