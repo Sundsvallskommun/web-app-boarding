@@ -38,6 +38,8 @@ export const EditTemplate = () => {
   const [lastSavedByName, setLastSavedByName] = useState<string>('');
   const confirm = useConfirm();
   const toastMessage = useSnackbar();
+  const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid as string, 10));
+  const [phaseIndex, setPhaseIndex] = useState<number>(0);
 
   const closeHandler = () => {
     setIsOpen(false);
@@ -55,7 +57,7 @@ export const EditTemplate = () => {
       permission: 'ADMIN',
       questionType: 'YES_OR_NO',
       fulfilmentStatus: 'EMPTY',
-      sortOrder: '0',
+      sortOrder: data && org ? (1000 * org?.treeLevel + data.phases[phaseIndex].tasks.length + 1).toString() : '0',
     };
   };
 
@@ -202,6 +204,7 @@ export const EditTemplate = () => {
                 showBackground={false}
                 color="info"
                 onClick={() => {
+                  setPhaseIndex(index);
                   setPhaseId(phase.id);
                   setIsOpen(true);
                 }}
