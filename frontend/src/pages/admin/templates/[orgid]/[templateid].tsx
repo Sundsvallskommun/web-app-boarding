@@ -291,7 +291,7 @@ export const EditTemplate = () => {
                       </Button>
                     : null}
                   </div>
-                  <div className="w-full rounded-16 bg-white shadow-custom border-divider pb-24">
+                  <div className="w-full rounded-16 bg-background-content shadow-custom border-divider pb-24">
                     {currentView === 0 ?
                       data && filteredTasks(data, [RoleType.MANAGER_FOR_NEW_EMPLOYEE, RoleType.MANAGER_FOR_NEW_MANAGER])
                     : data && filteredTasks(data, [RoleType.NEW_EMPLOYEE, RoleType.NEW_MANAGER])}
