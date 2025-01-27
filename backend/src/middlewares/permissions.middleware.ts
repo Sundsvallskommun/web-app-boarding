@@ -40,16 +40,12 @@ export const hasRoles = (roles: Array<KeyOfMap<InternalRoleMap>>) => async (req:
 };
 
 export const hasOrgPermissions = async (req: Request, res: Response, next: NextFunction) => {
-  console.log('Middleware hasOrgPermissions');
-  console.log('Req url', req.url);
   const userOrgId = req.user.organizationId;
   const params = req.params;
-  console.log('Checking permissions for org', userOrgId, params);
   const { orgId } = req.params;
 
-  const organization: Organization = await getOrganization(parseInt(orgId, 10), req.user);
   const userIsGlobalAdmin = req.user.role === 'global_admin';
-  const userCanEditOrg = req.user.children.includes(orgId);
+  const userCanEditOrg = req.user.children.includes(parseInt(orgId, 10));
   const allowed = userIsGlobalAdmin || userCanEditOrg;
 
   if (allowed) {
@@ -61,16 +57,14 @@ export const hasOrgPermissions = async (req: Request, res: Response, next: NextF
 };
 
 export const hasOrgTemplatePermissions = async (req: Request, res: Response, next: NextFunction) => {
-  console.log('Middleware hasOrgTemplatePermissions');
   const userOrgId = req.user.organizationId;
   const params = req.params;
-  console.log('Checking permissions for org template', userOrgId, params);
   const { orgId, templateId } = req.params;
 
   const organization: Organization = await getOrganization(parseInt(orgId, 10), req.user);
   const userIsGlobalAdmin = req.user.role === 'global_admin';
   const templateIsInOrg = organization?.checklists?.find(c => c.id === templateId);
-  const userCanEditOrg = req.user.role === 'department_admin' && req.user.children.includes(orgId);
+  const userCanEditOrg = req.user.role === 'department_admin' && req.user.children.includes(parseInt(orgId, 10));
   const allowed = userIsGlobalAdmin || (templateIsInOrg && userCanEditOrg);
 
   if (allowed) {
