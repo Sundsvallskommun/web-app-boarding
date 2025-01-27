@@ -28,7 +28,6 @@ const traverseOrgTree = (orgTree: OrganizationTree, children: number[]) => {
 };
 
 export const getOrganization = async (orgId: number, user: ClientUser) => {
-  console.log('Getting organization with id', orgId);
   const apiService = new ApiService();
   const checklist = APIS.find(api => api.name === 'checklist');
   const data = await apiService.get<OrganizationApiResponse>(
