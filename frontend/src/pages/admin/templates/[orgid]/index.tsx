@@ -46,8 +46,7 @@ export const OrgTemplate: React.FC = () => {
         t('templates:create.title'),
         t('templates:create.text'),
         t('templates:create.confirm'),
-        t('common:cancel'),
-        'error'
+        t('common:cancel')
       )
       .then((confirmed) => {
         if (confirmed) {
