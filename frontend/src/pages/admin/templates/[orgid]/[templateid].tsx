@@ -1,7 +1,7 @@
 import { AdminActivityListItem } from '@components/admin/admin-activity-list-item/admin-activity-list-item.component';
 import { AdminEditTaskModal } from '@components/admin/admin-edit-task-modal/admin-edit-task-modal.component';
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
-import { Checklist, SortorderRequest, Task } from '@data-contracts/backend/data-contracts';
+import { Checklist, SortorderRequest, Task, User } from '@data-contracts/backend/data-contracts';
 import { RoleType } from '@data-contracts/RoleType';
 import AdminLayout from '@layouts/admin-layout/admin-layout.component';
 import { useOrgTemplates, useOrgTreeStore } from '@services/organization-service';
@@ -18,7 +18,7 @@ import { findOrgInTree } from '@utils/find-org-in-tree';
 import dayjs from 'dayjs';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { AdminTemplateSidebar } from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
@@ -32,12 +32,25 @@ export const EditTemplate = () => {
   const { data, refresh, loaded, loading } = useTemplate(templateid as string);
   const { data: orgTreeData } = useOrgTreeStore();
   const { data: orgData } = useOrgTemplates(parseInt(orgid as string, 10));
+  const user = useUserStore((s) => s.user, shallow);
   const [currentView, setCurrentView] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [phaseId, setPhaseId] = useState<string>();
   const [lastSavedByName, setLastSavedByName] = useState<string>('');
   const confirm = useConfirm();
   const toastMessage = useSnackbar();
+
+  const editable = useCallback(
+    (checklist: Checklist, user: User) => {
+      const userHasOrgPermission =
+        user.role === 'department_admin' && user.children.includes(parseInt(orgid as string, 10));
+      const userIsGlobalAdmin = user.role === 'global_admin';
+      const editableLifeCycle =
+        checklist.lifeCycle === 'CREATED' || (!templateVersioningEnabled && checklist.lifeCycle === 'ACTIVE');
+      return (userHasOrgPermission || userIsGlobalAdmin) && editableLifeCycle;
+    },
+    [data, user]
+  );
 
   const closeHandler = () => {
     setIsOpen(false);
@@ -102,7 +115,7 @@ export const EditTemplate = () => {
     checklist.phases[phaseIndex] = thisPhase;
 
     const newSortorder = getSortorder(checklist);
-    await setSortorder(orgid as string, newSortorder);
+    await setSortorder(orgid as string, checklist.id, newSortorder);
     await refresh(templateid as string);
   }
 
@@ -121,7 +134,7 @@ export const EditTemplate = () => {
       )
       .then((confirmed) => {
         if (confirmed && data) {
-          activateTemplate(data.id)
+          activateTemplate(orgid as string, data.id)
             .then(() => {
               refresh(templateid as string);
               closeHandler();
@@ -149,7 +162,7 @@ export const EditTemplate = () => {
       )
       .then((confirmed) => {
         if (confirmed && data) {
-          createNewVersion(data.id)
+          createNewVersion(orgid as string, data.id)
             .then((checklist) => {
               router.push(`/admin/templates/${orgid}/${checklist?.id}`);
               closeHandler();
@@ -167,8 +180,8 @@ export const EditTemplate = () => {
   };
 
   const filteredTasks = useCallback(
-    (data: Checklist, roleTypes: string[]) => {
-      return data?.phases
+    (checklist: Checklist, roleTypes: string[]) => {
+      return checklist?.phases
         .sort((a, b) => a.sortOrder - b.sortOrder)
         .map((phase, index) => (
           <div key={phase.id} className="py-20 px-20 mb-48" data-cy={`phase-section-${index}`}>
@@ -180,19 +193,17 @@ export const EditTemplate = () => {
                   <AdminActivityListItem
                     key={task.id}
                     task={task}
-                    templateId={data.id}
+                    templateId={checklist.id}
                     phaseId={phase.id}
                     index={index}
                     items={list.length}
-                    moveUp={(task: Task) => moveUp(task, data)}
-                    moveDown={(task: Task) => moveDown(task, data)}
-                    allowDelete={
-                      data.lifeCycle === 'CREATED' || (!templateVersioningEnabled && data.lifeCycle === 'ACTIVE')
-                    }
+                    moveUp={(task: Task) => moveUp(task, checklist)}
+                    moveDown={(task: Task) => moveDown(task, checklist)}
+                    editable={editable(checklist, user)}
                   />
                 ))}
             </ol>
-            {data.lifeCycle === 'CREATED' || (!templateVersioningEnabled && data.lifeCycle === 'ACTIVE') ?
+            {editable(checklist, user) ?
               <Button
                 size="lg"
                 className="mt-8 ml-24"
@@ -206,7 +217,7 @@ export const EditTemplate = () => {
                   setIsOpen(true);
                 }}
               >
-                {t('task:add_activity')}
+                {t('task:create.title')}
               </Button>
             : null}
           </div>

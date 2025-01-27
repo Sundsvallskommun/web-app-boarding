@@ -1,0 +1,18 @@
+{
+  "data": {
+    "name": "Anna Globaladmin",
+    "firstName": "Anna",
+    "lastName": "Globaladmin",
+    "username": "ann01adm",
+    "permissions": {
+      "canEditAdmin": true,
+      "canViewAdmin": true,
+      "isManager": false
+    },
+    "role": "global_admin",
+    "orgId": 13,
+    "treeLevel": 1,
+    "children": []
+  },
+  "message": "success"
+}

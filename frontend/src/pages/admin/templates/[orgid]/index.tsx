@@ -1,6 +1,6 @@
 import { TemplateCard } from '@components/admin/template-card/template-card.component';
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
-import { Template } from '@data-contracts/backend/data-contracts';
+import { Template, User } from '@data-contracts/backend/data-contracts';
 import AdminLayout from '@layouts/admin-layout/admin-layout.component';
 import { useOrgTemplates, useOrgTree, useOrgTreeStore } from '@services/organization-service';
 import { createTemplate, useTemplate } from '@services/template-service/template-service';
@@ -9,7 +9,7 @@ import LucideIcon from '@sk-web-gui/lucide-icon';
 import { Button, useConfirm, useSnackbar } from '@sk-web-gui/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { shallow } from 'zustand/shallow';
@@ -30,6 +30,16 @@ export const OrgTemplate: React.FC = () => {
   useEffect(() => {
     setTemplateData(null);
   }, [orgid]);
+
+  const editable = useCallback(
+    (orgId: string, user: User) => {
+      const userHasOrgPermission =
+        user.role === 'department_admin' && user.children.includes(parseInt(orgid as string, 10));
+      const userIsGlobalAdmin = user.role === 'global_admin';
+      return userHasOrgPermission || userIsGlobalAdmin;
+    },
+    [data, user]
+  );
 
   const currentTemplates: Template[] = useMemo(
     () => data?.checklists.filter((template) => ['CREATED', 'ACTIVE'].includes(template.lifeCycle)) || [],
@@ -91,18 +101,20 @@ export const OrgTemplate: React.FC = () => {
                     .map((template) => <TemplateCard orgId={orgid} template={template} key={template.id} />)
                 : <div>
                     <p>Inga aktiva mallar</p>
-                    <Button
-                      size="lg"
-                      className="mt-8 ml-24"
-                      data-cy={`create-template-button`}
-                      leftIcon={<LucideIcon name="plus" />}
-                      variant="tertiary"
-                      showBackground={false}
-                      color="info"
-                      onClick={onCreateTemplate}
-                    >
-                      {t('templates:create.title')}
-                    </Button>
+                    {editable(orgid, user) ?
+                      <Button
+                        size="lg"
+                        className="mt-8 ml-24"
+                        data-cy={`create-template-button`}
+                        leftIcon={<LucideIcon name="plus" />}
+                        variant="tertiary"
+                        showBackground={false}
+                        color="info"
+                        onClick={onCreateTemplate}
+                      >
+                        {t('templates:create.title')}
+                      </Button>
+                    : null}
                   </div>
                 }
               </div>

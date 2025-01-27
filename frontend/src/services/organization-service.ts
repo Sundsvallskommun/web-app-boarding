@@ -29,7 +29,7 @@ export const getOrgTemplate = async (orgId: number) => {
 };
 
 export const getOrgTemplates = async (originOrg: number, orgIds: number[]) => {
-  const res = await apiService.post<OrganizationsApiResponse>(`/org/templates/`, { originOrg, orgIds });
+  const res = await apiService.post<OrganizationsApiResponse>(`/org/multiple/templates/`, { originOrg, orgIds });
   if (res) {
     return res.data.data;
   }
@@ -58,7 +58,10 @@ export const getOrganization = (orgId: number) => {
 };
 
 export const createOrganization = (orgData: OrganizationCreateRequest) => {
-  return apiService.post<ApiResponse<Organization>>('/org', orgData).then((res) => {
+  if (!orgData.organizationNumber) {
+    throw new Error('Organization number is required to create organization');
+  }
+  return apiService.post<ApiResponse<Organization>>(`/org/${orgData.organizationNumber}`, orgData).then((res) => {
     if (res) {
       return res.data.data;
     } else {

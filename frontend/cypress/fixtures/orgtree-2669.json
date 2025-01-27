@@ -159,7 +159,7 @@
           },
           {
             "organizationId": "13",
-            "orgId": 13,
+            "orgId": 266913,
             "treeLevel": 3,
             "orgName": "Org1 Platskontor Ort2",
             "orgNameShort": "Org1 Platskontor Ort2",
@@ -178,7 +178,7 @@
                 "orgNameShort": "Org1 Platskontor Ort2",
                 "abbreviation": null,
                 "orgDisplayName": "Org1 Platskontor Ort2",
-                "parentId": 13,
+                "parentId": 266913,
                 "isLeafLevel": false,
                 "responsibilityCode": null,
                 "responsibilityList": null,

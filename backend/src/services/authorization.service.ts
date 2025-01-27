@@ -4,21 +4,31 @@ import { roleADMapping } from './ad-role.service';
 export const defaultPermissions: () => Permissions = () => ({
   canEditAdmin: false,
   canViewAdmin: false,
+  canEditDepartment: false,
+  canViewDepartment: false,
   isManager: false,
 });
 
 enum RoleOrderEnum {
   'admin',
+  'department_admin',
   'developer',
   'user',
 }
 
 const roles = new Map<InternalRole, Partial<Permissions>>([
   [
-    'admin',
+    'global_admin',
     {
       canEditAdmin: true,
       canViewAdmin: true,
+    },
+  ],
+  [
+    'department_admin',
+    {
+      canEditDepartment: true,
+      canViewDepartment: true,
     },
   ],
   [

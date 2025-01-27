@@ -10,9 +10,10 @@ import {
   EmployeeChecklistTask,
   EmployeeChecklistTaskUpdateRequest,
   Mentor,
+  OngoingEmployeeChecklists,
 } from '@/data-contracts/checklist/data-contracts';
 import { HttpException } from '@exceptions/HttpException';
-import { DelegatedEmployeeChecklistResponse, EmployeeChecklistApiResponse, OngoingEmployeeChecklists } from '@/responses/checklist.response';
+import { COngoingEmployeeChecklists, DelegatedEmployeeChecklistResponse, EmployeeChecklistApiResponse } from '@/responses/checklist.response';
 import ApiResponse from '@interfaces/api-service.interface';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import { APIS, MUNICIPALITY_ID } from '@/config';
@@ -76,7 +77,7 @@ export class ChecklistController {
 
   @Get('/employee-checklists/ongoing')
   @OpenAPI({ summary: 'Fetch all ongoing checklists' })
-  @ResponseSchema(OngoingEmployeeChecklists)
+  @ResponseSchema(COngoingEmployeeChecklists)
   @UseBefore(authMiddleware)
   async getAllOngoingChecklists(
     @Req() req: RequestWithUser,

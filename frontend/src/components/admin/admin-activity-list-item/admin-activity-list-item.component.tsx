@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 import { AdminEditTaskModal } from '../admin-edit-task-modal/admin-edit-task-modal.component';
 import { removeTask, useTemplate } from '@services/template-service/template-service';
+import router from 'next/router';
 
 interface AdminActivityListItemProps {
   task: Task;
@@ -19,18 +20,19 @@ interface AdminActivityListItemProps {
   items: number;
   moveUp: (task: Task) => void;
   moveDown: (task: Task) => void;
-  allowDelete?: boolean;
+  editable?: boolean;
 }
 
 export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (props) => {
-  const { task, templateId, phaseId, index, items, moveUp, moveDown, allowDelete = false } = props;
+  const { task, templateId, phaseId, index, items, moveUp, moveDown, editable = false } = props;
+  const { templateid, orgid } = router.query;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);
   const confirm = useConfirm();
 
   const onRemoveTask = () => {
-    removeTask(templateId, phaseId, task.id).then(() => {
+    removeTask(orgid as string, templateId, phaseId, task.id).then(() => {
       refresh(templateId);
     });
   };
@@ -109,30 +111,31 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
             </div>
           </div>
           <div>
-            <div className=" flex flex-col items-center">
-              <div className="relative w-min h-[3.2rem]">
-                <PopupMenu>
-                  <PopupMenu.Button
-                    data-cy={`task-menu-button`}
-                    iconButton
-                    variant="tertiary"
-                    size="sm"
-                    showBackground={false}
-                  >
-                    <Icon name="ellipsis-vertical" />
-                  </PopupMenu.Button>
-                  <PopupMenu.Panel>
-                    <PopupMenu.Items>
-                      <PopupMenu.Item>
-                        <Button
-                          data-cy="activity-edit-button"
-                          leftIcon={<Icon name="pen" />}
-                          onClick={() => openHandler()}
-                        >
-                          {t('common:edit')}
-                        </Button>
-                      </PopupMenu.Item>
-                      {allowDelete ?
+            {editable ?
+              <div className=" flex flex-col items-center">
+                <div className="relative w-min h-[3.2rem]">
+                  <PopupMenu>
+                    <PopupMenu.Button
+                      data-cy={`task-menu-button`}
+                      iconButton
+                      variant="tertiary"
+                      size="sm"
+                      showBackground={false}
+                    >
+                      <Icon name="ellipsis-vertical" />
+                    </PopupMenu.Button>
+                    <PopupMenu.Panel>
+                      <PopupMenu.Items>
+                        <PopupMenu.Item>
+                          <Button
+                            data-cy="activity-edit-button"
+                            leftIcon={<Icon name="pen" />}
+                            onClick={() => openHandler()}
+                          >
+                            {t('common:edit')}
+                          </Button>
+                        </PopupMenu.Item>
+
                         <PopupMenu.Item>
                           <Button
                             data-cy="activity-remove-button"
@@ -156,12 +159,12 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
                             {t('common:remove')}
                           </Button>
                         </PopupMenu.Item>
-                      : null}
-                    </PopupMenu.Items>
-                  </PopupMenu.Panel>
-                </PopupMenu>
+                      </PopupMenu.Items>
+                    </PopupMenu.Panel>
+                  </PopupMenu>
+                </div>
               </div>
-            </div>
+            : null}
           </div>
         </div>
       </div>

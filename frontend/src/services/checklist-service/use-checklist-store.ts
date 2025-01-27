@@ -1,4 +1,4 @@
-import { EmployeeChecklist, OngoingEmployeeChecklists } from '@data-contracts/backend/data-contracts';
+import { EmployeeChecklist, COngoingEmployeeChecklists } from '@data-contracts/backend/data-contracts';
 import { create } from 'zustand';
 
 interface State<T> {
@@ -25,7 +25,7 @@ const createEmployeeChecklistStore = () => {
 };
 
 const createOngoingChecklistStore = () => {
-  return create<State<OngoingEmployeeChecklists> & Actions<OngoingEmployeeChecklists>>((set) => ({
+  return create<State<COngoingEmployeeChecklists> & Actions<COngoingEmployeeChecklists>>((set) => ({
     data: {
       checklists: [],
       _meta: {

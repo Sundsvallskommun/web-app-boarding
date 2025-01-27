@@ -1,13 +1,17 @@
 import ApiResponse from '@/interfaces/api-service.interface';
 import { ClientUser, InternalRole, InternalRoleEnum, Permissions as IPermissions } from '@/interfaces/users.interface';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsEnum, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
 
 export class Permissions implements IPermissions {
   @IsBoolean()
   canEditAdmin: boolean;
   @IsBoolean()
   canViewAdmin: boolean;
+  @IsBoolean()
+  canEditDepartment: boolean;
+  @IsBoolean()
+  canViewDepartment: boolean;
   @IsBoolean()
   isManager: boolean;
 }
@@ -26,6 +30,10 @@ export class User implements ClientUser {
   @ValidateNested()
   @Type(() => Permissions)
   permissions: Permissions;
+  @IsNumber()
+  organizationId: number;
+  @IsNumber({}, { each: true })
+  children: number[];
 }
 
 export class UserApiResponse implements ApiResponse<User> {

@@ -18,6 +18,7 @@ import { useExpressServer, getMetadataArgsStorage } from 'routing-controllers';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import swaggerUi from 'swagger-ui-express';
 import {
+  APIS,
   APP_NAME,
   BASE_URL_PREFIX,
   CREDENTIALS,
@@ -48,6 +49,8 @@ import { getPermissions, getRole } from './services/authorization.service';
 import ApiService from './services/api.service';
 import { EmployeeChecklist } from './responses/checklist.response';
 import { DelegatedEmployeeChecklistResponse } from '@/data-contracts/checklist/data-contracts';
+import { PortalPersonData } from './data-contracts/employee/data-contracts';
+import { getOrgChildren } from './services/organization.service';
 
 const SessionStoreCreate = SESSION_MEMORY ? createMemoryStore(session) : createFileStore(session);
 const sessionTTL = 4 * 24 * 60 * 60;
@@ -123,6 +126,8 @@ const samlStrategy = new Strategy(
             lastName: '',
             permissions: undefined,
             role: 'user',
+            organizationId: -1,
+            children: [],
           },
         );
         if (Array.isArray(res.data) && res.data.length > 0) {
@@ -139,6 +144,8 @@ const samlStrategy = new Strategy(
             lastName: '',
             permissions: undefined,
             role: 'user',
+            organizationId: -1,
+            children: [],
           },
         );
 
@@ -161,7 +168,25 @@ const samlStrategy = new Strategy(
         groups: appGroups,
         role: getRole(appGroups),
         permissions: { ...getPermissions(appGroups), isManager: await getIsManager() },
+        organizationId: -1,
+        children: [],
       };
+
+      const employee = APIS.find(api => api.name === 'employee');
+      const url = `${employee.name}/${employee.version}/portalpersondata/PERSONAL/${username}`;
+      const res = await apiService.get<PortalPersonData>({ url }, findUser);
+      console.log('res', res);
+      const orgTree = res.data.orgTree.split('¤');
+      console.log('orgTree', orgTree);
+      const lastLevel = orgTree[orgTree.length - 1];
+      const [level, orgId, orgName] = lastLevel.split('|');
+      console.log('level', level);
+      console.log('orgId', orgId);
+      console.log('orgName', orgName);
+      findUser.organizationId = parseInt(orgId);
+      const children = await getOrgChildren(parseInt(orgId), findUser);
+      console.log('children', children);
+      findUser.children = children;
 
       done(null, findUser);
     } catch (err) {
