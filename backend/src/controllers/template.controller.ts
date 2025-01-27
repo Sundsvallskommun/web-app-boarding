@@ -58,19 +58,11 @@ export class TemplateController {
   async createTask(
     @Req() req: RequestWithUser,
     @Param('orgId') orgId: number,
-    @Param('checklistId') checklistId: string,
+    @Param('templateId') templateId: string,
     @Param('phaseId') phaseId: string,
     @Body() data: TaskCreateRequest,
   ): Promise<ResponseData<TaskType>> {
-    console.log('User', req.user);
-    // await validateTemplateAction(req.user, orgId, checklistId);
-    // const allowed = await validateTemplateAction(req.user, orgId, checklistId);
-    // if (!allowed) {
-    //   console.log('Forbidden');
-    //   throw new HttpException(403, 'Missing permissions');
-    // }
-    console.log('Allowed');
-    const url = `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/checklists/${checklistId}/phases/${phaseId}/tasks`;
+    const url = `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/checklists/${templateId}/phases/${phaseId}/tasks`;
     return await this.apiService.post<Task, TaskCreateRequest>({ url, data }, req.user);
   }
 
