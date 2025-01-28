@@ -1,0 +1,13 @@
+{
+  "data": [
+    {
+      "id": "1b667e80-83ca-4a29-bdb5-f6e3630b4540",
+      "organizationName": "Sundsvalls kommun",
+      "organizationNumber": 13,
+      "checklists": [],
+      "communicationChannels": ["EMAIL"],
+      "created": "2025-01-21T15:31:10.602481+01:00"
+    }
+  ],
+  "message": "success"
+}

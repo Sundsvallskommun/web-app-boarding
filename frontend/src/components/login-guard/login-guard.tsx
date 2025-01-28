@@ -20,10 +20,16 @@ export const LoginGuard: React.FC<{ children?: React.ReactNode }> = ({ children 
     return <LoaderFullScreen />;
   }
 
-  if (user?.username && !user?.permissions?.isManager && query?.userId !== user?.username && user?.role !== 'admin') {
+  if (
+    user?.username &&
+    !user?.permissions?.isManager &&
+    query?.userId !== user?.username &&
+    user?.role !== 'global_admin' &&
+    user?.role !== 'department_admin'
+  ) {
     router.push(`/${user.username}`);
   }
-  if (router.pathname.startsWith('/admin') && user?.role !== 'admin') {
+  if (router.pathname.startsWith('/admin') && user?.role !== 'global_admin' && user?.role !== 'department_admin') {
     router.push('/');
   }
 

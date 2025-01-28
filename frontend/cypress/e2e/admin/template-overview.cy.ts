@@ -2,7 +2,7 @@ import { searchEmployeeResponse } from 'cypress/fixtures/managed-introductions';
 
 describe('Uses the template overview', () => {
   beforeEach(() => {
-    cy.intercept('GET', '**/api/me', { fixture: 'me-admin.json' });
+    cy.intercept('GET', '**/api/me', { fixture: 'me-global-admin.json' });
     cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse);
     cy.intercept('GET', '**/api/org/13/tree', { fixture: 'orgtree-13.json' });
     cy.intercept('GET', '**/api/org/2725/tree', { fixture: 'orgtree-2725.json' });

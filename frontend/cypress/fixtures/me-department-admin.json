@@ -1,0 +1,18 @@
+{
+  "data": {
+    "name": "Stina Enhetsadmin",
+    "firstName": "Stina",
+    "lastName": "Enhetsadmin",
+    "username": "sti01adm",
+    "permissions": {
+      "canEditAdmin": true,
+      "canViewAdmin": true,
+      "isManager": false
+    },
+    "role": "department_admin",
+    "orgId": 23,
+    "treeLevel": 2,
+    "children": [23, 24, 25, 26]
+  },
+  "message": "success"
+}

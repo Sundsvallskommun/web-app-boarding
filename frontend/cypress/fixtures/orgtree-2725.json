@@ -14,7 +14,7 @@
     "organizations": [
       {
         "organizationId": "3",
-        "orgId": 13,
+        "orgId": 27752,
         "treeLevel": 2,
         "orgName": "Org2 AO Org2",
         "orgNameShort": "Org2 AO Org2",
@@ -178,7 +178,7 @@
                 "orgNameShort": "Org2 Platskontor Ort2",
                 "abbreviation": null,
                 "orgDisplayName": "Org2 Platskontor Ort2",
-                "parentId": 13,
+                "parentId": 113,
                 "isLeafLevel": false,
                 "responsibilityCode": null,
                 "responsibilityList": null,
@@ -191,7 +191,7 @@
                     "orgNameShort": "Org2 Platskontor Ort2",
                     "abbreviation": null,
                     "orgDisplayName": "Org2 Platskontor Ort2",
-                    "parentId": 14,
+                    "parentId": 114,
                     "isLeafLevel": true,
                     "responsibilityCode": null,
                     "responsibilityList": null,

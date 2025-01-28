@@ -513,9 +513,11 @@ export class PagingMetaData {
   totalPages?: number;
 }
 
-export class OngoingEmployeeChecklists {
+export class COngoingEmployeeChecklists {
+  @ValidateNested({ each: true })
   @Type(() => OngoingEmployeeChecklist)
   checklists?: OngoingEmployeeChecklist[];
+  @ValidateNested()
   @Type(() => PagingMetaData)
   _meta?: PagingMetaData;
 }

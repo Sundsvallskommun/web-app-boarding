@@ -5,7 +5,7 @@ import {
 
 describe('Uses ongoing introductions', () => {
   beforeEach(() => {
-    cy.intercept('GET', '**/api/me', { fixture: 'me-admin.json' });
+    cy.intercept('GET', '**/api/me', { fixture: 'me-global-admin.json' });
     cy.intercept(
       'GET',
       '**/api/employee-checklists/ongoing?page=1&limit=15&sortBy=employeeName&sortDirection=ASC&employeeName=',

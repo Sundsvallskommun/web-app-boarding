@@ -5,17 +5,22 @@ export interface ClientUser {
   username: string;
   permissions: Permissions;
   role: InternalRole;
+  organizationId: number;
+  children: number[];
 }
 export interface Permissions {
   canEditAdmin: boolean;
   canViewAdmin: boolean;
+  canEditDepartment: boolean;
+  canViewDepartment: boolean;
   isManager: boolean;
 }
 
 /** Internal roles */
-export type InternalRole = 'admin' | 'developer' | 'user';
+export type InternalRole = 'global_admin' | 'department_admin' | 'developer' | 'user';
 export enum InternalRoleEnum {
-  admin = 'admin',
+  global_admin = 'global_admin',
+  department_admin = 'department_admin',
   developer = 'developer',
   user = 'user',
 }
