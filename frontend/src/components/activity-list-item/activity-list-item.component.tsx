@@ -31,11 +31,12 @@ interface ActivityListItemProps {
   checklistId: string;
   currentView: number;
   isUserChecklist: boolean;
+  managerUsername?: string;
 }
 
 export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const user = useUserStore((s) => s.user, shallow);
-  const { task, checklistId, currentView, isUserChecklist } = props;
+  const { task, checklistId, currentView, isUserChecklist, managerUsername } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
@@ -47,7 +48,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
     updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(() => {
       if (currentView === 0) {
         refreshDelegatedChecklists();
-        refreshManagedChecklists();
+        managerUsername?.length ? refreshManagedChecklists(managerUsername) : refreshManagedChecklists();
       } else {
         refreshChecklist();
       }
