@@ -174,13 +174,19 @@ const samlStrategy = new Strategy(
 
       const employee = APIS.find(api => api.name === 'employee');
       const url = `${employee.name}/${employee.version}/portalpersondata/PERSONAL/${username}`;
-      const res = await apiService.get<PortalPersonData>({ url }, findUser);
-      const orgTree = res.data.orgTree.split('¤');
-      const lastLevel = orgTree[orgTree.length - 1];
-      const [level, orgId, orgName] = lastLevel.split('|');
-      findUser.organizationId = parseInt(orgId);
-      const children = await getOrgChildren(parseInt(orgId), findUser);
-      findUser.children = children;
+      const res = await apiService.get<PortalPersonData>({ url }, findUser).catch(err => null);
+      if (res) {
+        const orgTree = res?.data.orgTree.split('¤');
+        const lastLevel = orgTree?.[orgTree.length - 1];
+        if (!lastLevel) {
+          done(null, findUser);
+          return;
+        }
+        const [level, orgId, orgName] = lastLevel.split('|');
+        findUser.organizationId = parseInt(orgId);
+        const children = await getOrgChildren(parseInt(orgId), findUser).catch(err => []);
+        findUser.children = children;
+      }
 
       done(null, findUser);
     } catch (err) {
