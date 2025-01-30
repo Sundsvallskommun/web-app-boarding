@@ -107,7 +107,7 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
                 data-cy={`table-row-button-${idx}`}
                 iconButton
                 onClick={() => {
-                  router.push(`/${checklist.employeeUsername}`);
+                  router.push(`./${checklist.employeeUsername}`);
                 }}
               >
                 <Icon name="arrow-right" />
@@ -135,7 +135,7 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
         />
 
         <p className="text-small mx-24 my-12" data-cy="ongoing-introductions-count">
-          {t('common:displayed_introductions', { count: data._meta.count })}
+          {t('common:displayed_introductions', { count: data._meta.totalRecords })}
         </p>
       </div>
 

@@ -10,7 +10,7 @@ export const useManagedChecklists = (): {
   data: EmployeeChecklist[];
   loaded: boolean;
   loading: boolean;
-  refresh: () => void;
+  refresh: (managerUsername?: string) => void;
 } => {
   const { permissions, username } = useUserStore(useShallow((state) => state.user));
   const { handleGetMany } = useCrudHelper('checklists');
@@ -18,10 +18,24 @@ export const useManagedChecklists = (): {
     useShallow((state) => [state.data, state.setData, state.loaded, state.setLoaded, state.loading, state.setLoading])
   );
 
-  const refresh = () => {
+  const refresh = (managerUsername?: string) => {
     if (permissions.isManager && username) {
       setLoading(true);
       handleGetMany(() => getChecklistsAsManager(username))
+        .then((res) => {
+          if (res) {
+            setData(res);
+          }
+          setLoaded(true);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoaded(false);
+          setLoading(false);
+        });
+    } else if (managerUsername?.length) {
+      setLoading(true);
+      handleGetMany(() => getChecklistsAsManager(managerUsername))
         .then((res) => {
           if (res) {
             setData(res);
