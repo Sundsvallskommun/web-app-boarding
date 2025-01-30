@@ -2,6 +2,7 @@ import {
   Checklist,
   ChecklistApiResponse,
   ChecklistCreateRequest,
+  Events,
   Organization,
   OrganizationCreateRequest,
   OrgTree,
@@ -21,6 +22,14 @@ import { useTemplateStore } from './use-template-store';
 
 const getTemplate: (id: string) => Promise<Checklist | undefined> = (id) => {
   return apiService.get<ChecklistApiResponse>(`/templates/${id}`).then((res) => {
+    if (res) {
+      return res.data.data;
+    }
+  });
+};
+
+export const getTemplateHistory: (id: string) => Promise<Events | undefined> = (id) => {
+  return apiService.get<ApiResponse<Events>>(`/templates/${id}/events`).then((res) => {
     if (res) {
       return res.data.data;
     }
