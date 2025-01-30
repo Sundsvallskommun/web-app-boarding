@@ -47,3 +47,50 @@ export class SortorderRequest implements ISortorderRequest {
   @Type(() => CPhaseItem)
   phaseOrder?: PhaseItem[];
 }
+
+export class Metadata {
+  @IsString()
+  key?: string;
+  @IsString()
+  value?: string;
+}
+
+export class Event {
+  @IsString()
+  logKey?: string;
+  @IsString()
+  eventType?: string;
+  @IsString()
+  municipalityId?: string;
+  @IsString()
+  message?: string;
+  @IsString()
+  owner?: string;
+  @IsString()
+  historyReference?: string;
+  @IsString()
+  sourceType?: string;
+  @IsString()
+  created?: string;
+  @IsString()
+  expires?: string;
+  @ValidateNested({ each: true })
+  @Type(() => Metadata)
+  metadata?: Metadata[];
+}
+
+export class Events {
+  @IsNumber()
+  page?: number;
+  @IsNumber()
+  limit?: number;
+  @IsNumber()
+  count?: number;
+  @IsNumber()
+  totalRecords?: number;
+  @IsNumber()
+  totalPages?: number;
+  @ValidateNested({ each: true })
+  @Type(() => Event)
+  eventList?: Event[];
+}

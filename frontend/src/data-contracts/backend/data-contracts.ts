@@ -402,6 +402,33 @@ export interface SortorderRequest {
   phaseOrder: CPhaseItem[];
 }
 
+export interface Metadata {
+  key: string;
+  value: string;
+}
+
+export interface Event {
+  logKey: string;
+  eventType: string;
+  municipalityId: string;
+  message: string;
+  owner: string;
+  historyReference: string;
+  sourceType: string;
+  created: string;
+  expires: string;
+  metadata: Metadata[];
+}
+
+export interface Events {
+  page: number;
+  limit: number;
+  count: number;
+  totalRecords: number;
+  totalPages: number;
+  eventList: Event[];
+}
+
 export interface OrgTree {
   organizationId: string;
   orgId: number;

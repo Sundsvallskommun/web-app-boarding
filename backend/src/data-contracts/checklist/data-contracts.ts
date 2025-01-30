@@ -48,14 +48,14 @@ export interface TaskItem {
 }
 
 export interface Problem {
-  title?: string;
-  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
   parameters?: Record<string, object>;
   status?: StatusType;
+  title?: string;
+  detail?: string;
 }
 
 export interface StatusType {
@@ -83,10 +83,10 @@ export interface ConstraintViolationProblem {
   violations?: Violation[];
   title?: string;
   message?: string;
-  detail?: string;
   /** @format uri */
   instance?: string;
   parameters?: Record<string, object>;
+  detail?: string;
   suppressed?: {
     stackTrace?: {
       classLoaderName?: string;
@@ -119,14 +119,14 @@ export interface ThrowableProblem {
     nativeMethod?: boolean;
   }[];
   message?: string;
-  title?: string;
-  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
   parameters?: Record<string, object>;
   status?: StatusType;
+  title?: string;
+  detail?: string;
   suppressed?: {
     stackTrace?: {
       classLoaderName?: string;
@@ -959,7 +959,6 @@ export interface OngoingEmployeeChecklistParameters {
   /** The sort order direction */
   sortDirection?: Direction;
   employeeName?: string;
-  municipalityId?: string;
 }
 
 /** Model for a employee specific checklist */
@@ -1053,4 +1052,61 @@ export interface Stakeholder {
 export interface DelegatedEmployeeChecklistResponse {
   /** Delegated employee checklists */
   employeeChecklists?: EmployeeChecklist[];
+}
+
+/** Model for an event */
+export interface Event {
+  logKey?: string;
+  eventType?: string;
+  municipalityId?: string;
+  message?: string;
+  owner?: string;
+  historyReference?: string;
+  sourceType?: string;
+  /** @format date-time */
+  created?: string;
+  /** @format date-time */
+  expires?: string;
+  metadata?: Metadata[];
+}
+
+/** Model for a paginated list of events */
+export interface Events {
+  /**
+   * Current page
+   * @format int32
+   * @example 5
+   */
+  page?: number;
+  /**
+   * Displayed objects per page
+   * @format int32
+   * @example 20
+   */
+  limit?: number;
+  /**
+   * Displayed objects on current page
+   * @format int32
+   * @example 13
+   */
+  count?: number;
+  /**
+   * Total amount of hits based on provided search parameters
+   * @format int64
+   * @example 98
+   */
+  totalRecords?: number;
+  /**
+   * Total amount of pages based on provided search parameters
+   * @format int32
+   * @example 23
+   */
+  totalPages?: number;
+  eventList?: Event[];
+}
+
+/** Model for a meta data, key-value pair */
+export interface Metadata {
+  key?: string;
+  value?: string;
 }

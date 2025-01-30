@@ -1,5 +1,5 @@
 import { APIS, MUNICIPALITY_ID } from '@/config';
-import { Checklist, SortorderRequest as ISortorderRequest, Task as TaskType } from '@/data-contracts/checklist/data-contracts';
+import { Checklist, SortorderRequest as ISortorderRequest, Task as TaskType, Events } from '@/data-contracts/checklist/data-contracts';
 import { HttpException } from '@/exceptions/HttpException';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import { hasOrgPermissions, hasOrgTemplatePermissions, hasSomePermission } from '@/middlewares/permissions.middleware';
@@ -128,6 +128,16 @@ export class TemplateController {
     const baseURL = apiURL(`${this.checklist.name}/${this.checklist.version}`);
     const url = `${MUNICIPALITY_ID}/checklists/${templateId}/version`;
     const res = await this.apiService.post<Checklist, never>({ url, baseURL }, req.user);
+
+    return { data: res.data, status: res.status, message: 'success' };
+  }
+
+  @Get('/templates/:templateId/events')
+  @OpenAPI({ summary: 'Fetch checklist template history by id' })
+  @ResponseSchema(ChecklistApiResponse)
+  async getTemplateHistory(@Req() req: RequestWithUser, @Param('templateId') templateId: string): Promise<ResponseData<Events>> {
+    const url = `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/checklists/${templateId}/events?sort=created,DESC&size=25`;
+    const res = await this.apiService.get<Events>({ url }, req.user);
 
     return { data: res.data, status: res.status, message: 'success' };
   }
