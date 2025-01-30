@@ -46,7 +46,7 @@ export class TemplateController {
   @OpenAPI({ summary: 'Create or replace custom sort order for organization' })
   @ResponseSchema(SortorderRequest)
   @UseBefore(hasOrgPermissions)
-  async setSortorder(@Req() req: RequestWithUser, @Param('orgid') orgId: string, @Body() data: ISortorderRequest): Promise<ISortorderRequest> {
+  async setSortorder(@Req() req: RequestWithUser, @Param('orgId') orgId: string, @Body() data: ISortorderRequest): Promise<ISortorderRequest> {
     const url = `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/sortorder/${orgId}`;
     return this.apiService.put<SortorderRequest, ISortorderRequest>({ url, data }, req.user).then(response => data);
   }
