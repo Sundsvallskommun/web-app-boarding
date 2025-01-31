@@ -94,7 +94,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
           <div className="my-8">
             <strong>{t('checklists:delegated_employees')}</strong>
 
-            {data?.delegatedTo?.length &&
+            {data?.delegatedTo?.length ?
               data.delegatedTo?.map((email, index) => {
                 return (
                   <div data-cy={`delegated-to-${index}`} key={index} className="flex justify-between mb-16 mt-8">
@@ -116,7 +116,8 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
                     )}
                   </div>
                 );
-              })}
+              })
+            : null}
 
             {!data?.delegatedTo?.length && isUserChecklist && <p className="pb-8">{t('delegation:no_assignments')}</p>}
 
