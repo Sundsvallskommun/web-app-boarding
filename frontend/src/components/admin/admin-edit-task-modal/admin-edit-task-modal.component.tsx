@@ -4,9 +4,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useOrgTreeStore } from '@services/organization-service';
 import { createTask, updateTask, useTemplate } from '@services/template-service/template-service';
 import { useUserStore } from '@services/user-service/user-service';
-import { FormControl, FormErrorMessage, FormLabel, Input, RadioButton } from '@sk-web-gui/forms';
+import { FormControl, FormErrorMessage, FormLabel, Input } from '@sk-web-gui/forms';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Modal, useSnackbar } from '@sk-web-gui/react';
+import { Button, Checkbox, Modal, useSnackbar } from '@sk-web-gui/react';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 import { useCrudHelper } from '@utils/use-crud-helpers';
 import { useTranslation } from 'next-i18next';
@@ -26,7 +26,7 @@ interface AdminEditTaskModalProps {
 
 export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => {
   const { closeHandler, isOpen, task, templateId, phaseId } = props;
-  const { templateid, orgid } = router.query;
+  const { orgid } = router.query;
   const user = useUserStore((s) => s.user, shallow);
   const { data: orgTreeData } = useOrgTreeStore();
   const { t } = useTranslation();
@@ -151,26 +151,35 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
       show={isOpen}
       onClose={closeHandler}
       className="w-[70rem] p-32"
-      label={<h4 className="text-label-medium">{t('task:edit_activity')}</h4>}
+      label={<h4 className="text-label-medium">{task.id ? t('task:edit_activity') : t('task:add_activity')}</h4>}
     >
       <FormProvider {...formControl}>
         <form onSubmit={handleSubmit(onSubmit)} data-cy="edit-task-form">
           <Modal.Content className="mb-24">
             <Input type="hidden" value="ADMIN" {...register('permission')} />
-            <RadioButton.Group inline>
-              {['NEW_EMPLOYEE', 'NEW_MANAGER', 'MANAGER_FOR_NEW_EMPLOYEE', 'MANAGER_FOR_NEW_MANAGER'].map(
-                (roleType) => (
-                  <RadioButton
-                    data-cy="role-type-radio-button"
-                    defaultChecked={task?.roleType === roleType}
-                    value={roleType}
-                    onChange={() => setValue('roleType', roleType as TaskUpdateRequest['roleType'])}
-                  >
-                    {t(`task:${roleType.toLocaleLowerCase()}`)}
-                  </RadioButton>
-                )
-              )}
-            </RadioButton.Group>
+
+            <Checkbox
+              defaultChecked={
+                task.id ? task.roleType === 'MANAGER_FOR_NEW_MANAGER' || task.roleType === 'NEW_MANAGER' : false
+              }
+              onChange={() => {
+                if (
+                  getValues().roleType === 'MANAGER_FOR_NEW_EMPLOYEE' ||
+                  getValues().roleType === 'MANAGER_FOR_NEW_MANAGER'
+                ) {
+                  getValues().roleType === 'MANAGER_FOR_NEW_EMPLOYEE' ?
+                    setValue('roleType', 'MANAGER_FOR_NEW_MANAGER')
+                  : setValue('roleType', 'MANAGER_FOR_NEW_EMPLOYEE');
+                } else {
+                  getValues().roleType === 'NEW_EMPLOYEE' ?
+                    setValue('roleType', 'NEW_MANAGER')
+                  : setValue('roleType', 'NEW_EMPLOYEE');
+                }
+              }}
+            >
+              {t('task:manager_activity')}
+            </Checkbox>
+
             <FormControl className="w-full" required>
               <FormLabel showRequired={false} className="mt-16">
                 {t('task:heading')}
