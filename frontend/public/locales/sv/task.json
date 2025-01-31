@@ -30,5 +30,6 @@
   "activities_completed": "{{first}} av {{second}} aktiviteter slutförda",
   "complete_by": "Slutför senast {{date}}",
   "of": "av",
-  "fulfilled_by": "Markerad av {{user}}"
+  "fulfilled_by": "Markerad av {{user}}",
+  "manager_activity" : "Aktivitet vid anställning av chef"
 }
