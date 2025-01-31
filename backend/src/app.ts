@@ -174,18 +174,36 @@ const samlStrategy = new Strategy(
 
       const employee = APIS.find(api => api.name === 'employee');
       const url = `${employee.name}/${employee.version}/portalpersondata/PERSONAL/${username}`;
-      const res = await apiService.get<PortalPersonData>({ url }, findUser).catch(err => null);
+      const res: { data: PortalPersonData } = await apiService.get<PortalPersonData>({ url }, findUser).catch(err => null);
       if (res) {
-        const orgTree = res?.data.orgTree.split('¤');
-        const lastLevel = orgTree?.[orgTree.length - 1];
-        if (!lastLevel) {
+        if (res.data.companyId === 1) {
+          console.log('Sundsvalls kommun');
+        } else {
+          console.log('Not Sundsvalls kommun');
+          console.log('companyId is: ', res.data.companyId);
+        }
+        const userOrgChunks: string[] = res?.data.orgTree.split('¤');
+        console.log('orgTreeChunks:', userOrgChunks);
+        if (userOrgChunks?.length < 5) {
           done(null, findUser);
           return;
         }
-        const [level, orgId, orgName] = lastLevel.split('|');
-        findUser.organizationId = parseInt(orgId);
-        const children = await getOrgChildren(parseInt(orgId), findUser).catch(err => []);
+        const userOrgs: { level: string; id: string; name: string }[] = userOrgChunks.map(unit => {
+          const [level, id, name] = unit.split('|');
+          return { level, id, name };
+        });
+        console.log('orgTree:', userOrgs);
+        const ADMIN_LEVEL = '2';
+        const adminUnit: { level: string; id: string; name: string } = userOrgs?.find(unit => unit?.level === ADMIN_LEVEL);
+        console.log('adminUnit:', adminUnit);
+        if (!adminUnit) {
+          done(null, findUser);
+          return;
+        }
+        findUser.organizationId = parseInt(adminUnit.id);
+        const children = await getOrgChildren(parseInt(adminUnit.id), findUser).catch(err => []);
         findUser.children = children;
+        console.log('findUser:', findUser);
       }
 
       done(null, findUser);
