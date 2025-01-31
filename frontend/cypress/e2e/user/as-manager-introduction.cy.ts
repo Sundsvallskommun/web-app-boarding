@@ -68,7 +68,7 @@ describe('Employee introduction as manager', () => {
         fulfilmentStatus: 'TRUE',
         updatedBy: 'ann01che',
       };
-      cy.intercept('PATCH', '**/api/employee-checklists/**/tasks/**', updateFulfilmentStatusResponse).as('hej');
+      cy.intercept('PATCH', '**/api/employee-checklists/**/tasks/**', updateFulfilmentStatusResponse);
     });
     cy.get('h1').should('contain', 'Introduktion för Elon New Employee-One');
     cy.get('[data-cy="radio-button-group"]').should('exist');
