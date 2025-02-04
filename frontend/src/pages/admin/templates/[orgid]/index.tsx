@@ -99,16 +99,15 @@ export const OrgTemplate: React.FC = () => {
                     .sort((a, b) => b.version - a.version)
                     .map((template) => <TemplateCard orgId={orgid} template={template} key={template.id} />)
                 : <div>
-                    <p>Inga aktiva mallar</p>
+                    <p>Det finns ingen mall för {data?.organizationName}</p>
                     {editable(orgid, user) ?
                       <Button
-                        size="lg"
-                        className="mt-8 ml-24"
+                        size="md"
+                        className="mt-8"
                         data-cy={`create-template-button`}
                         leftIcon={<LucideIcon name="plus" />}
-                        variant="tertiary"
-                        showBackground={false}
-                        color="info"
+                        variant="primary"
+                        showBackground={true}
                         onClick={onCreateTemplate}
                       >
                         {t('templates:create.title')}

@@ -249,58 +249,28 @@ export const EditTemplate = () => {
         <LoaderFullScreen />
       : <div className="flex w-full">
           <div className="w-full pt-40">
-            <h2 data-cy="template-name" className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">
-              {capitalize(data?.displayName || '')}
-            </h2>
+            <div className="flex justify-between items-center mb-24">
+              <h2 data-cy="template-name" className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">
+                {capitalize(data?.displayName || '')}
+              </h2>
+              <div className="flex gap-40 mb-24 text-small">
+                <div>
+                  <span>{t('templates:properties.updated')}</span> {dayjs(data?.updated).format('YYYY-MM-DD, HH:mm')}
+                </div>
+              </div>
+            </div>
             {loaded && (
               <>
                 <div>
-                  <div className="flex gap-40 mb-24 text-small">
-                    <div>
-                      <span className="font-bold">{t('templates:properties.updated_by')}</span> {lastSavedByName} (
-                      {data?.lastSavedBy}) {dayjs(data?.updated).format('YYYY-MM-DD, HH:mm')}
-                    </div>
-                    <div>
-                      <span className="font-bold">{t('templates:properties.version')}</span> {data?.version}
-                    </div>
-                  </div>
                   <div className="flex justify-between items-center">
                     <MenuBar current={currentView} className="w-full">
                       <MenuBar.Item data-cy={`template-menu-bar-item-0`}>
-                        <Button onClick={() => setCurrentView(0)}>Chef</Button>
+                        <Button onClick={() => setCurrentView(0)}>Aktiviteter för chef</Button>
                       </MenuBar.Item>
                       <MenuBar.Item data-cy={`template-menu-bar-item-1`}>
-                        <Button onClick={() => setCurrentView(1)}>Anställd</Button>
+                        <Button onClick={() => setCurrentView(1)}>Aktiviteter för medarbetare</Button>
                       </MenuBar.Item>
                     </MenuBar>
-                    <Label
-                      className="mx-md"
-                      color={
-                        data?.lifeCycle === 'ACTIVE' ? 'gronsta'
-                        : data?.lifeCycle === 'CREATED' ?
-                          'vattjom'
-                        : 'juniskar'
-                      }
-                    >
-                      {data?.lifeCycle === 'ACTIVE' ?
-                        t('templates:active')
-                      : data?.lifeCycle === 'CREATED' ?
-                        t('templates:created')
-                      : t('templates:deprecated')}
-                    </Label>
-                    {data?.lifeCycle === 'CREATED' ?
-                      <Button size="sm" color="vattjom" onClick={onActivate}>
-                        {t('templates:activate.confirm')}
-                      </Button>
-                    : (
-                      templateVersioningEnabled &&
-                      data?.lifeCycle === 'ACTIVE' &&
-                      orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
-                    ) ?
-                      <Button size="sm" color="vattjom" onClick={onNewVersion}>
-                        {t('templates:new_version.confirm')}
-                      </Button>
-                    : null}
                   </div>
                   <div className="w-full rounded-16 bg-background-content shadow-custom border-divider pb-24">
                     {currentView === 0 ?
