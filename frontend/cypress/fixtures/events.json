@@ -1,0 +1,88 @@
+{
+  "data": {
+    "page": 0,
+    "limit": 25,
+    "count": 23,
+    "totalRecords": 23,
+    "totalPages": 1,
+    "eventList": [
+      {
+        "logKey": "d13d0582-0eb4-47f4-9133-47e08a2bb8c3",
+        "eventType": "UPDATE",
+        "municipalityId": "2281",
+        "message": "Uppgift Stäm av vad som inte fungerar ändrad i fas Uppföljning",
+        "owner": "Checklist",
+        "sourceType": "ChecklistEntity",
+        "created": "2025-02-04T08:39:40.999+01:00",
+        "metadata": [
+          {
+            "key": "UserId",
+            "value": "ann01adm"
+          }
+        ]
+      },
+      {
+        "logKey": "d13d0582-0eb4-47f4-9133-47e08a2bb8c3",
+        "eventType": "UPDATE",
+        "municipalityId": "2281",
+        "message": "Uppgift Gör det som ska göras första veckan ändrad i fas Första veckan",
+        "owner": "Checklist",
+        "sourceType": "ChecklistEntity",
+        "created": "2025-02-04T08:39:37.856+01:00",
+        "metadata": [
+          {
+            "key": "UserId",
+            "value": "ann01adm"
+          }
+        ]
+      },
+      {
+        "logKey": "d13d0582-0eb4-47f4-9133-47e08a2bb8c3",
+        "eventType": "UPDATE",
+        "municipalityId": "2281",
+        "message": "Uppgift Aktivera datorkonto ändrad i fas Första dagen",
+        "owner": "Checklist",
+        "sourceType": "ChecklistEntity",
+        "created": "2025-02-04T08:39:33.195+01:00",
+        "metadata": [
+          {
+            "key": "UserId",
+            "value": "ann01adm"
+          }
+        ]
+      },
+      {
+        "logKey": "d13d0582-0eb4-47f4-9133-47e08a2bb8c3",
+        "eventType": "UPDATE",
+        "municipalityId": "2281",
+        "message": "Uppgift Aktivera datorkonto ändrad i fas Första dagen",
+        "owner": "Checklist",
+        "sourceType": "ChecklistEntity",
+        "created": "2025-02-04T08:39:02.412+01:00",
+        "metadata": [
+          {
+            "key": "UserId",
+            "value": "ann01adm"
+          }
+        ]
+      },
+      {
+        "logKey": "d13d0582-0eb4-47f4-9133-47e08a2bb8c3",
+        "eventType": "DELETE",
+        "municipalityId": "2281",
+        "message": "Uppgift test bortplockad från fas Inför första dagen",
+        "owner": "Checklist",
+        "sourceType": "ChecklistEntity",
+        "created": "2025-02-03T15:54:39.61+01:00",
+        "metadata": [
+          {
+            "key": "UserId",
+            "value": "Okänd"
+          }
+        ]
+      }
+    ]
+  },
+  "status": 200,
+  "message": "success"
+}
