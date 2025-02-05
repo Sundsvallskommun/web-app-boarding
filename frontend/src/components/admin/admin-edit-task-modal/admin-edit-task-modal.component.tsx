@@ -11,7 +11,7 @@ import { findOrgInTree } from '@utils/find-org-in-tree';
 import { useCrudHelper } from '@utils/use-crud-helpers';
 import { useTranslation } from 'next-i18next';
 import router from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { shallow } from 'zustand/shallow';
@@ -33,11 +33,11 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
   const { refresh } = useTemplate(templateId);
   const { handleUpdate, handleCreate } = useCrudHelper('task');
   const toastMessage = useSnackbar();
-
+  const [textError, setTextError] = useState<string | null>(null);
   let formSchema = yup.object({
     heading: yup.string().min(1, t('task:errors.heading')).required(t('task:errors.heading')),
     headingReference: yup.string().optional(),
-    text: yup.string().optional(),
+    text: yup.string().optional().max(2048, t('task:errors.text')),
     sortOrder: yup.number().required(),
     roleType: yup
       .mixed<TaskUpdateRequest['roleType']>()
@@ -101,6 +101,13 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
   };
 
   const onSubmit: SubmitHandler<TaskUpdateRequest | TaskCreateRequest> = (data) => {
+    if (data.text && data.text.length > 2048) {
+      setTextError(t('task:text_length_error'));
+      return;
+    }
+
+    setTextError(null);
+
     if (task.id && task.id !== '') {
       handleUpdate(() => {
         return updateTask(orgid as string, templateId, phaseId, task.id, data as TaskUpdateRequest)
@@ -213,21 +220,33 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
             </FormControl>
           </Modal.Content>
 
-          <Modal.Footer className="justify-end">
-            <Button
-              data-cy="activity-cancel-button"
-              variant="secondary"
-              onClick={() => {
-                setValue('heading', task?.heading || '');
-                setValue('text', task?.text || '');
-                closeHandler();
-              }}
-            >
-              {t('common:cancel')}
-            </Button>
-            <Button data-cy="activity-save-button" type="submit" onClick={handleSubmit(onSubmit, onError)}>
-              {t('common:save')}
-            </Button>
+          <Modal.Footer className="flex justify-between items-center">
+            {errors.text ?
+              <FormErrorMessage className="text-error flex items-center">
+                <Icon size="1.5rem" name="info" className="mr-2" />
+                <p className="text-left">{errors.text?.message}</p>
+              </FormErrorMessage>
+            : <div className="invisible flex items-center">
+                <Icon size="1.5rem" name="info" className="mr-2" />
+                <p className="text-left">Placeholder text</p>
+              </div>
+            }
+            <div className="flex gap-4">
+              <Button
+                data-cy="activity-cancel-button"
+                variant="secondary"
+                onClick={() => {
+                  setValue('heading', task?.heading || '');
+                  setValue('text', task?.text || '');
+                  closeHandler();
+                }}
+              >
+                {t('common:cancel')}
+              </Button>
+              <Button data-cy="activity-save-button" type="submit" onClick={handleSubmit(onSubmit, onError)}>
+                {t('common:save')}
+              </Button>
+            </div>
           </Modal.Footer>
         </form>
       </FormProvider>
