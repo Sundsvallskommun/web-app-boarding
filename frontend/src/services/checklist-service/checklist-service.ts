@@ -233,9 +233,9 @@ export const removeMentor: (checklistId: string) => Promise<{ status: number }> 
     });
 };
 
-export const getEmployee: (username: string) => Promise<Employee> = async (username: string) => {
+export const getEmployeeByEmail: (email: string) => Promise<Employee> = async (email: string) => {
   return apiService
-    .get<ApiResponse<Employee>>(`/portalpersondata/personal/${username}`)
+    .get<ApiResponse<Employee>>(`/portalpersondata/${email}`)
     .then((response) => {
       return response.data.data;
     })
