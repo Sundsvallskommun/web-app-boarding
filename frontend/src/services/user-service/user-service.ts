@@ -76,5 +76,5 @@ export const useUserStore = createWithEqualityFn<State & Actions>()(
 );
 
 export const getMentorInitials = (name: string) => {
-  return capitalize(name[0]) + capitalize(name.split(' ')[1][0]);
+  return capitalize(name[0]) + capitalize(name.split(' ')[1]?.[0] ?? '');
 };
