@@ -33,7 +33,7 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
   let formSchema = yup.object({
     heading: yup.string().min(1, t('task:errors.heading')).required(t('task:errors.heading')),
     headingReference: yup.string().required(),
-    text: yup.string().required(),
+    text: yup.string().optional().max(2048, t('task:errors.text')),
     questionType: yup
       .mixed<CustomTaskUpdateRequest['questionType']>()
       .required()
@@ -123,25 +123,34 @@ export const EditTaskModal: React.FC<EditTaskModalProps> = (props) => {
             <FormControl className="w-full">
               <FormLabel className="mt-16">{t('task:text')}</FormLabel>
               <div data-cy="edit-activity-text">
-                <RichTextEditor containerLabel="text" value={text} onChange={onRichTextChange} />
+                <RichTextEditor containerLabel="text" value={text || ''} onChange={onRichTextChange} />
               </div>
             </FormControl>
           </Modal.Content>
 
-          <Modal.Footer className="justify-end">
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setValue('heading', task.heading);
-                setValue('text', task.text);
-                closeHandler();
-              }}
-            >
-              {t('common:cancel')}
-            </Button>
-            <Button data-cy="save-edited-activity" type="submit">
-              {t('common:save')}
-            </Button>
+          <Modal.Footer className="flex justify-between items-center">
+            <div className="flex gap-4">
+              <Button
+                data-cy="activity-cancel-button"
+                variant="secondary"
+                onClick={() => {
+                  setValue('heading', task?.heading || '');
+                  setValue('text', task?.text || '');
+                  closeHandler();
+                }}
+              >
+                {t('common:cancel')}
+              </Button>
+              <Button data-cy="save-edited-activity" type="submit">
+                {t('common:add')}
+              </Button>
+              {errors.text && (
+                <FormErrorMessage className="text-error flex items-center">
+                  <Icon size="1.5rem" name="info" className="mr-4 ml-2" />
+                  <p>{errors.text?.message}</p>
+                </FormErrorMessage>
+              )}
+            </div>
           </Modal.Footer>
         </form>
       </FormProvider>

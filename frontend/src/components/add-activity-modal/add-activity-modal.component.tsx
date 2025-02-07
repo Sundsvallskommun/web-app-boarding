@@ -15,16 +15,6 @@ import { CustomTaskCreateRequest } from '@data-contracts/backend/data-contracts'
 import ReactQuill from 'react-quill';
 import { useTranslation } from 'react-i18next';
 
-let formSchema = yup.object({
-  heading: yup.string().min(1, 'Du måste skriva en rubrik').required('Du måste skriva en rubrik'),
-  headingReference: yup.string(),
-  text: yup.string(),
-  questionType: yup.string(),
-  phaseId: yup.string().required('Du måste välja en fas'),
-  sortOrder: yup.number().required(),
-  createdBy: yup.string().required(),
-});
-
 export const AddActivityModal: React.FC = () => {
   const user = useUserStore((s) => s.user, shallow);
   const { data, refresh } = useChecklist();
@@ -32,6 +22,15 @@ export const AddActivityModal: React.FC = () => {
   const quillRef = useRef<ReactQuill>(null);
   const { t } = useTranslation();
 
+  let formSchema = yup.object({
+    heading: yup.string().min(1, 'Du måste skriva en rubrik').required('Du måste skriva en rubrik'),
+    headingReference: yup.string(),
+    text: yup.string().max(2048, t('task:errors.text')),
+    questionType: yup.string(),
+    phaseId: yup.string().required('Du måste välja en fas'),
+    sortOrder: yup.number().required(),
+    createdBy: yup.string().required(),
+  });
   const formControl = useForm({
     defaultValues: {
       heading: '',
@@ -160,19 +159,27 @@ export const AddActivityModal: React.FC = () => {
           </FormControl>
         </Modal.Content>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={closeHandler}>
-            {t('common:cancel')}
-          </Button>
-          <Button
-            data-cy="add-new-activity-button"
-            disabled={!phaseId || !heading}
-            onClick={() => {
-              onSubmit();
-            }}
-          >
-            {t('common:add')}
-          </Button>
+        <Modal.Footer className="flex justify-between items-center">
+          <div className="flex gap-4">
+            <Button variant="secondary" onClick={closeHandler}>
+              {t('common:cancel')}
+            </Button>
+            <Button
+              data-cy="add-new-activity-button"
+              disabled={!phaseId || !heading}
+              onClick={() => {
+                onSubmit();
+              }}
+            >
+              {t('common:add')}
+            </Button>
+            {errors.text && (
+              <FormErrorMessage className="text-error flex items-center">
+                <Icon size="1.5rem" name="info" className="mr-4 ml-2" />
+                <p>{errors.text?.message}</p>
+              </FormErrorMessage>
+            )}
+          </div>
         </Modal.Footer>
       </Modal>
     </div>

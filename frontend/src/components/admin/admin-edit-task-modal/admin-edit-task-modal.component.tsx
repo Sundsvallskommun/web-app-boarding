@@ -33,11 +33,10 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
   const { refresh } = useTemplate(templateId);
   const { handleUpdate, handleCreate } = useCrudHelper('task');
   const toastMessage = useSnackbar();
-
   let formSchema = yup.object({
     heading: yup.string().min(1, t('task:errors.heading')).required(t('task:errors.heading')),
     headingReference: yup.string().optional(),
-    text: yup.string().optional(),
+    text: yup.string().optional().max(2048, t('task:errors.text')),
     sortOrder: yup.number().required(),
     roleType: yup
       .mixed<TaskUpdateRequest['roleType']>()
@@ -213,21 +212,29 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
             </FormControl>
           </Modal.Content>
 
-          <Modal.Footer className="justify-end">
-            <Button
-              data-cy="activity-cancel-button"
-              variant="secondary"
-              onClick={() => {
-                setValue('heading', task?.heading || '');
-                setValue('text', task?.text || '');
-                closeHandler();
-              }}
-            >
-              {t('common:cancel')}
-            </Button>
-            <Button data-cy="activity-save-button" type="submit" onClick={handleSubmit(onSubmit, onError)}>
-              {t('common:save')}
-            </Button>
+          <Modal.Footer className="flex justify-between items-center">
+            <div className="flex gap-4">
+              <Button
+                data-cy="activity-cancel-button"
+                variant="secondary"
+                onClick={() => {
+                  setValue('heading', task?.heading || '');
+                  setValue('text', task?.text || '');
+                  closeHandler();
+                }}
+              >
+                {t('common:cancel')}
+              </Button>
+              <Button data-cy="activity-save-button" type="submit" onClick={handleSubmit(onSubmit, onError)}>
+                {t('common:add')}
+              </Button>
+              {errors.text && (
+                <FormErrorMessage className="text-error flex items-center">
+                  <Icon size="1.5rem" name="info" className="mr-4 ml-2" />
+                  <p>{errors.text?.message}</p>
+                </FormErrorMessage>
+              )}
+            </div>
           </Modal.Footer>
         </form>
       </FormProvider>

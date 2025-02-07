@@ -1,6 +1,7 @@
 {
   "errors": {
-    "heading": "Du måste skriva en rubrik"
+    "heading": "Du måste skriva en rubrik",
+    "text": "Max antal tecken 2048. Inga bilder kan bifogas."
   },
   "create": {
     "title": "Lägg till aktivitet",
@@ -31,5 +32,5 @@
   "complete_by": "Slutför senast {{date}}",
   "of": "av",
   "fulfilled_by": "Markerad av {{user}}",
-  "manager_activity" : "Aktivitet vid anställning av chef"
+  "manager_activity": "Aktivitet vid anställning av chef"
 }
