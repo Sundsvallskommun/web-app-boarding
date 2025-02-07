@@ -7,7 +7,7 @@ import { Button, Checkbox, Label, PopupMenu } from '@sk-web-gui/react';
 import { shallow } from 'zustand/shallow';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import React, { useState } from 'react';
-import { EditTaskModal } from '@components/edit-task-modal/edit-task-modal.component';
+import { TaskModal, TaskModalProps } from '@components/task-modal/task-modal.component';
 import { useTranslation } from 'next-i18next';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
@@ -25,7 +25,6 @@ const isChecked = (fulfilmentStatus: string) => {
       return false;
   }
 };
-
 interface ActivityListItemProps {
   task: EmployeeChecklistTask;
   checklistId: string;
@@ -37,7 +36,16 @@ interface ActivityListItemProps {
 export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const user = useUserStore((s) => s.user, shallow);
   const { task, checklistId, currentView, isUserChecklist, managerUsername } = props;
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
+    mode: 'edit',
+    checklistId: 'checklistId',
+  });
+  const openModal = (props: Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>) => {
+    setModalProps(props);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => setIsModalOpen(false);
   const { t } = useTranslation();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { refresh: refreshChecklist } = useChecklist();
@@ -55,18 +63,13 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
     });
   };
 
-  const removeTask = () => {
-    removeCustomTask(checklistId, task.id).then(() => {
-      refreshChecklist();
-    });
-  };
-
-  const openHandler = () => {
-    setIsOpen(true);
-  };
-
-  const closeHandler = () => {
-    setIsOpen(false);
+  const removeTask = async () => {
+    try {
+      await removeCustomTask(checklistId, task.id);
+      await Promise.all([refreshChecklist(), refreshManagedChecklists(), refreshDelegatedChecklists()]);
+    } catch (error) {
+      console.error('Error removing task:', error);
+    }
   };
 
   return (
@@ -137,7 +140,9 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                         <PopupMenu.Item>
                           <Button
                             leftIcon={<Icon name="pen" />}
-                            onClick={() => openHandler()}
+                            onClick={() => {
+                              openModal({ mode: 'edit', checklistId: checklistId, task: task });
+                            }}
                             data-cy="edit-custom-activity-popup-menu-edit"
                           >
                             {t('common:edit')}
@@ -161,7 +166,15 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
           </div>
         </div>
       </div>
-      {isOpen && <EditTaskModal closeHandler={closeHandler} isOpen={isOpen} checklistId={checklistId} task={task} />}
+      {isModalOpen && (
+        <TaskModal
+          isModalOpen={isModalOpen}
+          closeModalHandler={closeModal}
+          mode="edit"
+          task={task}
+          checklistId={checklistId}
+        />
+      )}
     </div>
   );
 };
