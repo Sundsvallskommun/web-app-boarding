@@ -24,23 +24,24 @@ export const useUserInformation = (
   ]);
 
   const refresh = (_username: string) => {
+    if (!_username) return;
     setLoading(true);
-    _username &&
-      handleGetOne(() => getUser(_username))
-        .then((res) => {
-          if (res && _username && res.data) {
-            const newUser = { username: _username, name: res.data.givenname + ' ' + res.data.lastname };
-            const newData = [...data, newUser];
-            setData(newData);
-            setLoaded(true);
-            setLoading(false);
-          }
-        })
-        .catch(() => {
-          setData([]);
-          setLoaded(false);
+
+    handleGetOne(() => getUser(_username))
+      .then((res) => {
+        if (res && _username && res.data) {
+          const newUser = { username: _username, name: res.data.givenname + ' ' + res.data.lastname };
+          const newData = [...data, newUser];
+          setData(newData);
+          setLoaded(true);
           setLoading(false);
-        });
+        }
+      })
+      .catch(() => {
+        setData([]);
+        setLoaded(false);
+        setLoading(false);
+      });
   };
 
   const handleRefresh = () => {
