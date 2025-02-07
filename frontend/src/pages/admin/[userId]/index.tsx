@@ -66,7 +66,7 @@ export const CheckList: React.FC = () => {
                     </Breadcrumb>
                   </div>
 
-                  <h1 className="text-h1-md">
+                  <h1 data-cy="admin-introduction-title" className="text-h1-md">
                     {t('common:introduction_of')} {data?.employee?.firstName} {data?.employee?.lastName}
                   </h1>
 

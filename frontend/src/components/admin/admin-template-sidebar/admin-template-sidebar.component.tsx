@@ -22,7 +22,7 @@ export const AdminTemplateSidebar: React.FC<AdminTemplateSidebarProps> = (props)
           </Button>
         </MenuBar.Item>
         <MenuBar.Item className="w-full">
-          <Button className="w-full" onClick={() => setCurrent(1)}>
+          <Button data-cy="history-button" className="w-full" onClick={() => setCurrent(1)}>
             {t('templates:history')}
           </Button>
         </MenuBar.Item>
