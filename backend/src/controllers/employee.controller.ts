@@ -18,7 +18,7 @@ export class EmployeeController {
   private apiService = new ApiService();
 
   @Get('/portalpersondata/personal/:username')
-  @OpenAPI({ summary: 'Fetch employee' })
+  @OpenAPI({ summary: 'Fetch employee by username' })
   @ResponseSchema(EmployeeApiResponse)
   @UseBefore(authMiddleware)
   async getEmployeeData(@Req() req: RequestWithUser, @Param('username') username: string): Promise<ResponseData<PortalPersonData>> {
@@ -26,6 +26,20 @@ export class EmployeeController {
       throw new HttpException(400, 'Bad request');
     }
     const url = `employee/1.0/portalpersondata/PERSONAL/${username}`;
+    const res = await this.apiService.get<PortalPersonData>({ url }, req.user);
+    return { data: res.data, status: res.status, message: 'success' };
+  }
+
+  @Get('/portalpersondata/:email')
+  @OpenAPI({ summary: 'Fetch employee by email' })
+  @ResponseSchema(EmployeeApiResponse)
+  @UseBefore(authMiddleware)
+  async getEmployeeByEmail(@Req() req: RequestWithUser, @Param('email') email: string): Promise<ResponseData<PortalPersonData>> {
+    if (!req.user.username) {
+      throw new HttpException(400, 'Bad request');
+    }
+    const encodedEmail = encodeURIComponent(email);
+    const url = `employee/1.0/portalpersondata/${encodedEmail}`;
     const res = await this.apiService.get<PortalPersonData>({ url }, req.user);
     return { data: res.data, status: res.status, message: 'success' };
   }

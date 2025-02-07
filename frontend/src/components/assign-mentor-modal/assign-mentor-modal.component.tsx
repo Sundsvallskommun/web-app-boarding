@@ -1,5 +1,4 @@
-import { SearchEmployeeComponent } from '@components/search-employee/search-employee.component';
-import { Mentor } from '@data-contracts/backend/data-contracts';
+import { SearchEmployeeComponent, UserInformation } from '@components/search-employee/search-employee.component';
 import { assignMentor, removeMentor } from '@services/checklist-service/checklist-service';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
@@ -50,9 +49,9 @@ export const AssignMentorModal: React.FC = () => {
   };
 
   const onSubmit = () => {
-    fields.map((field: Mentor & { id: string }) => {
+    fields.map((field: UserInformation) => {
       data &&
-        assignMentor(data.id, { userId: field.userId, name: field.name }).then(() => {
+        assignMentor(data.id, { userId: field.userId, name: field.fullName }).then(() => {
           closeHandler();
         });
     });
