@@ -5,6 +5,7 @@ import { __DEV__ } from '@sk-web-gui/react';
 import { emptyUser } from './defaults';
 import { ServiceResponse } from '@interfaces/services';
 import { Employee, User } from '@data-contracts/backend/data-contracts';
+import { capitalize } from 'underscore.string';
 
 const handleSetUserResponse: (res: ApiResponse<User>) => User = (res) => ({
   name: res.data.name,
@@ -73,3 +74,7 @@ export const useUserStore = createWithEqualityFn<State & Actions>()(
     { enabled: __DEV__ }
   )
 );
+
+export const getMentorInitials = (name: string) => {
+  return capitalize(name[0]) + capitalize(name.split(' ')[1]?.[0] ?? '');
+};
