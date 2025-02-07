@@ -8,7 +8,6 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import { getEmployeeDepartment } from '@utils/get-employee-department';
-import { capitalize } from 'underscore.string';
 
 let formSchema = yup.object({
   userId: yup.string().required(),
@@ -110,7 +109,7 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
               <div className="mt-24" key={index}>
                 <div className="flex justify-between mb-8 px-2">
                   <div className="flex gap-8">
-                    <Avatar rounded initials={f.userId ? capitalize(f.userId[0]) + capitalize(f.userId[5]) : 'NN'} />
+                    <Avatar rounded initials={f.firstName[0] + f.lastName[0] ?? ''} />
                     <div>
                       <p className="m-0 p-0 text-small">
                         {f.firstName} {f.lastName} ({f.userId})
