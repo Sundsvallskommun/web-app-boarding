@@ -36,9 +36,11 @@
     "confirm": "Skapa ny version",
     "error": "Det gick inte att skapa en ny version av mallen."
   },
-  "higher_level_activities" : "Högre aktiviteter",
-  "go_to_template" : "Gå till mall",
-  "fetching_other_levels" : "Hämtar andra nivåer..",
-  "no_templates_available" : "Inga mallar tillgängliga",
-  "history" : "Historik"
+  "higher_level_activities": "Högre aktiviteter",
+  "go_to_template": "Gå till mall",
+  "fetching_other_levels": "Hämtar andra nivåer..",
+  "no_templates_available": "Inga mallar tillgängliga",
+  "history": "Historik",
+  "activities_for_boss": "Aktiviteter för chef",
+  "activities_for_employee": "Aktiviteter för medarbetare"
 }
