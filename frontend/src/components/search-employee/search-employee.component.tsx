@@ -109,7 +109,7 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
               <div className="mt-24" key={index}>
                 <div className="flex justify-between mb-8 px-2">
                   <div className="flex gap-8">
-                    <Avatar rounded initials={f.firstName[0] + f.lastName[0] ?? ''} />
+                    <Avatar rounded initials={f.firstName[0] + f.lastName[0]} />
                     <div>
                       <p className="m-0 p-0 text-small">
                         {f.firstName} {f.lastName} ({f.userId})
