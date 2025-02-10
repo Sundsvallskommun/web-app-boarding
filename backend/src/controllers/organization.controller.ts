@@ -2,13 +2,13 @@ import { OrganizationTree } from '@/data-contracts/mdviewer/data-contracts';
 import { HttpException } from '@/exceptions/HttpException';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import { hasOrgPermissions } from '@/middlewares/permissions.middleware';
-import { Organization, OrganizationCreateRequest } from '@/responses/checklist.response';
+import { Organization, OrganizationCreateRequest, OrganizationUpdateRequest } from '@/responses/checklist.response';
 import { OrganizationApiResponse, OrganizationsApiResponse, OrgTemplateApiResponse, OrgTreeApiResponse } from '@/responses/organization.response';
 import ApiService, { ApiResponse } from '@/services/api.service';
 import { APIS, MUNICIPALITY_ID } from '@config';
 import authMiddleware from '@middlewares/auth.middleware';
 import { Response } from 'express';
-import { Body, Controller, Get, Param, Post, Req, Res, UseBefore } from 'routing-controllers';
+import { Body, Controller, Get, Param, Patch, Post, Req, Res, UseBefore } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 @Controller()
@@ -178,5 +178,24 @@ export class OrganizationController {
     } catch (e) {
       throw new HttpException(e?.status || 500, e?.message || 'Internal server error');
     }
+  }
+
+  @Patch('/org/:orgId')
+  @OpenAPI({ summary: 'Update communication channels' })
+  @ResponseSchema(OrganizationsApiResponse)
+  @UseBefore(authMiddleware)
+  async updateCommunicationChannels(
+    @Req() req: RequestWithUser,
+    @Param('orgId') orgId: string,
+    @Body() data: OrganizationUpdateRequest,
+    @Res() response: Response<Organization>,
+  ): Promise<ApiResponse<Organization>> {
+    const { name } = req.user;
+    if (!name || !data.communicationChannels) {
+      throw new HttpException(400, 'Bad Request');
+    }
+
+    const url = `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/organizations/${orgId}`;
+    return await this.apiService.patch<Organization, OrganizationUpdateRequest>({ url, data }, req.user);
   }
 }
