@@ -40,7 +40,7 @@
   "go_to_template": "Gå till mall",
   "fetching_other_levels": "Hämtar andra nivåer..",
   "no_templates_available": "Inga mallar tillgängliga",
-  "history": "Ändringslogg"
+  "history": "Ändringslogg",
   "activities_for_manager": "Aktiviteter för chef",
   "activities_for_employee": "Aktiviteter för medarbetare"
 }
