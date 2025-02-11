@@ -51,6 +51,8 @@ import { EmployeeChecklist } from './responses/checklist.response';
 import { DelegatedEmployeeChecklistResponse } from '@/data-contracts/checklist/data-contracts';
 import { PortalPersonData } from './data-contracts/employee/data-contracts';
 import { getOrgChildren } from './services/organization.service';
+import { Organization } from './data-contracts/mdviewer/data-contracts';
+import { InternalRoleEnum } from './interfaces/users.interface';
 
 const SessionStoreCreate = SESSION_MEMORY ? createMemoryStore(session) : createFileStore(session);
 const sessionTTL = 4 * 24 * 60 * 60;
@@ -160,11 +162,21 @@ const samlStrategy = new Strategy(
     };
 
     try {
+      //
+      // This section assigns the user an organizationId that represents the topmost level
+      // in the part of the organization tree that the user is allowed to administrate.
+      //
+      // The user is also assigned a list of child organizations that the user is allowed to administrate.
+      // This are all children to the organizationId.
+      //
+      // For Sundsvalls kommun the organizationId is the level 2 organization.
+      // For other companies the organizationId is the level 1 organization.
+      //
       const findUser = {
         name: `${givenName} ${sn}`,
         firstName: givenName,
         lastName: sn,
-        username: username,
+        username,
         groups: appGroups,
         role: getRole(appGroups),
         permissions: { ...getPermissions(appGroups), isManager: await getIsManager() },
@@ -172,28 +184,85 @@ const samlStrategy = new Strategy(
         children: [],
       };
 
-      const employee = APIS.find(api => api.name === 'employee');
-      const url = `${employee.name}/${employee.version}/portalpersondata/PERSONAL/${username}`;
-      const res = await apiService.get<PortalPersonData>({ url }, findUser).catch(err => null);
-      if (res) {
-        const orgTree = res?.data.orgTree.split('¤');
-        const lastLevel = orgTree?.[orgTree.length - 1];
-        if (!lastLevel) {
-          done(null, findUser);
-          return;
-        }
-        const [level, orgId, orgName] = lastLevel.split('|');
-        findUser.organizationId = parseInt(orgId);
-        const children = await getOrgChildren(parseInt(orgId), findUser).catch(err => []);
-        findUser.children = children;
+      const employeeApi = APIS.find(api => api.name === 'employee');
+      const url = `${employeeApi.name}/${employeeApi.version}/portalpersondata/PERSONAL/${username}`;
+      const employeeRes: { data: PortalPersonData } | undefined = await apiService.get<PortalPersonData>({ url }, findUser).catch(err => {
+        logger.error(`Error fetching employee data: ${err.message || err}`);
+        return undefined;
+      });
+      logger.info(`Employee data: ${JSON.stringify(employeeRes.data)}`);
+
+      if (!employeeRes?.data?.companyId) {
+        logger.error('Error: Employee data not found or missing companyId.');
+        return done(null, findUser);
       }
 
-      done(null, findUser);
-    } catch (err) {
-      if (err instanceof HttpException && err?.status === 404) {
-        // Handle missing person form Citizen
+      const { companyId, orgTree } = employeeRes.data;
+      logger.debug(`companyId is: ${companyId}`);
+
+      const orgTreeChunks = orgTree?.split('¤') ?? [];
+      if (orgTreeChunks.length < 5) {
+        logger.error('Error: User organization does not contain 5 levels');
+        return done(null, findUser);
       }
-      done(err);
+
+      const userOrgs = orgTreeChunks.map(unit => {
+        const split = unit.split('|');
+        if (split.length !== 3) {
+          logger.warn(`Org unit string "${unit}" is malformed.`);
+          return { level: '', id: '', name: '' };
+        }
+        const [level, id, name] = split;
+        return { level, id, name };
+      });
+
+      if (companyId === 1) {
+        // User belongs to the Sundsvalls kommun organization tree,
+        // so the relevant admin level for department admins is level 2
+        logger.debug('User is in Sundsvalls kommun');
+        const userLevelTwo = userOrgs.find(unit => unit.level === '2');
+        if (!userLevelTwo) {
+          logger.error('Error: Could not find user level 2 organization');
+          return done(null, findUser);
+        }
+        findUser.organizationId = parseInt(userLevelTwo.id, 10);
+      } else {
+        // User is not in the Sundsvalls kommun organization tree,
+        // so the relevant admin level for department admins
+        // is level 1 (the company level)
+        logger.debug('User is not in Sundsvalls kommun');
+        const mdviewer = APIS.find(api => api.name === 'mdviewer');
+        const companyUrl = `${mdviewer.name}/${mdviewer.version}/${companyId}/company`;
+
+        const companyData: { data: Organization[] } | null = await apiService.get<Organization[]>({ url: companyUrl }, findUser).catch(err => {
+          logger.error(`Error fetching company data: ${err.message || err}`);
+          return null;
+        });
+
+        const userLevelOne = companyData?.data?.find(org => org.treeLevel === 1)?.orgId;
+        if (!userLevelOne) {
+          logger.error('Error: Could not find user level 1 organization');
+          return done(null, findUser);
+        }
+
+        findUser.organizationId = userLevelOne;
+      }
+
+      // Assign the list of children of the determined organizationId
+      const children = await getOrgChildren(findUser.organizationId, findUser).catch(err => {
+        logger.error(`Error fetching child organizations: ${err.message || err}`);
+        return [] as number[];
+      });
+      findUser.children = children;
+
+      logger.info(`Constructed user: ${JSON.stringify(findUser)}`);
+      return done(null, findUser);
+    } catch (err) {
+      if (err instanceof HttpException && err.status === 404) {
+        logger.warn('User not found in external service: 404');
+        return done(null, {});
+      }
+      return done(err);
     }
   },
 );

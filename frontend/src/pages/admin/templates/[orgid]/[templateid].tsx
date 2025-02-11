@@ -307,11 +307,12 @@ export const EditTemplate = () => {
                         t('templates:created')
                       : t('templates:deprecated')}
                     </Label>
-                    {data?.lifeCycle === 'CREATED' ?
+                    {editable(data, user) && data?.lifeCycle === 'CREATED' ?
                       <Button size="sm" color="vattjom" onClick={onActivate}>
                         {t('templates:activate.confirm')}
                       </Button>
                     : (
+                      editable(data, user) &&
                       templateVersioningEnabled &&
                       data?.lifeCycle === 'ACTIVE' &&
                       orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
