@@ -175,6 +175,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
                   : setValue('roleType', 'NEW_EMPLOYEE');
                 }
               }}
+              data-cy="role-type-checkbox"
             >
               {t('task:manager_activity')}
             </Checkbox>
