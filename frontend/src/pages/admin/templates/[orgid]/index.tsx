@@ -136,7 +136,7 @@ export const OrgTemplate: React.FC = () => {
               </div>
             )}
           </div>
-          {currentTemplates.length > 0 ?
+          {currentTemplates.length > 0 && editable(orgid, user) ?
             <div className="w-[240px]">
               <div className="flex gap-12 mb-12">
                 <p className="text-large">{t('templates:mail_posting.activate')}</p>
