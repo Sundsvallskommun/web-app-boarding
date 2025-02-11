@@ -106,6 +106,7 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
               <Button
                 data-cy={`table-row-button-${idx}`}
                 iconButton
+                variant="tertiary"
                 onClick={() => {
                   router.push(`./${checklist.employeeUsername}`);
                 }}
