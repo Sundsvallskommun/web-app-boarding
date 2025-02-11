@@ -276,7 +276,7 @@ export const EditTemplate = () => {
                           data-cy={`template-tabs-bar-button-0`}
                           onClick={() => setCurrentView(0)}
                         >
-                          {t('templates:activities_for_boss')}
+                          {t('templates:activities_for_manager')}
                         </Tabs.Button>
                         <Tabs.Content></Tabs.Content>
                       </Tabs.Item>
