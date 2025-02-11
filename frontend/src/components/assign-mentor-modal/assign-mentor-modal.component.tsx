@@ -7,7 +7,7 @@ import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Modal, useConfirm } from '@sk-web-gui/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { getMentorInitials, useUserStore } from '@services/user-service/user-service';
+import { getInitials, useUserStore } from '@services/user-service/user-service';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslation } from 'react-i18next';
 import { FormLabel } from '@sk-web-gui/forms';
@@ -86,7 +86,7 @@ export const AssignMentorModal: React.FC = () => {
         {data?.mentor ?
           <div className="flex justify-between mt-8">
             <div className="flex">
-              <Avatar initials={getMentorInitials(data?.mentor.name)} size="sm" rounded className="mr-8" />
+              <Avatar initials={getInitials(data?.mentor?.name)} size="sm" rounded className="mr-8" />
               <p>{`${data?.mentor?.name}`}</p>
             </div>
             {isManager && !isUserIntroduction && (
