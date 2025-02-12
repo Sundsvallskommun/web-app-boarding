@@ -13,7 +13,7 @@ import {
 } from '@services/template-service/template-service';
 import { getUser, useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
-import { Button, Label, MenuBar, useConfirm, useSnackbar, Tabs } from '@sk-web-gui/react';
+import { Button, Label, useConfirm, useSnackbar, Tabs } from '@sk-web-gui/react';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 import dayjs from 'dayjs';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -248,7 +248,7 @@ export const EditTemplate = () => {
       {loading || !data ?
         <LoaderFullScreen />
       : <div className="flex w-full">
-          <div className="w-full pt-40">
+          <div className="w-full pt-40 pb-40">
             <h2 data-cy="template-name" className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">
               {capitalize(data?.displayName || '')}
             </h2>
