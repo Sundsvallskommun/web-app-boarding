@@ -47,7 +47,7 @@ export const useUserInformation = (
   };
 
   useEffect(() => {
-    if (data.every((userInfo) => userInfo.username !== username)) {
+    if (username && data.every((userInfo) => userInfo.username !== username)) {
       setLoaded(false);
       setId(username);
       refresh(username);
