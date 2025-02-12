@@ -4,7 +4,7 @@
     "organizationName": "Org 2669",
     "organizationNumber": 2669,
     "checklists": [],
-    "communicationChannels": ["NO_COMMUNICATION"],
+    "communicationChannels": ["EMAIL"],
     "created": "2024-11-21T12:00:36.405963+01:00"
   },
   "message": "success"

@@ -142,6 +142,7 @@ export const OrgTemplate: React.FC = () => {
                 <p className="text-large">{t('templates:mail_posting.activate')}</p>
                 <div>
                   <Switch
+                    data-cy="communication-channel-switch"
                     defaultChecked={data.communicationChannels[0] === 'EMAIL'}
                     onChange={() =>
                       onSwitchCommunicationChannel(
