@@ -190,7 +190,7 @@ const samlStrategy = new Strategy(
         logger.error(`Error fetching employee data: ${err.message || err}`);
         return undefined;
       });
-      logger.info(`Employee data: ${JSON.stringify(employeeRes.data)}`);
+      logger.info(`Employee data: ${JSON.stringify(employeeRes?.data)}`);
 
       if (!employeeRes?.data?.companyId) {
         logger.error('Error: Employee data not found or missing companyId.');
