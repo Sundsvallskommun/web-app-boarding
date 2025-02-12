@@ -188,9 +188,9 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
               <FormLabel showRequired={false} className="mt-16">
                 {t('task:heading')}
               </FormLabel>
-              <Input {...register('heading')} data-cy="activity-heading-input" />
+              <Input {...register('heading')} data-cy="activity-heading" />
               {errors.heading && (
-                <FormErrorMessage className="text-error">
+                <FormErrorMessage className="text-error" data-cy="activity-heading-error">
                   <Icon size="1.5rem" name="info" /> {errors.heading?.message}
                 </FormErrorMessage>
               )}

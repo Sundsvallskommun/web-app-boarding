@@ -77,12 +77,13 @@ describe('Employee introduction as manager', () => {
     cy.intercept('POST', '**/api/employee-checklists/**/phases/**/customtasks', addCustomTaskResponse);
     cy.get('[data-cy="add-activity-button"]').should('exist').click();
     cy.get('[data-cy="add-activity-phase-select"]').should('exist').select('Om din anställning');
-    cy.get('[data-cy="add-activity-heading"]').should('exist').type('Ny aktivitet').clear();
-    cy.get('[data-cy="add-activity-text"]').should('exist').type('Beskrivning av ny aktivitet');
-    cy.get('[data-cy="add-activity-heading-error"]').should('exist').contains('Du måste skriva en rubrik');
-    cy.get('[data-cy="add-activity-heading"]').should('exist').type('Ny aktivitet');
-    cy.get('[data-cy="add-activity-heading-reference"]').should('exist').type('https://www.google.com');
-    cy.get('[data-cy="add-new-activity-button"]').contains('Lägg till').click();
+    cy.get('[data-cy="activity-heading"]').should('exist').type('Ny aktivitet').clear();
+    cy.get('[data-cy="activity-text"]').should('exist').type('Beskrivning av ny aktivitet');
+    cy.get('[data-cy="activity-save-button"]').contains('Lägg till').click();
+    cy.get('[data-cy="activity-heading-error"]').should('exist').contains('Du måste skriva en rubrik');
+    cy.get('[data-cy="activity-heading"]').should('exist').type('Ny aktivitet');
+    cy.get('[data-cy="activity-heading-reference"]').should('exist').type('https://www.google.com');
+    cy.get('[data-cy="activity-save-button"]').contains('Lägg till').click();
   });
 
   it('can edit and remove custom activity', () => {
@@ -94,10 +95,10 @@ describe('Employee introduction as manager', () => {
     cy.get('[data-cy="radio-button-employee-view"]').should('exist').click();
     cy.get('[data-cy="edit-custom-activity-popup-menu"]').should('exist').click();
     cy.get('[data-cy="edit-custom-activity-popup-menu-edit"]').should('exist').click();
-    cy.get('[data-cy="edit-activity-heading"]').should('exist').clear().type('Redigerad aktivitet');
-    cy.get('[data-cy="edit-activity-text"]').should('exist').type('Redigerad text');
-    cy.get('[data-cy="add-activity-heading-reference"]').should('exist').clear().type('https://www.google.se');
-    cy.get('[data-cy="save-edited-activity"]').should('exist').click();
+    cy.get('[data-cy="activity-heading"]').should('exist').clear().type('Redigerad aktivitet');
+    cy.get('[data-cy="activity-text"]').should('exist').clear().type('Redigerad text');
+    cy.get('[data-cy="activity-heading-reference"]').should('exist').clear().type('https://www.google.se');
+    cy.get('[data-cy="activity-save-button"]').should('exist').click();
 
     cy.get('[data-cy="edit-custom-activity-popup-menu"]').should('exist').click();
     cy.get('[data-cy="edit-custom-activity-popup-menu-remove"]').should('exist').click();
@@ -131,15 +132,15 @@ describe('Employee introduction as manager', () => {
 
     cy.get('[data-cy="delegated-to-0"]').should('exist').contains('anv01anv@example.com');
     cy.get('[data-cy="remove-delegation-icon-0"]').should('exist').click();
-    cy.get('button').contains('Ta bort').should('have.css', 'color', 'rgb(254, 226, 226)').click();
+    cy.get('button').contains('Ta bort').should('have.css', 'color', 'rgb(255, 255, 255)').click();
   });
 
   it('can add and remove mentor', () => {
     cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse).as('searchEmployee');
     cy.intercept('DELETE', '**/api/employee-checklists/**/mentor', removeAssignedMentorResponse);
     cy.get('[data-cy="remove-assigned-mentor-button"]').should('exist').click();
-    cy.get('button').contains('Ta bort').should('have.css', 'color', 'rgb(254, 226, 226)').click();
     cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroductionWithoutMentor);
+    cy.get('button').contains('Ta bort').should('have.css', 'color', 'rgb(255, 255, 255)').click();
     cy.intercept('PUT', '**/api/employee-checklists/**/mentor', assignMentorResponse);
 
     cy.get('[data-cy="add-mentor-button"]').should('have.text', 'Lägg till mentor').click();
