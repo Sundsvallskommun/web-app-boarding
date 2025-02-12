@@ -22,6 +22,7 @@ describe('Employee introduction as manager', () => {
     cy.intercept('GET', '**/api/employee-checklists/manager/ann01che', managedIntroductions);
     cy.intercept('GET', '**/api/employee-checklists/employee/ann01che', emptyEmployeeIntroduction);
     cy.intercept('GET', '**/api/employee-checklists/delegated-to/ann01che', emptyDelegatedIntroductions);
+    cy.intercept('GET', '**/api/portalpersondata/personal/ann01che', { fixture: 'employee-response.json' });
     cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroduction).as(
       'getEmployeeIntroductionAfterClick'
     );
@@ -53,7 +54,6 @@ describe('Employee introduction as manager', () => {
     cy.get('[data-cy="radio-button-employee-view"]').should('exist').click();
 
     cy.get('[data-cy="phase-menu-bar"]').contains('Om din anställning').should('exist');
-    cy.get('[data-cy="complete-all-activities"]').should('exist').check({ force: true });
 
     managerAsEmployeeIntroduction.data.phases[1].tasks.map((task) => {
       const updateFulfilmentStatusResponse = {
@@ -70,6 +70,7 @@ describe('Employee introduction as manager', () => {
       };
       cy.intercept('PATCH', '**/api/employee-checklists/**/tasks/**', updateFulfilmentStatusResponse);
     });
+    cy.get('[data-cy="complete-all-activities"]').should('exist').check({ force: true });
   });
 
   it('can add custom activity', () => {
