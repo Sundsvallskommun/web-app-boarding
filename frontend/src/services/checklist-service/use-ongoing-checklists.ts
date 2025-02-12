@@ -10,8 +10,7 @@ export const useOngoingChecklists = (
   currentPage: number,
   _pageSize: number,
   sortBy: string,
-  sortDirection: string,
-  searchTerm?: string
+  sortDirection: string
 ): {
   data: {
     checklists: OngoingEmployeeChecklist[];
@@ -28,7 +27,7 @@ export const useOngoingChecklists = (
   );
 
   const refresh = (query: string = '') => {
-    if (permissions.canViewAdmin && username) {
+    if ((permissions.canViewAdmin || permissions.canViewDepartment) && username) {
       setLoading(true);
       handleGetMany(() => getAllOngoingChecklists(currentPage, _pageSize, sortBy, sortDirection, query))
         .then((res) => {
