@@ -11,14 +11,14 @@ import {
   setSortorder,
   useTemplate,
 } from '@services/template-service/template-service';
-import { getUser, useUserStore } from '@services/user-service/user-service';
+import { useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
-import { Button, Label, MenuBar, useConfirm, useSnackbar, Tabs } from '@sk-web-gui/react';
+import { Button, Label, useConfirm, useSnackbar, Tabs } from '@sk-web-gui/react';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 import dayjs from 'dayjs';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { AdminTemplateSidebar } from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
@@ -36,7 +36,6 @@ export const EditTemplate = () => {
   const [currentView, setCurrentView] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [phaseId, setPhaseId] = useState<string>();
-  const [lastSavedByName, setLastSavedByName] = useState<string>('');
   const confirm = useConfirm();
   const toastMessage = useSnackbar();
   const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid as string, 10));
@@ -118,7 +117,7 @@ export const EditTemplate = () => {
 
     const newSortorder = getSortorder(checklist);
     await setSortorder(orgid as string, checklist.id, newSortorder);
-    await refresh(templateid as string);
+    refresh(templateid as string);
   }
 
   const moveUp = (task: Task, checklist: Checklist) => moveTask(task, checklist, -1);
@@ -131,8 +130,7 @@ export const EditTemplate = () => {
         t('templates:activate.title'),
         t('templates:activate.text'),
         t('templates:activate.confirm'),
-        t('common:cancel'),
-        'error'
+        t('common:cancel')
       )
       .then((confirmed) => {
         if (confirmed && data) {
@@ -229,17 +227,6 @@ export const EditTemplate = () => {
     [data]
   );
 
-  useEffect(() => {
-    if (!data?.lastSavedBy) {
-      setLastSavedByName('');
-    } else {
-      getUser(data?.lastSavedBy).then((user) => {
-        const name = `${user.data?.givenname || ''} ${user.data?.lastname || ''}`;
-        setLastSavedByName(name);
-      });
-    }
-  }, [data]);
-
   return (
     <AdminLayout
       title={`${t('common:title')} - ${t('common:admin')}`}
@@ -248,87 +235,69 @@ export const EditTemplate = () => {
       {loading || !data ?
         <LoaderFullScreen />
       : <div className="flex w-full">
-          <div className="w-full pt-40">
-            <h2 data-cy="template-name" className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">
-              {capitalize(data?.displayName || '')}
-            </h2>
-            {loaded && (
-              <>
-                <div>
-                  <div className="flex gap-40 mb-24 text-small">
-                    <div>
-                      <span className="font-bold">{t('templates:properties.updated_by')}</span> {lastSavedByName} (
-                      {data?.lastSavedBy}) {dayjs(data?.updated).format('YYYY-MM-DD, HH:mm')}
-                    </div>
-                    <div>
-                      <span className="font-bold">{t('templates:properties.version')}</span> {data?.version}
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <Tabs
-                      current={currentView}
-                      className="flex flex-col justify-center items-start"
-                      data-cy="template-tab-bar"
-                    >
-                      <Tabs.Item data-cy={`template-tabs-bar-item-0`}>
-                        <Tabs.Button
-                          className="w-full"
-                          data-cy={`template-tabs-bar-button-0`}
-                          onClick={() => setCurrentView(0)}
-                        >
-                          {t('templates:activities_for_manager')}
-                        </Tabs.Button>
-                        <Tabs.Content></Tabs.Content>
-                      </Tabs.Item>
+          <div className="pt-40 flex-1">
+            {data.lifeCycle === 'CREATED' && (
+              <div className="rounded-button bg-background-200 flex mb-40 justify-between p-12">
+                <p className="text-small">Du arbetar med ett utkast för mallen.</p>
 
-                      <Tabs.Item data-cy={`template-tabs-bar-item-1`}>
-                        <Tabs.Button
-                          className="w-full"
-                          data-cy={`template-tabs-bar-button-1`}
-                          onClick={() => setCurrentView(1)}
-                        >
-                          {t('templates:activities_for_employee')}
-                        </Tabs.Button>
-                        <Tabs.Content></Tabs.Content>
-                      </Tabs.Item>
-                    </Tabs>
-                    <Label
-                      className="mx-md"
-                      color={
-                        data?.lifeCycle === 'ACTIVE' ? 'gronsta'
-                        : data?.lifeCycle === 'CREATED' ?
-                          'vattjom'
-                        : 'juniskar'
-                      }
-                    >
-                      {data?.lifeCycle === 'ACTIVE' ?
-                        t('templates:active')
-                      : data?.lifeCycle === 'CREATED' ?
-                        t('templates:created')
-                      : t('templates:deprecated')}
-                    </Label>
-                    {editable(data, user) && data?.lifeCycle === 'CREATED' ?
-                      <Button size="sm" color="vattjom" onClick={onActivate}>
-                        {t('templates:activate.confirm')}
-                      </Button>
-                    : (
-                      editable(data, user) &&
-                      templateVersioningEnabled &&
-                      data?.lifeCycle === 'ACTIVE' &&
-                      orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
-                    ) ?
-                      <Button size="sm" color="vattjom" onClick={onNewVersion}>
-                        {t('templates:new_version.confirm')}
-                      </Button>
-                    : null}
-                  </div>
-                  <div className="w-full rounded-16 bg-background-content shadow-custom border-divider pb-24">
-                    {currentView === 0 ?
-                      data && filteredTasks(data, [RoleType.MANAGER_FOR_NEW_EMPLOYEE, RoleType.MANAGER_FOR_NEW_MANAGER])
-                    : data && filteredTasks(data, [RoleType.NEW_EMPLOYEE, RoleType.NEW_MANAGER])}
-                  </div>
-                </div>
-              </>
+                {editable(data, user) && data?.lifeCycle === 'CREATED' ?
+                  <Button size="md" onClick={onActivate}>
+                    {t('templates:activate.confirm')}
+                  </Button>
+                : (
+                  editable(data, user) &&
+                  templateVersioningEnabled &&
+                  orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
+                ) ?
+                  <Button size="sm" color="vattjom" onClick={onNewVersion}>
+                    {t('templates:new_version.confirm')}
+                  </Button>
+                : null}
+              </div>
+            )}
+            <div className="w-full flex">
+              <h2 data-cy="template-name" className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">
+                {capitalize(data?.displayName || '')}
+              </h2>
+              <Label
+                className="mx-md my-xs"
+                color={data?.lifeCycle === 'ACTIVE' ? 'gronsta' : 'tertiary'}
+                inverted
+                rounded
+              >
+                {data?.lifeCycle === 'ACTIVE' ?
+                  t('templates:active')
+                : data?.lifeCycle === 'CREATED' ?
+                  t('templates:created')
+                : t('templates:deprecated')}
+              </Label>
+            </div>
+            {loaded && (
+              <div>
+                <p className="text-small mb-40">
+                  {t('templates:properties.updated')} {dayjs(data?.updated).format('YYYY-MM-DD, HH:mm')}
+                </p>
+                <Tabs current={currentView} className="items-start" data-cy="template-tab-bar">
+                  <Tabs.Item data-cy={`template-tabs-bar-item-0`}>
+                    <Tabs.Button data-cy={`template-tabs-bar-button-0`} onClick={() => setCurrentView(0)}>
+                      {t('templates:activities_for_manager')}
+                    </Tabs.Button>
+                    <Tabs.Content className="w-full rounded-16 bg-background-content shadow-custom border-divider pb-24">
+                      {data &&
+                        filteredTasks(data, [RoleType.MANAGER_FOR_NEW_EMPLOYEE, RoleType.MANAGER_FOR_NEW_MANAGER])}
+                    </Tabs.Content>
+                  </Tabs.Item>
+
+                  <Tabs.Item data-cy={`template-tabs-bar-item-1`}>
+                    <Tabs.Button data-cy={`template-tabs-bar-button-1`} onClick={() => setCurrentView(1)}>
+                      {t('templates:activities_for_employee')}
+                    </Tabs.Button>
+                    <Tabs.Content className="rounded-16 bg-background-content shadow-custom border-divider pb-24">
+                      {data && filteredTasks(data, [RoleType.NEW_EMPLOYEE, RoleType.NEW_MANAGER])}
+                    </Tabs.Content>
+                  </Tabs.Item>
+                </Tabs>
+              </div>
             )}
           </div>
           <AdminTemplateSidebar currentView={currentView} />
