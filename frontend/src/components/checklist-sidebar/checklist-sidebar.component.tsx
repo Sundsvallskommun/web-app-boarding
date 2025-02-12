@@ -3,7 +3,7 @@ import { DelegateMultipleChecklistsModal } from '@components/delegate-checklists
 import { removeDelegation } from '@services/checklist-service/checklist-service';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
-import { useUserStore } from '@services/user-service/user-service';
+import { getInitials, useUserStore } from '@services/user-service/user-service';
 import { Avatar } from '@sk-web-gui/avatar';
 import Divider from '@sk-web-gui/divider';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
@@ -12,6 +12,7 @@ import React, { useCallback, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useDelegatedUsers } from '@services/user-service/use-delegated-user';
 
 interface ChecklistSidebarProps {
   isUserChecklist: boolean;
@@ -25,6 +26,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
 
   const { refresh, data } = useChecklist();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
+  const { data: delegatedUsers } = useDelegatedUsers(data?.delegatedTo ?? []);
 
   const methods = useForm();
   const { t } = useTranslation();
@@ -94,13 +96,20 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
           <div className="my-8">
             <strong>{t('checklists:delegated_employees')}</strong>
 
-            {data?.delegatedTo?.length &&
+            {data?.delegatedTo?.length ?
               data.delegatedTo?.map((email, index) => {
                 return (
                   <div data-cy={`delegated-to-${index}`} key={index} className="flex justify-between mb-16 mt-8">
-                    <div>
-                      <Avatar size="sm" className="mr-4" rounded /> {email}
-                    </div>
+                    {delegatedUsers?.map((delegated, index) => {
+                      if (delegated.email === email) {
+                        return (
+                          <div key={`delegated-user-${index}`}>
+                            <Avatar size="sm" className="mr-8" initials={getInitials(delegated.name)} rounded />
+                            {delegated.name}
+                          </div>
+                        );
+                      }
+                    })}
 
                     {isManager && !isUserChecklist && (
                       <Button
@@ -116,7 +125,8 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
                     )}
                   </div>
                 );
-              })}
+              })
+            : null}
 
             {!data?.delegatedTo?.length && isUserChecklist && <p className="pb-8">{t('delegation:no_assignments')}</p>}
 

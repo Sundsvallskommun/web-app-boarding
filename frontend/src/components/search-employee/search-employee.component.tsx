@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { getEmployee } from '@services/checklist-service/checklist-service';
+import { getEmployeeByEmail } from '@services/checklist-service/checklist-service';
 import { Avatar, Button, SearchField } from '@sk-web-gui/react';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { FormLabel } from '@sk-web-gui/forms';
-import { Mentor } from '@data-contracts/backend/data-contracts';
 import { useFieldArray, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -18,20 +17,23 @@ interface SearchEmployeeComponentProps {
   multiple: boolean;
 }
 
-interface UserForm {
+export interface UserInformation {
   userId: string;
-  name: string;
+  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  orgTree: string;
 }
 
 export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = ({ multiple }) => {
-  const { control } = useFormContext<{ recipients: UserForm[] }>();
+  const { control } = useFormContext<{ recipients: UserInformation[] }>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'recipients',
   });
   const [notFound, setNotFound] = useState<boolean>(false);
-  const [searchResult, setSearchResult] = useState<{ userId: string; name: string; email: string; orgTree: string }>();
+  const [searchResult, setSearchResult] = useState<UserInformation>();
   const { register, getValues, setValue, trigger } = useForm({
     resolver: yupResolver(formSchema),
     defaultValues: {
@@ -44,11 +46,13 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
   const onSearchHandler = () => {
     setNotFound(false);
 
-    getEmployee(getValues('userId'))
+    getEmployeeByEmail(getValues('userId'))
       .then((res) => {
         setSearchResult({
-          userId: getValues('userId'),
-          name: `${res.givenname} ${res.lastname}`,
+          userId: res.loginName.split('\\')[1],
+          fullName: `${res.givenname} ${res.lastname}`,
+          firstName: `${res.givenname}`,
+          lastName: `${res.lastname}`,
           email: res.email,
           orgTree: res.orgTree,
         });
@@ -62,7 +66,7 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
     <div>
       {!fields.length || multiple ?
         <div>
-          <FormLabel>{fields.length || multiple ? '' : t('common:search_by_username')}</FormLabel>
+          <FormLabel>{fields.length || multiple ? '' : t('common:search_by_email')}</FormLabel>
           <SearchField
             data-cy="search-employee-input"
             {...register('userId')}
@@ -83,7 +87,7 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
       {searchResult ?
         <div className="border-1 border-divider rounded-button p-16 my-16" data-cy="search-result-card">
           <p>
-            <strong>{searchResult.name}</strong> ({searchResult.userId})
+            <strong>{searchResult.fullName}</strong> ({searchResult.userId})
           </p>
           <p>{searchResult.email}</p>
           <p>{getEmployeeDepartment(searchResult.orgTree)}</p>
@@ -100,15 +104,15 @@ export const SearchEmployeeComponent: React.FC<SearchEmployeeComponentProps> = (
         </div>
       : fields.length ?
         <div className="my-16">
-          {fields.map((f: Mentor & { id: string; email: string }, index: number) => {
+          {fields.map((f, index: number) => {
             return (
               <div className="mt-24" key={index}>
                 <div className="flex justify-between mb-8 px-2">
                   <div className="flex gap-8">
-                    <Avatar rounded />
+                    <Avatar rounded initials={f.firstName[0] + f.lastName[0]} />
                     <div>
                       <p className="m-0 p-0 text-small">
-                        {f.name} ({f.userId})
+                        {f.firstName} {f.lastName} ({f.userId})
                       </p>
                       <p className="text-small">{f.email}</p>
                     </div>

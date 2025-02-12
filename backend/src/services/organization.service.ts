@@ -1,9 +1,8 @@
 import { APIS, MUNICIPALITY_ID } from '@/config';
-import { Organization, OrganizationTree } from '@/data-contracts/mdviewer/data-contracts';
-import ApiService from './api.service';
+import { OrganizationTree } from '@/data-contracts/mdviewer/data-contracts';
 import { ClientUser } from '@/interfaces/users.interface';
-import { Checklist } from '@/data-contracts/checklist/data-contracts';
 import { OrganizationApiResponse } from '@/responses/organization.response';
+import ApiService from './api.service';
 
 export const getOrgChildren = async (orgId: number, user): Promise<number[]> => {
   const apiService = new ApiService();

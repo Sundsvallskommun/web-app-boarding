@@ -1,10 +1,9 @@
 import { OrgTree } from '@data-contracts/backend/data-contracts';
 import { useOrgTree } from '@services/organization-service';
-import { MenuIndex } from '@sk-web-gui/menu-vertical/dist/types/menu-vertical-context';
-import { MenuVertical } from '@sk-web-gui/react';
+import { MenuVertical, MenuIndex } from '@sk-web-gui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface OrganizationMenuProps {
   searchValue: string;
@@ -12,7 +11,7 @@ interface OrganizationMenuProps {
 
 export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue }) => {
   const [current, setCurrent] = useState<MenuIndex>();
-  const { data, loaded } = useOrgTree([2669, 2725, 13]);
+  const { data } = useOrgTree([2669, 2725, 13]);
   const router = useRouter();
 
   useEffect(() => {

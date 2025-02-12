@@ -72,7 +72,7 @@ export const DelegateMultipleChecklistsModal: React.FC<DelegateMultipleChecklist
         <Modal.Content>
           <p>{t('delegation:assign_introduction_description')}</p>
 
-          <FormLabel>{t('common:search_by_username')}</FormLabel>
+          <FormLabel>{t('common:search_by_email')}</FormLabel>
           <SearchEmployeeComponent multiple={true} />
         </Modal.Content>
 
