@@ -19,26 +19,20 @@ import { managerAsEmployeeIntroduction } from '../../fixtures/manager-as-employe
 describe('Employee introduction as manager', () => {
   beforeEach(() => {
     cy.intercept('GET', '**/api/me', { fixture: 'me-manager.json' });
-    cy.intercept('GET', '**/api/employee-checklists/manager/ann01che', managedIntroductions);
     cy.intercept('GET', '**/api/employee-checklists/employee/ann01che', emptyEmployeeIntroduction);
     cy.intercept('GET', '**/api/employee-checklists/delegated-to/ann01che', emptyDelegatedIntroductions);
     cy.intercept('GET', '**/api/portalpersondata/personal/**', { fixture: 'employee-response.json' });
-    cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroduction).as(
-      'getEmployeeIntroductionAfterClick'
-    );
+    cy.intercept('GET', '**/api/employee-checklists/manager/ann01che', managedIntroductions);
     cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse).as('searchEmployee');
+    cy.intercept('GET', '**/api/portalpersondata/**', searchEmployeeResponse);
+    cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroduction).as(
+      'getEmployeeIntroduction'
+    );
 
     cy.viewport('macbook-15');
     cy.visit('http://localhost:3000');
     cy.get('[data-cy="managed-checklists-table"]').should('exist');
     cy.get('[data-cy="table-row-button-0"]').should('exist').click();
-    cy.wait('@getEmployeeIntroductionAfterClick', { timeout: 10000 }).then((interception) => {
-      if (interception) {
-        cy.log('Request intercepted:', interception);
-      } else {
-        cy.log('Request not intercepted');
-      }
-    });
   });
 
   it('shows manager introduction correctly', () => {
@@ -59,9 +53,9 @@ describe('Employee introduction as manager', () => {
     cy.get('h1').should('contain', 'Introduktion för Elon New Employee-One');
     cy.get('[data-cy="radio-button-group"]').should('exist');
     cy.get('[data-cy="radio-button-employee-view"]').should('exist').click();
-    
+
     cy.get('[data-cy="phase-menu-bar"]').contains('Om din anställning').should('exist');
-    
+
     managerAsEmployeeIntroduction.data.phases[1].tasks.map((task) => {
       const updateFulfilmentStatusResponse = {
         id: task.id,
@@ -138,31 +132,32 @@ describe('Employee introduction as manager', () => {
 
     cy.get('[data-cy="search-employee-input"]').should('not.exist');
 
-    cy.get('[data-cy="delegated-to-0"]').should('exist').contains('anv01anv@example.com');
+    cy.get('[data-cy="delegated-to-0"]').should('exist').contains('Användare Användarsson');
     cy.get('[data-cy="remove-delegation-icon-0"]').should('exist').click();
     cy.get('button').contains('Ta bort').should('have.css', 'color', 'rgb(255, 255, 255)').click();
   });
 
   it('can add and remove mentor', () => {
-    cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse).as('searchEmployee');
-    cy.intercept('DELETE', '**/api/employee-checklists/**/mentor', removeAssignedMentorResponse);
+    cy.wait('@getEmployeeIntroduction');
     cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroductionWithoutMentor).as(
-      'getEmployeeIntroductionWithoutMentor'
+      'getIntroductionWithoutMentor'
     );
-    cy.intercept('PUT', '**/api/employee-checklists/**/mentor', assignMentorResponse);
-
+    cy.intercept(
+      'DELETE',
+      '**/api/employee-checklists/bbbbbbbb-aaaa-aaaa-aaaa-aaaaaaaaaaaa/mentor',
+      removeAssignedMentorResponse
+    );
+    cy.intercept('PUT', '**/api/employee-checklists/bbbbbbbb-aaaa-aaaa-aaaa-aaaaaaaaaaaa/mentor', assignMentorResponse);
     cy.get('[data-cy="remove-assigned-mentor-button"]').should('exist').click();
-    cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroductionWithoutMentor);
     cy.get('button').contains('Ta bort').should('have.css', 'color', 'rgb(255, 255, 255)').click();
-    cy.intercept('PUT', '**/api/employee-checklists/**/mentor', assignMentorResponse);
+    cy.wait('@getIntroductionWithoutMentor');
+
     cy.get('[data-cy="add-mentor-button"]').should('have.text', 'Lägg till mentor').click();
     cy.get('[data-cy="search-employee-input"]').should('exist').type('anv01anv');
     cy.get('button').contains('Sök').click();
-    cy.wait('@searchEmployee');
     cy.get('[data-cy="add-search-result-button"]').should('exist').should('have.text', 'Lägg till').click();
-
-    cy.get('[data-cy="assign-mentor-button"]').should('exist').click();
-
-    cy.get('[data-cy="search-employee-input"]').should('not.exist');
+    cy.get('[data-cy="assign-mentor-button"]').should('have.text', 'Lägg till').click();
+    cy.intercept('PUT', '**/api/employee-checklists/bbbbbbbb-aaaa-aaaa-aaaa-aaaaaaaaaaaa/mentor', assignMentorResponse);
+    cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroduction);
   });
 });
