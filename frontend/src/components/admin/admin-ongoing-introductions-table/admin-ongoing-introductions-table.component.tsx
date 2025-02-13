@@ -39,8 +39,7 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
     currentPage,
     pageSize,
     sortColumn,
-    sortOrder === 'ascending' ? 'ASC' : 'DESC',
-    searchTerm
+    sortOrder === 'ascending' ? 'ASC' : 'DESC'
   );
 
   const onChangeHandler = (event: React.BaseSyntheticEvent) => {
