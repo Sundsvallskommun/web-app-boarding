@@ -3,6 +3,7 @@ import { Card, Label } from '@sk-web-gui/react';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
+import React from 'react';
 
 interface TemplateCardProps {
   template: Template;
@@ -11,6 +12,7 @@ interface TemplateCardProps {
 
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template, orgId }) => {
   const { t } = useTranslation();
+
   return (
     <Link href={`/admin/templates/${orgId}/${template.id}`} passHref legacyBehavior>
       <Card
@@ -22,23 +24,21 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, orgId }) =
       >
         <Card.Body>
           <Card.Header>
-            <h3 className="text-h3-sm md:text-h3-md xl:text-h3-lg mb-8">{template.displayName}</h3>
+            <h3 className="text-h3-sm md:text-h3-md xl:text-h3-lg mb-12">{template.displayName}</h3>
           </Card.Header>
-          <Card.Text className="flex flex-col gap-8">
-            <ul className="flex flex-col gap-8 text-dark-secondary">
-              <li>
-                <span className="font-bold">{`${t('templates:properties.updated')}:`}</span>
-                {` ${dayjs(template.updated).format('D MMM YYYY')}`}
-              </li>
+          <Card.Text className="flex flex-col">
+            <ul className="flex text-dark-secondary">
               <li>
                 <Label
                   className="mr-md"
                   color={
                     template?.lifeCycle === 'ACTIVE' ? 'gronsta'
                     : template?.lifeCycle === 'CREATED' ?
-                      'vattjom'
+                      'tertiary'
                     : ''
                   }
+                  inverted
+                  rounded
                 >
                   {template?.lifeCycle === 'ACTIVE' ?
                     t('templates:active')
@@ -46,21 +46,15 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, orgId }) =
                     t('templates:created')
                   : t('templates:deprecated')}
                 </Label>
-                <span className="font-bold">{`${t('templates:properties.version')}:`}</span>
-                {` ${template.version}`}
+              </li>
+              <li>
+                <span className="text-small">
+                  {t('templates:properties.updated')} {` ${dayjs(template.updated).format('D MMM YYYY, HH.mm')}`}
+                </span>
               </li>
             </ul>
-            <Label rounded color="tertiary" inverted className="grow-0 w-fit">
-              {t('templates:count_activities', {
-                count: template.phases.reduce(
-                  (accumulator, currentPhase) => accumulator + (currentPhase?.tasks?.length || 0),
-                  0
-                ),
-              })}
-            </Label>
           </Card.Text>
         </Card.Body>
-        <Card.Meta>asdf</Card.Meta>
       </Card>
     </Link>
   );

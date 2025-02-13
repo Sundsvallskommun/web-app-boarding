@@ -13,12 +13,12 @@ import {
 } from '@services/template-service/template-service';
 import { getUser, useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
-import { Button, Label, MenuBar, useConfirm, useSnackbar } from '@sk-web-gui/react';
+import { Button, Label, MenuBar, useConfirm, useSnackbar, Tabs } from '@sk-web-gui/react';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 import dayjs from 'dayjs';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { AdminTemplateSidebar } from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
@@ -265,14 +265,33 @@ export const EditTemplate = () => {
                     </div>
                   </div>
                   <div className="flex justify-between items-center">
-                    <MenuBar current={currentView} className="w-full">
-                      <MenuBar.Item data-cy={`template-menu-bar-item-0`}>
-                        <Button onClick={() => setCurrentView(0)}>Chef</Button>
-                      </MenuBar.Item>
-                      <MenuBar.Item data-cy={`template-menu-bar-item-1`}>
-                        <Button onClick={() => setCurrentView(1)}>Anställd</Button>
-                      </MenuBar.Item>
-                    </MenuBar>
+                    <Tabs
+                      current={currentView}
+                      className="flex flex-col justify-center items-start"
+                      data-cy="template-tab-bar"
+                    >
+                      <Tabs.Item data-cy={`template-tabs-bar-item-0`}>
+                        <Tabs.Button
+                          className="w-full"
+                          data-cy={`template-tabs-bar-button-0`}
+                          onClick={() => setCurrentView(0)}
+                        >
+                          {t('templates:activities_for_manager')}
+                        </Tabs.Button>
+                        <Tabs.Content></Tabs.Content>
+                      </Tabs.Item>
+
+                      <Tabs.Item data-cy={`template-tabs-bar-item-1`}>
+                        <Tabs.Button
+                          className="w-full"
+                          data-cy={`template-tabs-bar-button-1`}
+                          onClick={() => setCurrentView(1)}
+                        >
+                          {t('templates:activities_for_employee')}
+                        </Tabs.Button>
+                        <Tabs.Content></Tabs.Content>
+                      </Tabs.Item>
+                    </Tabs>
                     <Label
                       className="mx-md"
                       color={
@@ -288,11 +307,12 @@ export const EditTemplate = () => {
                         t('templates:created')
                       : t('templates:deprecated')}
                     </Label>
-                    {data?.lifeCycle === 'CREATED' ?
+                    {editable(data, user) && data?.lifeCycle === 'CREATED' ?
                       <Button size="sm" color="vattjom" onClick={onActivate}>
                         {t('templates:activate.confirm')}
                       </Button>
                     : (
+                      editable(data, user) &&
                       templateVersioningEnabled &&
                       data?.lifeCycle === 'ACTIVE' &&
                       orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0

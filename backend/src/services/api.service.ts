@@ -3,7 +3,7 @@ import { HttpException } from '@exceptions/HttpException';
 import { ClientUser } from '@interfaces/users.interface';
 import { apiURL } from '@utils/util';
 import { logger } from '@utils/logger';
-import axios, { AxiosError, AxiosInstance, AxiosInterceptorManager, AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import ApiTokenService from './api-token.service';
 
 export class ApiResponse<T> {
@@ -73,7 +73,7 @@ class ApiService {
       ...config,
       maxContentLength: Infinity,
       maxBodyLength: Infinity,
-      headers: { ...config.headers, sentbyuser: user.username },
+      headers: { ...config.headers, 'x-issuer': user.username },
       params: { ...defaultParams, ...config.params },
       url: config.baseURL ? config.url : apiURL(config.url),
     };

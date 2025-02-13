@@ -70,6 +70,23 @@ export const createOrganization = (orgData: OrganizationCreateRequest) => {
   });
 };
 
+export const updateCommunicationChannels = (orgId: string, orgName: string, communicationChannel: string) => {
+  if (!orgId || !orgName || !communicationChannel) {
+    throw new Error('Missing required organization data.');
+  }
+
+  const orgData = {
+    organizationName: orgName,
+    communicationChannels: [communicationChannel],
+  };
+
+  return apiService.patch<ApiResponse<Organization>>(`/org/${orgId}`, orgData).then((res) => {
+    if (res) {
+      return res.data.data;
+    }
+  });
+};
+
 interface OrgTreeStore {
   data: Record<number, OrgTree>;
   setData: (data: Record<number, OrgTree>) => void;
@@ -161,7 +178,7 @@ export const useOrgTemplates = (orgid: number) => {
   );
   const { data: orgTree } = useOrgTree();
 
-  useEffect(() => {
+  const refresh = (_orgid: number) => {
     setData(undefined);
     setLoaded(false);
     setLoading(true);
@@ -189,7 +206,13 @@ export const useOrgTemplates = (orgid: number) => {
         }
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    if (orgid !== data?.organizationNumber) {
+      refresh(orgid);
+    }
   }, [orgid]);
 
-  return { data, loaded, loading };
+  return { data, loaded, loading, refresh };
 };

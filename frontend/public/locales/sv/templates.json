@@ -11,7 +11,7 @@
   "count_activities_one": "{{count}} aktivitet",
   "count_activities_other": "{{count}} aktiviteter",
   "properties": {
-    "updated": "Senast ändrad",
+    "updated": "Uppdaterad",
     "updated_by": "Senast ändrad av",
     "version": "Version"
   },
@@ -36,9 +36,19 @@
     "confirm": "Skapa ny version",
     "error": "Det gick inte att skapa en ny version av mallen."
   },
-  "higher_level_activities" : "Högre aktiviteter",
-  "go_to_template" : "Gå till mall",
-  "fetching_other_levels" : "Hämtar andra nivåer..",
-  "no_templates_available" : "Inga mallar tillgängliga",
-  "history" : "Historik"
+  "related_templates": "Relaterade mallar",
+  "go_to_template": "Gå till mall",
+  "fetching_other_levels": "Hämtar andra nivåer..",
+  "no_templates_available": "Inga mallar tillgängliga",
+  "history": "Ändringslogg",
+  "activities_for_manager": "Aktiviteter för chef",
+  "activities_for_employee": "Aktiviteter för medarbetare",
+  "no_org_template" : "Det finns ingen mall för {{org}}",
+  "mail_posting": {
+    "activate" : "Aktivera mailutskick",
+    "activate_information" : "Mallen måste publiceras innan du kan aktivera mailutskicket.",
+    "activate_error" : "Det gick inte att aktivera mailutskick",
+    "activate_success" : "Mailutskick aktiverades för {{org}}",
+    "deactivate_success" : "Mailutskick avaktiverades för {{org}}"
+  }
 }

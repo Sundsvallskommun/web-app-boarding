@@ -24,7 +24,9 @@ export const useUserInformation = (
   ]);
 
   const refresh = (_username: string) => {
+    if (!_username) return;
     setLoading(true);
+
     handleGetOne(() => getUser(_username))
       .then((res) => {
         if (res && _username && res.data) {

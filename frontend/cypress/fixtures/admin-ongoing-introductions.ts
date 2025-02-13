@@ -3,7 +3,7 @@ export const adminOngoingIntroductions = {
     checklists: [
       {
         employeeName: 'Employee One',
-        employeeUsername: 'man00man',
+        employeeUsername: 'man01man',
         managerName: 'Man Manager',
         departmentName: 'Department One',
         delegatedTo: [],
@@ -12,7 +12,7 @@ export const adminOngoingIntroductions = {
       },
       {
         employeeName: 'Employee Two',
-        employeeUsername: 'man00man',
+        employeeUsername: 'man01man',
         managerName: 'Man Manager',
         departmentName: 'Department One',
         delegatedTo: [],
@@ -21,7 +21,7 @@ export const adminOngoingIntroductions = {
       },
       {
         employeeName: 'Employee Three',
-        employeeUsername: 'man00man',
+        employeeUsername: 'man01man',
         managerName: 'Man Manager',
         departmentName: 'Department One',
         delegatedTo: [],
@@ -46,7 +46,7 @@ export const adminOngoingIntroductionsSearchResponse = {
     checklists: [
       {
         employeeName: 'Employee Two',
-        employeeUsername: 'man00man',
+        employeeUsername: 'man01man',
         managerName: 'Man Manager',
         departmentName: 'Department One',
         delegatedTo: [],

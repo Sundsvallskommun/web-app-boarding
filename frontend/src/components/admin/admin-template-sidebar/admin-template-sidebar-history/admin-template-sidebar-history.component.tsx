@@ -24,6 +24,7 @@ export const AdminTemplateSidebarHistory: React.FC = () => {
           templateHistory?.eventList?.map((event, index) => {
             return (
               <div
+                data-cy={`history-event-${index}`}
                 key={`history-event-${index}`}
                 className={
                   'first:mt-lg relative pb-md px-md flex flex-col gap-sm' +

@@ -1,5 +1,4 @@
-import { SearchEmployeeComponent } from '@components/search-employee/search-employee.component';
-import { Mentor } from '@data-contracts/backend/data-contracts';
+import { SearchEmployeeComponent, UserInformation } from '@components/search-employee/search-employee.component';
 import { assignMentor, removeMentor } from '@services/checklist-service/checklist-service';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
@@ -8,7 +7,7 @@ import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Modal, useConfirm } from '@sk-web-gui/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useUserStore } from '@services/user-service/user-service';
+import { getInitials, useUserStore } from '@services/user-service/user-service';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslation } from 'react-i18next';
 import { FormLabel } from '@sk-web-gui/forms';
@@ -50,9 +49,9 @@ export const AssignMentorModal: React.FC = () => {
   };
 
   const onSubmit = () => {
-    fields.map((field: Mentor & { id: string }) => {
+    fields.map((field: UserInformation) => {
       data &&
-        assignMentor(data.id, { userId: field.userId, name: field.name }).then(() => {
+        assignMentor(data.id, { userId: field.userId, name: field.fullName }).then(() => {
           closeHandler();
         });
     });
@@ -87,7 +86,7 @@ export const AssignMentorModal: React.FC = () => {
         {data?.mentor ?
           <div className="flex justify-between mt-8">
             <div className="flex">
-              <Avatar size="sm" rounded className="mr-8" />
+              <Avatar initials={getInitials(data?.mentor?.name)} size="sm" rounded className="mr-8" />
               <p>{`${data?.mentor?.name}`}</p>
             </div>
             {isManager && !isUserIntroduction && (

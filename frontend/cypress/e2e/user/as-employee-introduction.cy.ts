@@ -1,3 +1,4 @@
+import { searchEmployeeResponse } from 'cypress/fixtures/managed-introductions';
 import { emptyDelegatedIntroductions } from '../../fixtures/empty-introductions';
 import { managerAsEmployeeIntroduction } from '../../fixtures/manager-as-employee-introduction';
 
@@ -8,7 +9,6 @@ describe('Employee introduction as employee', () => {
     cy.intercept('GET', '**/api/employee-checklists/employee/ann01che', managerAsEmployeeIntroduction);
     cy.intercept('GET', '**/api/employee-checklists/delegated-to/ann01che', emptyDelegatedIntroductions);
     cy.intercept('GET', '**/api/portalpersondata/personal/ann01che', { fixture: 'employee-response.json' });
-
     cy.viewport('macbook-15');
     cy.visit('http://localhost:3000');
     cy.get('[data-cy="user-introduction"]').should('exist');
@@ -25,7 +25,7 @@ describe('Employee introduction as employee', () => {
     cy.get('[data-cy="sidebar"]').should('exist').contains(managerAsEmployeeIntroduction.data.employee.email);
     cy.get('[data-cy="sidebar"]').should('exist').contains(managerAsEmployeeIntroduction.data.startDate);
     cy.get('[data-cy="mentor-content"]').should('exist').contains('Det finns ingen tillagd mentor');
-    cy.get('[data-cy="delegated-to-content"]').should('not.exist');
+    cy.get('[data-cy="delegated-to-content"]').should('exist').contains('Det finns inga tilldelade medarbetare');
   });
 
   it('views phases and marks activities as done', () => {
