@@ -22,7 +22,7 @@ describe('Employee introduction as manager', () => {
     cy.intercept('GET', '**/api/employee-checklists/manager/ann01che', managedIntroductions);
     cy.intercept('GET', '**/api/employee-checklists/employee/ann01che', emptyEmployeeIntroduction);
     cy.intercept('GET', '**/api/employee-checklists/delegated-to/ann01che', emptyDelegatedIntroductions);
-    cy.intercept('GET', '**/api/portalpersondata/personal/ann01che', { fixture: 'employee-response.json' });
+    cy.intercept('GET', '**/api/portalpersondata/personal/**', { fixture: 'employee-response.json' });
     cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroduction).as(
       'getEmployeeIntroductionAfterClick'
     );
