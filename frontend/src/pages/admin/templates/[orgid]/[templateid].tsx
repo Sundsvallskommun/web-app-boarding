@@ -238,7 +238,7 @@ export const EditTemplate = () => {
           <div className="pt-40 flex-1">
             {data.lifeCycle === 'CREATED' && (
               <div className="rounded-button bg-background-200 flex mb-40 justify-between p-12">
-                <p className="text-small">Du arbetar med ett utkast för mallen.</p>
+                <p className="text-small">{t('templates:activate.draft_information')}</p>
 
                 {editable(data, user) && data?.lifeCycle === 'CREATED' ?
                   <Button size="md" onClick={onActivate}>
@@ -275,7 +275,7 @@ export const EditTemplate = () => {
             {loaded && (
               <div>
                 <p className="text-small mb-40">
-                  {t('templates:properties.updated')} {dayjs(data?.updated).format('YYYY-MM-DD, HH:mm')}
+                  {t('templates:properties.updated')} {dayjs(data?.updated).format('DD MMM YYYY, HH:mm')}
                 </p>
                 <Tabs current={currentView} className="items-start" data-cy="template-tab-bar">
                   <Tabs.Item data-cy={`template-tabs-bar-item-0`}>

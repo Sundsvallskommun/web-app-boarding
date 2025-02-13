@@ -28,7 +28,8 @@
     "title": "Publicera mall",
     "text": "Denna mall aktiveras och den tidigare aktiva mallen inaktiveras.",
     "confirm": "Publicera",
-    "error": "Det gick inte att publicera mallen."
+    "error": "Det gick inte att publicera mallen.",
+    "draft_information" : "Du arbetar med ett utkast för mallen."
   },
   "new_version": {
     "title": "Skapa ny version?",
