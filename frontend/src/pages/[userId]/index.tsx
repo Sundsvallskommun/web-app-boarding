@@ -1,4 +1,3 @@
-import { AddActivityModal } from '@components/add-activity-modal/add-activity-modal.component';
 import { ChecklistSidebar } from '@components/checklist-sidebar/checklist-sidebar.component';
 import DefaultLayout from '@layouts/default-layout/default-layout.component';
 import Main from '@layouts/main/main.component';
@@ -9,6 +8,7 @@ import { Spinner } from '@sk-web-gui/spinner';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { TaskModal, TaskModalProps } from '@components/task-modal/task-modal.component';
 import { useShallow } from 'zustand/react/shallow';
 import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,8 @@ import { IntroductionPhaseMenu } from '@components/common/introduction-phase-men
 import { IntroductionViewToggle } from '@components/common/introduction-view-toggle/introduction-view-toggle.component';
 import { IntroductionFulFillAllTasksCheckbox } from '@components/common/introduction-fulfill-all-tasks-checkbox/introduction-fulfill-all-tasks-checkbox.component';
 import { IntroductionActivityList } from '@components/common/introduction-activity-list/introduction-activity-list.component';
+import { Button } from '@sk-web-gui/react';
+import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 
 export const CheckList: React.FC = () => {
   const {
@@ -24,7 +26,17 @@ export const CheckList: React.FC = () => {
   } = useUserStore(useShallow((s) => s.user));
   const router = useRouter();
   const { query } = router;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
+    mode: 'add',
+    checklistId: '',
+  });
+  const openModal = (props: Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>) => {
+    setModalProps(props);
+    setIsModalOpen(true);
+  };
 
+  const closeModal = () => setIsModalOpen(false);
   const [currentPhase, setCurrentPhase] = useState<number>(0);
   const [currentView, setCurrentView] = useState<number>(0);
   const [isUserChecklist, setIsUserChecklist] = useState<boolean>(false);
@@ -69,7 +81,19 @@ export const CheckList: React.FC = () => {
                     <div className="flex gap-16 my-24 justify-between">
                       <IntroductionViewToggle currentView={currentView} setCurrentView={setCurrentView} />
 
-                      {(managedChecklists || delegatedChecklist) && <AddActivityModal />}
+                      {(managedChecklists || delegatedChecklist) && (
+                        <div>
+                          <Button
+                            variant="primary"
+                            color="vattjom"
+                            onClick={() => openModal({ mode: 'add', checklistId: data?.id })}
+                            inverted
+                            data-cy="add-activity-button"
+                          >
+                            <Icon name="plus" size="18px" /> {t('task:create.title')}
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   : null}
 
@@ -108,6 +132,7 @@ export const CheckList: React.FC = () => {
           </div>
         }
       </Main>
+      <TaskModal isModalOpen={isModalOpen} closeModalHandler={closeModal} {...modalProps} />
     </DefaultLayout>
   );
 };

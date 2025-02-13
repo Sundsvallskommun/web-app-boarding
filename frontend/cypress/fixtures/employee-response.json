@@ -1,0 +1,25 @@
+{
+  "data": {
+    "personid": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+    "givenname": "Test",
+    "lastname": "Personsson",
+    "fullname": "Personsson Test",
+    "address": "",
+    "postalCode": "",
+    "city": "",
+    "workPhone": "000-123456",
+    "mobilePhone": "0700000000",
+    "aboutMe": "Verksamhetsutvecklare inom HR och digital utveckling. Bitr. systemägare för kommunens HR-system och ansvarig för effektivisering och digital utveckling av de kommunövergripande HR-processerna.",
+    "email": "test.personsson@example.com",
+    "mailNickname": "test.personsson",
+    "company": "Sundsvalls kommun",
+    "companyId": 1,
+    "orgTree": "2|28|Kommunstyrelsekontoret¤3|440|KSK Avdelningar¤4|1196|KSK Avd HR¤5|1197|KSK Avd HR¤6|650|KSK Avd HR Stab",
+    "referenceNumber": "TEST123PERSON",
+    "isManager": false,
+    "loginName": "PERSONAL\\test123person",
+    "fullOrgTree": "1|13|Sundsvalls kommun¤2|28|Kommunstyrelsekontoret¤3|440|KSK Avdelningar¤4|1196|KSK Avd HR¤5|1197|KSK Avd HR¤6|650|KSK Avd HR Stab"
+  },
+  "status": 200,
+  "message": "success"
+}

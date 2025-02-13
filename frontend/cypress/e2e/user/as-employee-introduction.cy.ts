@@ -8,7 +8,7 @@ describe('Employee introduction as employee', () => {
     cy.intercept('GET', '**/api/employee-checklists/manager/ann01che', { fixture: 'managed-introductions.ts' });
     cy.intercept('GET', '**/api/employee-checklists/employee/ann01che', managerAsEmployeeIntroduction);
     cy.intercept('GET', '**/api/employee-checklists/delegated-to/ann01che', emptyDelegatedIntroductions);
-    cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse).as('searchEmployee');
+    cy.intercept('GET', '**/api/portalpersondata/personal/ann01che', { fixture: 'employee-response.json' });
     cy.viewport('macbook-15');
     cy.visit('http://localhost:3000');
     cy.get('[data-cy="user-introduction"]').should('exist');
