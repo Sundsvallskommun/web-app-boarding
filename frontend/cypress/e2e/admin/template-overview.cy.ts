@@ -11,6 +11,7 @@ describe('Uses the template overview', () => {
     cy.intercept('GET', '**/api/org/1/template', { fixture: 'templates-org-13.json' });
     cy.intercept('GET', '**/api/org/13/template', { fixture: 'templates-org-13.json' });
     cy.intercept('POST', '**/api/org/multiple/templates', { fixture: 'templates-empty.json' }).as('postTemplates');
+    cy.intercept('GET', '**/api/templates/4b955690-f49d-4116-8c94-6076d93c6303/events', { fixture: 'events.json' });
     cy.intercept('GET', '**/api/templates/4b955690-f49d-4116-8c94-6076d93c6303', {
       fixture: 'template-4b955690.json',
     });
@@ -27,7 +28,7 @@ describe('Uses the template overview', () => {
     cy.get('[data-cy="template-name"]').should('include.text', 'Grund för checklista');
     cy.get('[data-cy="template-tabs-bar-button-0"]').contains('Aktiviteter för chef').click();
     cy.get('[data-cy="phase-section-0"]').should('exist');
-    cy.get('[data-cy="phase-section-0"]').within(() => {
+    cy.get('[data-cy="phase-section-0"]').each(() => {
       cy.get('[data-cy="add-activity-button"]').should('exist');
       cy.get('[data-cy="task-heading"]')
         .contains('Du som chef ansvarar för introduktionen för din nya medarbetare')
@@ -40,7 +41,7 @@ describe('Uses the template overview', () => {
     cy.get('[data-cy="template-tabs-bar-button-1"]').contains('Aktiviteter för medarbetare').click();
     cy.get('[data-cy="phase-section-0"]').should('exist');
     cy.get('[data-cy="phase-section-1"]').should('exist');
-    cy.get('[data-cy="phase-section-1"]').within(() => {
+    cy.get('[data-cy="phase-section-1"]').each(() => {
       cy.get('[data-cy="add-activity-button"]').should('exist');
       cy.get('[data-cy="task-heading"]').contains('Den anställdes första dag').should('exist');
       cy.get('[data-cy="task-text"]').contains('Den anställdes första dag beskrivs här.').should('exist');
@@ -51,19 +52,17 @@ describe('Uses the template overview', () => {
     cy.visit('http://localhost:3000/admin/templates/13/4b955690-f49d-4116-8c94-6076d93c6303');
     cy.get('[data-cy="template-name"]').should('include.text', 'Grund för checklista');
     cy.get('[data-cy="template-tabs-bar-button-0"]').contains('Aktiviteter för chef').click();
-    cy.get('[data-cy="phase-section-0"]')
+    cy.get('[data-cy="phase-section-0"]').should('exist');
+    cy.get('[data-cy="activity-list-item-0"]')
       .should('exist')
+      .first()
       .within(() => {
-        cy.get('[data-cy="activity-list-item-0"]')
-          .should('exist')
-          .within(() => {
-            cy.get('[data-cy="task-menu-button"]').should('exist').click();
-            cy.get('[data-cy="activity-edit-button"]').should('exist').click();
-          });
+        cy.get('[data-cy="task-menu-button"]').should('exist').click();
+        cy.get('[data-cy="activity-edit-button"]').contains('Redigera').should('exist').click();
       });
     cy.get('[data-cy="edit-task-modal"]')
       .should('exist')
-      .within(() => {
+      .each(() => {
         cy.get('[data-cy="role-type-checkbox"]').should('exist').click({ force: true });
         cy.get('[data-cy="activity-heading-input"]').should('exist').clear().type('Updated heading');
         cy.get('[data-cy="activity-heading-reference-input"]').should('exist').clear().type('https://example.com');
@@ -89,15 +88,13 @@ describe('Uses the template overview', () => {
     cy.visit('http://localhost:3000/admin/templates/13/4b955690-f49d-4116-8c94-6076d93c6303');
     cy.get('[data-cy="template-name"]').should('include.text', 'Grund för checklista');
     cy.get('[data-cy="template-tabs-bar-button-0"]').contains('Aktiviteter för chef').click();
-    cy.get('[data-cy="phase-section-0"]')
+    cy.get('[data-cy="phase-section-0"]').should('exist');
+    cy.get('[data-cy="activity-list-item-0"]')
       .should('exist')
+      .first()
       .within(() => {
-        cy.get('[data-cy="activity-list-item-0"]')
-          .should('exist')
-          .within(() => {
-            cy.get('[data-cy="task-menu-button"]').should('exist').click();
-            cy.get('[data-cy="activity-remove-button"]').should('exist').click();
-          });
+        cy.get('[data-cy="task-menu-button"]').should('exist').click();
+        cy.get('[data-cy="activity-remove-button"]').should('exist').click();
       });
     cy.get('.sk-dialog-buttons').should('exist').contains('Ta bort').click();
     cy.wait('@removeTask').should(({ request }) => {

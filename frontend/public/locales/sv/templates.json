@@ -25,10 +25,11 @@
     "error": "Det gick inte att skapa mallen"
   },
   "activate": {
-    "title": "Aktivera mall?",
+    "title": "Publicera mall",
     "text": "Denna mall aktiveras och den tidigare aktiva mallen inaktiveras.",
-    "confirm": "Aktivera",
-    "error": "Det gick inte att aktivera mallen."
+    "confirm": "Publicera",
+    "error": "Det gick inte att publicera mallen.",
+    "draft_information" : "Du arbetar med ett utkast för mallen."
   },
   "new_version": {
     "title": "Skapa ny version?",

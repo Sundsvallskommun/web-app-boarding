@@ -110,7 +110,7 @@ export const OrgTemplate: React.FC = () => {
     >
       {loading || !data ?
         <LoaderFullScreen />
-      : <div className="mx-32 my-40 flex justify-between">
+      : <div className="my-40 flex justify-between">
           <div>
             <h2 className="text-h2-sm md:text-h2-md xl:text-h2-lg mb-40">{data?.organizationName}</h2>
             {loaded && (
@@ -137,11 +137,12 @@ export const OrgTemplate: React.FC = () => {
             )}
           </div>
           {currentTemplates.length > 0 && editable(orgid, user) ?
-            <div className="w-[240px]">
+            <div className="w-[240px] mr-32">
               <div className="flex gap-12 mb-12">
                 <p className="text-large">{t('templates:mail_posting.activate')}</p>
                 <div>
                   <Switch
+                    data-cy="communication-channel-switch"
                     defaultChecked={data.communicationChannels[0] === 'EMAIL'}
                     onChange={() =>
                       onSwitchCommunicationChannel(
@@ -155,7 +156,7 @@ export const OrgTemplate: React.FC = () => {
                 </div>
               </div>
               {currentTemplates[0].lifeCycle === 'CREATED' ?
-                <div className="flex p-10 bg-background-200 rounded">
+                <div className="flex p-10 bg-background-200 rounded-button">
                   <div>
                     <LucideIcon className="mr-6" size="2rem" name="info" color="vattjom" />
                   </div>
