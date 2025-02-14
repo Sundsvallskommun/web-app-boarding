@@ -148,7 +148,7 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
             data-cy="ongoing-introductions-table"
           >
             <Table.Header
-              className="bg-background-content border-1 border-b-inverted-secondary-outline-hover"
+              className="bg-background-content border-b-1 border-primary-darkest"
               data-cy="ongoing-introductions-table-header"
             >
               <Table.HeaderColumn aria-sort={sortColumn === 'employeeName' ? sortOrder : 'none'}>

@@ -64,7 +64,7 @@ export default function DefaultLayout({
         <PageHeader headerSubtitle={headerSubtitle} headerTitle={headerTitle || title} logoLinkHref={logoLinkHref} />
 
         <div className="main-container flex-grow relative w-full flex flex-col pt-20">
-          {pathname !== '/' && user.permissions.isManager ?
+          {pathname !== '/' && !pathname.includes('/admin') && user.permissions.isManager ?
             <div className="w-full">
               <Breadcrumb className="container ">
                 <Breadcrumb.Item>
