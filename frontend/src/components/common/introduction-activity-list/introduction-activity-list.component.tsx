@@ -7,10 +7,11 @@ interface IntroductionActivityListProps {
   currentPhase: number;
   currentView: number;
   isUserChecklist: boolean;
+  readOnly?: boolean;
 }
 
 export const IntroductionActivityList: React.FC<IntroductionActivityListProps> = (props) => {
-  const { data, currentPhase, currentView, isUserChecklist } = props;
+  const { data, currentPhase, currentView, isUserChecklist, readOnly = false } = props;
 
   return (
     <>
@@ -25,6 +26,7 @@ export const IntroductionActivityList: React.FC<IntroductionActivityListProps> =
                 currentView={currentView}
                 isUserChecklist={isUserChecklist}
                 managerUsername={data?.manager.username}
+                readOnly={readOnly}
               />
             );
           }
@@ -38,6 +40,7 @@ export const IntroductionActivityList: React.FC<IntroductionActivityListProps> =
                 currentView={currentView}
                 isUserChecklist={isUserChecklist}
                 managerUsername={data?.manager.username}
+                readOnly={readOnly}
               />
             );
           }

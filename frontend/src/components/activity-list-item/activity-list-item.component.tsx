@@ -31,11 +31,12 @@ interface ActivityListItemProps {
   currentView: number;
   isUserChecklist: boolean;
   managerUsername?: string;
+  readOnly?: boolean;
 }
 
 export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const user = useUserStore((s) => s.user, shallow);
-  const { task, checklistId, currentView, isUserChecklist, managerUsername } = props;
+  const { task, checklistId, currentView, isUserChecklist, managerUsername, readOnly } = props;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
     mode: 'edit',
@@ -84,6 +85,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
             onChange={() => {
               updateTaskFulfilment(task.fulfilmentStatus === 'TRUE' ? 'FALSE' : 'TRUE');
             }}
+            readOnly={readOnly}
           />
           <div className="pl-20 pr-80 w-full">
             <div className={task.fulfilmentStatus === 'TRUE' ? 'text-dark-disabled' : ''}>

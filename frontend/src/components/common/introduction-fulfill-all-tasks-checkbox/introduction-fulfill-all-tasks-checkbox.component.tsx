@@ -18,10 +18,11 @@ interface IntroductionFulFillAllTasksCheckboxProps {
   currentView: number;
   data: EmployeeChecklist;
   currentPhase: number;
+  readOnly?: boolean;
 }
 
 export const IntroductionFulFillAllTasksCheckbox: React.FC<IntroductionFulFillAllTasksCheckboxProps> = (props) => {
-  const { currentView, currentPhase, data } = props;
+  const { currentView, currentPhase, data, readOnly } = props;
   const { username } = useUserStore(useShallow((s) => s.user));
   const { t } = useTranslation();
 
@@ -56,13 +57,14 @@ export const IntroductionFulFillAllTasksCheckbox: React.FC<IntroductionFulFillAl
             countCompletedManagerTasks(data?.phases[currentPhase]) === countManagerTasks(data?.phases[currentPhase])
           : countCompletedEmployeeTasks(data?.phases[currentPhase]) === countEmployeeTasks(data?.phases[currentPhase])
         }
-        onClick={() =>
+        onChange={() =>
           updateAllTaskFulfillments(
             currentView === 0 ?
               countCompletedManagerTasks(data?.phases[currentPhase]) === countManagerTasks(data?.phases[currentPhase])
             : countCompletedEmployeeTasks(data?.phases[currentPhase]) === countEmployeeTasks(data?.phases[currentPhase])
           )
         }
+        readOnly={readOnly}
       />
       <span className="text-small">{t('task:mark_all_activities_as_completed')}</span>
     </div>
