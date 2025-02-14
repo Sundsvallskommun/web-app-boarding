@@ -31,9 +31,8 @@ export interface TaskModalProps {
 export const TaskModal: React.FC<TaskModalProps> = (props) => {
   const { closeModalHandler, isModalOpen, task, checklistId, mode } = props;
   const user = useUserStore((s) => s.user, shallow);
-  const { data, refresh } = useChecklist();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
-  const { refresh: refreshChecklist } = useChecklist();
+  const { data } = useChecklist();
   const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
   const [richText, setRichText] = useState<string>('');
   const quillRef = useRef<ReactQuill>(null);
@@ -115,19 +114,20 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
     }, 0);
   }, [isModalOpen, mode, task]);
 
+  const refreshAndClose = () => {
+    refreshManagedChecklists();
+    refreshDelegatedChecklists();
+    closeModalHandler();
+  };
+
   const onSubmit: SubmitHandler<CustomTaskCreateRequest | CustomTaskUpdateRequest> = async (data) => {
     try {
       if (mode === 'edit' && checklistId && task?.id) {
         await updateCustomTask(checklistId, task.id, data as CustomTaskUpdateRequest);
-        refreshManagedChecklists();
-        refreshChecklist();
-        refreshDelegatedChecklists();
-        closeModalHandler();
+        refreshAndClose();
       } else if (mode === 'add' && checklistId) {
         await addCustomTask(checklistId, getValues('phaseId') || '', user.username, data as CustomTaskCreateRequest);
-        refresh();
-        refreshManagedChecklists();
-        closeModalHandler();
+        refreshAndClose();
       }
     } catch (error) {
       console.error('Error during form submission:', error);
