@@ -13,11 +13,12 @@ import Breadcrumb from '@sk-web-gui/breadcrumb';
 import { capitalize } from 'underscore.string';
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { getChecklistAsEmployee, getChecklistsAsManager } from '@services/checklist-service/checklist-service';
-import { Tabs } from '@sk-web-gui/react';
+import { Tabs, useSnackbar } from '@sk-web-gui/react';
 
 export const CheckList: React.FC = () => {
   const router = useRouter();
   const { query } = router;
+  const toastMessage = useSnackbar();
 
   const [currentPhase, setCurrentPhase] = useState<number>(0);
   const [currentView, setCurrentView] = useState<number>(0);
@@ -27,16 +28,34 @@ export const CheckList: React.FC = () => {
   const [managerIntroduction, setManagerIntroduction] = useState<EmployeeChecklist>();
 
   useEffect(() => {
-    getChecklistAsEmployee(query?.userId as string).then((res) => {
-      setEmployeeIntroduction(res);
-    });
+    getChecklistAsEmployee(query?.userId as string)
+      .then((res) => {
+        setEmployeeIntroduction(res);
+      })
+      .catch(() => {
+        toastMessage({
+          position: 'bottom',
+          closeable: false,
+          message: t('crud:get_one.error', { resource: t('common:introduction_one') }),
+          status: 'error',
+        });
+      });
   }, [query.userId]);
 
   useEffect(() => {
     employeeIntroduction &&
-      getChecklistsAsManager(employeeIntroduction.manager.username).then((res) => {
-        setManagerIntroduction(res.filter((employee) => employee.employee.username === query?.userId)[0]);
-      });
+      getChecklistsAsManager(employeeIntroduction.manager.username)
+        .then((res) => {
+          setManagerIntroduction(res.filter((employee) => employee.employee.username === query?.userId)[0]);
+        })
+        .catch(() => {
+          toastMessage({
+            position: 'bottom',
+            closeable: false,
+            message: t('crud:get_one.error', { resource: t('common:introduction_one') }),
+            status: 'error',
+          });
+        });
   }, [employeeIntroduction]);
 
   const data = currentView === 0 ? managerIntroduction : employeeIntroduction;
