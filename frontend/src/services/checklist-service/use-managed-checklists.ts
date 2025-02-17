@@ -19,9 +19,9 @@ export const useManagedChecklists = (): {
   );
 
   const refresh = (managerUsername?: string) => {
-    if (permissions.isManager && username) {
+    if (managerUsername?.length) {
       setLoading(true);
-      handleGetMany(() => getChecklistsAsManager(username))
+      handleGetMany(() => getChecklistsAsManager(managerUsername))
         .then((res) => {
           if (res) {
             setData(res);
@@ -33,9 +33,9 @@ export const useManagedChecklists = (): {
           setLoaded(false);
           setLoading(false);
         });
-    } else if (managerUsername?.length) {
+    } else if (permissions.isManager && username) {
       setLoading(true);
-      handleGetMany(() => getChecklistsAsManager(managerUsername))
+      handleGetMany(() => getChecklistsAsManager(username))
         .then((res) => {
           if (res) {
             setData(res);

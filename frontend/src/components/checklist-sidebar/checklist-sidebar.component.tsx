@@ -69,7 +69,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
     data && (
       <div className="rounded bg-background-content border-1 border-divider py-24 px-24" data-cy="sidebar">
         <div className="flex gap-16">
-          <Avatar rounded initials={`${data.employee.firstName[0]}${data.employee.lastName[0]}`} />
+          <Avatar rounded initials={`${data.employee?.firstName[0]}${data.employee?.lastName[0]}`} />
           <div>
             <strong>{`${data.employee?.firstName} ${data.employee?.lastName} (${data.employee?.username})`}</strong>
             <p className="text-small my-0">{data.employee?.title ? data.employee?.title : ''}</p>
@@ -78,7 +78,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
 
         <div className="my-16">
           <strong>{t('common:email')}</strong>
-          <p className="m-0">{data.employee.email}</p>
+          <p className="m-0">{data.employee?.email}</p>
         </div>
 
         <div className="my-8">

@@ -46,8 +46,14 @@ export const CheckList: React.FC = () => {
   const { data: employeeChecklist, loaded } = useChecklist((query?.userId as string) || username);
   const { data: delegatedChecklists } = useDelegatedChecklists();
 
-  const managedChecklist = managedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];
-  const delegatedChecklist = delegatedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];
+  const managedChecklist = managedChecklists.filter(
+    (checklist) => checklist.employee.username === query?.userId && checklist.manager.username === username
+  )[0];
+
+  const delegatedChecklist = delegatedChecklists.filter(
+    (checklist) => checklist.employee.username === query?.userId
+  )[0];
+
   const data =
     currentView === 0 && managedChecklist ? managedChecklist
     : currentView === 0 && delegatedChecklist ? delegatedChecklist
