@@ -9,7 +9,7 @@ export default function AdminSidebar() {
   const [value, setValue] = useState<string>('');
 
   return (
-    <div className="w-[45rem] min-h-full bg-background-content shadow-100 pt-32 pb-24 px-20 flex flex-col gap-40">
+    <div className="max-w-[38rem] min-h-full bg-background-content shadow-100 pt-32 pb-24 px-20 flex flex-col gap-40">
       <nav className="flex flex-col gap-16">
         <h1 className="text-label-medium m-0">{capitalize(t('templates:name_other'))}</h1>
 
@@ -20,6 +20,7 @@ export default function AdminSidebar() {
           onReset={() => setValue('')}
           showSearchButton={false}
           placeholder={t('admin:search_orgtree')}
+          size="md"
         />
 
         <OrganizationMenu searchValue={value} />
