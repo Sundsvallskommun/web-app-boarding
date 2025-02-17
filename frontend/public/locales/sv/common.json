@@ -17,7 +17,7 @@
   "start": "start",
   "username": "Användarnamn",
   "search_by_username": "Sök på användarnamn",
-  "search_by_employee": "Sök på anställd",
+  "search_by_employee": "Sök på medarbetare",
   "search_by_email": "Sök på mailadress",
   "search_errors": {
     "not_found": "Sökningen gav ingen träff"

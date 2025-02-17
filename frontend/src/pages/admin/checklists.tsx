@@ -9,7 +9,9 @@ export const Admin: React.FC = () => {
   const { t } = useTranslation();
   return (
     <DefaultLayout title={`${t('common:title')} - ${t('common:admin')}`} logoLinkHref="/admin">
-      <h1 className="text-h2-sm md:text-h2-md xl:text-h2-lg">{capitalize(t('common:ongoing_introductions'))}</h1>
+      <h1 className="mb-40 mt-36 text-h2-sm md:text-h2-md xl:text-h2-lg">
+        {capitalize(t('common:ongoing_introductions'))}
+      </h1>
       <AdminOngoingIntroductionsTable />
     </DefaultLayout>
   );
