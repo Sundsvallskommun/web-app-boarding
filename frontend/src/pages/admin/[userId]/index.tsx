@@ -11,11 +11,11 @@ import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslation } from 'react-i18next';
 import { IntroductionPhaseMenu } from '@components/common/introduction-phase-menu/introduction-phase-menu.component';
-import { IntroductionViewToggle } from '@components/common/introduction-view-toggle/introduction-view-toggle.component';
 import { IntroductionFulFillAllTasksCheckbox } from '@components/common/introduction-fulfill-all-tasks-checkbox/introduction-fulfill-all-tasks-checkbox.component';
 import { IntroductionActivityList } from '@components/common/introduction-activity-list/introduction-activity-list.component';
 import Breadcrumb from '@sk-web-gui/breadcrumb';
 import { capitalize } from 'underscore.string';
+import { Tabs } from '@sk-web-gui/react';
 
 export const CheckList: React.FC = () => {
   const { username } = useUserStore(useShallow((s) => s.user));
@@ -44,7 +44,7 @@ export const CheckList: React.FC = () => {
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
         {!loaded ?
-          <Spinner />
+          <Spinner className="my-80 mx-auto" />
         : <div>
             {loaded && !data ?
               <h2>{t('common:no_introductions')}</h2>
@@ -70,35 +70,69 @@ export const CheckList: React.FC = () => {
                     {t('common:introduction_of')} {data?.employee?.firstName} {data?.employee?.lastName}
                   </h1>
 
-                  <div className="flex gap-16 mt-24 mb-40 justify-between">
-                    <IntroductionViewToggle currentView={currentView} setCurrentView={setCurrentView} />
-                  </div>
+                  <div className="flex gap-40 mt-40">
+                    <Tabs current={currentView}>
+                      <Tabs.Item>
+                        <Tabs.Button onClick={() => setCurrentView(0)}>
+                          {t('templates:activities_for_manager')}
+                        </Tabs.Button>
+                        <Tabs.Content className="w-full rounded bg-background-content border-1 border-divider">
+                          <div>
+                            <IntroductionPhaseMenu
+                              data={data}
+                              currentPhase={currentPhase}
+                              setCurrentPhase={setCurrentPhase}
+                              currentView={currentView}
+                            />
+                            <div className="py-24 px-40">
+                              <IntroductionFulFillAllTasksCheckbox
+                                currentView={currentView}
+                                currentPhase={currentPhase}
+                                data={data}
+                              />
 
-                  <div className="flex gap-40">
-                    <div className="w-full rounded bg-background-content border-1 border-divider">
-                      <IntroductionPhaseMenu
-                        data={data}
-                        currentPhase={currentPhase}
-                        setCurrentPhase={setCurrentPhase}
-                        currentView={currentView}
-                      />
-                      <div className="py-24 px-40">
-                        <IntroductionFulFillAllTasksCheckbox
-                          currentView={currentView}
-                          currentPhase={currentPhase}
-                          data={data}
-                        />
+                              <IntroductionActivityList
+                                data={data}
+                                currentView={currentView}
+                                currentPhase={currentPhase}
+                                isUserChecklist={true}
+                              />
+                            </div>
+                          </div>
+                        </Tabs.Content>
+                      </Tabs.Item>
 
-                        <IntroductionActivityList
-                          data={data}
-                          currentView={currentView}
-                          currentPhase={currentPhase}
-                          isUserChecklist={true}
-                        />
-                      </div>
-                    </div>
+                      <Tabs.Item>
+                        <Tabs.Button onClick={() => setCurrentView(1)}>
+                          {t('templates:activities_for_employee')}
+                        </Tabs.Button>
+                        <Tabs.Content className="w-full rounded bg-background-content border-1 border-divider">
+                          <IntroductionPhaseMenu
+                            data={data}
+                            currentPhase={currentPhase}
+                            setCurrentPhase={setCurrentPhase}
+                            currentView={currentView}
+                          />
 
-                    <div className="w-5/12">
+                          <div className="py-24 px-40">
+                            <IntroductionFulFillAllTasksCheckbox
+                              currentView={currentView}
+                              currentPhase={currentPhase}
+                              data={data}
+                            />
+
+                            <IntroductionActivityList
+                              data={data}
+                              currentView={currentView}
+                              currentPhase={currentPhase}
+                              isUserChecklist={true}
+                            />
+                          </div>
+                        </Tabs.Content>
+                      </Tabs.Item>
+                    </Tabs>
+
+                    <div className="pt-56 w-5/12">
                       <ChecklistSidebar isUserChecklist={true} />
                     </div>
                   </div>
@@ -123,6 +157,7 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
       'task',
       'mentor',
       'user',
+      'templates',
     ])),
   },
 });

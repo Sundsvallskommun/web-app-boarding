@@ -1,6 +1,5 @@
 import { EmployeeChecklistTask } from '@data-contracts/backend/data-contracts';
 import { removeCustomTask, updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
-import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import sanitized from '@services/sanitizer-service';
 import { useUserStore } from '@services/user-service/user-service';
 import { Button, Checkbox, Label, PopupMenu } from '@sk-web-gui/react';
@@ -9,8 +8,6 @@ import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import React, { useState } from 'react';
 import { TaskModal, TaskModalProps } from '@components/task-modal/task-modal.component';
 import { useTranslation } from 'next-i18next';
-import { useChecklist } from '@services/checklist-service/use-checklist';
-import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 import { useUserInformation } from '@services/user-service/use-user-information';
 
 const isChecked = (fulfilmentStatus: string) => {
@@ -31,11 +28,23 @@ interface ActivityListItemProps {
   currentView: number;
   isUserChecklist: boolean;
   managerUsername?: string;
+  refreshChecklist: () => void;
+  refreshManagedChecklists: (managerUsername?: string | undefined) => void;
+  refreshDelegatedChecklists: () => void;
 }
 
 export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const user = useUserStore((s) => s.user, shallow);
-  const { task, checklistId, currentView, isUserChecklist, managerUsername } = props;
+  const {
+    task,
+    checklistId,
+    currentView,
+    isUserChecklist,
+    managerUsername,
+    refreshChecklist,
+    refreshManagedChecklists,
+    refreshDelegatedChecklists,
+  } = props;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
     mode: 'edit',
@@ -47,9 +56,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   };
   const closeModal = () => setIsModalOpen(false);
   const { t } = useTranslation();
-  const { refresh: refreshManagedChecklists } = useManagedChecklists();
-  const { refresh: refreshChecklist } = useChecklist();
-  const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
+
   const { data: userInformation } = useUserInformation(task.updatedBy);
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
