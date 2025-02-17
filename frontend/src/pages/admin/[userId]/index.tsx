@@ -16,6 +16,7 @@ import { IntroductionActivityList } from '@components/common/introduction-activi
 import Breadcrumb from '@sk-web-gui/breadcrumb';
 import { capitalize } from 'underscore.string';
 import { Tabs } from '@sk-web-gui/react';
+import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 
 export const CheckList: React.FC = () => {
   const { username } = useUserStore(useShallow((s) => s.user));
@@ -26,8 +27,18 @@ export const CheckList: React.FC = () => {
   const [currentView, setCurrentView] = useState<number>(0);
   const { t } = useTranslation();
 
-  const { data: managedChecklists, refresh: refreshManagedChecklists } = useManagedChecklists();
-  const { data: employeeChecklist, loaded } = useChecklist((query?.userId as string) || username);
+  const { refresh: refreshManagedChecklists, data: managedChecklists } = useManagedChecklists();
+  const {
+    refresh: refreshChecklist,
+    data: employeeChecklist,
+    loaded,
+  } = useChecklist((query?.userId as string) || username);
+  const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
+
+  const refreshAllChecklists = async () => {
+    await refreshChecklist();
+    await refreshDelegatedChecklists();
+  };
 
   const managedChecklist = managedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];
   const data = currentView === 0 ? managedChecklist : employeeChecklist;
@@ -89,6 +100,7 @@ export const CheckList: React.FC = () => {
                                 currentView={currentView}
                                 currentPhase={currentPhase}
                                 data={data}
+                                refreshAllChecklists={refreshAllChecklists}
                               />
 
                               <IntroductionActivityList
@@ -119,6 +131,7 @@ export const CheckList: React.FC = () => {
                               currentView={currentView}
                               currentPhase={currentPhase}
                               data={data}
+                              refreshAllChecklists={refreshAllChecklists}
                             />
 
                             <IntroductionActivityList
