@@ -3,7 +3,6 @@ import {
   ChecklistApiResponse,
   ChecklistCreateRequest,
   Events,
-  Organization,
   OrganizationCreateRequest,
   OrgTree,
   Phase,
@@ -171,8 +170,8 @@ export const createTemplate: (
   }
 
   const templateData: ChecklistCreateRequest = {
-    name: `CHECKLIST_TEMPLATE_${orgName.replace(/\s/g, '_').toUpperCase()}`,
-    displayName: `Grund för checklista för ${orgName}`,
+    name: `CHECKLIST_TEMPLATE_${orgName.replace(/\s/g, '_').toUpperCase()}_${orgId}`,
+    displayName: `Mall för ${orgName}`,
     organizationNumber: parseInt(orgId, 10),
     createdBy: user.username,
   };
