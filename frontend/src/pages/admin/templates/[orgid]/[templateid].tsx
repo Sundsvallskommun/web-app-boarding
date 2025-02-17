@@ -242,8 +242,8 @@ export const EditTemplate = () => {
     >
       {loading || !data ?
         <LoaderFullScreen />
-      : <div className="flex w-full">
-          <div className="pt-40 flex-1">
+      : <div className="flex w-full h-full">
+          <div className="pt-40 flex-1 mb-20">
             {data.lifeCycle === 'CREATED' && (
               <div className="rounded-button bg-background-200 flex mb-40 justify-between p-12">
                 <p className="text-small">{t('templates:activate.draft_information')}</p>

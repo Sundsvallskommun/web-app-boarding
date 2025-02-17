@@ -30,6 +30,10 @@ export const AdminTemplateSidebarActivities: React.FC<AdminTemplateSidebarActivi
 
   useEffect(() => {
     const chain = getParentChain(orgTree, Number(orgid));
+    const treeLevels: Record<number, number> = {};
+    chain.forEach((org) => {
+      treeLevels[org.orgId] = org.treeLevel;
+    });
     getOrgTemplates(
       Number(orgid),
       chain.map((org) => org.orgId)
@@ -37,6 +41,9 @@ export const AdminTemplateSidebarActivities: React.FC<AdminTemplateSidebarActivi
       if (res) {
         const templateData = res
           .filter((org) => org.organizationNumber !== Number(orgid))
+          .sort((a, b) => {
+            return treeLevels[a.organizationNumber] - treeLevels[b.organizationNumber];
+          })
           .map((org) => {
             const activeTemplate = org.checklists.find((checklist) => checklist.lifeCycle === 'ACTIVE');
             return {
