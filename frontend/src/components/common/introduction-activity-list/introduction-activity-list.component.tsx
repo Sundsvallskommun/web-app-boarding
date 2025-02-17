@@ -1,6 +1,9 @@
-import React from 'react';
 import { ActivityListItem } from '@components/activity-list-item/activity-list-item.component';
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
+import { useChecklist } from '@services/checklist-service/use-checklist';
+import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
+import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
+import React from 'react';
 
 interface IntroductionActivityListProps {
   data: EmployeeChecklist;
@@ -11,6 +14,12 @@ interface IntroductionActivityListProps {
 
 export const IntroductionActivityList: React.FC<IntroductionActivityListProps> = (props) => {
   const { data, currentPhase, currentView, isUserChecklist } = props;
+  const { refresh: refreshChecklist } = useChecklist();
+  const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
+  const { refresh: refreshManagedChecklists } = useManagedChecklists();
+
+  const refreshAllChecklists = () =>
+    Promise.all([refreshChecklist(), refreshDelegatedChecklists(), refreshManagedChecklists(data?.manager.username)]);
 
   return (
     <>
@@ -27,6 +36,7 @@ export const IntroductionActivityList: React.FC<IntroductionActivityListProps> =
                   currentView={currentView}
                   isUserChecklist={isUserChecklist}
                   managerUsername={data?.manager.username}
+                  refreshAllChecklists={refreshAllChecklists}
                 />
               );
             }
@@ -40,6 +50,7 @@ export const IntroductionActivityList: React.FC<IntroductionActivityListProps> =
                   currentView={currentView}
                   isUserChecklist={isUserChecklist}
                   managerUsername={data?.manager.username}
+                  refreshAllChecklists={refreshAllChecklists}
                 />
               );
             }
