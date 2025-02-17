@@ -19,6 +19,7 @@ interface IntroductionFulFillAllTasksCheckboxProps {
   currentView: number;
   data: EmployeeChecklist;
   currentPhase: number;
+  refreshAllChecklists: () => Promise<void>;
 }
 
 export const IntroductionFulFillAllTasksCheckbox: React.FC<IntroductionFulFillAllTasksCheckboxProps> = (props) => {
@@ -26,18 +27,12 @@ export const IntroductionFulFillAllTasksCheckbox: React.FC<IntroductionFulFillAl
   const { username } = useUserStore(useShallow((s) => s.user));
   const { t } = useTranslation();
 
-  const { refresh: refreshChecklist } = useChecklist(data.employee.username);
-  const { refresh: refreshManagedChecklists } = useManagedChecklists();
-  const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
-
   const updateAllTaskFulfillments = async (phaseCompletion: boolean) => {
     const updatePromises = data?.phases[currentPhase]?.tasks.map((task) => {
       return updateTaskFulfilmentStatus(data?.id, task.id, phaseCompletion ? 'FALSE' : 'TRUE', username);
     });
     Promise.all(updatePromises).then(() => {
-      refreshManagedChecklists(data?.manager.username);
-      refreshDelegatedChecklists();
-      refreshChecklist();
+      props.refreshAllChecklists();
     });
   };
 

@@ -19,6 +19,7 @@ export const useDelegatedChecklists = (): {
   );
 
   const refresh = () => {
+    if (loading) return;
     if (username) {
       setLoading(true);
       handleGetMany(() => getDelegatedChecklists(username))
