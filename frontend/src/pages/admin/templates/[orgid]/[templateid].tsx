@@ -84,10 +84,18 @@ export const EditTemplate = () => {
           phase.tasks
             // WHY IS SORTORDER NOT A NUMBER FOR TASKS WHEN IT IS FOR PHASES??
             ?.sort((a, b) => parseInt(a.sortOrder, 10) - parseInt(b.sortOrder, 10))
-            .map((task, index) => ({
-              id: task.id,
-              position: 1000 * level + index + 1,
-            })) || [],
+            .map((task, index) => {
+              // sortOrder for manager activities gets an additional prefix of 500 to make sure their sortOrders
+              // do not overlap with employee activities
+              // So manager activitied: 4501, 4502, 4503 etc
+              // and employee activities: 4001, 4002, 4003 etc
+              const roleTypePrefix =
+                ['MANAGER_FOR_NEW_EMPLOYEE', 'MANAGER_FOR_NEW_MANAGER'].includes(task.roleType) ? 500 : 0;
+              return {
+                id: task.id,
+                position: 1000 * level + roleTypePrefix + index + 1,
+              };
+            }) || [],
       })),
     };
     return order;

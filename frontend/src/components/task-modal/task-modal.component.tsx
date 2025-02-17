@@ -28,6 +28,8 @@ export interface TaskModalProps {
   mode: 'add' | 'edit';
 }
 
+const END_OF_LIST = 9999;
+
 export const TaskModal: React.FC<TaskModalProps> = (props) => {
   const { closeModalHandler, isModalOpen, task, checklistId, mode } = props;
   const user = useUserStore((s) => s.user, shallow);
@@ -67,9 +69,9 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
       text: '',
       questionType: 'YES_OR_NO' as CustomTaskUpdateRequest['questionType'],
       phaseId: data?.phases?.[0]?.id || '',
-      createdBy: '',
-      updatedBy: '',
-      sortOrder: data?.phases?.[0]?.tasks?.length || 0,
+      createdBy: user?.username || '',
+      updatedBy: user?.username || '',
+      sortOrder: END_OF_LIST,
     },
     resolver: yupResolver(formSchema),
     context: { mode },
@@ -97,16 +99,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
       });
       setRichText(task.text || '');
     } else {
-      reset({
-        heading: '',
-        headingReference: '',
-        text: '',
-        questionType: 'YES_OR_NO',
-        phaseId: '',
-        createdBy: user.username,
-        updatedBy: user.username,
-        sortOrder: data?.phases[0].tasks.length,
-      });
+      reset();
       setRichText('');
     }
     setTimeout(() => {
@@ -161,13 +154,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
             {mode === 'add' && (
               <FormControl className="w-full">
                 <FormLabel>Fas (obligatorisk)</FormLabel>
-                <Select
-                  {...register('phaseId')}
-                  data-cy="add-activity-phase-select"
-                  onChange={(e) => {
-                    data && setValue('sortOrder', data?.phases[e.currentTarget.selectedIndex].tasks.length);
-                  }}
-                >
+                <Select {...register('phaseId')} data-cy="add-activity-phase-select">
                   {data?.phases?.map((phase) => {
                     return (
                       <Select.Option key={`employee-${phase.id}`} value={phase.id}>
