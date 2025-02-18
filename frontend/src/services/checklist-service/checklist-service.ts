@@ -123,6 +123,7 @@ export const addCustomTask: (
     questionType: taskData.questionType,
     sortOrder: taskData.sortOrder,
     createdBy: username,
+    roleType: taskData.roleType,
   };
 
   return apiService

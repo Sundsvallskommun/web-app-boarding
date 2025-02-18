@@ -27,10 +27,7 @@ export const CheckList: React.FC = () => {
   const router = useRouter();
   const { query } = router;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
-    mode: 'add',
-    checklistId: '',
-  });
+
   const openModal = (props: Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>) => {
     setModalProps(props);
     setIsModalOpen(true);
@@ -52,6 +49,13 @@ export const CheckList: React.FC = () => {
     currentView === 0 && managedChecklist ? managedChecklist
     : currentView === 0 && delegatedChecklist ? delegatedChecklist
     : employeeChecklist;
+
+  const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
+    mode: 'add',
+    checklistId: '',
+    currentView: currentView,
+    data: data,
+  });
 
   useEffect(() => {
     if (!isManager || (isManager && employeeChecklist?.employee.username === query?.userId)) {
@@ -86,11 +90,14 @@ export const CheckList: React.FC = () => {
                           <Button
                             variant="primary"
                             color="vattjom"
-                            onClick={() => openModal({ mode: 'add', checklistId: data?.id })}
+                            onClick={() => openModal({ mode: 'add', checklistId: data?.id, currentView, data })}
                             inverted
                             data-cy="add-activity-button"
                           >
-                            <Icon name="plus" size="18px" /> {t('task:create.title')}
+                            <Icon name="plus" size="18px" />{' '}
+                            {currentView === 0 ?
+                              t('task:add_activity_for_manager')
+                            : t('task:add_activity_for_employee')}
                           </Button>
                         </div>
                       )}

@@ -87,6 +87,7 @@ export interface CustomTaskCreateRequest {
     | 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT';
   sortOrder: number;
   createdBy: string;
+  roleType: 'NEW_EMPLOYEE' | 'NEW_MANAGER' | 'MANAGER_FOR_NEW_EMPLOYEE' | 'MANAGER_FOR_NEW_MANAGER';
 }
 
 export interface EmployeeChecklist {

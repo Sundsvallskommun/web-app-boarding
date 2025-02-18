@@ -48,14 +48,14 @@ export interface TaskItem {
 }
 
 export interface Problem {
+  title?: string;
+  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
   parameters?: Record<string, object>;
   status?: StatusType;
-  title?: string;
-  detail?: string;
 }
 
 export interface StatusType {
@@ -83,10 +83,10 @@ export interface ConstraintViolationProblem {
   violations?: Violation[];
   title?: string;
   message?: string;
+  detail?: string;
   /** @format uri */
   instance?: string;
   parameters?: Record<string, object>;
-  detail?: string;
   suppressed?: {
     stackTrace?: {
       classLoaderName?: string;
@@ -119,14 +119,14 @@ export interface ThrowableProblem {
     nativeMethod?: boolean;
   }[];
   message?: string;
+  title?: string;
+  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
   parameters?: Record<string, object>;
   status?: StatusType;
-  title?: string;
-  detail?: string;
   suppressed?: {
     stackTrace?: {
       classLoaderName?: string;
@@ -235,6 +235,8 @@ export interface CustomTaskCreateRequest {
   text?: string;
   /** The question type of the task */
   questionType: QuestionType;
+  /** The role that shall perform the task */
+  roleType?: RoleType;
   /**
    * The sort order for the task
    * @format int32
@@ -253,6 +255,17 @@ export enum QuestionType {
   YES_OR_NO_WITH_TEXT = 'YES_OR_NO_WITH_TEXT',
   COMPLETED_OR_NOT_RELEVANT = 'COMPLETED_OR_NOT_RELEVANT',
   COMPLETED_OR_NOT_RELEVANT_WITH_TEXT = 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT',
+}
+
+/**
+ * The role that shall perform the task
+ * @example "NEW_EMPLOYEE"
+ */
+export enum RoleType {
+  NEW_EMPLOYEE = 'NEW_EMPLOYEE',
+  NEW_MANAGER = 'NEW_MANAGER',
+  MANAGER_FOR_NEW_EMPLOYEE = 'MANAGER_FOR_NEW_EMPLOYEE',
+  MANAGER_FOR_NEW_MANAGER = 'MANAGER_FOR_NEW_MANAGER',
 }
 
 /** Model for custom task */
@@ -282,7 +295,7 @@ export interface CustomTask {
    * @format int32
    */
   sortOrder?: number;
-  /** The role type of the task */
+  /** The role that shall perform the task */
   roleType?: RoleType;
   /** The question type of the task */
   questionType?: QuestionType;
@@ -303,14 +316,6 @@ export interface CustomTask {
    * @example "joe01doe"
    */
   lastSavedBy?: string;
-}
-
-/** The role type of the task */
-export enum RoleType {
-  NEW_EMPLOYEE = 'NEW_EMPLOYEE',
-  NEW_MANAGER = 'NEW_MANAGER',
-  MANAGER_FOR_NEW_EMPLOYEE = 'MANAGER_FOR_NEW_EMPLOYEE',
-  MANAGER_FOR_NEW_MANAGER = 'MANAGER_FOR_NEW_MANAGER',
 }
 
 /** Model for employee checklist triggering detailed status */
@@ -379,7 +384,7 @@ export interface TaskCreateRequest {
    * @example 1
    */
   sortOrder: number;
-  /** The role type of the task */
+  /** The role that shall perform the task */
   roleType: RoleType;
   /** The permission needed to administrate the phase */
   permission: Permission;
@@ -497,7 +502,7 @@ export interface Task {
    * @example 1
    */
   sortOrder?: number;
-  /** The role type of the task */
+  /** The role that shall perform the task */
   roleType?: RoleType;
   /** The question type of the task */
   questionType?: QuestionType;
@@ -669,7 +674,7 @@ export interface EmployeeChecklistTask {
    * @format int32
    */
   sortOrder?: number;
-  /** The role type of the task */
+  /** The role that shall perform the task */
   roleType?: RoleType;
   /** The question type of the task */
   questionType?: QuestionType;
@@ -757,6 +762,8 @@ export interface CustomTaskUpdateRequest {
   text?: string;
   /** The question type of the task */
   questionType?: QuestionType;
+  /** The role that shall perform the task */
+  roleType?: RoleType;
   /**
    * The sort order for the task
    * @format int32
@@ -797,7 +804,7 @@ export interface TaskUpdateRequest {
    * @example 1
    */
   sortOrder?: number;
-  /** The role type of the task */
+  /** The role that shall perform the task */
   roleType?: RoleType;
   /** The permission needed to administrate the phase */
   permission?: Permission;
@@ -1046,6 +1053,28 @@ export interface Stakeholder {
    * @example "Skoladministratör (Sundsvalls kommun)"
    */
   title?: string;
+}
+
+/** Model for information about the last execution to initiate employee checklists */
+export interface InitiationInformation {
+  /**
+   * The log id for the execution (used for investigation purpose when searching logs in ELK)
+   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
+   */
+  logId?: string;
+  /**
+   * A information summary for the execution
+   * @example "4 potential problems occurred when importing 6 employees"
+   */
+  summary?: string;
+  /**
+   * The execution date and time for the initiation
+   * @format date-time
+   * @example "2023-11-22T15:30:00+03:00"
+   */
+  executed?: string;
+  /** A list with detailed information for each employee checklist initiation */
+  details?: Detail[];
 }
 
 /** Model for delegated employee checklist response */

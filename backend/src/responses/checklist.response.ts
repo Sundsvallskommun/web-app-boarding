@@ -118,6 +118,8 @@ export class CustomTaskCreateRequest implements CustomTaskCreateRequestType {
   sortOrder: number;
   @IsString()
   createdBy: string;
+  @IsEnum(RoleType)
+  roleType?: RoleType;
 }
 
 export class EmployeeChecklist implements IEmployeeChecklist {
