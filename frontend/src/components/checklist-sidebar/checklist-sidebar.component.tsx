@@ -83,7 +83,9 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
 
         <div className="my-8">
           <strong>{t('common:start_date')}</strong>
-          <p className="m-0">{data.startDate}</p>
+          <p className="m-0">
+            {new Date(data.startDate).toLocaleDateString('SV', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </p>
         </div>
 
         <Divider className="my-24" />
