@@ -45,7 +45,7 @@ export default function AdminLayoutComponent({
 
         <div className="main-container w-full h-full">
           <AdminSidebar />
-          <Main className="w-full pl-40">{children}</Main>
+          <Main className="w-full pl-40 h-full mb-40">{children}</Main>
         </div>
       </div>;
 }
