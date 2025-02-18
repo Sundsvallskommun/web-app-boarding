@@ -11,7 +11,8 @@ interface OrganizationMenuProps {
 
 export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue }) => {
   const [current, setCurrent] = useState<MenuIndex>();
-  const { data } = useOrgTree([2669, 2725, 13]);
+  const rootIds = process.env.NEXT_PUBLIC_ROOT_IDS?.split(',').map((id) => parseInt(id, 10)) || [];
+  const { data, loading } = useOrgTree(rootIds);
   const router = useRouter();
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue 
           .some((word) => org.orgName?.toLowerCase().includes(word) || org.orgDisplayName?.toLowerCase().includes(word))
       ) {
         hasMatch = true;
-        return [...tree, { ...org, organizations: undefined }];
+        return [...tree, { ...org, organizations: [] }];
       }
       return tree;
     }, []);
@@ -63,7 +64,8 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue 
   };
 
   return (
-    data?.length > 2 && (
+    !loading &&
+    data.length > 0 && (
       <MenuVertical.Provider current={current} setCurrent={setCurrent}>
         <MenuVertical.Sidebar>
           <MenuVertical className="!pr-0 !pl-0" data-cy="organization-tree">
