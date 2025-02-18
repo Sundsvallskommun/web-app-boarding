@@ -16,6 +16,7 @@ import { shallow } from 'zustand/shallow';
 import {
   CustomTaskCreateRequest,
   CustomTaskUpdateRequest,
+  EmployeeChecklist,
   EmployeeChecklistTask,
 } from '@data-contracts/backend/data-contracts';
 import { useTranslation } from 'react-i18next';
@@ -26,16 +27,18 @@ export interface TaskModalProps {
   task?: EmployeeChecklistTask;
   checklistId?: string;
   mode: 'add' | 'edit';
+  currentView: number;
+  data: EmployeeChecklist | null;
 }
 
 const END_OF_LIST = 9999;
 
 export const TaskModal: React.FC<TaskModalProps> = (props) => {
-  const { closeModalHandler, isModalOpen, task, checklistId, mode } = props;
+  const { closeModalHandler, isModalOpen, task, checklistId, mode, currentView, data } = props;
   const user = useUserStore((s) => s.user, shallow);
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
-  const { data } = useChecklist();
   const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
+  const { refresh: refreshChecklist } = useChecklist();
   const [richText, setRichText] = useState<string>('');
   const quillRef = useRef<ReactQuill>(null);
   const { t } = useTranslation();
@@ -50,7 +53,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
       .oneOf(['YES_OR_NO', 'YES_OR_NO_WITH_TEXT', 'COMPLETED_OR_NOT_RELEVANT', 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT']),
     phaseId: yup.string().when('$mode', {
       is: 'add',
-      then: (schema) => schema.required('Du måste välja en fas'),
+      then: (schema) => schema.required(t('task:phase_error')),
       otherwise: (schema) => schema.notRequired().default(''),
     }),
     sortOrder: yup.number().required(),
@@ -60,6 +63,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
       otherwise: (schema) => schema.notRequired().default(''),
     }),
     updatedBy: yup.string().required(),
+    roleType: yup.string().required(),
   });
 
   const formControl = useForm({
@@ -72,6 +76,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
       createdBy: user?.username || '',
       updatedBy: user?.username || '',
       sortOrder: END_OF_LIST,
+      roleType: currentView === 0 ? 'MANAGER_FOR_NEW_EMPLOYEE' : 'NEW_EMPLOYEE',
     },
     resolver: yupResolver(formSchema),
     context: { mode },
@@ -96,6 +101,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
         questionType: task.questionType,
         updatedBy: user.username,
         sortOrder: task.sortOrder,
+        roleType: task.roleType,
       });
       setRichText(task.text || '');
     } else {
@@ -110,6 +116,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
   const refreshAndClose = () => {
     refreshManagedChecklists();
     refreshDelegatedChecklists();
+    refreshChecklist();
     closeModalHandler();
   };
 
@@ -119,6 +126,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
         await updateCustomTask(checklistId, task.id, data as CustomTaskUpdateRequest);
         refreshAndClose();
       } else if (mode === 'add' && checklistId) {
+        setValue('roleType', currentView === 0 ? 'MANAGER_FOR_NEW_EMPLOYEE' : 'NEW_EMPLOYEE');
         await addCustomTask(checklistId, getValues('phaseId') || '', user.username, data as CustomTaskCreateRequest);
         refreshAndClose();
       }
@@ -139,13 +147,20 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
   const onError = (error: any) => {
     console.error(error);
   };
+
   return (
     <Modal
       show={isModalOpen}
       onClose={closeModalHandler}
       className="w-[70rem] p-32"
       label={
-        <h4 className="text-label-medium">{mode === 'edit' ? t('task:edit_activity') : t('task:create.title')}</h4>
+        <h4 className="text-label-medium">
+          {mode === 'edit' ?
+            t('task:edit_activity')
+          : currentView === 0 ?
+            t('task:add_activity_for_manager')
+          : t('task:add_activity_for_employee')}
+        </h4>
       }
     >
       <FormProvider {...formControl}>
@@ -153,7 +168,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
           <Modal.Content className="mb-24">
             {mode === 'add' && (
               <FormControl className="w-full">
-                <FormLabel>Fas (obligatorisk)</FormLabel>
+                <FormLabel>{t('task:phase')}</FormLabel>
                 <Select {...register('phaseId')} data-cy="add-activity-phase-select">
                   {data?.phases?.map((phase) => {
                     return (
