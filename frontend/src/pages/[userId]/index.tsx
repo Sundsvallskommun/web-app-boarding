@@ -67,7 +67,7 @@ export const CheckList: React.FC = () => {
 
   const renderedData = (data: EmployeeChecklist) => (
     <>
-      <div className="w-full rounded bg-background-content border-1 border-divider">
+      <div className="grow rounded bg-background-content border-1 border-divider">
         <IntroductionPhaseMenu
           data={data}
           currentPhase={currentPhase}
