@@ -33,7 +33,6 @@
   "rows_per_page": "Rader per sida",
   "no_introductions": "Du har ingen pågående introduktion",
   "introduction_of": "Introduktion för",
-  "show_introduction_of": "Visa introduktion för",
   "assigned_introductions": "Tilldelade introduktioner",
   "department": "Verksamhet",
   "displayed_introductions": "Visar {{count}} introduktioner"

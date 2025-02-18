@@ -132,8 +132,14 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
               <div className=" flex flex-col items-center">
                 <div className="relative w-min h-[3.2rem]">
                   <PopupMenu>
-                    <PopupMenu.Button iconButton variant="tertiary" size="sm" showBackground={false}>
-                      <Icon name="ellipsis-vertical" data-cy="edit-custom-activity-popup-menu" />
+                    <PopupMenu.Button
+                      iconButton
+                      variant="tertiary"
+                      size="sm"
+                      showBackground={false}
+                      data-cy="edit-custom-activity-popup-menu"
+                    >
+                      <Icon name="ellipsis-vertical" />
                     </PopupMenu.Button>
                     <PopupMenu.Panel>
                       <PopupMenu.Items>
@@ -143,7 +149,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                             onClick={() => {
                               openModal({ mode: 'edit', checklistId: checklistId, task: task });
                             }}
-                            data-cy="edit-custom-activity-popup-menu-edit"
+                            data-cy="edit-custom-activity-popup-menu-edit-button"
                           >
                             {t('common:edit')}
                           </Button>
@@ -152,7 +158,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                           <Button
                             leftIcon={<Icon name="trash" />}
                             onClick={() => removeTask()}
-                            data-cy="edit-custom-activity-popup-menu-remove"
+                            data-cy="edit-custom-activity-popup-menu-remove-button"
                           >
                             {t('common:remove')}
                           </Button>

@@ -13,6 +13,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { useTranslation } from 'react-i18next';
+import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 
 interface IntroductionFulFillAllTasksCheckboxProps {
   currentView: number;
@@ -27,6 +28,7 @@ export const IntroductionFulFillAllTasksCheckbox: React.FC<IntroductionFulFillAl
 
   const { refresh: refreshChecklist } = useChecklist(data.employee.username);
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
+  const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
 
   const updateAllTaskFulfillments = (phaseCompletion: boolean) => {
     data?.phases[currentPhase]?.tasks.map((task) => {
@@ -34,6 +36,7 @@ export const IntroductionFulFillAllTasksCheckbox: React.FC<IntroductionFulFillAl
         if (task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || task.roleType === 'MANAGER_FOR_NEW_MANAGER') {
           updateTaskFulfilmentStatus(data?.id, task.id, phaseCompletion ? 'FALSE' : 'TRUE', username).then(() => {
             refreshManagedChecklists(data?.manager.username);
+            refreshDelegatedChecklists();
           });
         }
       } else {
@@ -47,7 +50,7 @@ export const IntroductionFulFillAllTasksCheckbox: React.FC<IntroductionFulFillAl
   };
 
   return (
-    <div className="p-16">
+    <div className="px-16">
       <Checkbox
         data-cy="complete-all-activities"
         className="pr-20"
