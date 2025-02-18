@@ -84,7 +84,7 @@ export default function DefaultLayout({
 
       {preContent && preContent}
 
-      <div className={`main-container flex-grow relative w-full flex flex-col`}>
+      <div className={`main-container flex-grow relative w-full flex flex-col mb-40`}>
         <div className="container max-width-content w-full">{children}</div>
       </div>
 
