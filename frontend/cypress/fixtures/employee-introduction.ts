@@ -77,7 +77,7 @@ export const employeeIntroduction = {
     ],
     created: '2024-11-21T13:43:10.502212+01:00',
     updated: '2024-12-12T08:55:50.237902+01:00',
-    startDate: '2024-12-14',
+    startDate: '14 december 2024',
     endDate: '2026-12-14',
     expirationDate: '2027-03-14',
   },

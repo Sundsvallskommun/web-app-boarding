@@ -90,7 +90,7 @@ export const managerAsEmployeeIntroduction = {
     ],
     created: '2024-11-21T13:41:05.901492+01:00',
     updated: '2024-12-16T11:10:36.726688+01:00',
-    startDate: '2024-12-10',
+    startDate: '10 december 2024',
     endDate: '2025-06-10',
     expirationDate: '2025-09-10',
   },
