@@ -146,7 +146,7 @@ export const CheckList: React.FC = () => {
                     </Tabs>
 
                     <div className="pt-56 w-5/12">
-                      <ChecklistSidebar isUserChecklist={true} />
+                      <ChecklistSidebar isUserChecklist={true} isDelegatedChecklist={false} />
                     </div>
                   </div>
                 </div>

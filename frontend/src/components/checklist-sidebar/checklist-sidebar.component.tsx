@@ -16,9 +16,10 @@ import { useDelegatedUsers } from '@services/user-service/use-delegated-user';
 
 interface ChecklistSidebarProps {
   isUserChecklist: boolean;
+  isDelegatedChecklist: boolean;
 }
 
-export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserChecklist: isUserChecklist }) => {
+export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserChecklist, isDelegatedChecklist }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const {
     permissions: { isManager },
@@ -111,7 +112,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
                       }
                     })}
 
-                    {isManager && !isUserChecklist && (
+                    {isManager && !isUserChecklist && !isDelegatedChecklist && (
                       <Button
                         data-cy={`remove-delegation-icon-${index}`}
                         iconButton
