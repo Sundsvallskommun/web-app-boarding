@@ -47,7 +47,7 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
 
   return (
     <div className="w-full" data-cy={`activity-list-item-${index}`}>
-      <div className="my-12 flex p-12">
+      <div className="my-12 flex p-12 hover:bg-[rgba(28,28,40,0.04)] rounded-[var(--Radius-Rounded-Button,12px)]">
         <div className="w-full flex items-start">
           <div className="flex gap-8">
             <Button
