@@ -29,12 +29,11 @@ export interface TaskModalProps {
   mode: 'add' | 'edit';
   currentView: number;
   data: EmployeeChecklist | null;
+  newSortOrder: number;
 }
 
-const END_OF_LIST = 9999;
-
 export const TaskModal: React.FC<TaskModalProps> = (props) => {
-  const { closeModalHandler, isModalOpen, task, checklistId, mode, currentView, data } = props;
+  const { closeModalHandler, isModalOpen, task, checklistId, mode, currentView, data, newSortOrder } = props;
   const user = useUserStore((s) => s.user, shallow);
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
@@ -66,18 +65,20 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
     roleType: yup.string().required(),
   });
 
+  const defaultValues = {
+    heading: '',
+    headingReference: '',
+    text: '',
+    questionType: 'YES_OR_NO' as CustomTaskUpdateRequest['questionType'],
+    phaseId: data?.phases?.[0]?.id || '',
+    createdBy: user?.username || '',
+    updatedBy: user?.username || '',
+    sortOrder: newSortOrder,
+    roleType: currentView === 0 ? 'MANAGER_FOR_NEW_EMPLOYEE' : 'NEW_EMPLOYEE',
+  };
+
   const formControl = useForm({
-    defaultValues: {
-      heading: '',
-      headingReference: '',
-      text: '',
-      questionType: 'YES_OR_NO' as CustomTaskUpdateRequest['questionType'],
-      phaseId: data?.phases?.[0]?.id || '',
-      createdBy: user?.username || '',
-      updatedBy: user?.username || '',
-      sortOrder: END_OF_LIST,
-      roleType: currentView === 0 ? 'MANAGER_FOR_NEW_EMPLOYEE' : 'NEW_EMPLOYEE',
-    },
+    defaultValues,
     resolver: yupResolver(formSchema),
     context: { mode },
   });
@@ -105,13 +106,13 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
       });
       setRichText(task.text || '');
     } else {
-      reset();
+      reset(defaultValues);
       setRichText('');
     }
     setTimeout(() => {
       setFocus(mode === 'edit' ? 'heading' : 'phaseId');
     }, 0);
-  }, [isModalOpen, mode, task]);
+  }, [isModalOpen, mode, task, newSortOrder]);
 
   const refreshAndClose = () => {
     refreshManagedChecklists();
@@ -120,14 +121,19 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
     closeModalHandler();
   };
 
-  const onSubmit: SubmitHandler<CustomTaskCreateRequest | CustomTaskUpdateRequest> = async (data) => {
+  const onSubmit: SubmitHandler<CustomTaskCreateRequest | CustomTaskUpdateRequest> = async (taskData) => {
     try {
       if (mode === 'edit' && checklistId && task?.id) {
-        await updateCustomTask(checklistId, task.id, data as CustomTaskUpdateRequest);
+        await updateCustomTask(checklistId, task.id, taskData as CustomTaskUpdateRequest);
         refreshAndClose();
       } else if (mode === 'add' && checklistId) {
         setValue('roleType', currentView === 0 ? 'MANAGER_FOR_NEW_EMPLOYEE' : 'NEW_EMPLOYEE');
-        await addCustomTask(checklistId, getValues('phaseId') || '', user.username, data as CustomTaskCreateRequest);
+        await addCustomTask(
+          checklistId,
+          getValues('phaseId') || '',
+          user.username,
+          taskData as CustomTaskCreateRequest
+        );
         refreshAndClose();
       }
     } catch (error) {
@@ -166,6 +172,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
       <FormProvider {...formControl}>
         <form>
           <Modal.Content className="mb-24">
+            <div>{JSON.stringify(getValues().sortOrder)}</div>
             {mode === 'add' && (
               <FormControl className="w-full">
                 <FormLabel>{t('task:phase')}</FormLabel>
