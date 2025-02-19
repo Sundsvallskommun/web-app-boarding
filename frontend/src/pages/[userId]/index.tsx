@@ -13,11 +13,10 @@ import { useShallow } from 'zustand/react/shallow';
 import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 import { useTranslation } from 'react-i18next';
 import { IntroductionPhaseMenu } from '@components/common/introduction-phase-menu/introduction-phase-menu.component';
-import { IntroductionViewToggle } from '@components/common/introduction-view-toggle/introduction-view-toggle.component';
-import { IntroductionFulFillAllTasksCheckbox } from '@components/common/introduction-fulfill-all-tasks-checkbox/introduction-fulfill-all-tasks-checkbox.component';
 import { IntroductionActivityList } from '@components/common/introduction-activity-list/introduction-activity-list.component';
-import { Button } from '@sk-web-gui/react';
+import { Button, Tabs } from '@sk-web-gui/react';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
+import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 
 export const CheckList: React.FC = () => {
   const {
@@ -84,6 +83,27 @@ export const CheckList: React.FC = () => {
     setCurrentPhase(0);
   }, [currentView]);
 
+  const renderedData = (data: EmployeeChecklist) => (
+    <>
+      <div className="grow rounded bg-background-content border-1 border-divider">
+        <IntroductionPhaseMenu
+          data={data}
+          currentPhase={currentPhase}
+          setCurrentPhase={setCurrentPhase}
+          currentView={currentView}
+        />
+        <div className="py-24 px-40">
+          <IntroductionActivityList
+            data={data}
+            currentView={currentView}
+            currentPhase={currentPhase}
+            isUserChecklist={isUserChecklist}
+          />
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
@@ -94,16 +114,39 @@ export const CheckList: React.FC = () => {
               <h2>{t('common:no_introductions')}</h2>
             : data && (
                 <div>
-                  <h1 className="text-h1-md my-40">
-                    {t('common:introduction_of')} {data?.employee?.firstName} {data?.employee?.lastName}
+                  <h1 className="text-h1-md mt-56 mb-40">
+                    {t('common:introduction_of')} {data?.employee?.firstName} {data?.employee?.lastName || ''}
                   </h1>
-                  {!isUserChecklist ?
-                    <div className="flex gap-16 my-24 justify-between">
-                      <IntroductionViewToggle currentView={currentView} setCurrentView={setCurrentView} />
-
-                      {(managedChecklists || delegatedChecklist) && (
-                        <div>
+                  <div className="flex gap-40">
+                    {!isUserChecklist ?
+                      <div className="flex gap-16 mb-24 w-9/12">
+                        <Tabs current={currentView} data-cy="introduction-for-tabs">
+                          <Tabs.Item>
+                            <Tabs.Button
+                              onClick={() => setCurrentView(0)}
+                              data-cy="introduction-for-tabs-manager-button"
+                            >
+                              {t('task:your_activity')}
+                            </Tabs.Button>
+                            <Tabs.Content>{renderedData(data)}</Tabs.Content>
+                          </Tabs.Item>
+                          <Tabs.Item>
+                            <Tabs.Button
+                              onClick={() => setCurrentView(1)}
+                              data-cy="introduction-for-tabs-employee-button"
+                            >
+                              {t('task:employee_activity')}
+                            </Tabs.Button>
+                            <Tabs.Content>{renderedData(data)}</Tabs.Content>
+                          </Tabs.Item>
+                        </Tabs>
+                      </div>
+                    : renderedData(data)}
+                    <div className="w-3/12">
+                      {(managedChecklists.length > 0 || delegatedChecklists.length > 0) && (
+                        <div className="flex flex-row-reverse">
                           <Button
+                            className="py-6 px-16"
                             variant="primary"
                             color="vattjom"
                             onClick={() => openModal({ mode: 'add', checklistId: data?.id, currentView, data })}
@@ -117,40 +160,13 @@ export const CheckList: React.FC = () => {
                           </Button>
                         </div>
                       )}
-                    </div>
-                  : null}
 
-                  <div className="flex gap-40">
-                    <div className="w-full rounded bg-background-content border-1 border-divider">
-                      <IntroductionPhaseMenu
-                        data={data}
-                        currentPhase={currentPhase}
-                        setCurrentPhase={setCurrentPhase}
-                        currentView={currentView}
-                      />
-
-                      <div className="py-24 px-40">
-                        <IntroductionFulFillAllTasksCheckbox
-                          currentView={currentView}
-                          currentPhase={currentPhase}
-                          data={data}
-                          refreshAllChecklists={refreshAllChecklists}
-                        />
-
-                        <IntroductionActivityList
-                          data={data}
-                          currentView={currentView}
-                          currentPhase={currentPhase}
+                      <div className={!isUserChecklist ? 'mt-16' : 'mt-0'}>
+                        <ChecklistSidebar
                           isUserChecklist={isUserChecklist}
+                          isDelegatedChecklist={!managedChecklist && !!delegatedChecklist}
                         />
                       </div>
-                    </div>
-
-                    <div className="w-5/12">
-                      <ChecklistSidebar
-                        isUserChecklist={isUserChecklist}
-                        isDelegatedChecklist={!managedChecklist && !!delegatedChecklist}
-                      />
                     </div>
                   </div>
                 </div>

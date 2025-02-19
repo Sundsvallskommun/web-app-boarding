@@ -37,7 +37,7 @@ export const IntroductionFulFillAllTasksCheckbox: React.FC<IntroductionFulFillAl
   };
 
   return (
-    <div className="p-16">
+    <div className="px-16">
       <Checkbox
         data-cy="complete-all-activities"
         className="pr-20"

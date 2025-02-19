@@ -37,8 +37,8 @@ describe('Employee introduction as manager', () => {
 
   it('shows manager introduction correctly', () => {
     cy.get('h1').should('contain', 'Introduktion för Elon New Employee-One');
-    cy.get('[data-cy="radio-button-group"]').should('exist');
-    cy.get('[data-cy="radio-button-manager-view"]').should('exist');
+    cy.get('[data-cy="introduction-for-tabs"]').should('exist');
+    cy.get('[data-cy="introduction-for-tabs-manager-button"]').should('exist');
     cy.get('[data-cy="add-activity-button"]').should('exist');
   });
 
@@ -51,8 +51,8 @@ describe('Employee introduction as manager', () => {
 
   it('views employee phases and marks activities as done', () => {
     cy.get('h1').should('contain', 'Introduktion för Elon New Employee-One');
-    cy.get('[data-cy="radio-button-group"]').should('exist');
-    cy.get('[data-cy="radio-button-employee-view"]').should('exist').click();
+    cy.get('[data-cy="introduction-for-tabs"]').should('exist');
+    cy.get('[data-cy="introduction-for-tabs-employee-button"]').should('exist').click();
 
     cy.get('[data-cy="phase-menu-bar"]').contains('Om din anställning').should('exist');
 
@@ -93,17 +93,21 @@ describe('Employee introduction as manager', () => {
     cy.intercept('DELETE', '**/api/employee-checklists/**/customtasks/**', removeCustomTaskResponse);
 
     cy.get('h1').should('contain', 'Introduktion för Elon New Employee-One');
-    cy.get('[data-cy="radio-button-group"]').should('exist');
-    cy.get('[data-cy="radio-button-employee-view"]').should('exist').click();
-    cy.get('[data-cy="edit-custom-activity-popup-menu"]').should('exist').click();
-    cy.get('[data-cy="edit-custom-activity-popup-menu-edit"]').should('exist').click();
+    cy.get('[data-cy="introduction-for-tabs"]').should('exist');
+    cy.get('[data-cy="introduction-for-tabs-employee-button"]').should('exist').click();
+    cy.get('[data-cy="edit-custom-activity-popup-menu"]').should('exist').click({ multiple: true, force: true });
+    cy.get('[data-cy="edit-custom-activity-popup-menu-edit-button"]')
+      .should('exist')
+      .click({ multiple: true, force: true });
     cy.get('[data-cy="activity-heading"]').should('exist').clear().type('Redigerad aktivitet');
     cy.get('[data-cy="activity-text"]').should('exist').clear().type('Redigerad text');
     cy.get('[data-cy="activity-heading-reference"]').should('exist').clear().type('https://www.google.se');
     cy.get('[data-cy="activity-save-button"]').should('exist').click();
 
-    cy.get('[data-cy="edit-custom-activity-popup-menu"]').should('exist').click();
-    cy.get('[data-cy="edit-custom-activity-popup-menu-remove"]').should('exist').click();
+    cy.get('[data-cy="edit-custom-activity-popup-menu"]').should('exist').click({ multiple: true, force: true });
+    cy.get('[data-cy="edit-custom-activity-popup-menu-remove-button"]')
+      .should('exist')
+      .click({ multiple: true, force: true });
     cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroductionWithoutMentor);
   });
 

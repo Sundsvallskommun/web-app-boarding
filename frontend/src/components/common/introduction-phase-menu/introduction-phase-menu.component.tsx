@@ -11,7 +11,7 @@ import { EmployeeChecklist, EmployeeChecklistPhase } from '@data-contracts/backe
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { setTimeToBeCompleted } from '@utils/fulfilment-status-utils';
 import { useTranslation } from 'react-i18next';
-
+import { IntroductionFulFillAllTasksCheckbox } from '@components/common/introduction-fulfill-all-tasks-checkbox/introduction-fulfill-all-tasks-checkbox.component';
 interface IntroductionPhaseMenuProps {
   data: EmployeeChecklist;
   currentPhase: number;
@@ -63,10 +63,8 @@ export const IntroductionPhaseMenu: React.FC<IntroductionPhaseMenuProps> = (prop
 
       <Divider className="w-full" />
 
-      <div className="pt-24 px-40">
-        <h2 className="mb-24 text-h2-md"> {data?.phases[currentPhase]?.name}</h2>
-        <p className="mb-md">{data?.phases[currentPhase]?.bodyText}</p>
-        <div className="flex mb-24 gap-16">
+      <div className="flex flex-col flex-start pt-40 px-40 gap-32">
+        <div className="flex gap-40 bg-vattjom-background-100 rounded-12 border border-vattjom-background-300 py-10 px-12">
           <div>
             <Icon name="check" className="align-sub mr-6" size="2rem" />
             {t('task:activities_completed', {
@@ -87,7 +85,9 @@ export const IntroductionPhaseMenu: React.FC<IntroductionPhaseMenuProps> = (prop
             })}
           </div>
         </div>
-
+        <h2 className="text-h2-md px-16 -mb-32"> {data?.phases[currentPhase]?.name}</h2>
+        <p className="px-16">{data?.phases[currentPhase]?.bodyText}</p>
+        <IntroductionFulFillAllTasksCheckbox currentView={currentView} currentPhase={currentPhase} data={data} />
         <Divider />
       </div>
     </>

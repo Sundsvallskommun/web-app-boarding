@@ -17,8 +17,8 @@ describe('Employee introduction as employee', () => {
   });
 
   it('shows introduction page correctly', () => {
-    cy.get('[data-cy="radio-button-group"]').should('not.exist');
-    cy.get('[data-cy="radio-button-manager-view"]').should('not.exist');
+    cy.get('[data-cy="introduction-for-tabs"]').should('not.exist');
+    cy.get('[data-cy="introduction-for-tabs-manager-button"]').should('not.exist');
     cy.get('[data-cy="add-activity-button"]').should('not.exist');
 
     cy.get('[data-cy="sidebar"]').should('exist').contains(managerAsEmployeeIntroduction.data.employee.username);
@@ -30,7 +30,7 @@ describe('Employee introduction as employee', () => {
 
   it('views phases and marks activities as done', () => {
     cy.get('[data-cy="phase-menu-bar"]').contains('Om din anställning');
-    cy.get('[data-cy="phase-menu-bar-button"]').contains('Nyanställd chef').should('exist').click();
+    cy.get('[data-cy="phase-menu-bar-button"]').contains('Nyanställd chef').should('exist').click({ force: true });
 
     managerAsEmployeeIntroduction.data.phases[1].tasks.map((task) => {
       const updateFulfilmentStatusResponse = {
