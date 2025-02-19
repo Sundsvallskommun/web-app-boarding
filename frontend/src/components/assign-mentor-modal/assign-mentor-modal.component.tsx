@@ -1,10 +1,10 @@
 import { SearchEmployeeComponent, UserInformation } from '@components/search-employee/search-employee.component';
-import { assignMentor, removeMentor } from '@services/checklist-service/checklist-service';
+import { assignMentor, delegateChecklist, removeMentor } from '@services/checklist-service/checklist-service';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { Avatar } from '@sk-web-gui/avatar';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Modal, useConfirm } from '@sk-web-gui/react';
+import { Button, Modal, useConfirm, useSnackbar } from '@sk-web-gui/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { getInitials, useUserStore } from '@services/user-service/user-service';
@@ -27,6 +27,7 @@ export const AssignMentorModal: React.FC = () => {
   const router = useRouter();
   const { query } = router;
   const confirm = useConfirm();
+  const toastMessage = useSnackbar();
 
   useEffect(() => {
     if (username === query?.userId) {
@@ -51,9 +52,33 @@ export const AssignMentorModal: React.FC = () => {
   const onSubmit = () => {
     fields.map((field: UserInformation) => {
       data &&
-        assignMentor(data.id, { userId: field.userId, name: field.fullName }).then(() => {
-          closeHandler();
-        });
+        assignMentor(data.id, { userId: field.userId, name: field.fullName })
+          .then(() => {
+            delegateChecklist(data.id, field.email)
+              .then(() => {
+                closeHandler();
+              })
+              .catch(() => {
+                toastMessage({
+                  position: 'bottom',
+                  closeable: false,
+                  message: t('delegation:errors.conflict', {
+                    user: field.email,
+                    firstName: data?.employee?.firstName,
+                    lastName: data?.employee?.firstName,
+                  }),
+                  status: 'error',
+                });
+              });
+          })
+          .catch(() => {
+            toastMessage({
+              position: 'bottom',
+              closeable: false,
+              message: t('mentor:add_mentor_error'),
+              status: 'error',
+            });
+          });
     });
   };
 
