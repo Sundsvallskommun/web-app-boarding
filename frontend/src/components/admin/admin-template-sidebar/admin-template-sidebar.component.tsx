@@ -14,19 +14,17 @@ export const AdminTemplateSidebar: React.FC<AdminTemplateSidebarProps> = (props)
   const { t } = useTranslation();
 
   return (
-    <div className="w-full max-w-[43rem] right-0 ml-40 border-l-1 border-divider gap-16 py-32 px-20 break-words">
+    <div className="w-full max-w-[38rem] right-0 ml-40 border-l-1 border-divider gap-16 py-32 px-20 break-words">
       <Tabs current={current} color="tertiary" className="mb-40" data-cy="tab-bar">
         <Tabs.Item>
-          <Tabs.Button className="w-full" onClick={() => setCurrent(0)}>
-            {t('templates:related_templates')}
-          </Tabs.Button>
+          <Tabs.Button onClick={() => setCurrent(0)}>{t('templates:related_templates')}</Tabs.Button>
           <Tabs.Content>
             <AdminTemplateSidebarActivities currentView={currentView} />
           </Tabs.Content>
         </Tabs.Item>
 
         <Tabs.Item>
-          <Tabs.Button data-cy="history-button" className="w-full" onClick={() => setCurrent(1)}>
+          <Tabs.Button data-cy="history-button" onClick={() => setCurrent(1)}>
             {t('templates:history')}
           </Tabs.Button>
           <Tabs.Content>
