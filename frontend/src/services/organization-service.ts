@@ -28,7 +28,6 @@ export const getOrgTree = async (orgId: number) =>
 
 export const getOrgTemplate = async (orgId: number) => {
   const res = await apiService.get<OrgTemplateApiResponse>(`/org/${orgId}/template`);
-  console.log(res);
   if (res) {
     return res.data.data;
   }
