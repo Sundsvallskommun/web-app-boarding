@@ -91,6 +91,7 @@ export const CheckList: React.FC = () => {
           currentPhase={currentPhase}
           setCurrentPhase={setCurrentPhase}
           currentView={currentView}
+          refreshAllChecklists={refreshAllChecklists}
         />
         <div className="py-24 px-40">
           <IntroductionActivityList

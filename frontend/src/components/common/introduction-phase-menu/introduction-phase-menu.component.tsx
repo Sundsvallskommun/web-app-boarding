@@ -17,10 +17,11 @@ interface IntroductionPhaseMenuProps {
   currentPhase: number;
   setCurrentPhase: Dispatch<SetStateAction<number>>;
   currentView: number;
+  refreshAllChecklists: () => Promise<void>;
 }
 
 export const IntroductionPhaseMenu: React.FC<IntroductionPhaseMenuProps> = (props) => {
-  const { data, currentPhase, setCurrentPhase, currentView } = props;
+  const { data, currentPhase, setCurrentPhase, currentView, refreshAllChecklists } = props;
   const { t } = useTranslation();
 
   const countTasks = (phase: EmployeeChecklistPhase) => {
@@ -87,7 +88,12 @@ export const IntroductionPhaseMenu: React.FC<IntroductionPhaseMenuProps> = (prop
         </div>
         <h2 className="text-h2-md px-16 -mb-32"> {data?.phases[currentPhase]?.name}</h2>
         <p className="px-16">{data?.phases[currentPhase]?.bodyText}</p>
-        <IntroductionFulFillAllTasksCheckbox currentView={currentView} currentPhase={currentPhase} data={data} />
+        <IntroductionFulFillAllTasksCheckbox
+          currentView={currentView}
+          currentPhase={currentPhase}
+          data={data}
+          refreshAllChecklists={refreshAllChecklists}
+        />
         <Divider />
       </div>
     </>
