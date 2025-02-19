@@ -19,7 +19,7 @@ export const AdminTemplateSidebarHistory: React.FC = () => {
   }, [templateid]);
 
   return templateHistory ?
-      <div>
+      <div className="pt-4 mx-8">
         {templateHistory &&
           templateHistory?.eventList?.map((event, index) => {
             return (
@@ -27,7 +27,7 @@ export const AdminTemplateSidebarHistory: React.FC = () => {
                 data-cy={`history-event-${index}`}
                 key={`history-event-${index}`}
                 className={
-                  'first:mt-lg relative pb-md px-md flex flex-col gap-sm' +
+                  'first:mt-md relative pb-lg px-md flex flex-col gap-sm' +
                   (index < templateHistory.eventList.length - 1 && 'border-0 border-l-1 border-gray-300')
                 }
               >

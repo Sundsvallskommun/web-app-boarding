@@ -65,64 +65,67 @@ export const AdminTemplateSidebarActivities: React.FC<AdminTemplateSidebarActivi
           .filter((org) => !!org?.template)
           .map((org, index) => {
             return (
-              <Accordion key={`template-accordion-${index}`} data-cy={`template-accordion-${index}`} size="sm">
-                <Accordion.Item
-                  key={`template-accordion-items-${index}`}
-                  data-cy={`template-accordion-item-${index}`}
-                  header={<h4 className="text-h4-sm">{org.orgName}</h4>}
-                >
-                  {org?.template?.phases.map((phase, index) => {
-                    return (
-                      <div className="gap-16 my-16" key={`${org.orgId}-${phase.id}-${index}`}>
-                        <p className="text-label-medium mt-16">{phase.name}</p>
-                        {phase.tasks
-                          ?.filter((t) =>
-                            currentView === 0 ?
-                              t.roleType === RoleType.MANAGER_FOR_NEW_EMPLOYEE ||
-                              t.roleType === RoleType.MANAGER_FOR_NEW_MANAGER
-                            : t.roleType === RoleType.NEW_EMPLOYEE || t.roleType === RoleType.NEW_MANAGER
-                          )
-                          .map((task, idx) => (
-                            <div key={`task-${index}-${idx}`}>
-                              <div className="my-16 ml-8">
-                                {task.headingReference ?
-                                  <>
-                                    <a className="underline mr-4" href={task.headingReference} target="_blank">
-                                      {task.heading}
-                                    </a>
-                                    <Icon size="1.5rem" name="external-link" />
-                                  </>
-                                : task.heading}
+              <>
+                <Accordion key={`template-accordion-${index}`} data-cy={`template-accordion-${index}`} size="sm">
+                  <Accordion.Item
+                    key={`template-accordion-items-${index}`}
+                    data-cy={`template-accordion-item-${index}`}
+                    header={<h4 className="text-h4-sm">{org.orgName}</h4>}
+                  >
+                    {org?.template?.phases.map((phase, index) => {
+                      return (
+                        <div className="gap-16 my-16" key={`${org.orgId}-${phase.id}-${index}`}>
+                          <p className="text-label-medium mt-16 ml-12">{phase.name}</p>
+                          {phase.tasks
+                            ?.filter((t) =>
+                              currentView === 0 ?
+                                t.roleType === RoleType.MANAGER_FOR_NEW_EMPLOYEE ||
+                                t.roleType === RoleType.MANAGER_FOR_NEW_MANAGER
+                              : t.roleType === RoleType.NEW_EMPLOYEE || t.roleType === RoleType.NEW_MANAGER
+                            )
+                            .map((task, idx) => (
+                              <div key={`task-${index}-${idx}`}>
+                                <div className="my-16 mx-20">
+                                  {task.headingReference ?
+                                    <>
+                                      <a className="underline mr-4" href={task.headingReference} target="_blank">
+                                        {task.heading}
+                                      </a>
+                                      <Icon size="1.5rem" name="external-link" />
+                                    </>
+                                  : task.heading}
 
-                                <p
-                                  className="text-small my-0 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:ml-lg [&>ol]:ml-lg [&>*>a]:underline"
-                                  dangerouslySetInnerHTML={{
-                                    __html: sanitized(task.text || '').replace('<a', "<a target='_blank'"),
-                                  }}
-                                ></p>
+                                  <p
+                                    className="text-small my-0 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:ml-lg [&>ol]:ml-lg [&>*>a]:underline"
+                                    dangerouslySetInnerHTML={{
+                                      __html: sanitized(task.text || '').replace('<a', "<a target='_blank'"),
+                                    }}
+                                  ></p>
+                                </div>
+                                <Divider className="mt-16 mx-12" />
                               </div>
-                              <Divider className="my-16" />
-                            </div>
-                          ))}
-                      </div>
-                    );
-                  })}
-                  <div>
-                    <Button
-                      data-cy={`template-link-${index}`}
-                      size="sm"
-                      variant="secondary"
-                      className="mt-16"
-                      rightIcon={<Icon name="arrow-right" />}
-                      onClick={() => {
-                        router.push(`/admin/templates/${org.orgId}/${org.template?.id}`);
-                      }}
-                    >
-                      {t('templates:go_to_template')}
-                    </Button>
-                  </div>
-                </Accordion.Item>
-              </Accordion>
+                            ))}
+                        </div>
+                      );
+                    })}
+                    <div>
+                      <Button
+                        data-cy={`template-link-${index}`}
+                        size="sm"
+                        variant="secondary"
+                        className="mt-16"
+                        rightIcon={<Icon name="arrow-right" />}
+                        onClick={() => {
+                          router.push(`/admin/templates/${org.orgId}/${org.template?.id}`);
+                        }}
+                      >
+                        {t('templates:go_to_template')}
+                      </Button>
+                    </div>
+                  </Accordion.Item>
+                </Accordion>
+                <Divider className="mt-0 mb-8 py-0" />
+              </>
             );
           })
       : loadingTemplates ?
