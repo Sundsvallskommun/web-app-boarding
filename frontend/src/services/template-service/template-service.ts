@@ -163,7 +163,7 @@ export const createTemplate: (
     const data: OrganizationCreateRequest = {
       organizationName: fromOrgTree.orgName || fromOrgTree.orgId.toString(),
       organizationNumber: fromOrgTree.orgId,
-      communicationChannels: ['EMAIL'],
+      communicationChannels: ['NO_COMMUNICATION'],
     };
     const newOrganization = await createOrganization(data);
     orgName = newOrganization.organizationName;
