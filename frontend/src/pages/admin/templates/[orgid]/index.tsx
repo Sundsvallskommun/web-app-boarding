@@ -6,7 +6,7 @@ import { updateCommunicationChannels, useOrgTemplates, useOrgTreeStore } from '@
 import { createTemplate, useTemplate } from '@services/template-service/template-service';
 import { useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
-import { Button, Switch, useConfirm, useSnackbar } from '@sk-web-gui/react';
+import { Button, Switch, useSnackbar } from '@sk-web-gui/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo } from 'react';
@@ -19,7 +19,6 @@ export const OrgTemplate: React.FC = () => {
   const query = router.query;
   const user = useUserStore((s) => s.user, shallow);
   const orgid = Array.isArray(query?.orgid) ? query.orgid[0] : query.orgid || '';
-  const confirm = useConfirm();
   const toastMessage = useSnackbar();
   const { data: orgTree } = useOrgTreeStore();
 
@@ -46,31 +45,20 @@ export const OrgTemplate: React.FC = () => {
   );
 
   const onCreateTemplate = () => {
-    confirm
-      .showConfirmation(
-        t('templates:create.title'),
-        t('templates:create.text'),
-        t('templates:create.confirm'),
-        t('common:cancel')
-      )
-      .then((confirmed) => {
-        if (confirmed) {
-          createTemplate(orgid, orgTree, user)
-            .then((res) => {
-              if (res?.id) {
-                router.push(`/admin/templates/${orgid}/${res.id}`);
-              }
-            })
-            .catch((e) => {
-              console.error('error', e);
-              toastMessage({
-                position: 'bottom',
-                closeable: false,
-                message: t('templates:create.error'),
-                status: 'error',
-              });
-            });
+    createTemplate(orgid, orgTree, user)
+      .then((res) => {
+        if (res?.id) {
+          router.push(`/admin/templates/${orgid}/${res.id}`);
         }
+      })
+      .catch((e) => {
+        console.error('error', e);
+        toastMessage({
+          position: 'bottom',
+          closeable: false,
+          message: t('templates:create.error'),
+          status: 'error',
+        });
       });
   };
 
