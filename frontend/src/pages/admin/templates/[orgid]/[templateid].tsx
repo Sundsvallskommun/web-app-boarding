@@ -213,7 +213,7 @@ export const EditTemplate = () => {
             </ol>
             {editable(checklist, user) ?
               <Button
-                size="lg"
+                size="md"
                 className="mt-8 ml-24"
                 data-cy={`add-activity-button`}
                 leftIcon={<LucideIcon name="plus" />}
