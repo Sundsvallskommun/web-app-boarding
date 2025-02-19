@@ -1,6 +1,6 @@
 {
   "errors": {
-    "conflict": "Det gick inte att delegera till {{user}}"
+    "conflict": "Det gick inte att tilldela {{user}}"
   },
   "assign" : "Tilldela",
   "assign_introduction" : "Tilldela introduktion",
