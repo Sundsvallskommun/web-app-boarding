@@ -38,6 +38,8 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
     mode: 'edit',
     checklistId: 'checklistId',
+    currentView: currentView,
+    data: null,
   });
   const openModal = (props: Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>) => {
     setModalProps(props);
@@ -131,7 +133,13 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                           <Button
                             leftIcon={<Icon name="pen" />}
                             onClick={() => {
-                              openModal({ mode: 'edit', checklistId: checklistId, task: task });
+                              openModal({
+                                mode: 'edit',
+                                checklistId: checklistId,
+                                task: task,
+                                data: null,
+                                currentView,
+                              });
                             }}
                             data-cy="edit-custom-activity-popup-menu-edit"
                           >
@@ -163,6 +171,8 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
           mode="edit"
           task={task}
           checklistId={checklistId}
+          currentView={currentView}
+          data={modalProps.data}
         />
       )}
     </div>
