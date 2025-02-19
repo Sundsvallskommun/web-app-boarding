@@ -193,7 +193,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
               </FormControl>
             )}
 
-            <FormControl className="w-full" required>
+            <FormControl className="w-full">
               <FormLabel showRequired={false} className="mt-16">
                 {t('task:heading')}
               </FormLabel>
