@@ -1,17 +1,14 @@
+import { TaskModal, TaskModalProps } from '@components/task-modal/task-modal.component';
 import { EmployeeChecklistTask } from '@data-contracts/backend/data-contracts';
 import { removeCustomTask, updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
-import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import sanitized from '@services/sanitizer-service';
-import { useUserStore } from '@services/user-service/user-service';
-import { Button, Checkbox, Label, PopupMenu } from '@sk-web-gui/react';
-import { shallow } from 'zustand/shallow';
-import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import React, { useState } from 'react';
-import { TaskModal, TaskModalProps } from '@components/task-modal/task-modal.component';
-import { useTranslation } from 'next-i18next';
-import { useChecklist } from '@services/checklist-service/use-checklist';
-import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 import { useUserInformation } from '@services/user-service/use-user-information';
+import { useUserStore } from '@services/user-service/user-service';
+import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
+import { Button, Checkbox, Label, PopupMenu } from '@sk-web-gui/react';
+import { useTranslation } from 'next-i18next';
+import React, { useState } from 'react';
+import { shallow } from 'zustand/shallow';
 
 const isChecked = (fulfilmentStatus: string) => {
   switch (fulfilmentStatus) {
@@ -31,6 +28,7 @@ interface ActivityListItemProps {
   currentView: number;
   isUserChecklist: boolean;
   managerUsername?: string;
+  refreshAllChecklists: () => Promise<[void, void, void]>;
 }
 
 export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
@@ -40,6 +38,8 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
     mode: 'edit',
     checklistId: 'checklistId',
+    currentView: currentView,
+    data: null,
   });
   const openModal = (props: Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>) => {
     setModalProps(props);
@@ -47,26 +47,18 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   };
   const closeModal = () => setIsModalOpen(false);
   const { t } = useTranslation();
-  const { refresh: refreshManagedChecklists } = useManagedChecklists();
-  const { refresh: refreshChecklist } = useChecklist();
-  const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
   const { data: userInformation } = useUserInformation(task.updatedBy);
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
-    updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(() => {
-      if (currentView === 0) {
-        refreshDelegatedChecklists();
-        managerUsername?.length ? refreshManagedChecklists(managerUsername) : refreshManagedChecklists();
-      } else {
-        refreshChecklist();
-      }
+    updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(async () => {
+      return await props.refreshAllChecklists();
     });
   };
 
   const removeTask = async () => {
     try {
       await removeCustomTask(checklistId, task.id);
-      await Promise.all([refreshChecklist(), refreshManagedChecklists(), refreshDelegatedChecklists()]);
+      await props.refreshAllChecklists();
     } catch (error) {
       console.error('Error removing task:', error);
     }
@@ -147,7 +139,13 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                           <Button
                             leftIcon={<Icon name="pen" />}
                             onClick={() => {
-                              openModal({ mode: 'edit', checklistId: checklistId, task: task });
+                              openModal({
+                                mode: 'edit',
+                                checklistId: checklistId,
+                                task: task,
+                                data: null,
+                                currentView,
+                              });
                             }}
                             data-cy="edit-custom-activity-popup-menu-edit-button"
                           >
@@ -179,6 +177,8 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
           mode="edit"
           task={task}
           checklistId={checklistId}
+          currentView={currentView}
+          data={modalProps.data}
         />
       )}
     </div>

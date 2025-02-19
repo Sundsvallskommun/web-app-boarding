@@ -14,12 +14,17 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { useShallow } from 'zustand/react/shallow';
 import { ApiResponse, apiService } from './api-service';
 
-export const getOrgTree = async (orgId: number) => {
-  const res = await apiService.get<OrgTreeApiResponse>(`/org/${orgId}/tree`);
-  if (res) {
-    return res.data.data;
-  }
-};
+export const getOrgTree = async (orgId: number) =>
+  apiService
+    .get<OrgTreeApiResponse>(`/org/${orgId}/tree`)
+    .then((res) => {
+      if (res) {
+        return res.data.data;
+      }
+    })
+    .catch((e) => {
+      return undefined;
+    });
 
 export const getOrgTemplate = async (orgId: number) => {
   const res = await apiService.get<OrgTemplateApiResponse>(`/org/${orgId}/template`);
@@ -122,24 +127,33 @@ export const useOrgTree = (organizations?: number[]) => {
   useEffect(() => {
     if (organizations && organizations.length > 0) {
       setLoading(true);
-      let newData = data;
-      for (let index = 0; index < organizations.length; index++) {
-        if (!Object.keys(data).includes(organizations[index].toString())) {
-          getOrgTree(organizations[index])
+
+      const orgPromises = organizations.map((org) => {
+        if (!Object.keys(data).includes(org.toString())) {
+          return getOrgTree(org)
             .then((res) => {
-              if (res) {
-                newData = { ...newData, [organizations[index]]: res };
-                setData(newData);
-              }
+              return res ? { [org]: res } : {};
             })
             .catch((e) => {
               console.error(e);
+              return {};
             });
+        } else {
+          return Promise.resolve({});
         }
-      }
-      setData(newData);
-      setLoaded(true);
-      setLoading(false);
+      });
+
+      Promise.all(orgPromises)
+        .then((results) => {
+          const newEntries = results.reduce((acc, curr) => ({ ...acc, ...curr }), {});
+
+          const updatedData = { ...data, ...newEntries };
+          setData(updatedData);
+          setLoaded(true);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [orgstring]);
 

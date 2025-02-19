@@ -42,7 +42,7 @@ export const IntroductionPhaseMenu: React.FC<IntroductionPhaseMenuProps> = (prop
   return (
     <>
       <MenuBar current={currentPhase} className="w-full" data-cy="phase-menu-bar">
-        {data?.phases.map((phase, index) => {
+        {data?.phases?.map((phase, index) => {
           return (
             currentView === 0 && countManagerTasks(phase) > 0 ?
               <MenuBar.Item key={index}>

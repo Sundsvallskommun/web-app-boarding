@@ -34,5 +34,9 @@
   "complete_by": "Slutför senast {{date}}",
   "of": "av",
   "fulfilled_by": "Markerad av {{user}}",
-  "manager_activity": "Aktivitet vid anställning av chef"
+  "manager_activity": "Aktivitet vid anställning av chef",
+  "add_activity_for_manager" : "Lägg till egen aktivitet",
+  "add_activity_for_employee" : "Lägg till aktivitet för medarbetare",
+  "phase" : "Fas (obligatorisk)",
+  "phase_error" : "Du måste välja en fas"
 }

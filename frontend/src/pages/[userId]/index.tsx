@@ -26,10 +26,7 @@ export const CheckList: React.FC = () => {
   const router = useRouter();
   const { query } = router;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
-    mode: 'add',
-    checklistId: '',
-  });
+
   const openModal = (props: Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>) => {
     setModalProps(props);
     setIsModalOpen(true);
@@ -41,21 +38,42 @@ export const CheckList: React.FC = () => {
   const [isUserChecklist, setIsUserChecklist] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  const { data: managedChecklists } = useManagedChecklists();
-  const { data: employeeChecklist, loaded } = useChecklist((query?.userId as string) || username);
-  const { data: delegatedChecklists } = useDelegatedChecklists();
+  const { refresh: refreshManagedChecklists, data: managedChecklists } = useManagedChecklists();
+  const {
+    refresh: refreshChecklist,
+    data: employeeChecklist,
+    loaded,
+  } = useChecklist((query?.userId as string) || username);
+  const { refresh: refreshDelegatedChecklists, data: delegatedChecklists } = useDelegatedChecklists();
+
+  const refreshAllChecklists = async () => {
+    await refreshChecklist();
+    await refreshDelegatedChecklists();
+    await refreshManagedChecklists(data?.manager.username);
+  };
 
   const managedChecklist = managedChecklists.filter(
-    (employee) => employee.employee.username === query?.userId && employee.manager.username === username
+    (checklist) => checklist.employee.username === query?.userId && checklist.manager.username === username
   )[0];
-  const delegatedChecklist = delegatedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];
+
+  const delegatedChecklist = delegatedChecklists.filter(
+    (checklist) => checklist.employee.username === query?.userId
+  )[0];
+
   const data =
     currentView === 0 && managedChecklist ? managedChecklist
     : currentView === 0 && delegatedChecklist ? delegatedChecklist
     : employeeChecklist;
 
+  const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
+    mode: 'add',
+    checklistId: '',
+    currentView: currentView,
+    data: data,
+  });
+
   useEffect(() => {
-    if (!isManager || (isManager && employeeChecklist?.employee.username === query?.userId)) {
+    if (!isManager || (isManager && employeeChecklist?.employee?.username === query?.userId)) {
       setCurrentView(1);
       setIsUserChecklist(true);
     }
@@ -131,17 +149,23 @@ export const CheckList: React.FC = () => {
                             className="py-6 px-16"
                             variant="primary"
                             color="vattjom"
-                            onClick={() => openModal({ mode: 'add', checklistId: data?.id })}
+                            onClick={() => openModal({ mode: 'add', checklistId: data?.id, currentView, data })}
                             inverted
                             data-cy="add-activity-button"
                           >
-                            <Icon name="plus" size="18px" /> {t('task:create.title')}
+                            <Icon name="plus" size="18px" />{' '}
+                            {currentView === 0 ?
+                              t('task:add_activity_for_manager')
+                            : t('task:add_activity_for_employee')}
                           </Button>
                         </div>
                       )}
 
                       <div className={!isUserChecklist ? 'mt-16' : 'mt-0'}>
-                        <ChecklistSidebar isUserChecklist={isUserChecklist} />
+                        <ChecklistSidebar
+                          isUserChecklist={isUserChecklist}
+                          isDelegatedChecklist={!managedChecklist && !!delegatedChecklist}
+                        />
                       </div>
                     </div>
                   </div>
