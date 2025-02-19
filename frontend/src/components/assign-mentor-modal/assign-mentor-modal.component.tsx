@@ -64,8 +64,6 @@ export const AssignMentorModal: React.FC = () => {
                   closeable: false,
                   message: t('delegation:errors.conflict', {
                     user: field.email,
-                    firstName: data?.employee?.firstName,
-                    lastName: data?.employee?.firstName,
                   }),
                   status: 'error',
                 });
