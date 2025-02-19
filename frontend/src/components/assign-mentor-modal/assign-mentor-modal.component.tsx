@@ -25,7 +25,7 @@ export const AssignMentorModal: React.FC = () => {
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { t } = useTranslation();
   const router = useRouter();
-  const { query } = router;
+  const { pathname, query } = router;
   const confirm = useConfirm();
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export const AssignMentorModal: React.FC = () => {
               <Avatar initials={getInitials(data?.mentor?.name)} size="sm" rounded className="mr-8" />
               <p>{`${data?.mentor?.name}`}</p>
             </div>
-            {isManager && !isUserIntroduction && (
+            {isManager && !isUserIntroduction && !pathname.includes('/admin') && (
               <Button
                 data-cy="remove-assigned-mentor-button"
                 iconButton
@@ -102,7 +102,7 @@ export const AssignMentorModal: React.FC = () => {
               </Button>
             )}
           </div>
-        : isManager && !isUserIntroduction ?
+        : isManager && !isUserIntroduction && !pathname.includes('/admin') ?
           <Button data-cy="add-mentor-button" variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
             {t('mentor:add')}
           </Button>
@@ -114,12 +114,14 @@ export const AssignMentorModal: React.FC = () => {
           className="w-[60rem] p-32"
           label={
             <h4 className="text-label-medium">
-              {t('checklists:mentor.assign_mentor', { user: `${data?.employee.firstName} ${data?.employee.lastName}` })}
+              {t('checklists:mentor.assign_mentor', {
+                user: `${data?.employee?.firstName} ${data?.employee?.lastName}`,
+              })}
             </h4>
           }
         >
           <Modal.Content>
-            <p>{t('mentor:add_description', { user: `${data?.employee.firstName} ${data?.employee.lastName}` })}</p>
+            <p>{t('mentor:add_description', { user: `${data?.employee?.firstName} ${data?.employee?.lastName}` })}</p>
 
             <SearchEmployeeComponent multiple={false} />
           </Modal.Content>

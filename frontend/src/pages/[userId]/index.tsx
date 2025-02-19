@@ -39,12 +39,28 @@ export const CheckList: React.FC = () => {
   const [isUserChecklist, setIsUserChecklist] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  const { data: managedChecklists } = useManagedChecklists();
-  const { data: employeeChecklist, loaded } = useChecklist((query?.userId as string) || username);
-  const { data: delegatedChecklists } = useDelegatedChecklists();
+  const { refresh: refreshManagedChecklists, data: managedChecklists } = useManagedChecklists();
+  const {
+    refresh: refreshChecklist,
+    data: employeeChecklist,
+    loaded,
+  } = useChecklist((query?.userId as string) || username);
+  const { refresh: refreshDelegatedChecklists, data: delegatedChecklists } = useDelegatedChecklists();
 
-  const managedChecklist = managedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];
-  const delegatedChecklist = delegatedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];
+  const refreshAllChecklists = async () => {
+    await refreshChecklist();
+    await refreshDelegatedChecklists();
+    await refreshManagedChecklists(data?.manager.username);
+  };
+
+  const managedChecklist = managedChecklists.filter(
+    (checklist) => checklist.employee.username === query?.userId && checklist.manager.username === username
+  )[0];
+
+  const delegatedChecklist = delegatedChecklists.filter(
+    (checklist) => checklist.employee.username === query?.userId
+  )[0];
+
   const data =
     currentView === 0 && managedChecklist ? managedChecklist
     : currentView === 0 && delegatedChecklist ? delegatedChecklist
@@ -58,7 +74,7 @@ export const CheckList: React.FC = () => {
   });
 
   useEffect(() => {
-    if (!isManager || (isManager && employeeChecklist?.employee.username === query?.userId)) {
+    if (!isManager || (isManager && employeeChecklist?.employee?.username === query?.userId)) {
       setCurrentView(1);
       setIsUserChecklist(true);
     }
@@ -118,6 +134,7 @@ export const CheckList: React.FC = () => {
                           currentView={currentView}
                           currentPhase={currentPhase}
                           data={data}
+                          refreshAllChecklists={refreshAllChecklists}
                         />
 
                         <IntroductionActivityList
@@ -130,7 +147,10 @@ export const CheckList: React.FC = () => {
                     </div>
 
                     <div className="w-5/12">
-                      <ChecklistSidebar isUserChecklist={isUserChecklist} />
+                      <ChecklistSidebar
+                        isUserChecklist={isUserChecklist}
+                        isDelegatedChecklist={!managedChecklist && !!delegatedChecklist}
+                      />
                     </div>
                   </div>
                 </div>
