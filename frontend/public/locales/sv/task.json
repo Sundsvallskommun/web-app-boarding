@@ -18,7 +18,7 @@
   "remove_activity": "Ta bort aktivitet?",
   "your_activity": "Dina aktiviteter",
   "employee_activity": "Medarbetarens aktiviteter",
-  "remove_activity_text": "Du kan bara ta bort aktiviteter så länge mallen är ett utkast, inte när mallen aktiverats.",
+  "remove_activity_text": "Aktiviteten tas bort direkt från alla pågående introduktioner.",
   "choose_phase": "Välj fas",
   "heading": "Rubrik (obligatorisk)",
   "heading_reference": "Länk",
