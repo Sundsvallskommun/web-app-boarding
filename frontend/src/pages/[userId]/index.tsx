@@ -144,7 +144,7 @@ export const CheckList: React.FC = () => {
                       </div>
                     : renderedData(data)}
                     <div className="w-3/12">
-                      {(managedChecklists.length > 0 || delegatedChecklists.length > 0) && (
+                      {!isUserChecklist && (managedChecklists.length > 0 || delegatedChecklists.length > 0) && (
                         <div className="flex flex-row-reverse">
                           <Button
                             className="py-6 px-16"
