@@ -16,6 +16,7 @@ const handleSetUserResponse: (res: ApiResponse<User>) => User = (res) => ({
   permissions: res.data.permissions,
   organizationId: res.data.organizationId,
   children: res.data.children,
+  email: res.data.email,
 });
 
 const getMe: () => Promise<ServiceResponse<User>> = () => {

@@ -19,6 +19,7 @@ export const emptyUser: User = {
   permissions: defaultPermissions,
   organizationId: -1,
   children: [],
+  email: '',
 };
 
 export const emptyUserResponse: ApiResponse<User> = {

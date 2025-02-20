@@ -7,6 +7,7 @@ export interface ClientUser {
   role: InternalRole;
   organizationId: number;
   children: number[];
+  email: string;
 }
 export interface Permissions {
   canEditAdmin: boolean;

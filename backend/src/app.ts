@@ -130,6 +130,7 @@ const samlStrategy = new Strategy(
             role: 'user',
             organizationId: -1,
             children: [],
+            email: '',
           },
         );
         if (Array.isArray(res.data) && res.data.length > 0) {
@@ -148,6 +149,7 @@ const samlStrategy = new Strategy(
             role: 'user',
             organizationId: -1,
             children: [],
+            email: '',
           },
         );
 
@@ -177,6 +179,7 @@ const samlStrategy = new Strategy(
         firstName: givenName,
         lastName: sn,
         username,
+        email: '',
         groups: appGroups,
         role: getRole(appGroups),
         permissions: { ...getPermissions(appGroups), isManager: await getIsManager() },
@@ -191,6 +194,7 @@ const samlStrategy = new Strategy(
         return undefined;
       });
       logger.info(`Employee data: ${JSON.stringify(employeeRes?.data)}`);
+      findUser.email = employeeRes?.data?.email ?? '';
 
       if (!employeeRes?.data?.companyId) {
         logger.error('Error: Employee data not found or missing companyId.');

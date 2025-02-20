@@ -3,7 +3,7 @@ import DefaultLayout from '@layouts/default-layout/default-layout.component';
 import Main from '@layouts/main/main.component';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
-import { getUser, useUserStore } from '@services/user-service/user-service';
+import { useUserStore } from '@services/user-service/user-service';
 import { Spinner } from '@sk-web-gui/spinner';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
@@ -22,6 +22,7 @@ import { removeDelegation } from '@services/checklist-service/checklist-service'
 export const CheckList: React.FC = () => {
   const {
     username,
+    email,
     permissions: { isManager },
   } = useUserStore(useShallow((s) => s.user));
   const router = useRouter();
@@ -75,23 +76,20 @@ export const CheckList: React.FC = () => {
   });
 
   const handleRemoveDelegation = () => {
-    getUser(username).then((res) => {
-      const delegatedEmail = data?.delegatedTo.filter((email) => email === res?.data?.email)[0];
-      data &&
-        delegatedEmail &&
-        removeDelegation(data.id, delegatedEmail)
-          .then(() => {
-            refreshAllChecklists().then(() => router.push('/'));
-          })
-          .catch(() => {
-            toastMessage({
-              position: 'bottom',
-              closeable: false,
-              message: t('delegation:errors.remove'),
-              status: 'error',
-            });
+    data &&
+      removeDelegation(data.id, email)
+        .then(() => {
+          refreshDelegatedChecklists();
+          router.push('/');
+        })
+        .catch(() => {
+          toastMessage({
+            position: 'bottom',
+            closeable: false,
+            message: t('delegation:errors.remove'),
+            status: 'error',
           });
-    });
+        });
   };
 
   useEffect(() => {
