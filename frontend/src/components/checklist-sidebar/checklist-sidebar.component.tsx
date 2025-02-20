@@ -89,10 +89,19 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
           </p>
         </div>
 
-        <Divider className="my-24" />
+        {isDelegatedChecklist && (
+          <div className="mt-16">
+            <strong>{t('common:manager')}</strong>
+            <p className="m-0">
+              {data.manager?.firstName} {data.manager?.lastName}
+            </p>
+          </div>
+        )}
+
+        <Divider className="my-32" />
 
         <div className="mt-16 mb-24">
-          <AssignMentorModal />
+          <AssignMentorModal isDelegatedChecklist={isDelegatedChecklist} />
         </div>
 
         <div data-cy="delegated-to-content">
@@ -133,7 +142,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
 
             {!data?.delegatedTo?.length && isUserChecklist && <p className="pb-8">{t('delegation:no_assignments')}</p>}
 
-            {isManager && !isUserChecklist && (
+            {isManager && !isUserChecklist && !isDelegatedChecklist && (
               <div className="mt-8">
                 <Button data-cy="delegate-introduction-button" variant="tertiary" onClick={openHandler} size="sm">
                   {t('delegation:assign_introduction')}

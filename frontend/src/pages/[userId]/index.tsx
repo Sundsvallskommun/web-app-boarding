@@ -3,7 +3,7 @@ import DefaultLayout from '@layouts/default-layout/default-layout.component';
 import Main from '@layouts/main/main.component';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
-import { useUserStore } from '@services/user-service/user-service';
+import { getUser, useUserStore } from '@services/user-service/user-service';
 import { Spinner } from '@sk-web-gui/spinner';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
@@ -14,9 +14,10 @@ import { useDelegatedChecklists } from '@services/checklist-service/use-delegate
 import { useTranslation } from 'react-i18next';
 import { IntroductionPhaseMenu } from '@components/common/introduction-phase-menu/introduction-phase-menu.component';
 import { IntroductionActivityList } from '@components/common/introduction-activity-list/introduction-activity-list.component';
-import { Button, Tabs } from '@sk-web-gui/react';
+import { Button, Tabs, useSnackbar } from '@sk-web-gui/react';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
+import { removeDelegation } from '@services/checklist-service/checklist-service';
 
 export const CheckList: React.FC = () => {
   const {
@@ -26,6 +27,7 @@ export const CheckList: React.FC = () => {
   const router = useRouter();
   const { query } = router;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const toastMessage = useSnackbar();
 
   const openModal = (props: Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>) => {
     setModalProps(props);
@@ -47,9 +49,9 @@ export const CheckList: React.FC = () => {
   const { refresh: refreshDelegatedChecklists, data: delegatedChecklists } = useDelegatedChecklists();
 
   const refreshAllChecklists = async () => {
-    await refreshChecklist();
-    await refreshDelegatedChecklists();
-    await refreshManagedChecklists(data?.manager.username);
+    refreshChecklist();
+    refreshDelegatedChecklists();
+    refreshManagedChecklists(data?.manager.username);
   };
 
   const managedChecklist = managedChecklists.filter(
@@ -71,6 +73,26 @@ export const CheckList: React.FC = () => {
     currentView: currentView,
     data: data,
   });
+
+  const handleRemoveDelegation = () => {
+    getUser(username).then((res) => {
+      const delegatedEmail = data?.delegatedTo.filter((email) => email === res?.data?.email)[0];
+      data &&
+        delegatedEmail &&
+        removeDelegation(data.id, delegatedEmail)
+          .then(() => {
+            refreshAllChecklists().then(() => router.push('/'));
+          })
+          .catch(() => {
+            toastMessage({
+              position: 'bottom',
+              closeable: false,
+              message: t('delegation:errors.remove'),
+              status: 'error',
+            });
+          });
+    });
+  };
 
   useEffect(() => {
     if (!isManager || (isManager && employeeChecklist?.employee?.username === query?.userId)) {
@@ -115,12 +137,20 @@ export const CheckList: React.FC = () => {
               <h2>{t('common:no_introductions')}</h2>
             : data && (
                 <div>
+                  {delegatedChecklist && (
+                    <div className="flex grow gap-40 justify-between mt-56 border-1 border-divider rounded-button bg-background-200 py-10 px-16 w-[91rem]">
+                      {t('delegation:info', { manager: data?.manager?.firstName + ' ' + data?.manager?.lastName })}
+                      <Button onClick={handleRemoveDelegation} variant="secondary" className="self-center mr-8">
+                        {t('delegation:remove')}
+                      </Button>
+                    </div>
+                  )}
                   <h1 className="text-h1-md mt-56 mb-40">
                     {t('common:introduction_of')} {data?.employee?.firstName} {data?.employee?.lastName || ''}
                   </h1>
                   <div className="flex gap-40">
                     {!isUserChecklist ?
-                      <div className="flex gap-16 mb-24 w-9/12">
+                      <div className="flex grow gap-16 mb-24 w-[90rem]">
                         <Tabs current={currentView} data-cy="introduction-for-tabs">
                           <Tabs.Item>
                             <Tabs.Button
@@ -143,8 +173,8 @@ export const CheckList: React.FC = () => {
                         </Tabs>
                       </div>
                     : renderedData(data)}
-                    <div className="w-3/12">
-                      {(managedChecklists.length > 0 || delegatedChecklists.length > 0) && (
+                    <div className="w-[40rem]">
+                      {managedChecklists.length > 0 && !delegatedChecklist && (
                         <div className="flex flex-row-reverse">
                           <Button
                             className="py-6 px-16"
@@ -162,7 +192,14 @@ export const CheckList: React.FC = () => {
                         </div>
                       )}
 
-                      <div className={!isUserChecklist ? 'mt-16' : 'mt-0'}>
+                      <div
+                        className={
+                          delegatedChecklist ? 'mt-56'
+                          : !isUserChecklist ?
+                            'mt-16'
+                          : 'mt-0'
+                        }
+                      >
                         <ChecklistSidebar
                           isUserChecklist={isUserChecklist}
                           isDelegatedChecklist={!managedChecklist && !!delegatedChecklist}

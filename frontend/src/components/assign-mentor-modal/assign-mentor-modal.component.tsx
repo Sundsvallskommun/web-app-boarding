@@ -13,7 +13,11 @@ import { useTranslation } from 'react-i18next';
 import { FormLabel } from '@sk-web-gui/forms';
 import { useRouter } from 'next/router';
 
-export const AssignMentorModal: React.FC = () => {
+interface AssignMentorModalProps {
+  isDelegatedChecklist: boolean;
+}
+
+export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegatedChecklist }) => {
   const {
     username,
     permissions: { isManager },
@@ -112,7 +116,7 @@ export const AssignMentorModal: React.FC = () => {
               <Avatar initials={getInitials(data?.mentor?.name)} size="sm" rounded className="mr-8" />
               <p>{`${data?.mentor?.name}`}</p>
             </div>
-            {isManager && !isUserIntroduction && !pathname.includes('/admin') && (
+            {isManager && !isUserIntroduction && !pathname.includes('/admin') && !isDelegatedChecklist && (
               <Button
                 data-cy="remove-assigned-mentor-button"
                 iconButton
@@ -125,7 +129,7 @@ export const AssignMentorModal: React.FC = () => {
               </Button>
             )}
           </div>
-        : isManager && !isUserIntroduction && !pathname.includes('/admin') ?
+        : isManager && !isUserIntroduction && !pathname.includes('/admin') && !isDelegatedChecklist ?
           <Button data-cy="add-mentor-button" variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
             {t('mentor:add')}
           </Button>
