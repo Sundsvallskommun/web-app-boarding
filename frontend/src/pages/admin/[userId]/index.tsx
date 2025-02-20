@@ -11,7 +11,6 @@ import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslation } from 'react-i18next';
 import { IntroductionPhaseMenu } from '@components/common/introduction-phase-menu/introduction-phase-menu.component';
-import { IntroductionFulFillAllTasksCheckbox } from '@components/common/introduction-fulfill-all-tasks-checkbox/introduction-fulfill-all-tasks-checkbox.component';
 import { IntroductionActivityList } from '@components/common/introduction-activity-list/introduction-activity-list.component';
 import Breadcrumb from '@sk-web-gui/breadcrumb';
 import { capitalize } from 'underscore.string';
@@ -109,7 +108,7 @@ export const CheckList: React.FC = () => {
                       </Tabs.Item>
 
                       <Tabs.Item>
-                        <Tabs.Button onClick={() => setCurrentView(1)}>
+                        <Tabs.Button data-cy="employee-activities" onClick={() => setCurrentView(1)}>
                           {t('templates:activities_for_employee')}
                         </Tabs.Button>
                         <Tabs.Content className="w-full rounded bg-background-content border-1 border-divider">

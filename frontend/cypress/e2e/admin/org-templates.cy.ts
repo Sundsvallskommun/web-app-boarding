@@ -3,6 +3,13 @@ import { searchEmployeeResponse } from 'cypress/fixtures/managed-introductions';
 describe('Uses the organization templates', () => {
   beforeEach(() => {
     cy.intercept('GET', '**/api/me', { fixture: 'me-global-admin.json' });
+
+    cy.intercept('GET', '**/api/org/2668/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2744/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2754/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2755/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2764/tree', { body: {} });
+
     cy.intercept('GET', '**/api/org/13/tree', { fixture: 'orgtree-13.json' });
     cy.intercept('GET', '**/api/org/2725/tree', { fixture: 'orgtree-2725.json' });
     cy.intercept('GET', '**/api/org/2669/tree', { fixture: 'orgtree-2669.json' });
@@ -65,7 +72,6 @@ describe('Uses the organization templates', () => {
     cy.get('[data-cy="communication-channel-switch"]').should('not.exist');
 
     cy.get('[data-cy="create-template-button"]').should('exist').click();
-    cy.get('[data-color="gronsta"]').should('have.text', 'Skapa').click();
 
     cy.wait('@getOrgTemplate');
     cy.wait('@postOrgTemplate');
@@ -114,7 +120,7 @@ describe('Uses the organization templates', () => {
         cy.get('[data-cy="template-link-0"]').should('exist').click();
 
         cy.intercept('GET', '**/api/templates/111-111-111-111-111', { fixture: 'template-4b955690.json' });
-        cy.intercept('GET', '**/api/templates/111-111-111-111-111/events', { fixture: null });
+        cy.intercept('GET', '**/api/templates/111-111-111-111-111/events', { body: {} });
       });
   });
 });
