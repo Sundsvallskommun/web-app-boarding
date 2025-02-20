@@ -16,7 +16,7 @@
     "version": "Version"
   },
   "created": "Utkast",
-  "active": "Aktiv",
+  "active": "Publicerad",
   "deprecated": "Inaktiv",
   "create": {
     "title": "Skapa mall",
@@ -26,7 +26,7 @@
   },
   "activate": {
     "title": "Publicera mall",
-    "text": "Denna mall aktiveras och den tidigare aktiva mallen inaktiveras.",
+    "text": "Mallen kan inte längre redigeras som ett utkast.",
     "confirm": "Publicera",
     "error": "Det gick inte att publicera mallen.",
     "draft_information" : "Du arbetar med ett utkast för mallen."
