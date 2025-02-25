@@ -34,6 +34,8 @@ export class User implements ClientUser {
   organizationId: number;
   @IsNumber({}, { each: true })
   children: number[];
+  @IsString()
+  email: string;
 }
 
 export class UserApiResponse implements ApiResponse<User> {

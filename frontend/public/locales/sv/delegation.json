@@ -1,14 +1,17 @@
 {
   "errors": {
-    "conflict": "Det gick inte att tilldela {{user}}"
+    "conflict": "Det gick inte att tilldela {{user}}",
+    "remove" : "Det gick inte att ta bort tilldelning"
   },
   "assign" : "Tilldela",
   "assign_introduction" : "Tilldela introduktion",
   "assign_introduction_other" : "Tilldela introduktioner",
   "assign_introduction_description" : "Tilldela personer som ansvarar för delar av introduktionen.",
   "confirmation": {
-    "title": "Ta bort delegering?",
+    "title": "Ta bort tilldelning?",
     "text": "{{user}} kommer inte längre att ha tillgång till introduktionen. Aktiviteter som {{user}} har gjort kommer att ligga kvar."
   },
-  "no_assignments" : "Det finns inga tilldelade medarbetare"
+  "no_assignments" : "Det finns inga tilldelade medarbetare",
+  "info" : "{{manager}} har tilldelat introduktionen till dig. Slutför de aktiviteter du har ansvar över. När du är klar kan du ta bort tilldelningen.",
+  "remove" : "Ta bort tilldelning"
 }

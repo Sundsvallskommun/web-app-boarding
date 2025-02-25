@@ -26,6 +26,7 @@ export interface User {
   permissions: Permissions;
   organizationId: number;
   children: number[];
+  email: string;
 }
 
 export interface UserApiResponse {
