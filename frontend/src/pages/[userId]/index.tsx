@@ -8,7 +8,7 @@ import { Spinner } from '@sk-web-gui/spinner';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { TaskModal, TaskModalProps } from '@components/task-modal/task-modal.component';
+import { TaskModal } from '@components/task-modal/task-modal.component';
 import { useShallow } from 'zustand/react/shallow';
 import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 import { useTranslation } from 'react-i18next';
@@ -68,13 +68,6 @@ export const CheckList: React.FC = () => {
     currentView === 0 && managedChecklist ? managedChecklist
     : currentView === 0 && delegatedChecklist ? delegatedChecklist
     : employeeChecklist;
-
-  const [modalProps, setModalProps] = useState<Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>>({
-    mode: 'add',
-    checklistId: '',
-    currentView: currentView,
-    data: data,
-  });
 
   const handleRemoveDelegation = () => {
     data &&
