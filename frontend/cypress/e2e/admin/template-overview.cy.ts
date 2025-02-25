@@ -3,6 +3,13 @@ import { searchEmployeeResponse } from 'cypress/fixtures/managed-introductions';
 describe('Uses the template overview', () => {
   beforeEach(() => {
     cy.intercept('GET', '**/api/me', { fixture: 'me-global-admin.json' });
+
+    cy.intercept('GET', '**/api/org/2668/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2744/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2754/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2755/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2764/tree', { body: {} });
+
     cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse);
     cy.intercept('GET', '**/api/org/13/tree', { fixture: 'orgtree-13.json' });
     cy.intercept('GET', '**/api/org/2725/tree', { fixture: 'orgtree-2725.json' });
@@ -94,7 +101,7 @@ describe('Uses the template overview', () => {
       .first()
       .within(() => {
         cy.get('[data-cy="task-menu-button"]').should('exist').click();
-        cy.get('[data-cy="activity-remove-button"]').should('exist').click();
+        cy.get('[data-cy="activity-0-remove-button"]').should('exist').click();
       });
     cy.get('.sk-dialog-buttons').should('exist').contains('Ta bort').click();
     cy.wait('@removeTask').should(({ request }) => {

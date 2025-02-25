@@ -9,6 +9,13 @@ describe('Testing admin template history', () => {
       '**/api/employee-checklists/ongoing?page=1&limit=15&sortBy=employeeName&sortDirection=ASC&employeeName=',
       adminOngoingIntroductions
     );
+
+    cy.intercept('GET', '**/api/org/2668/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2744/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2754/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2755/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2764/tree', { body: {} });
+
     cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse);
     cy.intercept('GET', '**/api/org/13/tree', { fixture: 'orgtree-13.json' });
     cy.intercept('GET', '**/api/org/2725/tree', { fixture: 'orgtree-2725.json' });

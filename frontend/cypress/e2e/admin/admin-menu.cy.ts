@@ -5,6 +5,12 @@ describe('Uses the admin page', () => {
     cy.intercept('GET', '**/api/org/2725/tree', { fixture: 'orgtree-2725.json' });
     cy.intercept('GET', '**/api/org/2669/tree', { fixture: 'orgtree-2669.json' });
 
+    cy.intercept('GET', '**/api/org/2668/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2744/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2754/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2755/tree', { body: {} });
+    cy.intercept('GET', '**/api/org/2764/tree', { body: {} });
+
     cy.viewport('macbook-15');
     cy.visit('http://localhost:3000/admin');
   });

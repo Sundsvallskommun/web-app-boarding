@@ -227,7 +227,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
                 {t('common:cancel')}
               </Button>
               <Button data-cy="activity-save-button" type="submit" onClick={handleSubmit(onSubmit, onError)}>
-                {t('common:add')}
+                {task.id ? t('common:save') : t('common:add')}
               </Button>
               {errors.text && (
                 <FormErrorMessage className="text-error flex items-center">

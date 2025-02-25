@@ -1,13 +1,9 @@
 import { Task } from '@data-contracts/backend/data-contracts';
-import { removeCustomTask } from '@services/checklist-service/checklist-service';
-import { useChecklist } from '@services/checklist-service/use-checklist';
 import sanitized from '@services/sanitizer-service';
-import { useUserStore } from '@services/user-service/user-service';
 import LucideIcon, { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Label, Link, PopupMenu, useConfirm } from '@sk-web-gui/react';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
-import { shallow } from 'zustand/shallow';
 import { AdminEditTaskModal } from '../admin-edit-task-modal/admin-edit-task-modal.component';
 import { removeTask, useTemplate } from '@services/template-service/template-service';
 import router from 'next/router';
@@ -25,7 +21,7 @@ interface AdminActivityListItemProps {
 
 export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (props) => {
   const { task, templateId, phaseId, index, items, moveUp, moveDown, editable = false } = props;
-  const { templateid, orgid } = router.query;
+  const { orgid } = router.query;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);
@@ -138,7 +134,7 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
 
                         <PopupMenu.Item>
                           <Button
-                            data-cy="activity-remove-button"
+                            data-cy={`activity-${index}-remove-button`}
                             leftIcon={<Icon name="trash" />}
                             onClick={() =>
                               confirm
