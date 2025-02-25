@@ -172,7 +172,6 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
       <FormProvider {...formControl}>
         <form>
           <Modal.Content className="mb-24">
-            <div>{JSON.stringify(getValues().sortOrder)}</div>
             {mode === 'add' && (
               <FormControl className="w-full">
                 <FormLabel>{t('task:phase')}</FormLabel>
