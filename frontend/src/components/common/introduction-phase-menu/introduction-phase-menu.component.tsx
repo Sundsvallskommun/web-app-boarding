@@ -71,12 +71,12 @@ export const IntroductionPhaseMenu: React.FC<IntroductionPhaseMenuProps> = (prop
             {t('task:activities_completed', {
               first:
                 currentView === 0 ?
-                  countCompletedManagerTasks(data?.phases[currentPhase])
-                : countCompletedEmployeeTasks(data?.phases[currentPhase]),
+                  countCompletedManagerTasks(data?.phases?.[currentPhase])
+                : countCompletedEmployeeTasks(data?.phases?.[currentPhase]),
               second:
                 currentView === 0 ?
-                  countManagerTasks(data?.phases[currentPhase])
-                : countEmployeeTasks(data?.phases[currentPhase]),
+                  countManagerTasks(data?.phases?.[currentPhase])
+                : countEmployeeTasks(data?.phases?.[currentPhase]),
             })}
           </div>
           <div>

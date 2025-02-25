@@ -244,41 +244,39 @@ export const EditTemplate = () => {
         <LoaderFullScreen />
       : <div className="flex w-full h-full">
           <div className="pt-40 flex-1 mb-20">
-            {data.lifeCycle === 'CREATED' && (
-              <div className="rounded-button bg-background-200 flex mb-40 justify-between p-12">
-                <p className="text-small">{t('templates:activate.draft_information')}</p>
+            <div className="w-full flex justify-between">
+              <div className="flex">
+                <h2 data-cy="template-name" className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">
+                  {capitalize(data?.displayName || '')}
+                </h2>
 
-                {editable(data, user) && data?.lifeCycle === 'CREATED' ?
-                  <Button size="md" onClick={onActivate}>
-                    {t('templates:activate.confirm')}
-                  </Button>
-                : (
-                  editable(data, user) &&
-                  templateVersioningEnabled &&
-                  orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
-                ) ?
-                  <Button size="sm" color="vattjom" onClick={onNewVersion}>
-                    {t('templates:new_version.confirm')}
-                  </Button>
-                : null}
+                <Label
+                  className="mx-md my-xs"
+                  color={data?.lifeCycle === 'ACTIVE' ? 'gronsta' : 'tertiary'}
+                  inverted
+                  rounded
+                >
+                  {data?.lifeCycle === 'ACTIVE' ?
+                    t('templates:active')
+                  : data?.lifeCycle === 'CREATED' ?
+                    t('templates:created')
+                  : t('templates:deprecated')}
+                </Label>
               </div>
-            )}
-            <div className="w-full flex">
-              <h2 data-cy="template-name" className="text-h3-sm md:text-h3-md xl:text-h3-lg m-0 mb-24">
-                {capitalize(data?.displayName || '')}
-              </h2>
-              <Label
-                className="mx-md my-xs"
-                color={data?.lifeCycle === 'ACTIVE' ? 'gronsta' : 'tertiary'}
-                inverted
-                rounded
-              >
-                {data?.lifeCycle === 'ACTIVE' ?
-                  t('templates:active')
-                : data?.lifeCycle === 'CREATED' ?
-                  t('templates:created')
-                : t('templates:deprecated')}
-              </Label>
+
+              {editable(data, user) && data?.lifeCycle === 'CREATED' ?
+                <Button size="md" onClick={onActivate}>
+                  {t('templates:activate.title')}
+                </Button>
+              : (
+                editable(data, user) &&
+                templateVersioningEnabled &&
+                orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
+              ) ?
+                <Button size="sm" color="vattjom" onClick={onNewVersion}>
+                  {t('templates:new_version.confirm')}
+                </Button>
+              : null}
             </div>
             {loaded && (
               <div>

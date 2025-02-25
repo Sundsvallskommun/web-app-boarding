@@ -19,6 +19,8 @@ import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { removeDelegation } from '@services/checklist-service/checklist-service';
 
+const CUSTOM_TASK_OFFSET = 6000;
+
 export const CheckList: React.FC = () => {
   const {
     username,
@@ -30,8 +32,7 @@ export const CheckList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toastMessage = useSnackbar();
 
-  const openModal = (props: Omit<TaskModalProps, 'closeModalHandler' | 'isModalOpen'>) => {
-    setModalProps(props);
+  const openModal = () => {
     setIsModalOpen(true);
   };
 
@@ -103,27 +104,33 @@ export const CheckList: React.FC = () => {
     setCurrentPhase(0);
   }, [currentView]);
 
-  const renderedData = (data: EmployeeChecklist) => (
-    <>
-      <div className="grow rounded bg-background-content border-1 border-divider">
-        <IntroductionPhaseMenu
-          data={data}
-          currentPhase={currentPhase}
-          setCurrentPhase={setCurrentPhase}
-          currentView={currentView}
-          refreshAllChecklists={refreshAllChecklists}
-        />
-        <div className="py-24 px-40">
-          <IntroductionActivityList
+  const customTasksLength = data?.phases?.[currentPhase]?.tasks.filter((t) => t.customTask).length || 0;
+  const newSortOrder =
+    (data?.phases?.[currentPhase]?.tasks.filter((t) => t.customTask)?.[customTasksLength - 1]?.sortOrder ||
+      CUSTOM_TASK_OFFSET) + 1;
+
+  const renderedData = (data: EmployeeChecklist) =>
+    data ?
+      <>
+        <div className="grow rounded bg-background-content border-1 border-divider">
+          <IntroductionPhaseMenu
             data={data}
-            currentView={currentView}
             currentPhase={currentPhase}
-            isUserChecklist={isUserChecklist}
+            setCurrentPhase={setCurrentPhase}
+            currentView={currentView}
+            refreshAllChecklists={refreshAllChecklists}
           />
+          <div className="py-24 px-40">
+            <IntroductionActivityList
+              data={data}
+              currentView={currentView}
+              currentPhase={currentPhase}
+              isUserChecklist={isUserChecklist}
+            />
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    : null;
 
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
@@ -171,6 +178,7 @@ export const CheckList: React.FC = () => {
                         </Tabs>
                       </div>
                     : renderedData(data)}
+
                     <div className="w-[40rem]">
                       {managedChecklists.length > 0 && !delegatedChecklist && (
                         <div className="flex flex-row-reverse">
@@ -178,7 +186,7 @@ export const CheckList: React.FC = () => {
                             className="py-6 px-16"
                             variant="primary"
                             color="vattjom"
-                            onClick={() => openModal({ mode: 'add', checklistId: data?.id, currentView, data })}
+                            onClick={openModal}
                             inverted
                             data-cy="add-activity-button"
                           >
@@ -211,7 +219,15 @@ export const CheckList: React.FC = () => {
           </div>
         }
       </Main>
-      <TaskModal isModalOpen={isModalOpen} closeModalHandler={closeModal} {...modalProps} />
+      <TaskModal
+        isModalOpen={isModalOpen}
+        closeModalHandler={closeModal}
+        mode="add"
+        checklistId={data?.id}
+        currentView={currentView}
+        data={data}
+        newSortOrder={newSortOrder}
+      />
     </DefaultLayout>
   );
 };
