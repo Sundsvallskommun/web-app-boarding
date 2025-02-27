@@ -7,8 +7,8 @@ import { getInitials, useUserStore } from '@services/user-service/user-service';
 import { Avatar } from '@sk-web-gui/avatar';
 import Divider from '@sk-web-gui/divider';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Modal, Tooltip, useConfirm } from '@sk-web-gui/react';
-import React, { useCallback, useState } from 'react';
+import { Button, Modal, Tooltip } from '@sk-web-gui/react';
+import React, { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -35,7 +35,6 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
 
   const methods = useForm();
   const { t } = useTranslation();
-  const confirm = useConfirm();
   const [removeDelegationModalOpen, setRemoveDelegationModalOpen] = useState<boolean>(false);
   const [selectedDelegation, setSelectedDelegation] = useState<string[]>([]);
 
