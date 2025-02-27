@@ -1,4 +1,4 @@
-import { TaskModal, TaskModalProps } from '@components/task-modal/task-modal.component';
+import { TaskModal } from '@components/task-modal/task-modal.component';
 import { EmployeeChecklistTask } from '@data-contracts/backend/data-contracts';
 import { removeCustomTask, updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
 import sanitized from '@services/sanitizer-service';
@@ -33,7 +33,7 @@ interface ActivityListItemProps {
 
 export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const user = useUserStore((s) => s.user, shallow);
-  const { task, checklistId, currentView, isUserChecklist, managerUsername } = props;
+  const { task, checklistId, currentView, isUserChecklist } = props;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const openModal = () => {
     setIsModalOpen(true);
