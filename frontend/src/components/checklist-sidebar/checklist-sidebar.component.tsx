@@ -7,12 +7,13 @@ import { getInitials, useUserStore } from '@services/user-service/user-service';
 import { Avatar } from '@sk-web-gui/avatar';
 import Divider from '@sk-web-gui/divider';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, useConfirm } from '@sk-web-gui/react';
+import { Button, Modal, Tooltip, useConfirm } from '@sk-web-gui/react';
 import React, { useCallback, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDelegatedUsers } from '@services/user-service/use-delegated-user';
+import { useRouter } from 'next/router';
 
 interface ChecklistSidebarProps {
   isUserChecklist: boolean;
@@ -25,6 +26,9 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
     permissions: { isManager },
   } = useUserStore(useShallow((state) => state.user));
 
+  const router = useRouter();
+  const { pathname } = router;
+
   const { refresh, data } = useChecklist();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { data: delegatedUsers } = useDelegatedUsers(data?.delegatedTo ?? []);
@@ -32,6 +36,20 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
   const methods = useForm();
   const { t } = useTranslation();
   const confirm = useConfirm();
+  const [removeDelegationModalOpen, setRemoveDelegationModalOpen] = useState<boolean>(false);
+  const [selectedDelegation, setSelectedDelegation] = useState<string[]>([]);
+
+  const closeRemoveDelegationModalHandler = () => {
+    setRemoveDelegationModalOpen(false);
+  };
+
+  const initialHover = [false];
+  const [hover, setHover] = useState<boolean[]>(initialHover);
+  const handleHover = (index: number) => {
+    const newHover = [...initialHover];
+    newHover[index] = true;
+    setHover(newHover);
+  };
 
   const openHandler = () => {
     setIsOpen(true);
@@ -47,28 +65,21 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
     setIsOpen(false);
   };
 
-  const handleRemoveDelegation = useCallback(
-    (email: string) => () => {
-      confirm
-        .showConfirmation(
-          t('delegation:confirmation.title'),
-          t('delegation:confirmation.text', { user: email }),
-          t('common:remove'),
-          t('common:cancel'),
-          'error'
-        )
-        .then((confirmed) => {
-          if (confirmed && data) {
-            removeDelegation(data.id, email).then(() => onUpdate());
-          }
-        });
-    },
-    [data, confirm]
-  );
+  const handleRemoveDelegation = () => {
+    if (data && selectedDelegation) {
+      removeDelegation(data.id, selectedDelegation[0]).then(() => {
+        onUpdate();
+        closeRemoveDelegationModalHandler();
+      });
+    }
+  };
 
   return (
     data && (
-      <div className="rounded bg-background-content border-1 border-divider py-24 px-24" data-cy="sidebar">
+      <div
+        className="rounded bg-background-content border-1 border-divider py-24 px-24 min-w-[35rem]"
+        data-cy="sidebar"
+      >
         <div className="flex gap-16">
           <Avatar rounded initials={`${data.employee?.firstName[0]}${data.employee?.lastName[0]}`} />
           <div>
@@ -89,7 +100,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
           </p>
         </div>
 
-        {isDelegatedChecklist && (
+        {(isDelegatedChecklist || pathname.includes('/admin')) && (
           <div className="mt-16">
             <strong>{t('common:manager')}</strong>
             <p className="m-0">
@@ -115,26 +126,43 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
                     {delegatedUsers?.map((delegated, index) => {
                       if (delegated.email === email) {
                         return (
-                          <div key={`delegated-user-${index}`}>
-                            <Avatar size="sm" className="mr-8" initials={getInitials(delegated.name)} rounded />
-                            {delegated.name}
-                          </div>
+                          <>
+                            <div key={`delegated-user-${index}`}>
+                              <Avatar size="sm" className="mr-8" initials={getInitials(delegated.name)} rounded />
+                              {delegated.name}
+                            </div>
+
+                            {isManager && !isUserChecklist && !isDelegatedChecklist && (
+                              <div
+                                className="relative w-fit h-fit flex items-center"
+                                onMouseEnter={() => handleHover(index)}
+                                onMouseLeave={() => setHover(initialHover)}
+                              >
+                                <Button
+                                  data-cy={`remove-delegation-icon-${index}`}
+                                  iconButton
+                                  size="sm"
+                                  variant="tertiary"
+                                  showBackground={false}
+                                  onClick={() => {
+                                    setSelectedDelegation([email, delegated.name]);
+                                    setRemoveDelegationModalOpen(true);
+                                  }}
+                                >
+                                  <Icon name="trash" />
+                                </Button>
+                                <Tooltip
+                                  position="right"
+                                  className={`${hover[index] ? 'absolute ml-[3rem] w-[9rem]' : 'hidden'}`}
+                                >
+                                  {t('common:remove')}
+                                </Tooltip>
+                              </div>
+                            )}
+                          </>
                         );
                       }
                     })}
-
-                    {isManager && !isUserChecklist && !isDelegatedChecklist && (
-                      <Button
-                        data-cy={`remove-delegation-icon-${index}`}
-                        iconButton
-                        size="sm"
-                        variant="tertiary"
-                        showBackground={false}
-                        onClick={handleRemoveDelegation(email)}
-                      >
-                        <Icon name="trash" />
-                      </Button>
-                    )}
                   </div>
                 );
               })
@@ -155,6 +183,23 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
             )}
           </div>
         </div>
+
+        <Modal
+          show={removeDelegationModalOpen}
+          onClose={closeRemoveDelegationModalHandler}
+          label={t('delegation:confirmation.title', { user: selectedDelegation[1] })}
+          className="max-w-[40rem]"
+        >
+          <Modal.Content>{t('delegation:confirmation.text', { user: selectedDelegation[1] })}</Modal.Content>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={closeRemoveDelegationModalHandler}>
+              {t('common:cancel')}
+            </Button>
+            <Button color="error" onClick={handleRemoveDelegation}>
+              {t('common:remove')}
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     )
   );

@@ -1,7 +1,7 @@
 import { Task } from '@data-contracts/backend/data-contracts';
 import sanitized from '@services/sanitizer-service';
 import LucideIcon, { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Label, Link, PopupMenu, useConfirm } from '@sk-web-gui/react';
+import { Button, Label, Link, Modal, PopupMenu } from '@sk-web-gui/react';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { AdminEditTaskModal } from '../admin-edit-task-modal/admin-edit-task-modal.component';
@@ -25,11 +25,12 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);
-  const confirm = useConfirm();
+  const [removeTaskModalOpen, setRemoveTaskModalOpen] = useState<boolean>(false);
 
   const onRemoveTask = () => {
     removeTask(orgid as string, templateId, phaseId, task.id).then(() => {
       refresh(templateId);
+      removeTaskModalCloseHandler();
     });
   };
 
@@ -39,6 +40,14 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
 
   const closeHandler = () => {
     setIsOpen(false);
+  };
+
+  const removeTaskModalOpenHandler = () => {
+    setRemoveTaskModalOpen(true);
+  };
+
+  const removeTaskModalCloseHandler = () => {
+    setRemoveTaskModalOpen(false);
   };
 
   return (
@@ -136,21 +145,7 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
                           <Button
                             data-cy={`activity-${index}-remove-button`}
                             leftIcon={<Icon name="trash" />}
-                            onClick={() =>
-                              confirm
-                                .showConfirmation(
-                                  t('task:remove_activity'),
-                                  t('task:remove_activity_text'),
-                                  t('common:remove'),
-                                  t('common:cancel'),
-                                  'error'
-                                )
-                                .then((confirmed) => {
-                                  if (confirmed) {
-                                    onRemoveTask();
-                                  }
-                                })
-                            }
+                            onClick={removeTaskModalOpenHandler}
                           >
                             {t('common:remove')}
                           </Button>
@@ -173,6 +168,18 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
           task={task}
         />
       )}
+
+      <Modal show={removeTaskModalOpen} onClose={removeTaskModalCloseHandler} label={t('task:remove_activity')}>
+        <Modal.Content>{t('task:remove_activity_text')}</Modal.Content>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={removeTaskModalCloseHandler}>
+            {t('common:cancel')}
+          </Button>
+          <Button color="error" onClick={onRemoveTask}>
+            {t('common:remove')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

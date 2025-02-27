@@ -4,8 +4,8 @@ import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { Avatar } from '@sk-web-gui/avatar';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Modal, useConfirm, useSnackbar } from '@sk-web-gui/react';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Button, Modal, Tooltip, useSnackbar } from '@sk-web-gui/react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { getInitials, useUserStore } from '@services/user-service/user-service';
 import { useShallow } from 'zustand/react/shallow';
@@ -30,8 +30,8 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
   const { t } = useTranslation();
   const router = useRouter();
   const { pathname, query } = router;
-  const confirm = useConfirm();
   const toastMessage = useSnackbar();
+  const [removeMentorModalOpen, setRemoveMentorModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (username === query?.userId) {
@@ -51,6 +51,18 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
     methods.setValue('recipients', '');
 
     setIsOpen(false);
+  };
+
+  const removeMentorModalCloseHandler = () => {
+    setRemoveMentorModalOpen(false);
+  };
+
+  const initialHover = [false];
+  const [hover, setHover] = useState<boolean[]>(initialHover);
+  const handleHover = (index: number) => {
+    const newHover = [...initialHover];
+    newHover[index] = true;
+    setHover(newHover);
   };
 
   const onSubmit = () => {
@@ -84,26 +96,15 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
     });
   };
 
-  const handleRemoveAssignedMentor = useCallback(
-    () => () => {
-      confirm
-        .showConfirmation(
-          t('mentor:confirmation.title', { user: data?.mentor.name }),
-          t('mentor:confirmation.text', { user: data?.mentor.name }),
-          t('common:remove'),
-          t('common:cancel'),
-          'error'
-        )
-        .then((confirmed) => {
-          if (confirmed && data) {
-            removeMentor(data.id).then(() => {
-              closeHandler();
-            });
-          }
-        });
-    },
-    [data, confirm]
-  );
+  const handleRemoveAssignedMentor = () => {
+    if (data) {
+      removeMentor(data.id).then(() => {
+        refresh();
+        refreshManagedChecklists();
+        removeMentorModalCloseHandler();
+      });
+    }
+  };
 
   return (
     <FormProvider {...methods}>
@@ -117,16 +118,25 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
               <p>{`${data?.mentor?.name}`}</p>
             </div>
             {isManager && !isUserIntroduction && !pathname.includes('/admin') && !isDelegatedChecklist && (
-              <Button
-                data-cy="remove-assigned-mentor-button"
-                iconButton
-                size="sm"
-                variant="tertiary"
-                showBackground={false}
-                onClick={handleRemoveAssignedMentor()}
+              <div
+                className="relative w-fit h-fit flex items-center"
+                onMouseEnter={() => handleHover(0)}
+                onMouseLeave={() => setHover(initialHover)}
               >
-                <Icon name="trash" />
-              </Button>
+                <Button
+                  data-cy="remove-assigned-mentor-button"
+                  iconButton
+                  size="sm"
+                  variant="tertiary"
+                  showBackground={false}
+                  onClick={() => setRemoveMentorModalOpen(true)}
+                >
+                  <Icon name="trash" />
+                </Button>
+                <Tooltip position="right" className={`${hover[0] ? 'absolute ml-[3rem] w-[9rem]' : 'hidden'}`}>
+                  {t('common:remove')}
+                </Tooltip>
+              </div>
             )}
           </div>
         : isManager && !isUserIntroduction && !pathname.includes('/admin') && !isDelegatedChecklist ?
@@ -175,6 +185,23 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
           </Modal.Footer>
         </Modal>
       </div>
+
+      <Modal
+        show={removeMentorModalOpen}
+        onClose={removeMentorModalCloseHandler}
+        label={t('mentor:confirmation.title', { user: data?.mentor?.name })}
+        className="max-w-[40rem]"
+      >
+        <Modal.Content>{t('mentor:confirmation.text', { user: data?.mentor?.name })}</Modal.Content>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={removeMentorModalCloseHandler}>
+            {t('common:cancel')}
+          </Button>
+          <Button color="error" onClick={handleRemoveAssignedMentor}>
+            {t('common:remove')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </FormProvider>
   );
 };
