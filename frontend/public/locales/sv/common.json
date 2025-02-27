@@ -26,7 +26,7 @@
   "start_date": "Anställningsdatum",
   "employee": "Medarbetare",
   "manager": "Chef",
-  "employee_status": "Status anställd",
+  "employee_status": "Status medarbetare",
   "manager_status": "Status chef",
   "selected_one": "anställd vald",
   "selected_other": "anställda valda",

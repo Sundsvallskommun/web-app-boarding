@@ -148,7 +148,7 @@ export const CheckList: React.FC = () => {
                   </h1>
                   <div className="flex gap-40">
                     {!isUserChecklist ?
-                      <div className="flex grow gap-16 mb-24 w-[90rem]">
+                      <div className="flex grow gap-16 mb-24 w-[90rem] mt-8">
                         <Tabs current={currentView} data-cy="introduction-for-tabs">
                           <Tabs.Item>
                             <Tabs.Button
@@ -173,10 +173,10 @@ export const CheckList: React.FC = () => {
                     : renderedData(data)}
 
                     <div className="w-[40rem]">
-                      {managedChecklists.length > 0 && !delegatedChecklist && (
+                      {managedChecklists.length > 0 && !delegatedChecklist && !isUserChecklist && (
                         <div className="flex flex-row-reverse">
                           <Button
-                            className="py-6 px-16"
+                            className="mb-24 px-16"
                             variant="primary"
                             color="vattjom"
                             onClick={openModal}
@@ -191,14 +191,7 @@ export const CheckList: React.FC = () => {
                         </div>
                       )}
 
-                      <div
-                        className={
-                          delegatedChecklist ? 'mt-56'
-                          : !isUserChecklist ?
-                            'mt-16'
-                          : 'mt-0'
-                        }
-                      >
+                      <div className={delegatedChecklist ? 'mt-64' : 'mt-0'}>
                         <ChecklistSidebar
                           isUserChecklist={isUserChecklist}
                           isDelegatedChecklist={!managedChecklist && !!delegatedChecklist}
