@@ -35,8 +35,8 @@ export const CheckList: React.FC = () => {
   const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
 
   const refreshAllChecklists = async () => {
-    await refreshChecklist();
-    await refreshDelegatedChecklists();
+    refreshChecklist();
+    refreshDelegatedChecklists();
   };
 
   const managedChecklist = managedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];

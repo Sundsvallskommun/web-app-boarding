@@ -13,7 +13,7 @@ import {
 } from '@services/template-service/template-service';
 import { useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
-import { Button, Label, useConfirm, useSnackbar, Tabs } from '@sk-web-gui/react';
+import { Button, Label, useConfirm, useSnackbar, Tabs, Modal } from '@sk-web-gui/react';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 import dayjs from 'dayjs';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -40,6 +40,7 @@ export const EditTemplate = () => {
   const toastMessage = useSnackbar();
   const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid as string, 10));
   const [phaseIndex, setPhaseIndex] = useState<number>(0);
+  const [activateTemplateModalOpen, setActivateTemplateModalOpen] = useState<boolean>(false);
 
   const editable = useCallback(
     (checklist: Checklist, user: User) => {
@@ -55,6 +56,10 @@ export const EditTemplate = () => {
 
   const closeHandler = () => {
     setIsOpen(false);
+  };
+
+  const closeActivateTemplateModalHandler = () => {
+    setActivateTemplateModalOpen(false);
   };
 
   const newTask: (
@@ -133,30 +138,21 @@ export const EditTemplate = () => {
   const moveDown = (task: Task, checklist: Checklist) => moveTask(task, checklist, 1);
 
   const onActivate = () => {
-    confirm
-      .showConfirmation(
-        t('templates:activate.title'),
-        t('templates:activate.text'),
-        t('templates:activate.confirm'),
-        t('common:cancel')
-      )
-      .then((confirmed) => {
-        if (confirmed && data) {
-          activateTemplate(orgid as string, data.id)
-            .then(() => {
-              refresh(templateid as string);
-              closeHandler();
-            })
-            .catch(() => {
-              toastMessage({
-                position: 'bottom',
-                closeable: false,
-                message: t('templates:activate.error'),
-                status: 'error',
-              });
-            });
-        }
-      });
+    if (data) {
+      activateTemplate(orgid as string, data.id)
+        .then(() => {
+          refresh(templateid as string);
+          closeActivateTemplateModalHandler();
+        })
+        .catch(() => {
+          toastMessage({
+            position: 'bottom',
+            closeable: false,
+            message: t('templates:activate.error'),
+            status: 'error',
+          });
+        });
+    }
   };
 
   const onNewVersion = () => {
@@ -265,7 +261,7 @@ export const EditTemplate = () => {
               </div>
 
               {editable(data, user) && data?.lifeCycle === 'CREATED' ?
-                <Button size="md" onClick={onActivate}>
+                <Button size="md" onClick={() => setActivateTemplateModalOpen(true)}>
                   {t('templates:activate.title')}
                 </Button>
               : (
@@ -318,6 +314,20 @@ export const EditTemplate = () => {
           task={newTask(currentView === 0 ? 'MANAGER_FOR_NEW_EMPLOYEE' : 'NEW_EMPLOYEE')}
         />
       )}
+
+      <Modal
+        show={activateTemplateModalOpen}
+        onClose={closeActivateTemplateModalHandler}
+        label={t('templates:activate.title')}
+      >
+        <Modal.Content>{t('templates:activate.text')}</Modal.Content>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeActivateTemplateModalHandler}>
+            {t('common:cancel')}
+          </Button>
+          <Button onClick={onActivate}>{t('templates:activate.confirm')}</Button>
+        </Modal.Footer>
+      </Modal>
     </AdminLayout>
   );
 };

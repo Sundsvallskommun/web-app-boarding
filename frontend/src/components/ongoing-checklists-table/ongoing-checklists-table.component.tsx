@@ -115,6 +115,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
               onClick={() => {
                 router.push(`/${d.employee.username}`);
               }}
+              variant="tertiary"
             >
               <Icon name="arrow-right" />
             </Button>
@@ -127,7 +128,7 @@ export const OngoingChecklistsTable: React.FC<OngoingChecklistsTableProps> = (pr
       <Spinner />
     : <div>
         <Table className="mb-40 bg-background-content border-1 border-divider" background={true}>
-          <Table.Header className="bg-background-content border-1 border-b-inverted-secondary-outline-hover">
+          <Table.Header className="bg-background-content border-b-1 border-primary-darkest">
             {!delegatedChecklists && (
               <Table.HeaderColumn>
                 <Checkbox

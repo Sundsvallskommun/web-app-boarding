@@ -28,7 +28,7 @@
   "new_manager": "Ny chef",
   "manager_for_new_employee": "Chef för ny anställd",
   "manager_for_new_manager": "Chef för ny chef",
-  "text": "Brödtext",
+  "text": "Beskrivning",
   "mark_all_activities_as_completed": "Markera alla aktiviteter som klar",
   "activities_completed": "{{first}} av {{second}} aktiviteter klara",
   "complete_by": "Slutför senast {{date}}",
