@@ -8,7 +8,7 @@
   "assign_introduction_other" : "Tilldela introduktioner",
   "assign_introduction_description" : "Tilldela personer som ansvarar för delar av introduktionen.",
   "confirmation": {
-    "title": "Ta bort tilldelning?",
+    "title": "Ta bort {{user}}?",
     "text": "{{user}} kommer inte längre att ha tillgång till introduktionen. Aktiviteter som {{user}} har gjort kommer att ligga kvar."
   },
   "no_assignments" : "Det finns inga tilldelade medarbetare",

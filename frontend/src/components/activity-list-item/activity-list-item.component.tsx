@@ -1,4 +1,4 @@
-import { TaskModal, TaskModalProps } from '@components/task-modal/task-modal.component';
+import { TaskModal } from '@components/task-modal/task-modal.component';
 import { EmployeeChecklistTask } from '@data-contracts/backend/data-contracts';
 import { removeCustomTask, updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
 import sanitized from '@services/sanitizer-service';
@@ -33,7 +33,7 @@ interface ActivityListItemProps {
 
 export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const user = useUserStore((s) => s.user, shallow);
-  const { task, checklistId, currentView, isUserChecklist, managerUsername } = props;
+  const { task, checklistId, currentView, isUserChecklist } = props;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const openModal = () => {
     setIsModalOpen(true);
@@ -58,9 +58,9 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   };
 
   return (
-    <div>
-      <div className="my-4 flex p-16">
-        <div className="w-full mt-8 flex items-start">
+    <div className="my-8">
+      <div className="flex p-16 hover:bg-background-200 rounded-button">
+        <div className="w-full flex items-start">
           <Checkbox
             data-cy={`id-${task.id}`}
             checked={isChecked(task.fulfilmentStatus)}
@@ -97,7 +97,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                 </Label>
               )}
               {task.fulfilmentStatus === 'TRUE' && (
-                <p className="text-small text-primary mt-8">
+                <p className="text-small text-primary mt-16">
                   <Icon className="align-middle mr-5" name="check" size="1.5rem" />
                   {t('task:fulfilled_by', {
                     user: userInformation?.map((userInfo) => {

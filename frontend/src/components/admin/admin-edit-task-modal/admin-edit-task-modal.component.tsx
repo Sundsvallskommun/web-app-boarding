@@ -180,7 +180,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
               {t('task:manager_activity')}
             </Checkbox>
 
-            <FormControl className="w-full" required>
+            <FormControl className="w-full">
               <FormLabel showRequired={false} className="mt-16">
                 {t('task:heading')}
               </FormLabel>
