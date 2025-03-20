@@ -72,13 +72,15 @@ passport.deserializeUser(function (user, done) {
 const samlStrategy = new Strategy(
   {
     disableRequestedAuthnContext: true,
-    identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
+    identifierFormat: 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified',
     callbackUrl: SAML_CALLBACK_URL,
     entryPoint: SAML_ENTRY_SSO,
     // decryptionPvk: SAML_PRIVATE_KEY,
     privateKey: SAML_PRIVATE_KEY,
     // Identity Provider's public key
     idpCert: SAML_IDP_PUBLIC_CERT,
+    signatureAlgorithm: 'sha256',
+    digestAlgorithm: 'sha256',
     issuer: SAML_ISSUER,
     wantAssertionsSigned: false,
     acceptedClockSkewMs: 1000,
