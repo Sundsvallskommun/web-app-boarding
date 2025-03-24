@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { useShallow } from 'zustand/react/shallow';
+import { OrganizationLogotype } from '@components/organization-logotype/organization-logotype.component';
+import React from 'react';
 
 interface PageHeaderProps extends React.ComponentProps<typeof Header> {
   headerTitle?: string;
@@ -35,6 +37,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ headerSubtitle, headerTi
       LogoLinkWrapperComponent={<NextLink legacyBehavior href={logoLinkHref} passHref />}
       wrapperClasses="py-6 z-10"
     >
+      <OrganizationLogotype />
       <div className="flex justify-end gap-24 items-center">
         {showAdminMenu && (
           <>
