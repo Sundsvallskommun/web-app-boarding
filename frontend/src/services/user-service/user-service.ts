@@ -39,7 +39,8 @@ export const getUser: (username: string) => Promise<ServiceResponse<Employee>> =
     }));
 };
 
-export const isAdmin = (user: User) => user.role === 'global_admin' || user.role === 'department_admin';
+export const isAdmin = (user: User) =>
+  user.role === 'global_admin' || user.role === 'department_admin' || user.role === 'developer';
 
 interface State {
   user: User;
