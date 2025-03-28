@@ -25,11 +25,17 @@ export const LoginGuard: React.FC<{ children?: React.ReactNode }> = ({ children 
     !user?.permissions?.isManager &&
     query?.userId !== user?.username &&
     user?.role !== 'global_admin' &&
-    user?.role !== 'department_admin'
+    user?.role !== 'department_admin' &&
+    user?.role !== 'developer'
   ) {
     router.push(`/${user.username}`);
   }
-  if (router.pathname.startsWith('/admin') && user?.role !== 'global_admin' && user?.role !== 'department_admin') {
+  if (
+    router.pathname.startsWith('/admin') &&
+    user?.role !== 'global_admin' &&
+    user?.role !== 'department_admin' &&
+    user?.role !== 'developer'
+  ) {
     router.push('/');
   }
 
