@@ -35,5 +35,11 @@
   "introduction_of": "Introduktion för",
   "assigned_introductions": "Tilldelade introduktioner",
   "department": "Verksamhet",
-  "displayed_introductions": "Visar {{count}} introduktioner"
+  "displayed_introductions": "Visar {{count}} introduktioner",
+  "info_banner": {
+    "title": "Detta är ett pågående utvecklingsarbete för digitala introduktioner.",
+    "text" : "Du ser dina medarbetare och kan använda utvecklade funktioner om du vill. Det är ett pågående införandeprojekt under 2025. Har du frågor eller synpunkter under införandeprojektet - kontakta din HR-partner.",
+    "show_text" : "Läs mer",
+    "hide_text" : "Dölj information"
+  }
 }

@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation';
 import { capitalize } from 'underscore.string';
 import { shallow } from 'zustand/shallow';
 import React from 'react';
+import { InfoBanner } from '@components/common/info-banner/info-banner.component';
 
 export interface DefaultLayoutProps {
   children: React.ReactNode;
@@ -49,6 +50,7 @@ export default function DefaultLayout({
 
   return (
     <div className="DefaultLayout full-page-layout bg-background-100">
+      <InfoBanner />
       <Head>
         <title>{title ? title : fullTitle}</title>
         <meta name="description" content={title ? title : `${process.env.NEXT_PUBLIC_APP_NAME}`} />
