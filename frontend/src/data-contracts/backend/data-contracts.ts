@@ -432,12 +432,14 @@ export interface Events {
 }
 
 export interface OrgTree {
-  organizationId: string;
   orgId: number;
   treeLevel: number;
-  orgDisplayName?: string;
   orgName?: string;
   parentId: number;
+  isLeafLevel?: boolean;
+  companyId?: number;
+  responsibilityCode?: string;
+  responsibilityList?: string;
   organizations?: OrgTree[];
 }
 

@@ -10,13 +10,13 @@
  */
 
 export interface Problem {
-  title?: string;
-  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
   parameters?: Record<string, object>;
+  title?: string;
+  detail?: string;
   status?: StatusType;
 }
 
