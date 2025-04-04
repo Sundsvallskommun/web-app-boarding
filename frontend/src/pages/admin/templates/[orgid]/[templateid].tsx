@@ -74,7 +74,7 @@ export const EditTemplate = () => {
       permission: 'ADMIN',
       questionType: 'YES_OR_NO',
       fulfilmentStatus: 'EMPTY',
-      sortOrder: data && org ? (1000 * org?.treeLevel + data.phases[phaseIndex].tasks.length + 1).toString() : '0',
+      sortOrder: data && org ? (1000 * org?.treeLevel + data.phases[phaseIndex].tasks?.length + 1).toString() : '0',
     };
   };
 
