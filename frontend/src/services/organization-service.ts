@@ -208,8 +208,8 @@ export const useOrgTemplates = (orgid: number) => {
         const fromOrgTree = findOrgInTree(orgTree, orgid);
         if (fromOrgTree) {
           setData({
-            id: fromOrgTree.organizationId,
-            organizationName: fromOrgTree.orgName || fromOrgTree.orgDisplayName || '',
+            id: fromOrgTree.orgId.toString(),
+            organizationName: fromOrgTree.orgName || fromOrgTree.orgName || '',
             organizationNumber: fromOrgTree.orgId,
             checklists: [],
             communicationChannels: 'NO_COMMUNICATION',

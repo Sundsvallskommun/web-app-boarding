@@ -7,7 +7,7 @@ Dessa APIer används i projektet, applikationsanvändaren i WSO2 måste prenumer
 | API             | Version |
 | --------------- | ------: |
 | SimulatorServer |     2.0 |
-| MDViewer        |     1.0 |
+| Company         |     1.0 |
 | Checklist       |     1.0 |
 | Employee        |     1.0 |
 
@@ -20,7 +20,7 @@ Dessa APIer används i projektet, applikationsanvändaren i WSO2 måste prenumer
 
 ### Steg för steg
 
-1. Klona ner repot till en mapp "<web-app-projektnamn>" 
+1. Klona ner repot till en mapp "<web-app-projektnamn>"
 
 2. Installera dependencies för både `backend` och `frontend`
 

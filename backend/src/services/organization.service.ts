@@ -1,13 +1,13 @@
 import { APIS, MUNICIPALITY_ID } from '@/config';
-import { OrganizationTree } from '@/data-contracts/mdviewer/data-contracts';
+import { OrganizationTree } from '@/data-contracts/company/data-contracts';
 import { ClientUser } from '@/interfaces/users.interface';
 import { OrganizationApiResponse } from '@/responses/organization.response';
 import ApiService from './api.service';
 
 export const getOrgChildren = async (orgId: number, user): Promise<number[]> => {
   const apiService = new ApiService();
-  const mdviewer = APIS.find(api => api.name === 'mdviewer');
-  const data = await apiService.get<OrganizationTree>({ url: `${mdviewer.name}/${mdviewer.version}/${orgId}/orgtree` }, user);
+  const company = APIS.find(api => api.name === 'company');
+  const data = await apiService.get<OrganizationTree>({ url: `${company.name}/${company.version}/${MUNICIPALITY_ID}/${orgId}/orgtree` }, user);
   const org = data.data;
   let children = [];
   if (org) {

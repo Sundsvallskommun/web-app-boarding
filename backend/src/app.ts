@@ -51,8 +51,7 @@ import { EmployeeChecklist } from './responses/checklist.response';
 import { DelegatedEmployeeChecklistResponse } from '@/data-contracts/checklist/data-contracts';
 import { PortalPersonData } from './data-contracts/employee/data-contracts';
 import { getOrgChildren } from './services/organization.service';
-import { Organization } from './data-contracts/mdviewer/data-contracts';
-import { InternalRoleEnum } from './interfaces/users.interface';
+import { Organization } from './data-contracts/company/data-contracts';
 
 const SessionStoreCreate = SESSION_MEMORY ? createMemoryStore(session) : createFileStore(session);
 const sessionTTL = 4 * 24 * 60 * 60;
@@ -239,8 +238,8 @@ const samlStrategy = new Strategy(
         // so the relevant admin level for department admins
         // is level 1 (the company level)
         logger.debug('User is not in Sundsvalls kommun');
-        const mdviewer = APIS.find(api => api.name === 'mdviewer');
-        const companyUrl = `${mdviewer.name}/${mdviewer.version}/${companyId}/company`;
+        const company = APIS.find(api => api.name === 'company');
+        const companyUrl = `${company.name}/${company.version}/${companyId}/company`;
 
         const companyData: { data: Organization[] } | null = await apiService.get<Organization[]>({ url: companyUrl }, findUser).catch(err => {
           logger.error(`Error fetching company data: ${err.message || err}`);

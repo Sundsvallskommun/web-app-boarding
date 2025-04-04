@@ -1,4 +1,4 @@
-import { OrganizationTree } from '@/data-contracts/mdviewer/data-contracts';
+import { OrganizationTree } from '@/data-contracts/company/data-contracts';
 import { HttpException } from '@/exceptions/HttpException';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import { hasOrgPermissions } from '@/middlewares/permissions.middleware';
@@ -14,7 +14,7 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 @Controller()
 export class OrganizationController {
   private apiService = new ApiService();
-  private mdviewer = APIS.find(api => api.name === 'mdviewer');
+  private company = APIS.find(api => api.name === 'company');
   private checklist = APIS.find(api => api.name === 'checklist');
 
   @Get('/org/:orgId/tree')
@@ -35,7 +35,10 @@ export class OrganizationController {
     }
 
     try {
-      const data = await this.apiService.get<OrganizationTree>({ url: `${this.mdviewer.name}/${this.mdviewer.version}/${orgId}/orgtree` }, req.user);
+      const data = await this.apiService.get<OrganizationTree>(
+        { url: `${this.company.name}/${this.company.version}/${MUNICIPALITY_ID}/${orgId}/orgtree` },
+        req.user,
+      );
       return response.send({ data: data.data, message: 'success' });
     } catch (e) {
       throw new HttpException(e?.status || 500, e?.message || 'Internal server error');

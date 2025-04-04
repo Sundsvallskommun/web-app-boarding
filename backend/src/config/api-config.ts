@@ -2,7 +2,7 @@
 export const APIS = [
   {
     name: 'simulatorserver',
-    version: '1.0',
+    version: '2.0',
   },
   {
     name: 'checklist',
@@ -13,7 +13,7 @@ export const APIS = [
     version: '1.0',
   },
   {
-    name: 'mdviewer',
+    name: 'company',
     version: '1.0',
   },
 ] as const;

@@ -36,7 +36,7 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue 
         searchValue
           .toLowerCase()
           .split(' ')
-          .some((word) => org.orgName?.toLowerCase().includes(word) || org.orgDisplayName?.toLowerCase().includes(word))
+          .some((word) => org.orgName?.toLowerCase().includes(word) || org.orgName?.toLowerCase().includes(word))
       ) {
         hasMatch = true;
         return [...tree, { ...org, organizations: [] }];
