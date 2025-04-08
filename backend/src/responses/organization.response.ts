@@ -1,33 +1,38 @@
 import { Checklist, CommunicationChannel, Organization as OrganizationType } from '@/data-contracts/checklist/data-contracts';
-import { OrganizationTree } from '@/data-contracts/mdviewer/data-contracts';
+import { OrganizationTree } from '@/data-contracts/company/data-contracts';
 import ApiResponse from '@/interfaces/api-service.interface';
 import { Type } from 'class-transformer';
-import { IsDateString, IsEnum, IsIn, IsInt, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsDateString, IsEnum, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Template } from './template.response';
 import { Organization } from './checklist.response';
-import e from 'express';
 
 export class OrgTree implements OrganizationTree {
-  @IsString()
-  organizationId?: string;
   @IsInt()
   orgId?: number;
   @IsInt()
   treeLevel?: number;
   @IsString()
   @IsOptional()
-  orgDisplayName?: string;
+  orgName?: string | null;
+  @IsInt()
+  parentId?: number;
+  @IsOptional()
+  @IsBoolean()
+  isLeafLevel?: boolean;
+  @IsInt()
+  @IsOptional()
+  companyId?: number;
   @IsString()
   @IsOptional()
-  orgName?: string;
-  @IsNumber()
-  parentId?: number;
+  responsibilityCode?: string | null;
+  @IsString()
+  @IsOptional()
+  responsibilityList?: string | null;
   @ValidateNested({ each: true })
   @Type(() => OrgTree)
   @IsOptional()
-  organizations?: OrgTree[];
+  organizations?: OrgTree[] | null;
 }
-
 export class OrgTemplate implements OrganizationType {
   @IsString()
   id?: string;
