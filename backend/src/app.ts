@@ -264,7 +264,6 @@ const samlStrategy = new Strategy(
       findUser.children = children;
 
       logger.info(`Constructed user: ${JSON.stringify(findUser)}`);
-      console.log(`Constructed user: ${JSON.stringify(findUser)}`);
       return done(null, findUser);
     } catch (err) {
       if (err instanceof HttpException && err.status === 404) {
