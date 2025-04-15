@@ -23,6 +23,7 @@ import {
   BASE_URL_PREFIX,
   CREDENTIALS,
   LOG_FORMAT,
+  MUNICIPALITY_ID,
   NODE_ENV,
   ORIGIN,
   PORT,
@@ -239,7 +240,7 @@ const samlStrategy = new Strategy(
         // is level 1 (the company level)
         logger.debug('User is not in Sundsvalls kommun');
         const company = APIS.find(api => api.name === 'company');
-        const companyUrl = `${company.name}/${company.version}/${companyId}/company`;
+        const companyUrl = `${company.name}/${company.version}/${MUNICIPALITY_ID}/${companyId}/orgnodes`;
 
         const companyData: { data: Organization[] } | null = await apiService.get<Organization[]>({ url: companyUrl }, findUser).catch(err => {
           logger.error(`Error fetching company data: ${err.message || err}`);
