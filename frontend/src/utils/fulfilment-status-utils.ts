@@ -11,6 +11,8 @@ export const setTimeToBeCompleted = (startDate: string, timeToComplete: string) 
       return start.format('DD MMMM YYYY');
     case 'P1W':
       return start.add(7, 'days').format('DD MMMM YYYY');
+    case 'P1M':
+      return start.add(1, 'months').format('DD MMMM YYYY');
     case 'P6M':
       return start.add(6, 'months').format('DD MMMM YYYY');
     default:
