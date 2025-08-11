@@ -47,11 +47,26 @@ export interface ChecklistWithOrgId extends Checklist {
   phases: PhaseWithOrgId[];
 }
 
+// Helper functions to validate orgId and templateId
+function isValidOrgId(orgId: string): boolean {
+  return /^\d+$/.test(orgId);
+}
+function isValidTemplateId(templateId: string): boolean {
+  // Accepts only digits; adjust regex if templateId can be UUID or other format
+  return /^\d+$/.test(templateId);
+}
+
 export const setSortorder: (
   orgId: string,
   templateId: string,
   sortOrderData: SortorderRequest
 ) => Promise<SortorderRequest> = async (orgId, templateId, sortOrderData) => {
+  if (!isValidOrgId(orgId)) {
+    throw new Error(`Invalid orgId: ${orgId}`);
+  }
+  if (!isValidTemplateId(templateId)) {
+    throw new Error(`Invalid templateId: ${templateId}`);
+  }
   return apiService
     .put<SortorderRequest>(`/org/${orgId}/templates/${templateId}/sortorder`, sortOrderData)
     .then((response) => {
