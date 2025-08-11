@@ -13,7 +13,13 @@ import {
   COngoingEmployeeChecklists,
 } from '@data-contracts/backend/data-contracts';
 
+// Allow only alphanumeric, underscore, hyphen, and dot in usernames
+const isValidUsername = (username: string): boolean => /^[a-zA-Z0-9_.-]+$/.test(username);
+
 export const getChecklistAsEmployee: (username: string) => Promise<EmployeeChecklist> = async (username: string) => {
+  if (!isValidUsername(username)) {
+    return Promise.reject(new Error('Invalid username'));
+  }
   return await apiService
     .get<ApiResponse<EmployeeChecklist>>(`/employee-checklists/employee/${username}`)
     .then((res) => {
@@ -24,6 +30,9 @@ export const getChecklistAsEmployee: (username: string) => Promise<EmployeeCheck
     });
 };
 
+  if (!isValidUsername(username)) {
+    return Promise.reject(new Error('Invalid username'));
+  }
 export const getChecklistsAsManager: (username: string) => Promise<EmployeeChecklist[]> = async (username: string) => {
   return apiService
     .get<ApiResponse<EmployeeChecklist[]>>(`/employee-checklists/manager/${username}`)
@@ -41,6 +50,9 @@ export const getChecklistsAsManager: (username: string) => Promise<EmployeeCheck
 
 export const getDelegatedChecklists: (username: string) => Promise<DelegatedEmployeeChecklistResponse> = async (
   username: string
+  if (!isValidUsername(username)) {
+    return Promise.reject(new Error('Invalid username'));
+  }
 ) => {
   return apiService
     .get<ApiResponse<DelegatedEmployeeChecklistResponse>>(`/employee-checklists/delegated-to/${username}`)
