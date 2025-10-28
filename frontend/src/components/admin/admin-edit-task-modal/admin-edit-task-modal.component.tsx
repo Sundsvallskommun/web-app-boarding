@@ -1,4 +1,3 @@
-import { RichTextEditor } from '@components/rich-text-editor/rich-text-editor.component';
 import { Task, TaskCreateRequest, TaskUpdateRequest } from '@data-contracts/backend/data-contracts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useOrgTreeStore } from '@services/organization-service';
@@ -15,6 +14,8 @@ import React, { useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { shallow } from 'zustand/shallow';
+import dynamic from 'next/dynamic';
+const TextEditor = dynamic(() => import('@sk-web-gui/text-editor'), { ssr: false });
 
 interface AdminEditTaskModalProps {
   closeHandler: () => void;
@@ -140,10 +141,6 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
     closeHandler();
   };
 
-  const onRichTextChange = (val: string) => {
-    setValue('text', val.length ? val : '');
-  };
-
   return (
     <Modal
       data-cy="edit-task-modal"
@@ -204,11 +201,13 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
             </FormControl>
             <FormControl className="w-full" data-cy="activity-description">
               <FormLabel className="mt-16">{t('task:text')}</FormLabel>
-              <RichTextEditor
+              <TextEditor
+                className="mb-lg h-[120px]"
                 data-cy="activity-description-input"
-                containerLabel="text"
-                value={text || ''}
-                onChange={onRichTextChange}
+                value={{ markup: text }}
+                onChange={(e) => {
+                  setValue('text', e.target.value.markup);
+                }}
               />
             </FormControl>
           </Modal.Content>

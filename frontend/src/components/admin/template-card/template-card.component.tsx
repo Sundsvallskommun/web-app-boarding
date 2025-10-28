@@ -14,7 +14,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, orgId }) =
   const { t } = useTranslation();
 
   return (
-    <Link href={`/admin/templates/${orgId}/${template.id}`} passHref legacyBehavior>
+    <Link href={`/admin/templates/${orgId}/${template.id}`}>
       <Card
         layout="horizontal"
         href={`/admin/templates/edit/${template.id}`}

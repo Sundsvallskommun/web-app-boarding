@@ -35,10 +35,14 @@ export default function AdminLayoutComponent({
           <meta name="description" content={title ? title : `${process.env.NEXT_PUBLIC_APP_NAME}`} />
         </Head>
 
-        <NextLink href="#content" legacyBehavior passHref>
-          <a onClick={setFocusToMain} accessKey="s" className="next-link-a" data-cy="systemMessage-a">
-            {t('layout:header.goto_content')}
-          </a>
+        <NextLink
+          href="#content"
+          onClick={setFocusToMain}
+          accessKey="s"
+          className="next-link-a"
+          data-cy="systemMessage-a"
+        >
+          {t('layout:header.goto_content')}
         </NextLink>
 
         <PageHeader headerSubtitle={headerSubtitle} headerTitle={headerTitle || title} logoLinkHref={logoLinkHref} />

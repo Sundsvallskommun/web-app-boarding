@@ -1,4 +1,4 @@
-import { MenuBar } from '@sk-web-gui/react';
+import { NavigationBar } from '@sk-web-gui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
@@ -14,13 +14,17 @@ export const AdminMenu = () => {
     : undefined;
 
   return (
-    <MenuBar current={current} data-cy="nav-admin-menu">
-      <MenuBar.Item wrapper={<Link href="/admin/checklists" legacyBehavior passHref />}>
-        <a data-cy="nav-admin-menu-introduktioner">{capitalize(t('checklists:name_other'))}</a>
-      </MenuBar.Item>
-      <MenuBar.Item wrapper={<Link href="/admin/templates" legacyBehavior passHref />}>
-        <a data-cy="nav-admin-menu-mallar">{capitalize(t('templates:name_other'))}</a>
-      </MenuBar.Item>
-    </MenuBar>
+    <NavigationBar current={current} data-cy="nav-admin-menu">
+      <NavigationBar.Item>
+        <Link href="/admin/checklists" data-cy="nav-admin-menu-introduktioner">
+          {capitalize(t('checklists:name_other'))}
+        </Link>
+      </NavigationBar.Item>
+      <NavigationBar.Item>
+        <Link href="/admin/templates" data-cy="nav-admin-menu-mallar">
+          {capitalize(t('templates:name_other'))}
+        </Link>
+      </NavigationBar.Item>
+    </NavigationBar>
   );
 };
