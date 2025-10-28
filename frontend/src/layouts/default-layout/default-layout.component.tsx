@@ -56,13 +56,7 @@ export default function DefaultLayout({
         <meta name="description" content={title ? title : `${process.env.NEXT_PUBLIC_APP_NAME}`} />
       </Head>
 
-      <NextLink
-        href="#content"
-        onClick={setFocusToMain}
-        accessKey="s"
-        className="next-link-a"
-        data-cy="systemMessage-a"
-      >
+      <NextLink href="#content" onClick={setFocusToMain} className="next-link-a" data-cy="systemMessage-a">
         {t('layout:header.goto_content')}
       </NextLink>
 

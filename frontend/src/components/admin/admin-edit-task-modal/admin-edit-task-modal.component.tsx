@@ -52,7 +52,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
     createdBy: yup.string().required(),
   });
 
-  const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid as string, 10));
+  const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid as string, 10));
   const level = org?.treeLevel || 0;
 
   const formControl = useForm<TaskCreateRequest & TaskUpdateRequest>({
@@ -92,7 +92,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
       questionType: task?.questionType,
       updatedBy: user.username,
       createdBy: user.username,
-      sortOrder: parseInt(task?.sortOrder || '0', 10) || 0,
+      sortOrder: Number.parseInt(task?.sortOrder || '0', 10) || 0,
     });
   }, [task]);
 

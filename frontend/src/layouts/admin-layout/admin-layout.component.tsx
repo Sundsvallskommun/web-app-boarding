@@ -27,21 +27,14 @@ export default function AdminLayoutComponent({
     }
   };
 
-  return !isAdmin(user) ?
-      <></>
-    : <div className="DefaultLayout full-page-layout bg-background-100">
+  return isAdmin(user) ?
+      <div className="DefaultLayout full-page-layout bg-background-100">
         <Head>
           <title>{title ? title : fullTitle}</title>
           <meta name="description" content={title ? title : `${process.env.NEXT_PUBLIC_APP_NAME}`} />
         </Head>
 
-        <NextLink
-          href="#content"
-          onClick={setFocusToMain}
-          accessKey="s"
-          className="next-link-a"
-          data-cy="systemMessage-a"
-        >
+        <NextLink href="#content" onClick={setFocusToMain} className="next-link-a" data-cy="systemMessage-a">
           {t('layout:header.goto_content')}
         </NextLink>
 
@@ -51,5 +44,6 @@ export default function AdminLayoutComponent({
           <AdminSidebar />
           <Main className="w-full pl-40 h-full mb-40">{children}</Main>
         </div>
-      </div>;
+      </div>
+    : <></>;
 }
