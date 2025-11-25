@@ -1,4 +1,3 @@
-import { RichTextEditor } from '@components/rich-text-editor/rich-text-editor.component';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { addCustomTask, updateCustomTask } from '@services/checklist-service/checklist-service';
 import { useChecklist } from '@services/checklist-service/use-checklist';
@@ -8,8 +7,7 @@ import { useUserStore } from '@services/user-service/user-service';
 import { FormControl, FormErrorMessage, FormLabel, Input } from '@sk-web-gui/forms';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Modal, Select } from '@sk-web-gui/react';
-import React, { useEffect, useRef, useState } from 'react';
-import ReactQuill from 'react-quill';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { shallow } from 'zustand/shallow';
@@ -20,6 +18,8 @@ import {
   EmployeeChecklistTask,
 } from '@data-contracts/backend/data-contracts';
 import { useTranslation } from 'react-i18next';
+import dynamic from 'next/dynamic';
+const TextEditor = dynamic(() => import('@sk-web-gui/text-editor'), { ssr: false });
 
 export interface TaskModalProps {
   closeModalHandler: () => void;
@@ -39,7 +39,6 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
   const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
   const { refresh: refreshChecklist } = useChecklist();
   const [richText, setRichText] = useState<string>('');
-  const quillRef = useRef<ReactQuill>(null);
   const { t } = useTranslation();
 
   let formSchema = yup.object({
@@ -141,15 +140,6 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
     }
   };
 
-  const onRichTextChange = (val: string) => {
-    if (quillRef.current) {
-      const editor = quillRef.current.getEditor();
-      const length = editor.getLength();
-      setRichText(val);
-      setValue('text', length > 1 ? val : '');
-    }
-  };
-
   const onError = (error: any) => {
     console.error(error);
   };
@@ -211,12 +201,11 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
             <FormControl className="w-full">
               <FormLabel className="mt-16">{t('task:text')}</FormLabel>
               <div className="mb-16" data-cy="activity-text">
-                <RichTextEditor
-                  ref={quillRef}
-                  containerLabel="text"
-                  value={richText}
-                  onChange={(value) => {
-                    return onRichTextChange(value);
+                <TextEditor
+                  className="mb-lg h-[120px]"
+                  value={{ markup: richText }}
+                  onChange={(e) => {
+                    setValue('text', e.target.value.markup);
                   }}
                 />
               </div>

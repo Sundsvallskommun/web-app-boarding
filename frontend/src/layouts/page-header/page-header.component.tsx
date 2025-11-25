@@ -2,7 +2,6 @@ import { AdminMenu } from '@components/admin/admin-menu/admin-menu.component';
 import { isAdmin, useUserStore } from '@services/user-service/user-service';
 import { Divider, Header, Icon, Link, UserMenu } from '@sk-web-gui/react';
 import { LogOut, User2, UserCog } from 'lucide-react';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
@@ -34,7 +33,6 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ headerSubtitle, headerTi
       subtitle={headerSubtitle ? headerSubtitle : 'Sundsvalls kommun'}
       aria-label={`${headerTitle ? headerTitle : process.env.NEXT_PUBLIC_APP_NAME} ${headerSubtitle}`}
       logoLinkOnClick={handleLogoClick}
-      LogoLinkWrapperComponent={<NextLink legacyBehavior href={logoLinkHref} passHref />}
       wrapperClasses="py-6 z-10"
     >
       <OrganizationLogotype />
