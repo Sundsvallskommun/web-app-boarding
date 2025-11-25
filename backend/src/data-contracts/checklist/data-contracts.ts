@@ -152,9 +152,15 @@ export interface Violation {
 
 /** Model for a mentor on an employee checklist */
 export interface Mentor {
-  /** The user-id of the mentor */
+  /**
+   * The user-id of the mentor
+   * @minLength 1
+   */
   userId: string;
-  /** The name of the mentor */
+  /**
+   * The name of the mentor
+   * @minLength 1
+   */
   name: string;
 }
 
@@ -168,6 +174,7 @@ export enum Permission {
 export interface PhaseCreateRequest {
   /**
    * The name of the phase
+   * @minLength 1
    * @example "Första veckan"
    */
   name: string;
@@ -189,7 +196,10 @@ export interface PhaseCreateRequest {
    * @example 1
    */
   sortOrder: number;
-  /** The id of the user creating the phase */
+  /**
+   * The id of the user creating the phase
+   * @minLength 1
+   */
   createdBy: string;
 }
 
@@ -203,6 +213,7 @@ export enum CommunicationChannel {
 export interface OrganizationCreateRequest {
   /**
    * The name of the unit
+   * @minLength 1
    * @example "Sundsvall Energi"
    */
   organizationName: string;
@@ -220,6 +231,7 @@ export interface OrganizationCreateRequest {
 export interface CustomTaskCreateRequest {
   /**
    * The heading of the task
+   * @minLength 1
    * @example "Bjud på fika"
    */
   heading: string;
@@ -244,6 +256,7 @@ export interface CustomTaskCreateRequest {
   sortOrder: number;
   /**
    * The id of the user creating the custom task
+   * @minLength 1
    * @example "joe01doe"
    */
   createdBy: string;
@@ -343,11 +356,13 @@ export interface EmployeeChecklistResponse {
 export interface ChecklistCreateRequest {
   /**
    * The name of the checklist
+   * @minLength 1
    * @example "Checklist_A"
    */
   name: string;
   /**
    * The display name of the checklist
+   * @minLength 1
    * @example "Display name"
    */
   displayName: string;
@@ -357,7 +372,10 @@ export interface ChecklistCreateRequest {
    * @example 11
    */
   organizationNumber: number;
-  /** The id of the user creating the checklist */
+  /**
+   * The id of the user creating the checklist
+   * @minLength 1
+   */
   createdBy: string;
 }
 
@@ -365,6 +383,7 @@ export interface ChecklistCreateRequest {
 export interface TaskCreateRequest {
   /**
    * The name of the task
+   * @minLength 1
    * @example "Name of the task"
    */
   heading: string;
@@ -392,6 +411,7 @@ export interface TaskCreateRequest {
   questionType: QuestionType;
   /**
    * The id of the user creating the task
+   * @minLength 1
    * @example "joe01doe"
    */
   createdBy: string;
@@ -422,7 +442,10 @@ export interface PhaseUpdateRequest {
    * @example 1
    */
   sortOrder?: number;
-  /** The id of the user updating the phase */
+  /**
+   * The id of the user updating the phase
+   * @minLength 1
+   */
   updatedBy: string;
 }
 
@@ -635,6 +658,7 @@ export interface EmployeeChecklistTaskUpdateRequest {
   responseText?: string | null;
   /**
    * Identifier for the person that is performing the update
+   * @minLength 1
    * @example "joe01doe"
    */
   updatedBy: string;
@@ -706,6 +730,7 @@ export interface EmployeeChecklistPhaseUpdateRequest {
   tasksFulfilmentStatus?: FulfilmentStatus;
   /**
    * Identifier for the person that is performing the update
+   * @minLength 1
    * @example "joe01doe"
    */
   updatedBy: string;
@@ -771,6 +796,7 @@ export interface CustomTaskUpdateRequest {
   sortOrder?: number;
   /**
    * The id of the user updating the custom task
+   * @minLength 1
    * @example "joe01doe"
    */
   updatedBy: string;
@@ -783,7 +809,10 @@ export interface ChecklistUpdateRequest {
    * @example "New display name"
    */
   displayName?: string;
-  /** The id of the user updating the checklist */
+  /**
+   * The id of the user updating the checklist
+   * @minLength 1
+   */
   updatedBy: string;
 }
 
@@ -812,6 +841,7 @@ export interface TaskUpdateRequest {
   questionType?: QuestionType;
   /**
    * The id of the user updating the task
+   * @minLength 1
    * @example "joe01doe"
    */
   updatedBy: string;
