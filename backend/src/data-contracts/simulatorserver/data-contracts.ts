@@ -14,10 +14,10 @@ export interface Problem {
   instance?: string;
   /** @format uri */
   type?: string;
-  parameters?: Record<string, object>;
+  parameters?: Record<string, any>;
+  status?: StatusType;
   title?: string;
   detail?: string;
-  status?: StatusType;
 }
 
 export interface StatusType {
