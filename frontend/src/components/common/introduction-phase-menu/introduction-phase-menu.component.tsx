@@ -1,4 +1,4 @@
-import { Button, MenuBar } from '@sk-web-gui/react';
+import { Button, NavigationBar } from '@sk-web-gui/react';
 import {
   countCompletedEmployeeTasks,
   countCompletedManagerTasks,
@@ -42,25 +42,25 @@ export const IntroductionPhaseMenu: React.FC<IntroductionPhaseMenuProps> = (prop
 
   return (
     <>
-      <MenuBar current={currentPhase} className="w-full" data-cy="phase-menu-bar">
+      <NavigationBar current={currentPhase} className="w-full" data-cy="phase-menu-bar">
         {data?.phases?.map((phase, index) => {
           return (
             currentView === 0 && countManagerTasks(phase) > 0 ?
-              <MenuBar.Item key={index}>
+              <NavigationBar.Item key={index}>
                 <Button onClick={() => setCurrentPhase(index)} data-cy="phase-menu-bar-button">
                   {phase.name} ({countTasks(data?.phases[index])})
                 </Button>
-              </MenuBar.Item>
+              </NavigationBar.Item>
             : currentView === 1 && countEmployeeTasks(phase) > 0 ?
-              <MenuBar.Item key={index}>
+              <NavigationBar.Item key={index}>
                 <Button onClick={() => setCurrentPhase(index)} data-cy="phase-menu-bar-button">
                   {phase.name} ({countTasks(data?.phases[index])})
                 </Button>
-              </MenuBar.Item>
+              </NavigationBar.Item>
             : null
           );
         })}
-      </MenuBar>
+      </NavigationBar>
 
       <Divider className="w-full" />
 

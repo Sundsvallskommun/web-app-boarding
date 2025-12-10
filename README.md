@@ -5,11 +5,11 @@
 Dessa APIer används i projektet, applikationsanvändaren i WSO2 måste prenumerera på dessa. Systemet utgår ifrån /backend/api-config.ts där dessa står specificerade.
 
 | API             | Version |
-| --------------- | ------: |
+| --------------- |--------:|
 | SimulatorServer |     2.0 |
 | Company         |     1.0 |
-| Checklist       |     1.0 |
-| Employee        |     1.0 |
+| Checklist       |     1.1 |
+| Employee        |     2.0 |
 
 ## Utveckling
 
@@ -20,7 +20,10 @@ Dessa APIer används i projektet, applikationsanvändaren i WSO2 måste prenumer
 
 ### Steg för steg
 
-1. Klona ner repot till en mapp "<web-app-projektnamn>"
+1. Klona ner repot
+```
+git clone https://github.com/Sundsvallskommun/web-app-boarding.git
+```
 
 2. Installera dependencies för både `backend` och `frontend`
 
@@ -64,14 +67,11 @@ yarn prisma:generate
 yarn prisma:migrate
 ```
 
-6. Synca datamodeller för api:er
-
-   Se till att README och /backend/src/config/api-config.ts matchar och justera utefter de api:er som önskas användas.
-
-   - För backend, i /backend kör `yarn generate:contracts` för att få ned de senaste datamodellerna för samtliga api:er
+6. Synka datamodeller för api:er
+   - För backend, i /backend kör `yarn generate:contracts` för att få ned de senaste datamodellerna för samtliga api:er som är angivna i apiconfig
      -- Justera om så behövs utifrån de uppdaterade modellerna
 
-   - För frontend, se till att backend är igång (`yarn dev`), i /frontend kör `yarn generate:contracts` för att synca backend med frontend
+   - För frontend, se till att backend är igång (`yarn dev`), i /frontend kör `yarn generate:contracts` för att synka backend med frontend
      -- Justera om så behövs utifrån de uppdaterade modellerna
 
 ### Språkstöd
@@ -91,7 +91,7 @@ export const getServerSideProps = async ({ locale }) => ({
 });
 ```
 
-För att lägga till ett ytterligare spåk, skapa en mapp med språkets namn, och lägg sedan till språket i `next-i18next.config.js`.
+För att lägga till ett ytterligare språk, skapa en mapp med språkets namn, och lägg sedan till språket i `next-i18next.config.js`.
 
 **Exempel för tyska:**
 Skapa `frontend/public/locales/de/common.json`.

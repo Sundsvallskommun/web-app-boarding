@@ -1,9 +1,9 @@
 import ApiService from '@/services/api.service';
 import { logger } from '@/utils/logger';
-import { Controller, Get, Req } from 'routing-controllers';
+import { Controller, Get } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 import { APIS } from '@config';
-import { RequestWithUser } from '@/interfaces/auth.interface';
+import { InternalRoleEnum } from '@interfaces/users.interface';
 
 @Controller()
 export class HealthController {
@@ -12,12 +12,29 @@ export class HealthController {
 
   @Get('/health/up')
   @OpenAPI({ summary: 'Return health check' })
-  async up(@Req() req: RequestWithUser) {
+  async up() {
     const url = `${this.api.name}/${this.api.version}/simulations/response?status=200%20OK`;
     const data = {
       status: 'OK',
     };
-    const res = await this.apiService.post<{ status: string }, any>({ url, data }, req.user).catch(e => {
+    const emptyUser = {
+      name: '',
+      firstName: '',
+      lastName: '',
+      username: '',
+      permissions: {
+        canEditAdmin: false,
+        canViewAdmin: false,
+        canEditDepartment: false,
+        canViewDepartment: false,
+        isManager: false,
+      },
+      role: InternalRoleEnum.user,
+      organizationId: 0,
+      children: [],
+      email: '',
+    };
+    const res = await this.apiService.post<{ status: string }, { status: string }>({ url, data }, emptyUser).catch(e => {
       logger.error('Error when doing health check:', e);
       return e;
     });
