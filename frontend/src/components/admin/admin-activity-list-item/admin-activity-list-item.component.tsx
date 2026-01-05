@@ -90,7 +90,7 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
             <div className={task.fulfilmentStatus === 'TRUE' ? 'text-dark-disabled' : ''}>
               <span className="mr-3 mb-8 text-large" data-cy="task-heading">
                 {task.headingReference ?
-                  <Link external href={task.headingReference}>
+                  <Link variant="tertiary" external href={task.headingReference}>
                     {task.heading}
                   </Link>
                 : task.heading}
@@ -99,7 +99,7 @@ export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (prop
                 <p>
                   <span
                     data-cy="task-text"
-                    className="my-0 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:ml-lg [&>ol]:ml-lg [&>*>a]:underline"
+                    className="my-0 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:ml-lg [&>ol]:ml-lg [&>*>a]:underline [&>*>*>a]:underline activityLink"
                     dangerouslySetInnerHTML={{
                       __html: sanitized(task.text || '').replace('<a', "<a target='_blank'"),
                     }}
