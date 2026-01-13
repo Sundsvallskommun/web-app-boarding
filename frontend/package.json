@@ -31,7 +31,7 @@
     "dotenv-cli": "^8.0.0",
     "i18next": "^23.11.2",
     "lucide-react": "^0.471.1",
-    "next": "15.5.9",
+    "next": "16.1.1",
     "next-i18next": "^15.3.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
