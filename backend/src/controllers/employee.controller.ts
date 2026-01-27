@@ -17,7 +17,7 @@ interface ResponseData<T> {
 @Controller()
 export class EmployeeController {
   private apiService = new ApiService();
-  private employeeApi = APIS.find(api => api.name === 'employee');
+  private readonly employeeApi = APIS.find(api => api.name === 'employee');
 
   @Get('/portalpersondata/personal/:username')
   @OpenAPI({ summary: 'Fetch employee by username' })
