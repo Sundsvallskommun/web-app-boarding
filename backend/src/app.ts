@@ -122,13 +122,14 @@ const samlStrategy = new Strategy(
       });
     }
 
+    const checklistApi = APIS.find(api => api.name === 'checklist');
     const groupList: string[] = groups !== undefined ? (groups.split(',').map(x => x.toLowerCase()) as string[]) : [];
 
     const appGroups: string[] = groupList.length > 0 ? groupList : [];
 
     const getIsManager = async () => {
       try {
-        const url = `checklist/1.0/2281/employee-checklists/manager/${username}`;
+        const url = `${checklistApi.name}/${checklistApi.version}/${MUNICIPALITY_ID}/employee-checklists/manager/${username}`;
         const res = await apiService.get<EmployeeChecklist[]>(
           { url },
           {
@@ -147,7 +148,7 @@ const samlStrategy = new Strategy(
           return true;
         }
 
-        const hasDelegated = `checklist/1.0/2281/employee-checklists/delegated-to/${username}`;
+        const hasDelegated = `${checklistApi.name}/${checklistApi.version}/${MUNICIPALITY_ID}/employee-checklists/delegated-to/${username}`;
         const hasDelegatedRes = await apiService.get<DelegatedEmployeeChecklistResponse>(
           { url: hasDelegated },
           {

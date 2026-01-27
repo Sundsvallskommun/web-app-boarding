@@ -6,6 +6,7 @@ import { HttpException } from '@exceptions/HttpException';
 import { PortalPersonData } from '@/data-contracts/employee/data-contracts';
 import { EmployeeApiResponse } from '@/responses/employee.response';
 import { RequestWithUser } from '@/interfaces/auth.interface';
+import { APIS, MUNICIPALITY_ID } from '@config';
 
 interface ResponseData<T> {
   data: T;
@@ -16,6 +17,7 @@ interface ResponseData<T> {
 @Controller()
 export class EmployeeController {
   private apiService = new ApiService();
+  private readonly employeeApi = APIS.find(api => api.name === 'employee');
 
   @Get('/portalpersondata/personal/:username')
   @OpenAPI({ summary: 'Fetch employee by username' })
@@ -25,7 +27,7 @@ export class EmployeeController {
     if (!req.user.username) {
       throw new HttpException(400, 'Bad request');
     }
-    const url = `employee/1.0/portalpersondata/PERSONAL/${username}`;
+    const url = `${this.employeeApi.name}/${this.employeeApi.version}/${MUNICIPALITY_ID}/portalpersondata/PERSONAL/${username}`;
     const res = await this.apiService.get<PortalPersonData>({ url }, req.user);
     return { data: res.data, status: res.status, message: 'success' };
   }
@@ -39,7 +41,7 @@ export class EmployeeController {
       throw new HttpException(400, 'Bad request');
     }
     const encodedEmail = encodeURIComponent(email);
-    const url = `employee/1.0/portalpersondata/${encodedEmail}`;
+    const url = `${this.employeeApi.name}/${this.employeeApi.version}/${MUNICIPALITY_ID}/portalpersondata/${encodedEmail}`;
     const res = await this.apiService.get<PortalPersonData>({ url }, req.user);
     return { data: res.data, status: res.status, message: 'success' };
   }
