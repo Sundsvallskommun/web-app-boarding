@@ -198,7 +198,7 @@ const samlStrategy = new Strategy(
       };
 
       const employeeApi = APIS.find(api => api.name === 'employee');
-      const url = `${employeeApi.name}/${employeeApi.version}/portalpersondata/PERSONAL/${username}`;
+      const url = `${employeeApi.name}/${employeeApi.version}/${MUNICIPALITY_ID}/portalpersondata/PERSONAL/${username}`;
       const employeeRes: { data: PortalPersonData } | undefined = await apiService.get<PortalPersonData>({ url }, findUser).catch(err => {
         logger.error(`Error fetching employee data: ${err.message || err}`);
         return undefined;
@@ -208,6 +208,7 @@ const samlStrategy = new Strategy(
 
       if (!employeeRes?.data?.companyId) {
         logger.error('Error: Employee data not found or missing companyId.');
+        logger.error(`Employee data: ${JSON.stringify(employeeRes?.data)}`);
         return done(null, findUser);
       }
 
