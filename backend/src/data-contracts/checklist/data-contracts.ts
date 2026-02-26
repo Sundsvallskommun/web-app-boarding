@@ -11,15 +11,11 @@
 
 /** Model for a phase item in the sort order structure */
 export interface PhaseItem {
-  /**
-   * The id for the item
-   * @example "283cec0f-b6eb-473c-9dbb-d97a959a8144"
-   */
+  /** The id for the item */
   id?: string;
   /**
    * The sort order position for the item
    * @format int32
-   * @example 1
    */
   position: number;
   /** List containing sort order for the task items connected to the phase */
@@ -34,28 +30,24 @@ export interface SortorderRequest {
 
 /** Model for a task item in the sort order structure */
 export interface TaskItem {
-  /**
-   * The id for the item
-   * @example "283cec0f-b6eb-473c-9dbb-d97a959a8144"
-   */
+  /** The id for the item */
   id?: string;
   /**
    * The sort order position for the item
    * @format int32
-   * @example 1
    */
   position: number;
 }
 
 export interface Problem {
-  title?: string;
-  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
-  parameters?: Record<string, object>;
+  parameters?: Record<string, any>;
   status?: StatusType;
+  title?: string;
+  detail?: string;
 }
 
 export interface StatusType {
@@ -83,10 +75,10 @@ export interface ConstraintViolationProblem {
   violations?: Violation[];
   title?: string;
   message?: string;
-  detail?: string;
   /** @format uri */
   instance?: string;
-  parameters?: Record<string, object>;
+  parameters?: Record<string, any>;
+  detail?: string;
   suppressed?: {
     stackTrace?: {
       classLoaderName?: string;
@@ -106,7 +98,7 @@ export interface ConstraintViolationProblem {
 }
 
 export interface ThrowableProblem {
-  cause?: ThrowableProblem;
+  cause?: any;
   stackTrace?: {
     classLoaderName?: string;
     moduleName?: string;
@@ -119,14 +111,14 @@ export interface ThrowableProblem {
     nativeMethod?: boolean;
   }[];
   message?: string;
-  title?: string;
-  detail?: string;
   /** @format uri */
   instance?: string;
   /** @format uri */
   type?: string;
-  parameters?: Record<string, object>;
+  parameters?: Record<string, any>;
   status?: StatusType;
+  title?: string;
+  detail?: string;
   suppressed?: {
     stackTrace?: {
       classLoaderName?: string;
@@ -164,7 +156,6 @@ export interface Mentor {
   name: string;
 }
 
-/** The permission needed to administrate the phase */
 export enum Permission {
   SUPERADMIN = 'SUPERADMIN',
   ADMIN = 'ADMIN',
@@ -175,25 +166,17 @@ export interface PhaseCreateRequest {
   /**
    * The name of the phase
    * @minLength 1
-   * @example "Första veckan"
    */
   name: string;
-  /**
-   * The body text of the phase
-   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
-   */
+  /** The body text of the phase */
   bodyText?: string;
-  /**
-   * The time to complete the phase
-   * @example "P1M"
-   */
+  /** The time to complete the phase */
   timeToComplete?: string;
   /** The permission needed to administrate the phase */
   permission: Permission;
   /**
    * The sort order of the phase
    * @format int32
-   * @example 1
    */
   sortOrder: number;
   /**
@@ -203,7 +186,6 @@ export interface PhaseCreateRequest {
   createdBy: string;
 }
 
-/** Valid channels to use when communicating with the organization */
 export enum CommunicationChannel {
   EMAIL = 'EMAIL',
   NO_COMMUNICATION = 'NO_COMMUNICATION',
@@ -214,13 +196,11 @@ export interface OrganizationCreateRequest {
   /**
    * The name of the unit
    * @minLength 1
-   * @example "Sundsvall Energi"
    */
   organizationName: string;
   /**
    * The organization number of the unit
    * @format int32
-   * @example 5345
    */
   organizationNumber: number;
   /** @uniqueItems true */
@@ -232,18 +212,11 @@ export interface CustomTaskCreateRequest {
   /**
    * The heading of the task
    * @minLength 1
-   * @example "Bjud på fika"
    */
   heading: string;
-  /**
-   * Optional reference to use as value for the headings anchor element
-   * @example "http://www.google.com"
-   */
+  /** Optional reference to use as value for the headings anchor element */
   headingReference?: string;
-  /**
-   * The body text of the task
-   * @example "Detta är en beskrivning av ett uppdrag"
-   */
+  /** The body text of the task */
   text?: string;
   /** The question type of the task */
   questionType: QuestionType;
@@ -257,12 +230,10 @@ export interface CustomTaskCreateRequest {
   /**
    * The id of the user creating the custom task
    * @minLength 1
-   * @example "joe01doe"
    */
   createdBy: string;
 }
 
-/** The question type of the task */
 export enum QuestionType {
   YES_OR_NO = 'YES_OR_NO',
   YES_OR_NO_WITH_TEXT = 'YES_OR_NO_WITH_TEXT',
@@ -270,10 +241,6 @@ export enum QuestionType {
   COMPLETED_OR_NOT_RELEVANT_WITH_TEXT = 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT',
 }
 
-/**
- * The role that shall perform the task
- * @example "NEW_EMPLOYEE"
- */
 export enum RoleType {
   NEW_EMPLOYEE = 'NEW_EMPLOYEE',
   NEW_MANAGER = 'NEW_MANAGER',
@@ -283,70 +250,48 @@ export enum RoleType {
 
 /** Model for custom task */
 export interface CustomTask {
-  /**
-   * The id of the task
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
+  /** The id of the task */
   id?: string;
-  /**
-   * The heading of the task
-   * @example "Bjud på fika"
-   */
+  /** The heading of the task */
   heading?: string;
-  /**
-   * Reference to use as value for the headings anchor element (if present)
-   * @example "http://www.google.com"
-   */
+  /** Reference to use as value for the headings anchor element (if present) */
   headingReference?: string;
-  /**
-   * The body text of the task
-   * @example "Detta är en beskrivning av ett uppdrag"
-   */
+  /** The body text of the task */
   text?: string;
   /**
    * The sort order for the task
    * @format int32
    */
   sortOrder?: number;
-  /** The role that shall perform the task */
+  /** The role type of the task */
   roleType?: RoleType;
   /** The question type of the task */
   questionType?: QuestionType;
   /**
    * The date and time the task was created
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   created?: string;
   /**
    * The date and time the task was last updated
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   updated?: string;
-  /**
-   * The id of the user that last modified the custom task
-   * @example "joe01doe"
-   */
+  /** The id of the user that last modified the custom task */
   lastSavedBy?: string;
 }
 
 /** Model for employee checklist triggering detailed status */
 export interface Detail {
+  /** Status for action of creating the employee checklist */
   status?: StatusType;
-  /**
-   * Descriptive text for of the creation outcome
-   * @example "Employee with loginname abc123 processed successfully."
-   */
+  /** Descriptive text for of the creation outcome */
   information?: string;
 }
 
 /** Model for employee checklist triggering response */
 export interface EmployeeChecklistResponse {
-  /**
-   * Summary for execution
-   * @example "Successful execution"
-   */
+  /** Summary for execution */
   summary?: string;
   /** Details for each user specific creation */
   details?: Detail[];
@@ -357,19 +302,16 @@ export interface ChecklistCreateRequest {
   /**
    * The name of the checklist
    * @minLength 1
-   * @example "Checklist_A"
    */
   name: string;
   /**
    * The display name of the checklist
    * @minLength 1
-   * @example "Display name"
    */
   displayName: string;
   /**
    * The organization that the checklist is created for
    * @format int32
-   * @example 11
    */
   organizationNumber: number;
   /**
@@ -384,62 +326,48 @@ export interface TaskCreateRequest {
   /**
    * The name of the task
    * @minLength 1
-   * @example "Name of the task"
    */
   heading: string;
-  /**
-   * Optional reference to use as value for the headings anchor element
-   * @example "http://www.google.com"
-   */
+  /** Optional reference to use as value for the headings anchor element */
   headingReference?: string;
-  /**
-   * The body text of the task
-   * @example "Body text of the task"
-   */
+  /** The body text of the task */
   text?: string;
   /**
    * The sort order of the task
    * @format int32
-   * @example 1
    */
   sortOrder: number;
-  /** The role that shall perform the task */
+  /** The role type of the task */
   roleType: RoleType;
-  /** The permission needed to administrate the phase */
+  /** The permission needed to administrate the task */
   permission: Permission;
   /** The question type of the task */
   questionType: QuestionType;
   /**
    * The id of the user creating the task
    * @minLength 1
-   * @example "joe01doe"
    */
   createdBy: string;
+  /**
+   * Indicates if the task is optional or not
+   * @default false
+   */
+  optional?: boolean;
 }
 
 /** Model for phase update request */
 export interface PhaseUpdateRequest {
-  /**
-   * The name of the phase
-   * @example "Första veckan"
-   */
+  /** The name of the phase */
   name?: string;
-  /**
-   * The body text of the phase
-   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
-   */
+  /** The body text of the phase */
   bodyText?: string;
-  /**
-   * The time to complete the phase
-   * @example "P1M"
-   */
+  /** The time to complete the phase */
   timeToComplete?: string;
   /** The permission needed to administrate the phase */
   permission?: Permission;
   /**
    * The sort order of the phase
    * @format int32
-   * @example 1
    */
   sortOrder?: number;
   /**
@@ -451,32 +379,19 @@ export interface PhaseUpdateRequest {
 
 /** Model for a phase */
 export interface Phase {
-  /**
-   * The id of the phase
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
+  /** The id of the phase */
   id?: string;
-  /**
-   * The name of the phase
-   * @example "Första veckan"
-   */
+  /** The name of the phase */
   name?: string;
-  /**
-   * The body text of the phase
-   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
-   */
+  /** The body text of the phase */
   bodyText?: string;
-  /**
-   * The time to complete the phase
-   * @example "P1M"
-   */
+  /** The time to complete the phase */
   timeToComplete?: string;
   /** The permission needed to administrate the phase */
   permission?: Permission;
   /**
    * The sort order of the phase
    * @format int32
-   * @example 1
    */
   sortOrder?: number;
   /** Tasks in the phase */
@@ -484,13 +399,11 @@ export interface Phase {
   /**
    * The created date and time of the phase
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   created?: string;
   /**
    * The last update date and time of the phase
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   updated?: string;
   /** The id of the user that last modified the phase */
@@ -499,89 +412,60 @@ export interface Phase {
 
 /** Task model */
 export interface Task {
-  /**
-   * The id of the task
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
+  /** The id of the task */
   id?: string;
-  /**
-   * The heading of the task
-   * @example "Bjud på fika"
-   */
+  /** The heading of the task */
   heading?: string;
-  /**
-   * Reference to use as value for the headings anchor element (if present)
-   * @example "http://www.google.com"
-   */
+  /** Reference to use as value for the headings anchor element (if present) */
   headingReference?: string;
-  /**
-   * The body text of the task
-   * @example "Detta är en beskrivning av ett uppdrag"
-   */
+  /** The body text of the task */
   text?: string;
   /**
    * The sort order of the task
    * @format int32
-   * @example 1
    */
   sortOrder?: number;
-  /** The role that shall perform the task */
+  /** The role type eligible for the task */
   roleType?: RoleType;
   /** The question type of the task */
   questionType?: QuestionType;
-  /** The permission needed to administrate the phase */
+  /** The permission needed to administrate the task */
   permission?: Permission;
   /**
    * The date and time the task was created
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   created?: string;
   /**
    * The date and time the task was last updated
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   updated?: string;
-  /**
-   * The id of the user that last modified the task
-   * @example "joe01doe"
-   */
+  /** The id of the user that last modified the task */
   lastSavedBy?: string;
+  /** Indicates if the task is optional or not */
+  optional?: boolean;
 }
 
 /** Model for organizational unit update request */
 export interface OrganizationUpdateRequest {
-  /**
-   * The name of the unit
-   * @example "Sundsvall Energi"
-   */
-  organizationName?: string | null;
+  /** The name of the unit */
+  organizationName?: string;
   /** @uniqueItems true */
   communicationChannels?: CommunicationChannel[];
 }
 
 /** Model for checklist */
 export interface Checklist {
-  /**
-   * The id of the checklist
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
+  /** The id of the checklist */
   id?: string;
-  /**
-   * The name of the checklist
-   * @example "Checklist_A"
-   */
+  /** The name of the checklist */
   name?: string;
-  /**
-   * The display name of the checklist
-   * @example "Display name"
-   */
+  /** The display name of the checklist */
   displayName?: string;
   /**
    * The version of the checklist
    * @format int32
-   * @example 1
    */
   version?: number;
   /** The lifecycle of the checklist */
@@ -589,13 +473,11 @@ export interface Checklist {
   /**
    * The created date and time of the checklist
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   created?: string;
   /**
    * The last update date and time of the checklist
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   updated?: string;
   /** The id of the user that last modified the checklist */
@@ -604,7 +486,6 @@ export interface Checklist {
   phases?: Phase[];
 }
 
-/** The lifecycle of the checklist */
 export enum LifeCycle {
   CREATED = 'CREATED',
   ACTIVE = 'ACTIVE',
@@ -614,20 +495,13 @@ export enum LifeCycle {
 
 /** Model for an organizational unit */
 export interface Organization {
-  /**
-   * The id of the unit
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
+  /** The id of the unit */
   id?: string;
-  /**
-   * The name of the unit
-   * @example "Sundsvall Energi"
-   */
+  /** The name of the unit */
   organizationName?: string;
   /**
    * The organization number of the unit
    * @format int32
-   * @example 5345
    */
   organizationNumber?: number;
   checklists?: Checklist[];
@@ -636,13 +510,11 @@ export interface Organization {
   /**
    * The date and time the unit was created
    * @format date-time
-   * @example "2023-11-22T15:30:00+02:00"
    */
   created?: string;
   /**
    * The date and time the unit was updated
    * @format date-time
-   * @example "2023-11-22T15:30:00+02:00"
    */
   updated?: string;
 }
@@ -651,117 +523,82 @@ export interface Organization {
 export interface EmployeeChecklistTaskUpdateRequest {
   /** The status of the task fulfilment */
   fulfilmentStatus?: FulfilmentStatus;
-  /**
-   * The response text for the task fulfilment
-   * @example "Har bjudit på fika"
-   */
-  responseText?: string | null;
+  /** The response text for the task fulfilment */
+  responseText?: string;
   /**
    * Identifier for the person that is performing the update
    * @minLength 1
-   * @example "joe01doe"
    */
   updatedBy: string;
 }
 
-/** The status of the task fulfilment */
 export enum FulfilmentStatus {
   EMPTY = 'EMPTY',
   TRUE = 'TRUE',
   FALSE = 'FALSE',
+  NOT_RELEVANT = 'NOT_RELEVANT',
 }
 
 /** Model for a employee checklist task */
 export interface EmployeeChecklistTask {
-  /**
-   * The id of the task
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
+  /** The id of the task */
   id?: string;
-  /**
-   * The heading of the task
-   * @example "Bjud på fika"
-   */
+  /** The heading of the task */
   heading?: string;
-  /**
-   * Reference to use as value for the headings anchor element (if present)
-   * @example "http://www.google.com"
-   */
+  /** Reference to use as value for the headings anchor element (if present) */
   headingReference?: string;
-  /**
-   * The body text of the task
-   * @example "Detta är en beskrivning av ett uppdrag"
-   */
+  /** The body text of the task */
   text?: string;
   /**
    * The sort order for the task
    * @format int32
    */
   sortOrder?: number;
-  /** The role that shall perform the task */
+  /** The role type of the task */
   roleType?: RoleType;
   /** The question type of the task */
   questionType?: QuestionType;
   /** Tells if the task is only applies to the current checklist or not */
   customTask?: boolean;
-  /**
-   * The task response text
-   * @example "Jag har bjudit på fika"
-   */
+  /** Indicates if the task is optional or not */
+  optional?: boolean;
+  /** The task response text */
   responseText?: string;
   /** The status of the task fulfilment */
   fulfilmentStatus?: FulfilmentStatus;
   /**
    * The date and time the task was last updated
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   updated?: string;
-  /**
-   * Identifier for the person that last updated the task
-   * @example "joe01doe"
-   */
+  /** Identifier for the person that last updated the task */
   updatedBy?: string;
 }
 
 /** Model for update request on an employee checklist phase */
 export interface EmployeeChecklistPhaseUpdateRequest {
-  /** The status of the task fulfilment */
+  /** The value to be set on all tasks in the phase */
   tasksFulfilmentStatus?: FulfilmentStatus;
   /**
    * Identifier for the person that is performing the update
    * @minLength 1
-   * @example "joe01doe"
    */
   updatedBy: string;
 }
 
 /** Model for a employee checklist phase */
 export interface EmployeeChecklistPhase {
-  /**
-   * The id of the phase
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
+  /** The id of the phase */
   id?: string;
-  /**
-   * The name of the phase
-   * @example "Första veckan"
-   */
+  /** The name of the phase */
   name?: string;
-  /**
-   * The body text of the phase
-   * @example "Detta är en beskrivning av vad som ska göras under första veckan"
-   */
+  /** The body text of the phase */
   bodyText?: string;
-  /**
-   * The time to complete the phase
-   * @example "P1M"
-   */
+  /** The time to complete the phase */
   timeToComplete?: string;
   /**
    * The sort order for the phase
    * @format int32
-   * @example 1
    */
   sortOrder?: number;
   /** Tasks in the phase */
@@ -770,20 +607,11 @@ export interface EmployeeChecklistPhase {
 
 /** Model for custom task update request */
 export interface CustomTaskUpdateRequest {
-  /**
-   * The heading of the task
-   * @example "Bjud på fika"
-   */
+  /** The heading of the task */
   heading?: string;
-  /**
-   * Optional reference to use as value for the headings anchor element
-   * @example "http://www.google.com"
-   */
+  /** Optional reference to use as value for the headings anchor element */
   headingReference?: string;
-  /**
-   * The body text of the task
-   * @example "Detta är en beskrivning av ett uppdrag"
-   */
+  /** The body text of the task */
   text?: string;
   /** The question type of the task */
   questionType?: QuestionType;
@@ -797,17 +625,13 @@ export interface CustomTaskUpdateRequest {
   /**
    * The id of the user updating the custom task
    * @minLength 1
-   * @example "joe01doe"
    */
   updatedBy: string;
 }
 
 /** Model for checklist update request */
 export interface ChecklistUpdateRequest {
-  /**
-   * The name of the checklist
-   * @example "New display name"
-   */
+  /** The name of the checklist */
   displayName?: string;
   /**
    * The id of the user updating the checklist
@@ -820,64 +644,52 @@ export interface ChecklistUpdateRequest {
 export interface TaskUpdateRequest {
   /** The name of the task */
   heading?: string;
-  /**
-   * Optional reference to use as value for the headings anchor element
-   * @example "http://www.google.com"
-   */
+  /** Optional reference to use as value for the headings anchor element */
   headingReference?: string;
   /** The body text of the task */
   text?: string;
   /**
    * The sort order of the task
    * @format int32
-   * @example 1
    */
   sortOrder?: number;
-  /** The role that shall perform the task */
+  /** The role type of the task */
   roleType?: RoleType;
-  /** The permission needed to administrate the phase */
+  /** The permission needed to administrate the task */
   permission?: Permission;
   /** The question type of the task */
   questionType?: QuestionType;
   /**
    * The id of the user updating the task
    * @minLength 1
-   * @example "joe01doe"
    */
   updatedBy: string;
+  /** Indicates if the task is optional or not */
+  optional?: boolean;
 }
 
 /** Model for correspondence */
 export interface Correspondence {
-  /**
-   * Id for message
-   * @example "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-   */
+  /** Id for message */
   messageId?: string;
-  /**
-   * Message recipient
-   * @example "email.address@noreply.com"
-   */
+  /** Message recipient */
   recipient?: string;
   /**
    * Attempt count
    * @format int32
-   * @example 1
    */
   attempts?: number;
   /** Status for correspondence */
   correspondenceStatus?: CorrespondenceStatus;
-  /** Valid channels to use when communicating with the organization */
+  /** Communicationschannel used for message */
   communicationChannel?: CommunicationChannel;
   /**
    * Timestamp when message was sent
    * @format date-time
-   * @example "2023-11-22T15:30:00+02:00"
    */
   sent?: string;
 }
 
-/** Status for correspondence */
 export enum CorrespondenceStatus {
   SENT = 'SENT',
   NOT_SENT = 'NOT_SENT',
@@ -887,41 +699,24 @@ export enum CorrespondenceStatus {
 
 /** Model for summarized information for an ongoing employee checklist */
 export interface OngoingEmployeeChecklist {
-  /**
-   * The employee first name and last name concatenated
-   * @example "John Doe"
-   */
+  /** The employee first name and last name concatenated */
   employeeName?: string;
-  /**
-   * The employee username
-   * @example "johndoe"
-   */
+  /** The employee username */
   employeeUsername?: string;
-  /**
-   * The employees managers first name and last name concatenated
-   * @example "John Doe"
-   */
+  /** The employees managers first name and last name concatenated  */
   managerName?: string;
-  /**
-   * The organization name
-   * @example "Organization XYZ"
-   */
+  /** The organization name */
   departmentName?: string;
-  /**
-   * The names of the person(s) which have been delegated the checklist
-   * @example "John Doe"
-   */
+  /** The names of the person(s) which have been delegated the checklist */
   delegatedTo?: string[];
   /**
    * The employment date of the employee
    * @format date
-   * @example "2021-01-01"
    */
   employmentDate?: string;
   /**
    * The purge date for the checklist
    * @format date
-   * @example "2029-01-01"
    */
   purgeDate?: string;
 }
@@ -938,39 +733,30 @@ export interface PagingMetaData {
   /**
    * Current page
    * @format int32
-   * @example 5
    */
   page?: number;
   /**
    * Displayed objects per page
    * @format int32
-   * @example 20
    */
   limit?: number;
   /**
    * Displayed objects on current page
    * @format int32
-   * @example 13
    */
   count?: number;
   /**
    * Total amount of hits based on provided search parameters
    * @format int64
-   * @example 98
    */
   totalRecords?: number;
   /**
    * Total amount of pages based on provided search parameters
    * @format int32
-   * @example 23
    */
   totalPages?: number;
 }
 
-/**
- * The sort order direction
- * @example "ASC"
- */
 export enum Direction {
   ASC = 'ASC',
   DESC = 'DESC',
@@ -982,14 +768,12 @@ export interface OngoingEmployeeChecklistParameters {
    * @format int32
    * @min 1
    * @default 1
-   * @example 1
    */
   page?: number;
   /**
    * Result size per page. Maximum allowed value is dynamically configured
    * @format int32
    * @min 1
-   * @example 15
    */
   limit?: number;
   sortBy?: string[];
@@ -1000,20 +784,17 @@ export interface OngoingEmployeeChecklistParameters {
 
 /** Model for a employee specific checklist */
 export interface EmployeeChecklist {
-  /**
-   * The id of the employee checklist
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
+  /** The id of the employee checklist */
   id?: string;
-  /** Model for a stakeholder (employee or manager) to an employee checklist */
+  /** The employee connected to the checklist */
   employee?: Stakeholder;
-  /** Model for a stakeholder (employee or manager) to an employee checklist */
+  /** The manager connected to the checklist */
   manager?: Stakeholder;
   /** Signal if all tasks in the checklist has been completed or not */
   completed?: boolean;
   /** Signal if the checklist is locked or not */
   locked?: boolean;
-  /** Model for a mentor on an employee checklist */
+  /** The mentor on the checklist */
   mentor?: Mentor;
   /** Contains the email to the delegate(s) if the checklist is delegated */
   delegatedTo?: string[];
@@ -1022,85 +803,55 @@ export interface EmployeeChecklist {
   /**
    * The created date and time of the checklist
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   created?: string;
   /**
    * The last update date and time of the checklist
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   updated?: string;
   /**
    * The date when the fulfilment of the checklist was started
    * @format date
-   * @example "2023-11-22"
    */
   startDate?: string;
   /**
    * The date when the fulfilment of the checklist was finished
    * @format date
-   * @example "2023-11-22"
    */
   endDate?: string;
   /**
    * The expiration date of the checklist
    * @format date
-   * @example "2023-11-22"
    */
   expirationDate?: string;
 }
 
 /** Model for a stakeholder (employee or manager) to an employee checklist */
 export interface Stakeholder {
-  /**
-   * The person id for the stakeholder
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
+  /** The person id for the stakeholder */
   id?: string;
-  /**
-   * The first name for the stakeholder
-   * @example "John"
-   */
+  /** The first name for the stakeholder */
   firstName?: string;
-  /**
-   * The last name for the stakeholder
-   * @example "Doe"
-   */
+  /** The last name for the stakeholder */
   lastName?: string;
-  /**
-   * The email address for the stakeholder
-   * @example "email.address@noreply.com"
-   */
+  /** The email address for the stakeholder */
   email?: string;
-  /**
-   * The username for the stakeholder
-   * @example "abc12def"
-   */
+  /** The username for the stakeholder */
   username?: string;
-  /**
-   * The job title for the stakeholder (if applicable)
-   * @example "Skoladministratör (Sundsvalls kommun)"
-   */
+  /** The job title for the stakeholder (if applicable) */
   title?: string;
 }
 
 /** Model for information about the last execution to initiate employee checklists */
 export interface InitiationInformation {
-  /**
-   * The log id for the execution (used for investigation purpose when searching logs in ELK)
-   * @example "5a6c3e4e-c320-4006-b448-1fd4121df828"
-   */
+  /** The log id for the execution (used for investigation purpose when searching logs in ELK) */
   logId?: string;
-  /**
-   * A information summary for the execution
-   * @example "4 potential problems occurred when importing 6 employees"
-   */
+  /** A information summary for the execution */
   summary?: string;
   /**
    * The execution date and time for the initiation
    * @format date-time
-   * @example "2023-11-22T15:30:00+03:00"
    */
   executed?: string;
   /** A list with detailed information for each employee checklist initiation */
@@ -1134,31 +885,26 @@ export interface Events {
   /**
    * Current page
    * @format int32
-   * @example 5
    */
   page?: number;
   /**
    * Displayed objects per page
    * @format int32
-   * @example 20
    */
   limit?: number;
   /**
    * Displayed objects on current page
    * @format int32
-   * @example 13
    */
   count?: number;
   /**
    * Total amount of hits based on provided search parameters
    * @format int64
-   * @example 98
    */
   totalRecords?: number;
   /**
    * Total amount of pages based on provided search parameters
    * @format int32
-   * @example 23
    */
   totalPages?: number;
   eventList?: Event[];

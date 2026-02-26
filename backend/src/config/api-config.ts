@@ -6,7 +6,7 @@ export const APIS = [
   },
   {
     name: 'checklist',
-    version: '1.1',
+    version: '1.3',
   },
   {
     name: 'employee',

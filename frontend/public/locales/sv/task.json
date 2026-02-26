@@ -11,7 +11,8 @@
   "update": {
     "title": "Redigera aktivitet",
     "confirm": "Spara",
-    "error": "Det gick inte att spara aktiviteten"
+    "error": "Det gick inte att spara aktiviteten",
+    "status_error": "Det gick inte att uppdatera aktiviteten"
   },
   "add_activity": "Lägg till aktivitet",
   "edit_activity": "Redigera aktivitet",
@@ -38,5 +39,8 @@
   "add_activity_for_manager" : "Lägg till egen aktivitet",
   "add_activity_for_employee" : "Lägg till aktivitet för medarbetare",
   "phase" : "Fas (obligatorisk)",
-  "phase_error" : "Du måste välja en fas"
+  "phase_error" : "Du måste välja en fas",
+  "optional" : "Aktiviteten är valbar för medarbetaren att utföra",
+  "mark_as_relevant" : "Markera som aktuell",
+  "mark_as_not_relevant" : "Markera som inte aktuell"
 }

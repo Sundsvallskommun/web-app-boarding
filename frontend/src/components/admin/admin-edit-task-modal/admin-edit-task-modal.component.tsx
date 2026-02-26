@@ -50,6 +50,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
       .oneOf(['YES_OR_NO', 'YES_OR_NO_WITH_TEXT', 'COMPLETED_OR_NOT_RELEVANT', 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT']),
     updatedBy: yup.string().required(),
     createdBy: yup.string().required(),
+    optional: yup.boolean().optional(),
   });
 
   const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid as string, 10));
@@ -66,6 +67,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
       questionType: 'YES_OR_NO' as TaskUpdateRequest['questionType'],
       updatedBy: '',
       createdBy: '',
+      optional: false,
     },
     resolver: yupResolver(formSchema),
   });
@@ -93,6 +95,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
       updatedBy: user.username,
       createdBy: user.username,
       sortOrder: Number.parseInt(task?.sortOrder || '0', 10) || 0,
+      optional: task?.optional,
     });
   }, [task]);
 
@@ -151,7 +154,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
     >
       <FormProvider {...formControl}>
         <form onSubmit={handleSubmit(onSubmit)} data-cy="edit-task-form">
-          <Modal.Content className="mb-24">
+          <Modal.Content className="gap-24">
             <Input type="hidden" value="ADMIN" {...register('permission')} />
 
             <Checkbox
@@ -177,10 +180,10 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
               {t('task:manager_activity')}
             </Checkbox>
 
+            <Checkbox {...register('optional')}>{t('task:optional')}</Checkbox>
+
             <FormControl className="w-full">
-              <FormLabel showRequired={false} className="mt-16">
-                {t('task:heading')}
-              </FormLabel>
+              <FormLabel showRequired={false}>{t('task:heading')}</FormLabel>
               <Input data-cy="activity-heading-input" {...register('heading')} />
               {errors.heading && (
                 <FormErrorMessage className="text-error">
@@ -189,9 +192,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
               )}
             </FormControl>
             <FormControl className="w-full">
-              <FormLabel showRequired={false} className="mt-16">
-                {t('task:heading_reference')}
-              </FormLabel>
+              <FormLabel showRequired={false}>{t('task:heading_reference')}</FormLabel>
               <Input data-cy="activity-heading-reference-input" {...register('headingReference')} />
               {errors.headingReference && (
                 <FormErrorMessage className="text-error">
@@ -200,7 +201,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
               )}
             </FormControl>
             <FormControl className="w-full" data-cy="activity-description">
-              <FormLabel className="mt-16">{t('task:text')}</FormLabel>
+              <FormLabel>{t('task:text')}</FormLabel>
               <TextEditor
                 className="mb-lg h-[120px]"
                 data-cy="activity-description-input"
@@ -213,7 +214,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
           </Modal.Content>
 
           <Modal.Footer className="flex justify-between items-center">
-            <div className="flex gap-4">
+            <div className="flex gap-12 mt-16">
               <Button
                 data-cy="activity-cancel-button"
                 variant="secondary"
