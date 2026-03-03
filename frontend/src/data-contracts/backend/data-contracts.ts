@@ -72,9 +72,10 @@ export interface EmployeeChecklistTask {
     | 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT';
   customTask: boolean;
   responseText: string;
-  fulfilmentStatus: 'EMPTY' | 'TRUE' | 'FALSE';
+  fulfilmentStatus: 'EMPTY' | 'TRUE' | 'FALSE' | 'NOT_RELEVANT';
   updated: string;
   updatedBy: string;
+  optional?: string;
 }
 
 export interface CustomTaskCreateRequest {
@@ -180,6 +181,7 @@ export interface TaskCreateRequest {
     | 'COMPLETED_OR_NOT_RELEVANT'
     | 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT';
   createdBy: string;
+  optional?: boolean;
 }
 
 export interface OrganizationUpdateRequest {
@@ -245,17 +247,18 @@ export interface Task {
   created: string;
   updated: string;
   lastSavedBy: string;
-  fulfilmentStatus: 'EMPTY' | 'TRUE' | 'FALSE';
+  fulfilmentStatus: 'EMPTY' | 'TRUE' | 'FALSE' | 'NOT_RELEVANT';
+  optional?: boolean;
 }
 
 export interface EmployeeChecklistTaskUpdateRequest {
-  fulfilmentStatus: 'EMPTY' | 'TRUE' | 'FALSE';
+  fulfilmentStatus: 'EMPTY' | 'TRUE' | 'FALSE' | 'NOT_RELEVANT';
   responseText: string;
   updatedBy: string;
 }
 
 export interface EmployeeChecklistPhaseUpdateRequest {
-  tasksFulfilmentStatus: 'EMPTY' | 'TRUE' | 'FALSE';
+  tasksFulfilmentStatus: 'EMPTY' | 'TRUE' | 'FALSE' | 'NOT_RELEVANT';
   updatedBy: string;
 }
 
@@ -301,6 +304,7 @@ export interface TaskUpdateRequest {
     | 'COMPLETED_OR_NOT_RELEVANT'
     | 'COMPLETED_OR_NOT_RELEVANT_WITH_TEXT';
   updatedBy: string;
+  optional?: boolean;
 }
 
 export interface Correspondence {

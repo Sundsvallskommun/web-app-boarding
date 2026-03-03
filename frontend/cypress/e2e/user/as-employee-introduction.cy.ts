@@ -1,4 +1,3 @@
-import { searchEmployeeResponse } from 'cypress/fixtures/managed-introductions';
 import { emptyDelegatedIntroductions } from '../../fixtures/empty-introductions';
 import { managerAsEmployeeIntroduction } from '../../fixtures/manager-as-employee-introduction';
 
@@ -6,9 +5,11 @@ describe('Employee introduction as employee', () => {
   beforeEach(() => {
     cy.intercept('GET', '**/api/me', { fixture: 'me-manager.json' });
     cy.intercept('GET', '**/api/employee-checklists/manager/ann01che', { fixture: 'managed-introductions.ts' });
+    cy.intercept('GET', '**/api/employee-checklists/manager/bob01bos', { fixture: 'managed-introductions.ts' });
     cy.intercept('GET', '**/api/employee-checklists/employee/ann01che', managerAsEmployeeIntroduction);
     cy.intercept('GET', '**/api/employee-checklists/delegated-to/ann01che', emptyDelegatedIntroductions);
     cy.intercept('GET', '**/api/portalpersondata/personal/ann01che', { fixture: 'employee-response.json' });
+
     cy.viewport('macbook-15');
     cy.visit('http://localhost:3000');
     cy.get('[data-cy="user-introduction"]').should('exist');
@@ -48,5 +49,32 @@ describe('Employee introduction as employee', () => {
       cy.intercept('PATCH', '**/api/employee-checklists/**/tasks/**', updateFulfilmentStatusResponse);
     });
     cy.get('[data-cy="complete-all-activities"]').should('exist').check({ force: true });
+  });
+
+  it('can change activity relevance', () => {
+    cy.get('[data-cy="phase-menu-bar"]').contains('Om din anställning');
+
+    const introduction = managerAsEmployeeIntroduction;
+    const optionalTask = managerAsEmployeeIntroduction.data.phases[1].tasks[0];
+    introduction.data.phases[0].tasks[0] = {
+      id: optionalTask.id,
+      heading: optionalTask.heading,
+      questionType: 'COMPLETED_OR_NOT_RELEVANT',
+      text: optionalTask.text,
+      sortOrder: 0,
+      roleType: optionalTask.roleType,
+      customTask: optionalTask.customTask,
+      responseText: '',
+      updated: '2024-12-27T12:30:00Z',
+      fulfilmentStatus: 'NOT_RELEVANT',
+      updatedBy: 'ann01che',
+      optional: true,
+    };
+
+    cy.intercept('GET', '**/api/employee-checklists/employee/ann01che', introduction);
+    cy.intercept('PATCH', '**/api/employee-checklists/**/tasks/**', introduction.data.phases[0].tasks[0]);
+
+    cy.get('[data-cy="optional-activity-button"]').contains('Markera som inte aktuell').should('exist').click();
+    cy.get('[data-cy="optional-activity-button"]').contains('Markera som aktuell');
   });
 });

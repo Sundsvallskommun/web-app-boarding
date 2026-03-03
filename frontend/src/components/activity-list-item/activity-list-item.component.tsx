@@ -5,10 +5,11 @@ import sanitized from '@services/sanitizer-service';
 import { useUserInformation } from '@services/user-service/use-user-information';
 import { useUserStore } from '@services/user-service/user-service';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Checkbox, Label, PopupMenu } from '@sk-web-gui/react';
+import { Button, Checkbox, cx, Label, PopupMenu, useSnackbar } from '@sk-web-gui/react';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { shallow } from 'zustand/shallow';
+import { OptionalActivityButton } from '@components/activity-list-item/optional-activity-button.component';
 
 const isChecked = (fulfilmentStatus: string) => {
   switch (fulfilmentStatus) {
@@ -18,6 +19,8 @@ const isChecked = (fulfilmentStatus: string) => {
       return false;
     case 'TRUE':
       return true;
+    case 'NOT_RELEVANT':
+      return false;
     default:
       return false;
   }
@@ -35,17 +38,31 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const user = useUserStore((s) => s.user, shallow);
   const { task, checklistId, currentView, isUserChecklist } = props;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const toastMessage = useSnackbar();
+
   const openModal = () => {
     setIsModalOpen(true);
   };
   const closeModal = () => setIsModalOpen(false);
   const { t } = useTranslation();
   const { data: userInformation } = useUserInformation(task.updatedBy);
+  const notRelevant = task.fulfilmentStatus === 'NOT_RELEVANT';
+  const completed = task.fulfilmentStatus === 'TRUE';
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
-    updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username).then(async () => {
-      return await props.refreshAllChecklists();
-    });
+    updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username)
+      .then(async () => {
+        return await props.refreshAllChecklists();
+      })
+      .catch((error) => {
+        console.error('Error updating task fulfilment status:', error);
+        toastMessage({
+          position: 'bottom',
+          closeable: false,
+          message: t('task:update.status_error'),
+          status: 'error',
+        });
+      });
   };
 
   const removeTask = async () => {
@@ -67,21 +84,26 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
             value={task.fulfilmentStatus}
             className="pr-3"
             onChange={() => {
-              updateTaskFulfilment(task.fulfilmentStatus === 'TRUE' ? 'FALSE' : 'TRUE');
+              updateTaskFulfilment(completed ? 'FALSE' : 'TRUE');
             }}
+            disabled={notRelevant}
           />
           <div className="pl-20 pr-80 w-full">
-            <div className={task.fulfilmentStatus === 'TRUE' ? 'text-dark-disabled' : ''}>
+            <div className={completed || notRelevant ? 'text-dark-disabled' : ''}>
               {task.headingReference ?
                 <>
-                  <a className="text-large underline mr-4" href={task.headingReference} target="_blank">
+                  <a
+                    className={cx(notRelevant && 'line-through', 'text-large underline mr-4')}
+                    href={task.headingReference}
+                    target="_blank"
+                  >
                     {task.heading}
                   </a>
                   <Icon size="1.5rem" name="external-link" />
                 </>
-              : <span className="mr-3 text-large">{task.heading}</span>}
+              : <span className={cx(notRelevant && 'line-through', 'mr-3 text-large')}>{task.heading}</span>}
               <div className="pr-40">
-                <p>
+                <p className={cx(notRelevant && 'line-through')}>
                   <span
                     className="my-0 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:ml-lg [&>ol]:ml-lg [&>*>a]:underline"
                     dangerouslySetInnerHTML={{
@@ -90,13 +112,12 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                   ></span>
                 </p>
               </div>
-
               {task.customTask && (
                 <Label className="mt-4" rounded inverted>
                   Egen aktivitet
                 </Label>
               )}
-              {task.fulfilmentStatus === 'TRUE' && (
+              {completed && (
                 <p className="text-small text-primary mt-16">
                   <Icon className="align-middle mr-5" name="check" size="1.5rem" />
                   {t('task:fulfilled_by', {
@@ -110,6 +131,12 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                   })}
                 </p>
               )}
+              {task.optional ?
+                <OptionalActivityButton
+                  updateTaskFulfilment={updateTaskFulfilment}
+                  fulfilmentStatus={task.fulfilmentStatus}
+                />
+              : null}
             </div>
           </div>
           <div>
