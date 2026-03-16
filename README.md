@@ -8,7 +8,7 @@ Dessa APIer används i projektet, applikationsanvändaren i WSO2 måste prenumer
 | --------------- |--------:|
 | SimulatorServer |     2.0 |
 | Company         |     1.0 |
-| Checklist       |     1.1 |
+| Checklist       |     1.3 |
 | Employee        |     2.0 |
 
 ## Utveckling

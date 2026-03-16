@@ -39,6 +39,7 @@ export const managerAsEmployeeIntroduction = {
             fulfilmentStatus: 'FALSE',
             updated: '2024-12-11T08:27:20.677539+01:00',
             updatedBy: 'ann01che',
+            optional: true,
           },
           {
             id: 'aaaaaaaa-aaaa-abaa-aaaa-aaaaaaaaaaaa',

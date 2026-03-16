@@ -78,6 +78,7 @@ export const createTask: (
     permission: taskData.permission,
     questionType: taskData.questionType,
     createdBy: taskData.createdBy,
+    optional: taskData.optional,
   };
 
   return apiService
@@ -107,6 +108,7 @@ export const updateTask: (
     permission: taskData.permission,
     questionType: taskData.questionType,
     updatedBy: taskData.updatedBy,
+    optional: taskData.optional,
   };
 
   return apiService

@@ -10,10 +10,7 @@ import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { updateTaskFulfilmentStatus } from '@services/checklist-service/checklist-service';
 import { useUserStore } from '@services/user-service/user-service';
 import { useShallow } from 'zustand/react/shallow';
-import { useChecklist } from '@services/checklist-service/use-checklist';
-import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { useTranslation } from 'react-i18next';
-import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 
 interface IntroductionFulFillAllTasksCheckboxProps {
   currentView: number;
@@ -29,7 +26,9 @@ export const IntroductionFulFillAllTasksCheckbox: React.FC<IntroductionFulFillAl
 
   const updateAllTaskFulfillments = async (phaseCompletion: boolean) => {
     const updatePromises = data?.phases[currentPhase]?.tasks.map((task) => {
-      return updateTaskFulfilmentStatus(data?.id, task.id, phaseCompletion ? 'FALSE' : 'TRUE', username);
+      if (task.fulfilmentStatus !== 'NOT_RELEVANT') {
+        return updateTaskFulfilmentStatus(data?.id, task.id, phaseCompletion ? 'FALSE' : 'TRUE', username);
+      }
     });
     Promise.all(updatePromises).then(() => {
       props.refreshAllChecklists();

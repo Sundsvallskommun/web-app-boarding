@@ -8,7 +8,9 @@ export const countAllTasks = (checklist: EmployeeChecklist) => {
   let sum = 0;
 
   checklist.phases.map((phase: EmployeeChecklistPhase) => {
-    phase.tasks.map((task: EmployeeChecklistTask) => sum++);
+    phase.tasks.map((task: EmployeeChecklistTask) => {
+      if (task.fulfilmentStatus !== 'NOT_RELEVANT') sum++;
+    });
   });
 
   return sum;
@@ -28,7 +30,10 @@ export const countManagerTasks = (phase: EmployeeChecklistPhase) => {
   let count = 0;
 
   phase?.tasks?.map((task) => {
-    if (task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || task.roleType === 'MANAGER_FOR_NEW_MANAGER') {
+    if (
+      (task.roleType === 'MANAGER_FOR_NEW_EMPLOYEE' || task.roleType === 'MANAGER_FOR_NEW_MANAGER') &&
+      task.fulfilmentStatus !== 'NOT_RELEVANT'
+    ) {
       count++;
     }
   });
@@ -40,7 +45,10 @@ export const countEmployeeTasks = (phase: EmployeeChecklistPhase) => {
   let count = 0;
 
   phase?.tasks?.map((task) => {
-    if (task.roleType === 'NEW_EMPLOYEE' || task.roleType === 'NEW_MANAGER') {
+    if (
+      (task.roleType === 'NEW_EMPLOYEE' || task.roleType === 'NEW_MANAGER') &&
+      task.fulfilmentStatus !== 'NOT_RELEVANT'
+    ) {
       count++;
     }
   });

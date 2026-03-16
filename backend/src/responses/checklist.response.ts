@@ -103,6 +103,9 @@ export class EmployeeChecklistTask implements IEmployeeChecklistTask {
   updated?: string;
   @IsString()
   updatedBy?: string;
+  @IsString()
+  @IsOptional()
+  optional?: boolean;
 }
 
 export class CustomTaskCreateRequest implements CustomTaskCreateRequestType {
@@ -268,6 +271,9 @@ export class TaskCreateRequest implements TaskCreateRequestType {
   questionType: QuestionType;
   @IsString()
   createdBy: string;
+  @IsBoolean()
+  @IsOptional()
+  optional: boolean;
 }
 
 export class OrganizationUpdateRequest implements OrganizationUpdateRequestType {
@@ -381,6 +387,9 @@ export class Task implements TaskType {
   lastSavedBy?: string;
   @IsEnum(FulfilmentStatus)
   fulfilmentStatus?: FulfilmentStatus;
+  @IsBoolean()
+  @IsOptional()
+  optional: boolean;
 }
 
 export class EmployeeChecklistTaskUpdateRequest implements EmployeeChecklistTaskUpdateRequestType {
@@ -461,6 +470,9 @@ export class TaskUpdateRequest implements TaskUpdateRequestType {
   questionType?: QuestionType;
   @IsString()
   updatedBy: string;
+  @IsBoolean()
+  @IsOptional()
+  optional: boolean;
 }
 
 export class Correspondence implements CorrespondenceType {
