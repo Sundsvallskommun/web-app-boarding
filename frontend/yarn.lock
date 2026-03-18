@@ -1023,10 +1023,10 @@
   dependencies:
     webpack-bundle-analyzer "4.10.1"
 
-"@next/env@15.5.9":
-  version "15.5.9"
-  resolved "https://registry.yarnpkg.com/@next/env/-/env-15.5.9.tgz#53c2c34dc17cd87b61f70c6cc211e303123b2ab8"
-  integrity sha512-4GlTZ+EJM7WaW2HEZcyU317tIQDjkQIyENDLxYJfSWlfqguN+dHkZgyQTV/7ykvobU7yEH5gKvreNrH4B6QgIg==
+"@next/env@15.5.10":
+  version "15.5.10"
+  resolved "https://registry.yarnpkg.com/@next/env/-/env-15.5.10.tgz#3b0506c57d0977e60726a1663f36bc96d42c295b"
+  integrity sha512-plg+9A/KoZcTS26fe15LHg+QxReTazrIOoKKUC3Uz4leGGeNPgLHdevVraAAOX0snnUs3WkRx3eUQpj9mreG6A==
 
 "@next/eslint-plugin-next@15.5.4":
   version "15.5.4"
@@ -1458,12 +1458,12 @@
     "@sk-web-gui/utils" "2.2.2"
     universal-cookie "^8.0.1"
 
-"@sk-web-gui/core@^4.0.1":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/@sk-web-gui/core/-/core-4.1.1.tgz#b95bc2780c7e0fcd0b11406c550fe4310922865e"
-  integrity sha512-X0AyzOMTLYj1bTG3RPhgdjcFicAE+1rVc2+SEiqC7Xj7LVZ3JRm4hfADYWPXkYYE92DOFTxhtrL7Gfl2y6Sw3A==
+"@sk-web-gui/core@^4.0.4":
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/@sk-web-gui/core/-/core-4.4.0.tgz#d361fe2f1f0633041a114b1ae5d14a38892e2780"
+  integrity sha512-KPY595eUicqDVPiB926iEX1+XG0+5BEre77RD3d5ELhfkmM4MJDoPWNfjL76plIsYV52qQMsWGkBbu6XUmLF5g==
   dependencies:
-    "@sk-web-gui/theme" "2.6.0"
+    "@sk-web-gui/theme" "2.7.1"
     "@tailwindcss/container-queries" "^0.1.1"
     "@tailwindcss/forms" "^0.5.10"
     mini-svg-data-uri "^1.4.4"
@@ -1745,10 +1745,10 @@
     "@sk-web-gui/divider" "1.1.6"
     "@sk-web-gui/utils" "2.2.2"
 
-"@sk-web-gui/text-editor@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@sk-web-gui/text-editor/-/text-editor-2.0.2.tgz#284ca2a2383b02ee7a99895223739cbb6c8dbf2f"
-  integrity sha512-QuYjLO0N4P3Pq5HXRsIzl7XUH02K4nA7+0oW5OWHWE3N6Ys67HgYUf7r+f7d9/PLCU+A9OUWESXFk14/og39IA==
+"@sk-web-gui/text-editor@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@sk-web-gui/text-editor/-/text-editor-2.1.0.tgz#d645ddc72c187fdfc4cde55468519af75e0e2ba3"
+  integrity sha512-fJ9XrxcHGHuhZCY5O8xmX51G0a+2VYO28hCdUTivsQyhWx5MUnL+xDPEV4Cp6VHpgOYjFW0xU6bPlK+XdE3OZg==
   dependencies:
     "@sk-web-gui/tooltip" "1.1.2"
     "@sk-web-gui/utils" "2.2.2"
@@ -1766,6 +1766,15 @@
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@sk-web-gui/theme/-/theme-2.6.0.tgz#11ca2eccb5256c7948b8fc2d1e3cfcb7efb5c8db"
   integrity sha512-VJQKAiUjdulpcedox+gJCsO2IVSDs/QfJu2laJ+iUS/jycc/SSBFRgOhPSTVIsgyFiCZAvrjeaGo4goaVzBA/Q==
+  dependencies:
+    "@sk-web-gui/utils" "2.2.2"
+    lodash.set "^4.3.2"
+    usehooks-ts "^3.1.1"
+
+"@sk-web-gui/theme@2.7.1":
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/@sk-web-gui/theme/-/theme-2.7.1.tgz#c870be25e81420b8da1273d5b70086dfe6a2a432"
+  integrity sha512-AG6Q3lpjwcVVaLwPfNFVJZS95wsmq7UomeaLyQMPzmCXkFt53MrB9G9ox1ERLtze1Bu8f02zemsvjGx99gy1Iw==
   dependencies:
     "@sk-web-gui/utils" "2.2.2"
     lodash.set "^4.3.2"
@@ -5796,12 +5805,12 @@ next-i18next@^15.3.1:
     hoist-non-react-statics "^3.3.2"
     i18next-fs-backend "^2.6.0"
 
-next@15.5.9:
-  version "15.5.9"
-  resolved "https://registry.yarnpkg.com/next/-/next-15.5.9.tgz#1b80d05865cc27e710fb4dcfc6fd9e726ed12ad4"
-  integrity sha512-agNLK89seZEtC5zUHwtut0+tNrc0Xw4FT/Dg+B/VLEo9pAcS9rtTKpek3V6kVcVwsB2YlqMaHdfZL4eLEVYuCg==
+next@15.5.10:
+  version "15.5.10"
+  resolved "https://registry.yarnpkg.com/next/-/next-15.5.10.tgz#5e3824d8f00dcd66ca4e79c38834f766976116bd"
+  integrity sha512-r0X65PNwyDDyOrWNKpQoZvOatw7BcsTPRKdwEqtc9cj3wv7mbBIk9tKed4klRaFXJdX0rugpuMTHslDrAU1bBg==
   dependencies:
-    "@next/env" "15.5.9"
+    "@next/env" "15.5.10"
     "@swc/helpers" "0.5.15"
     caniuse-lite "^1.0.30001579"
     postcss "8.4.31"
