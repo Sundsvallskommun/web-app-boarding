@@ -47,7 +47,7 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
   const { t } = useTranslation();
   const { data: userInformation } = useUserInformation(task.updatedBy);
   const notRelevant = task.fulfilmentStatus === 'NOT_RELEVANT';
-  const completed = task.fulfilmentStatus === 'TRUE';
+  const completed = task.fulfilmentStatus === 'TRUE' || notRelevant;
 
   const updateTaskFulfilment = (newFulfilmentStatus: string) => {
     updateTaskFulfilmentStatus(checklistId, task.id, newFulfilmentStatus, user.username)
@@ -117,6 +117,12 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                   Egen aktivitet
                 </Label>
               )}
+              {task.optional ?
+                <OptionalActivityButton
+                  updateTaskFulfilment={updateTaskFulfilment}
+                  fulfilmentStatus={task.fulfilmentStatus}
+                />
+              : null}
               {completed && (
                 <p className="text-small text-primary mt-16">
                   <Icon className="align-middle mr-5" name="check" size="1.5rem" />
@@ -131,12 +137,6 @@ export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
                   })}
                 </p>
               )}
-              {task.optional ?
-                <OptionalActivityButton
-                  updateTaskFulfilment={updateTaskFulfilment}
-                  fulfilmentStatus={task.fulfilmentStatus}
-                />
-              : null}
             </div>
           </div>
           <div>
