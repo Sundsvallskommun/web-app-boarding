@@ -49,6 +49,8 @@ export const useManagedChecklists = (): {
         });
     } else {
       setData([]);
+      setLoaded(true);
+      setLoading(false);
     }
   };
 

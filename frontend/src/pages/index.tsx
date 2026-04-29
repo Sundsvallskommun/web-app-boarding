@@ -11,7 +11,7 @@ import { capitalize } from 'underscore.string';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useUserStore } from '@services/user-service/user-service';
 import { useShallow } from 'zustand/react/shallow';
-import { Avatar, Button } from '@sk-web-gui/react';
+import { Avatar, Button, Spinner } from '@sk-web-gui/react';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { useRouter } from 'next/router';
 import { countAllCompletedTasks, countAllTasks } from '@utils/count-tasks';
@@ -27,9 +27,20 @@ export function Index() {
   const { checked } = methods.watch();
   const { username } = useUserStore(useShallow((s) => s.user));
 
-  const { data: managedChecklists, loaded: managedChecklistsLoaded } = useManagedChecklists();
-  const { data: checklist, loaded: checklistLoaded } = useChecklist(username);
-  const { data: delegatedChecklists, loaded: delegatedChecklistsLoaded } = useDelegatedChecklists();
+  const {
+    data: managedChecklists,
+    loading: managedChecklistsLoading,
+    loaded: managedChecklistLoaded,
+  } = useManagedChecklists();
+  const { data: checklist, loading: checklistLoading, loaded: checklistLoaded } = useChecklist(username);
+  const {
+    data: delegatedChecklists,
+    loading: delegatedChecklistsLoading,
+    loaded: delegatedChecklistsLoaded,
+  } = useDelegatedChecklists();
+
+  const isLoaded = managedChecklistLoaded && checklistLoaded && delegatedChecklistsLoaded;
+  const isLoading = managedChecklistsLoading || checklistLoading || delegatedChecklistsLoading;
 
   const closeHandler = () => {
     setIsOpen(false);
@@ -38,8 +49,10 @@ export function Index() {
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
-        <div className="py-10">
-          {checklist && checklistLoaded ?
+        {isLoading || !isLoaded ?
+          <Spinner className="mx-auto my-40" />
+        : checklist && checklistLoaded ?
+          <div className="py-10">
             <div
               className="flex justify-between border-1 border-divider rounded-button bg-background-content px-16 pt-16 pb-16 mb-40 w-1/3"
               data-cy="user-introduction"
@@ -75,37 +88,37 @@ export function Index() {
                 />
               </div>
             </div>
-          : null}
 
-          {managedChecklists.length ?
-            <>
-              <h2 className="my-16">{capitalize(t('checklists:ongoing_checklists'))}</h2>
-              <p className="mb-16">
-                {t('checklists:you_got_ongoing_checklists', { count: managedChecklists?.length })}
-              </p>
+            {managedChecklists.length ?
+              <>
+                <h2 className="my-16">{capitalize(t('checklists:ongoing_checklists'))}</h2>
+                <p className="mb-16">
+                  {t('checklists:you_got_ongoing_checklists', { count: managedChecklists?.length })}
+                </p>
 
-              <div data-cy="managed-checklists-table">
-                <FormProvider {...methods}>
-                  <OngoingChecklistsTable data={managedChecklists} delegatedChecklists={false} />
-                </FormProvider>
-              </div>
-            </>
-          : null}
-
-          {delegatedChecklists.length ?
-            <div className="py-24">
-              <h2 className="mb-16">{t('common:assigned_introductions')}</h2>
-              <p className="mb-16">
-                {t('checklists:you_got_assigned_introductions', { count: delegatedChecklists?.length })}
-              </p>
-              {delegatedChecklists ?
-                <div data-cy="delegated-checklists-table">
-                  <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
+                <div data-cy="managed-checklists-table">
+                  <FormProvider {...methods}>
+                    <OngoingChecklistsTable data={managedChecklists} delegatedChecklists={false} />
+                  </FormProvider>
                 </div>
-              : null}
-            </div>
-          : null}
-        </div>
+              </>
+            : null}
+
+            {delegatedChecklists.length ?
+              <div className="py-24">
+                <h2 className="mb-16">{t('common:assigned_introductions')}</h2>
+                <p className="mb-16">
+                  {t('checklists:you_got_assigned_introductions', { count: delegatedChecklists?.length })}
+                </p>
+                {delegatedChecklists ?
+                  <div data-cy="delegated-checklists-table">
+                    <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
+                  </div>
+                : null}
+              </div>
+            : null}
+          </div>
+        : <h2>{t('common:no_introductions')}</h2>}
 
         <FormProvider {...methods}>
           <DelegateMultipleChecklistsModal checklistIds={checked} onClose={closeHandler} isOpen={isOpen} />
