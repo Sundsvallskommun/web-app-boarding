@@ -26,13 +26,28 @@ export const CheckList: React.FC = () => {
   const [currentView, setCurrentView] = useState<number>(0);
   const { t } = useTranslation();
 
-  const { refresh: refreshManagedChecklists, data: managedChecklists } = useManagedChecklists();
+  const {
+    refresh: refreshManagedChecklists,
+    data: managedChecklists,
+    loaded: managedChecklistLoaded,
+    loading: managedChecklistLoading,
+  } = useManagedChecklists();
   const {
     refresh: refreshChecklist,
     data: employeeChecklist,
-    loaded,
+    loaded: employeeChecklistLoaded,
+    loading: employeeChecklistLoading,
   } = useChecklist((query?.userId as string) || username);
-  const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
+  const {
+    refresh: refreshDelegatedChecklists,
+    loading: delegatedChecklistLoading,
+    loaded: delegatedChecklistLoaded,
+  } = useDelegatedChecklists();
+
+  const routerReady = router.isReady;
+  const isLoaded = managedChecklistLoaded && employeeChecklistLoaded && delegatedChecklistLoaded;
+  const isLoading = managedChecklistLoading || employeeChecklistLoading || delegatedChecklistLoading;
+  const showSpinner = isLoading || !isLoaded || !routerReady;
 
   const refreshAllChecklists = async () => {
     refreshChecklist();
@@ -43,8 +58,10 @@ export const CheckList: React.FC = () => {
   const data = currentView === 0 ? managedChecklist : employeeChecklist;
 
   useEffect(() => {
-    refreshManagedChecklists(employeeChecklist?.manager.username);
-  }, [employeeChecklist]);
+    if (employeeChecklist?.manager?.username) {
+      refreshManagedChecklists(employeeChecklist.manager.username);
+    }
+  }, [employeeChecklist?.manager?.username]);
 
   useEffect(() => {
     setCurrentPhase(0);
@@ -53,94 +70,86 @@ export const CheckList: React.FC = () => {
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
-        {!loaded ?
+        {showSpinner || !data ?
           <Spinner className="my-80 mx-auto" />
-        : <div>
-            {loaded && !data ?
-              <h2>{t('common:no_introductions')}</h2>
-            : data && (
-                <div>
-                  <div className="w-full">
-                    <Breadcrumb className="mb-40">
-                      <Breadcrumb.Item>
-                        <Breadcrumb.Link href="/admin/checklists">
-                          {capitalize(t('common:introduction_other'))}
-                        </Breadcrumb.Link>
-                      </Breadcrumb.Item>
+        : data ?
+          <div>
+            <div className="w-full">
+              <Breadcrumb className="mb-40">
+                <Breadcrumb.Item>
+                  <Breadcrumb.Link href="/admin/checklists">
+                    {capitalize(t('common:introduction_other'))}
+                  </Breadcrumb.Link>
+                </Breadcrumb.Item>
 
-                      <Breadcrumb.Item currentPage>
-                        <Breadcrumb.Link href="#">
-                          {data?.employee?.firstName} {data?.employee?.lastName}
-                        </Breadcrumb.Link>
-                      </Breadcrumb.Item>
-                    </Breadcrumb>
-                  </div>
+                <Breadcrumb.Item currentPage>
+                  <Breadcrumb.Link href="#">
+                    {data?.employee?.firstName} {data?.employee?.lastName}
+                  </Breadcrumb.Link>
+                </Breadcrumb.Item>
+              </Breadcrumb>
+            </div>
 
-                  <h1 data-cy="admin-introduction-title" className="text-h1-md">
-                    {t('common:introduction_of')} {data?.employee?.firstName} {data?.employee?.lastName}
-                  </h1>
+            <h1 data-cy="admin-introduction-title" className="text-h1-md">
+              {t('common:introduction_of')} {data?.employee?.firstName} {data?.employee?.lastName}
+            </h1>
 
-                  <div className="flex gap-40 mt-40">
-                    <Tabs current={currentView}>
-                      <Tabs.Item>
-                        <Tabs.Button onClick={() => setCurrentView(0)}>
-                          {t('templates:activities_for_manager')}
-                        </Tabs.Button>
-                        <Tabs.Content className="w-full rounded bg-background-content border-1 border-divider">
-                          <div>
-                            <IntroductionPhaseMenu
-                              data={data}
-                              currentPhase={currentPhase}
-                              setCurrentPhase={setCurrentPhase}
-                              currentView={currentView}
-                              refreshAllChecklists={refreshAllChecklists}
-                            />
-                            <div className="py-24 px-40">
-                              <IntroductionActivityList
-                                data={data}
-                                currentView={currentView}
-                                currentPhase={currentPhase}
-                                isUserChecklist={true}
-                              />
-                            </div>
-                          </div>
-                        </Tabs.Content>
-                      </Tabs.Item>
-
-                      <Tabs.Item>
-                        <Tabs.Button data-cy="employee-activities" onClick={() => setCurrentView(1)}>
-                          {t('templates:activities_for_employee')}
-                        </Tabs.Button>
-                        <Tabs.Content className="w-full rounded bg-background-content border-1 border-divider">
-                          <IntroductionPhaseMenu
-                            data={data}
-                            currentPhase={currentPhase}
-                            setCurrentPhase={setCurrentPhase}
-                            currentView={currentView}
-                            refreshAllChecklists={refreshAllChecklists}
-                          />
-
-                          <div className="py-24 px-40">
-                            <IntroductionActivityList
-                              data={data}
-                              currentView={currentView}
-                              currentPhase={currentPhase}
-                              isUserChecklist={true}
-                            />
-                          </div>
-                        </Tabs.Content>
-                      </Tabs.Item>
-                    </Tabs>
-
-                    <div className="pt-56 w-5/12">
-                      <ChecklistSidebar isUserChecklist={true} isDelegatedChecklist={false} />
+            <div className="flex gap-40 mt-40">
+              <Tabs current={currentView}>
+                <Tabs.Item>
+                  <Tabs.Button onClick={() => setCurrentView(0)}>{t('templates:activities_for_manager')}</Tabs.Button>
+                  <Tabs.Content className="w-full rounded bg-background-content border-1 border-divider">
+                    <div>
+                      <IntroductionPhaseMenu
+                        data={data}
+                        currentPhase={currentPhase}
+                        setCurrentPhase={setCurrentPhase}
+                        currentView={currentView}
+                        refreshAllChecklists={refreshAllChecklists}
+                      />
+                      <div className="py-24 px-40">
+                        <IntroductionActivityList
+                          data={data}
+                          currentView={currentView}
+                          currentPhase={currentPhase}
+                          isUserChecklist={true}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )
-            }
+                  </Tabs.Content>
+                </Tabs.Item>
+
+                <Tabs.Item>
+                  <Tabs.Button data-cy="employee-activities" onClick={() => setCurrentView(1)}>
+                    {t('templates:activities_for_employee')}
+                  </Tabs.Button>
+                  <Tabs.Content className="w-full rounded bg-background-content border-1 border-divider">
+                    <IntroductionPhaseMenu
+                      data={data}
+                      currentPhase={currentPhase}
+                      setCurrentPhase={setCurrentPhase}
+                      currentView={currentView}
+                      refreshAllChecklists={refreshAllChecklists}
+                    />
+
+                    <div className="py-24 px-40">
+                      <IntroductionActivityList
+                        data={data}
+                        currentView={currentView}
+                        currentPhase={currentPhase}
+                        isUserChecklist={true}
+                      />
+                    </div>
+                  </Tabs.Content>
+                </Tabs.Item>
+              </Tabs>
+
+              <div className="pt-56 w-5/12">
+                <ChecklistSidebar isUserChecklist={true} isDelegatedChecklist={false} />
+              </div>
+            </div>
           </div>
-        }
+        : <h2>{t('common:no_introductions')}</h2>}
       </Main>
     </DefaultLayout>
   );

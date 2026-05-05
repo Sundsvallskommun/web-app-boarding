@@ -42,19 +42,33 @@ export const CheckList: React.FC = () => {
   const [isUserChecklist, setIsUserChecklist] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  const { refresh: refreshManagedChecklists, data: managedChecklists } = useManagedChecklists();
+  const {
+    refresh: refreshManagedChecklists,
+    data: managedChecklists,
+    loading: managedChecklistsLoading,
+    loaded: managedChecklistLoaded,
+  } = useManagedChecklists();
   const {
     refresh: refreshChecklist,
     data: employeeChecklist,
-    loaded,
+    loading: checklistLoading,
+    loaded: employeeChecklistLoaded,
   } = useChecklist((query?.userId as string) || username);
-  const { refresh: refreshDelegatedChecklists, data: delegatedChecklists } = useDelegatedChecklists();
+  const {
+    refresh: refreshDelegatedChecklists,
+    data: delegatedChecklists,
+    loading: delegatedChecklistLoading,
+    loaded: delegatedChecklistsLoaded,
+  } = useDelegatedChecklists();
 
   const refreshAllChecklists = async () => {
     refreshChecklist();
     refreshDelegatedChecklists();
     refreshManagedChecklists(data?.manager.username);
   };
+
+  const isLoading = managedChecklistsLoading || checklistLoading || delegatedChecklistLoading;
+  const isLoaded = managedChecklistLoaded && employeeChecklistLoaded && delegatedChecklistsLoaded;
 
   const managedChecklist = managedChecklists.filter(
     (checklist) => checklist.employee.username === query?.userId && checklist.manager.username === username
@@ -128,80 +142,72 @@ export const CheckList: React.FC = () => {
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
-        {!loaded ?
-          <Spinner />
+        {isLoading || !isLoaded || !data ?
+          <Spinner className="mx-auto my-40" />
         : <div>
-            {loaded && !data ?
-              <h2>{t('common:no_introductions')}</h2>
-            : data && (
-                <div>
-                  {delegatedChecklist && (
-                    <div className="flex grow gap-40 justify-between mt-56 border-1 border-divider rounded-button bg-background-200 py-10 px-16 w-[91rem]">
-                      {t('delegation:info', { manager: data?.manager?.firstName + ' ' + data?.manager?.lastName })}
-                      <Button onClick={handleRemoveDelegation} variant="secondary" className="self-center mr-8">
-                        {t('delegation:remove')}
-                      </Button>
-                    </div>
-                  )}
-                  <h1 className="text-h1-md mt-56 mb-40">
-                    {t('common:introduction_of')} {data?.employee?.firstName} {data?.employee?.lastName || ''}
-                  </h1>
-                  <div className="flex gap-40">
-                    {!isUserChecklist ?
-                      <div className="flex grow gap-16 mb-24 w-[90rem] mt-8">
-                        <Tabs current={currentView} data-cy="introduction-for-tabs">
-                          <Tabs.Item>
-                            <Tabs.Button
-                              onClick={() => setCurrentView(0)}
-                              data-cy="introduction-for-tabs-manager-button"
-                            >
-                              {t('task:your_activity')}
-                            </Tabs.Button>
-                            <Tabs.Content>{renderedData(data)}</Tabs.Content>
-                          </Tabs.Item>
-                          <Tabs.Item>
-                            <Tabs.Button
-                              onClick={() => setCurrentView(1)}
-                              data-cy="introduction-for-tabs-employee-button"
-                            >
-                              {t('task:employee_activity')}
-                            </Tabs.Button>
-                            <Tabs.Content>{renderedData(data)}</Tabs.Content>
-                          </Tabs.Item>
-                        </Tabs>
-                      </div>
-                    : renderedData(data)}
-
-                    <div className="w-[40rem]">
-                      {managedChecklists.length > 0 && !delegatedChecklist && !isUserChecklist && (
-                        <div className="flex flex-row-reverse">
-                          <Button
-                            className="mb-24 px-16"
-                            variant="primary"
-                            color="vattjom"
-                            onClick={openModal}
-                            inverted
-                            data-cy="add-activity-button"
+            {data ?
+              <div>
+                {delegatedChecklist && (
+                  <div className="flex grow gap-40 justify-between mt-56 border-1 border-divider rounded-button bg-background-200 py-10 px-16 w-[91rem]">
+                    {t('delegation:info', { manager: data?.manager?.firstName + ' ' + data?.manager?.lastName })}
+                    <Button onClick={handleRemoveDelegation} variant="secondary" className="self-center mr-8">
+                      {t('delegation:remove')}
+                    </Button>
+                  </div>
+                )}
+                <h1 className="text-h1-md mt-56 mb-40">
+                  {t('common:introduction_of')} {data?.employee?.firstName} {data?.employee?.lastName || ''}
+                </h1>
+                <div className="flex gap-40">
+                  {!isUserChecklist ?
+                    <div className="flex grow gap-16 mb-24 w-[90rem] mt-8">
+                      <Tabs current={currentView} data-cy="introduction-for-tabs">
+                        <Tabs.Item>
+                          <Tabs.Button onClick={() => setCurrentView(0)} data-cy="introduction-for-tabs-manager-button">
+                            {t('task:your_activity')}
+                          </Tabs.Button>
+                          <Tabs.Content>{renderedData(data)}</Tabs.Content>
+                        </Tabs.Item>
+                        <Tabs.Item>
+                          <Tabs.Button
+                            onClick={() => setCurrentView(1)}
+                            data-cy="introduction-for-tabs-employee-button"
                           >
-                            <Icon name="plus" size="18px" />{' '}
-                            {currentView === 0 ?
-                              t('task:add_activity_for_manager')
-                            : t('task:add_activity_for_employee')}
-                          </Button>
-                        </div>
-                      )}
+                            {t('task:employee_activity')}
+                          </Tabs.Button>
+                          <Tabs.Content>{renderedData(data)}</Tabs.Content>
+                        </Tabs.Item>
+                      </Tabs>
+                    </div>
+                  : renderedData(data)}
 
-                      <div className={delegatedChecklist ? 'mt-64' : 'mt-0'}>
-                        <ChecklistSidebar
-                          isUserChecklist={isUserChecklist}
-                          isDelegatedChecklist={!managedChecklist && !!delegatedChecklist}
-                        />
+                  <div className="w-[40rem]">
+                    {managedChecklists.length > 0 && !delegatedChecklist && !isUserChecklist && (
+                      <div className="flex flex-row-reverse">
+                        <Button
+                          className="mb-24 px-16"
+                          variant="primary"
+                          color="vattjom"
+                          onClick={openModal}
+                          inverted
+                          data-cy="add-activity-button"
+                        >
+                          <Icon name="plus" size="18px" />{' '}
+                          {currentView === 0 ? t('task:add_activity_for_manager') : t('task:add_activity_for_employee')}
+                        </Button>
                       </div>
+                    )}
+
+                    <div className={delegatedChecklist ? 'mt-64' : 'mt-0'}>
+                      <ChecklistSidebar
+                        isUserChecklist={isUserChecklist}
+                        isDelegatedChecklist={!managedChecklist && !!delegatedChecklist}
+                      />
                     </div>
                   </div>
                 </div>
-              )
-            }
+              </div>
+            : <h2>{t('common:no_introductions')}</h2>}
           </div>
         }
       </Main>
