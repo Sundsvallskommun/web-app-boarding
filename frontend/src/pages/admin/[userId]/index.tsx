@@ -70,7 +70,7 @@ export const CheckList: React.FC = () => {
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
-        {showSpinner || !data ?
+        {showSpinner ?
           <Spinner className="my-80 mx-auto" />
         : data ?
           <div>
