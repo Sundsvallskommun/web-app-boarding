@@ -142,7 +142,7 @@ export const CheckList: React.FC = () => {
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
-        {isLoading || !isLoaded || !data ?
+        {isLoading || !isLoaded ?
           <Spinner className="mx-auto my-40" />
         : <div>
             {data ?
