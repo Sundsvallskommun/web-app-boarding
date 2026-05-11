@@ -41,6 +41,7 @@ export function Index() {
 
   const isLoaded = managedChecklistLoaded && checklistLoaded && delegatedChecklistsLoaded;
   const isLoading = managedChecklistsLoading || checklistLoading || delegatedChecklistsLoading;
+  const hasData = Boolean(checklist) || Boolean(managedChecklists?.length) || Boolean(delegatedChecklists?.length);
 
   const closeHandler = () => {
     setIsOpen(false);
@@ -51,45 +52,47 @@ export function Index() {
       <Main>
         {isLoading || !isLoaded ?
           <Spinner className="mx-auto my-40" />
-        : checklist && checklistLoaded ?
+        : hasData && isLoaded ?
           <div className="py-10">
-            <div
-              className="flex justify-between border-1 border-divider rounded-button bg-background-content px-16 pt-16 pb-16 mb-40 w-1/3"
-              data-cy="user-introduction"
-            >
-              <div className="flex" data-cy="employee-checklist-card">
-                <Avatar
-                  rounded
-                  initials={`${checklist.employee.firstName[0]}${checklist.employee.lastName[0]}`}
-                  size="md"
-                />
-                <div className="px-16">
-                  <strong>
-                    {checklist.employee.firstName} {checklist.employee.lastName}
-                  </strong>
-                  <p className="text-small my-0">
-                    <Icon name="check" size="1.8rem" className="align-top mr-6" />
-                    {t('task:activities_completed', {
-                      first: countAllCompletedTasks(checklist),
-                      second: countAllTasks(checklist),
-                    })}
-                  </p>
+            {checklist?.id ?
+              <div
+                className="flex justify-between border-1 border-divider rounded-button bg-background-content px-16 pt-16 pb-16 mb-40 w-1/3"
+                data-cy="user-introduction"
+              >
+                <div className="flex" data-cy="employee-checklist-card">
+                  <Avatar
+                    rounded
+                    initials={`${checklist.employee.firstName[0]}${checklist.employee.lastName[0]}`}
+                    size="md"
+                  />
+                  <div className="px-16">
+                    <strong>
+                      {checklist.employee.firstName} {checklist.employee.lastName}
+                    </strong>
+                    <p className="text-small my-0">
+                      <Icon name="check" size="1.8rem" className="align-top mr-6" />
+                      {t('task:activities_completed', {
+                        first: countAllCompletedTasks(checklist),
+                        second: countAllTasks(checklist),
+                      })}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <Button
+                    data-cy="user-introduction-button"
+                    iconButton
+                    leftIcon={<Icon name="arrow-right" />}
+                    onClick={() => {
+                      router.push(`/${username}`);
+                    }}
+                  />
                 </div>
               </div>
+            : null}
 
-              <div>
-                <Button
-                  data-cy="user-introduction-button"
-                  iconButton
-                  leftIcon={<Icon name="arrow-right" />}
-                  onClick={() => {
-                    router.push(`/${username}`);
-                  }}
-                />
-              </div>
-            </div>
-
-            {managedChecklists.length ?
+            {managedChecklists?.length ?
               <>
                 <h2 className="my-16">{capitalize(t('checklists:ongoing_checklists'))}</h2>
                 <p className="mb-16">
@@ -104,7 +107,7 @@ export function Index() {
               </>
             : null}
 
-            {delegatedChecklists.length ?
+            {delegatedChecklists?.length ?
               <div className="py-24">
                 <h2 className="mb-16">{t('common:assigned_introductions')}</h2>
                 <p className="mb-16">
