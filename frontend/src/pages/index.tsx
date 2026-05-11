@@ -52,7 +52,7 @@ export function Index() {
       <Main>
         {isLoading || !isLoaded ?
           <Spinner className="mx-auto my-40" />
-        : hasData && isLoaded ?
+        : hasData ?
           <div className="py-10">
             {checklist?.id ?
               <div
@@ -113,11 +113,9 @@ export function Index() {
                 <p className="mb-16">
                   {t('checklists:you_got_assigned_introductions', { count: delegatedChecklists?.length })}
                 </p>
-                {delegatedChecklists ?
-                  <div data-cy="delegated-checklists-table">
-                    <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
-                  </div>
-                : null}
+                <div data-cy="delegated-checklists-table">
+                  <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
+                </div>
               </div>
             : null}
           </div>
