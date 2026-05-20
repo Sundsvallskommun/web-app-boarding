@@ -54,6 +54,9 @@ describe('Overview as user', () => {
     cy.intercept('GET', '**/api/employee-checklists/manager/ann01che', managedIntroductions);
     cy.intercept('GET', '**/api/employee-checklists/employee/ann01che', { fixture: 'employee-checklist-none.json' });
     cy.intercept('GET', '**/api/employee-checklists/delegated-to/ann01che', emptyDelegatedIntroductions);
+    cy.intercept('POST', '**/api/employee-checklists/**/delegate-to/**', {
+      fixture: null,
+    });
 
     cy.get('[data-cy="managed-checklists-table"]').should('exist');
     managedIntroductions.data.map((employeeIntroduction) => {
