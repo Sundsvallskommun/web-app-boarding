@@ -23,11 +23,15 @@ interface ChecklistSidebarProps {
 export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserChecklist, isDelegatedChecklist }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const {
-    permissions: { isManager },
+    permissions: { isManager, canEditAdmin, canEditDepartment },
   } = useUserStore(useShallow((state) => state.user));
 
   const router = useRouter();
   const { pathname } = router;
+
+  const canAssign =
+    (isManager && !isUserChecklist && !isDelegatedChecklist) ||
+    ((canEditAdmin || canEditDepartment) && pathname.includes('/admin'));
 
   const { refresh, data } = useChecklist();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
@@ -131,7 +135,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
                               {delegated.name}
                             </div>
 
-                            {isManager && !isUserChecklist && !isDelegatedChecklist && (
+                            {canAssign && (
                               <div
                                 className="relative w-fit h-fit flex items-center"
                                 onMouseEnter={() => handleHover(index)}
@@ -169,7 +173,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
 
             {!data?.delegatedTo?.length && isUserChecklist && <p className="pb-8">{t('delegation:no_assignments')}</p>}
 
-            {isManager && !isUserChecklist && !isDelegatedChecklist && (
+            {canAssign && (
               <div className="mt-8">
                 <Button data-cy="delegate-introduction-button" variant="tertiary" onClick={openHandler} size="sm">
                   {t('delegation:assign_introduction')}
