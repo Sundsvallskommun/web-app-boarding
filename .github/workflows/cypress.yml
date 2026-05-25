@@ -1,0 +1,49 @@
+name: Cypress tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - "develop"
+      - "main"
+      - "*"
+    paths:
+      - frontend/src/**
+      - frontend/cypress/**
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    name: E2E in Chrome on ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cypress run
+        uses: cypress-io/github-action@e65cba2e7319696fc0fdc4d5a319b737aec4ba1c
+        with:
+          working-directory: frontend
+          install-command: yarn --frozen-lockfile --silent --network-timeout 1000000
+          browser: chrome
+          build: yarn build
+          start: yarn start
+          wait-on: "http://localhost:3000"
+          spec: cypress/e2e/**/*.cy.ts
+          config: viewportHeight=1024,viewportWidth=1440
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEXT_PUBLIC_APP_NAME: Introduktioner
+          NEXT_PUBLIC_API_URL: http://localhost:3001/api
+          NEXT_PUBLIC_ROOT_IDS: "2668,2669,2725,2744,2754,2755,2764,13"
+          DOMAIN_NAME: localhost
+          BASE_PATH: ""
+          ADMIN_URL: http://localhost:3000/admin
+          NEXT_PUBLIC_BASE_PATH: ""
+          NEXT_PUBLIC_PROTECTED_ROUTES: '"admin"'
+          HEALTH_AUTH: false
+          HEALTH_USERNAME: ""
+          HEALTH_PASSWORD: ""
