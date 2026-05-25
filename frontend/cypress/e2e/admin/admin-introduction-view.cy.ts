@@ -67,6 +67,19 @@ describe('Make sure to show correct introduction details', () => {
     cy.get('[data-cy="search-employee-input"]').should('not.exist');
   });
 
+  it('keeps the introduction visible after opening and closing the delegate modal without assigning', () => {
+    cy.get('[data-cy="table-row-button-0"] > [data-testid="sk-icon-arrow-right"] > .lucide').click();
+    cy.get('[data-cy="admin-introduction-title"]').should('contain', 'Introduktion för Manne Mansson');
+
+    cy.get('[data-cy="delegate-introduction-button"]').should('exist').click();
+    cy.get('[data-cy="search-employee-input"]').should('exist');
+    cy.get('button').contains('Avbryt').click();
+
+    cy.get('[data-cy="search-employee-input"]').should('not.exist');
+    cy.get('[data-cy="admin-introduction-title"]').should('contain', 'Introduktion för Manne Mansson');
+    cy.contains('Du har ingen pågående introduktion').should('not.exist');
+  });
+
   it('admin can remove existing delegation from sidebar', () => {
     cy.intercept('DELETE', '**/api/employee-checklists/**/delegated-to/**', removeDelegationResponse).as(
       'removeDelegation'

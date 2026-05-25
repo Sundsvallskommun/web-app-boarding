@@ -60,7 +60,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
 
   const onUpdate = () => {
     refresh();
-    refreshManagedChecklists();
+    refreshManagedChecklists(data?.manager?.username);
   };
 
   const closeHandler = () => {
