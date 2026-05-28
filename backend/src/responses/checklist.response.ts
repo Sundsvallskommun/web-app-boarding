@@ -11,7 +11,8 @@ import {
   CommunicationChannel,
   OrganizationCreateRequest as OrganizationCreateRequestType,
   CustomTask as CustomTaskType,
-  StatusType as StatusTypeType,
+  HttpStatusCode as HttpStatusCodeType,
+  HttpStatus,
   Detail as DetailType,
   EmployeeChecklistResponse as EmployeeChecklistResponseType,
   ChecklistCreateRequest as ChecklistCreateRequestType,
@@ -201,17 +202,25 @@ export class CustomTask implements CustomTaskType {
   lastSavedBy?: string;
 }
 
-export class StatusType implements StatusTypeType {
-  @IsNumber()
-  statusCode?: number;
-  @IsString()
-  reasonPhrase?: string;
+export class HttpStatusCode implements HttpStatusCodeType {
+  @IsBoolean()
+  error?: boolean;
+  @IsBoolean()
+  is1xxInformational?: boolean;
+  @IsBoolean()
+  is2xxSuccessful?: boolean;
+  @IsBoolean()
+  is3xxRedirection?: boolean;
+  @IsBoolean()
+  is4xxClientError?: boolean;
+  @IsBoolean()
+  is5xxServerError?: boolean;
 }
 
 export class Detail implements DetailType {
   @ValidateNested()
-  @Type(() => StatusType)
-  status?: StatusType;
+  @Type(() => HttpStatusCode)
+  status?: HttpStatusCode | HttpStatus;
   @IsString()
   information?: string;
 }
