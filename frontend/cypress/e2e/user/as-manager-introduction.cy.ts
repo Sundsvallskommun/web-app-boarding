@@ -50,14 +50,8 @@ describe('Employee introduction as manager', () => {
   });
 
   it('views employee phases and marks activities as done', () => {
-    cy.get('h1').should('contain', 'Introduktion för Elon New Employee-One');
-    cy.get('[data-cy="introduction-for-tabs"]').should('exist');
-    cy.get('[data-cy="introduction-for-tabs-employee-button"]').should('exist').click();
-
-    cy.get('[data-cy="phase-menu-bar"]').contains('Om din anställning').should('exist');
-
-    managerAsEmployeeIntroduction.data.phases[1].tasks.map((task) => {
-      const updateFulfilmentStatusResponse = {
+    const updateFulfilmentStatusResponse = managerAsEmployeeIntroduction.data.phases[1].tasks.map((task) => {
+      return {
         id: task.id,
         heading: task.heading,
         text: task.text,
@@ -69,9 +63,15 @@ describe('Employee introduction as manager', () => {
         fulfilmentStatus: 'TRUE',
         updatedBy: 'ann01che',
       };
-      cy.intercept('PATCH', '**/api/employee-checklists/**/tasks/**', updateFulfilmentStatusResponse);
     });
-    cy.get('[data-cy="complete-all-activities"]').should('exist').check({ force: true });
+    cy.intercept('PATCH', '**/api/employee-checklists/**/tasks/**', updateFulfilmentStatusResponse);
+
+    cy.get('h1').should('contain', 'Introduktion för Elon New Employee-One');
+    cy.get('[data-cy="introduction-for-tabs"]').should('exist');
+    cy.get('[data-cy="introduction-for-tabs-employee-button"]').should('exist').click();
+    cy.get('[data-cy="phase-menu-bar"]').contains('Om din anställning').should('exist');
+    cy.get('[data-cy="add-activity-button"]').should('have.text', ' Lägg till aktivitet för medarbetare');
+    cy.get('[data-cy="complete-all-activities"]').should('exist').first().check({ force: true });
   });
 
   it('can add custom activity', () => {
@@ -104,10 +104,12 @@ describe('Employee introduction as manager', () => {
     cy.get('[data-cy="activity-heading-reference"]').should('exist').clear().type('https://www.google.se');
     cy.get('[data-cy="activity-save-button"]').should('exist').click();
 
-    cy.get('[data-cy="edit-custom-activity-popup-menu"]').should('exist').click({ multiple: true, force: true });
+    cy.get('[data-cy="edit-custom-activity-popup-menu"]').click({ multiple: true, force: true });
     cy.get('[data-cy="edit-custom-activity-popup-menu-remove-button"]')
+      .should('include.text', 'Ta bort')
       .should('exist')
-      .click({ multiple: true, force: true });
+      .first()
+      .click({ force: true });
     cy.intercept('GET', '**/api/employee-checklists/employee/emp01emp', employeeIntroductionWithoutMentor);
   });
 

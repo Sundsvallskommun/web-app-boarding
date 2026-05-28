@@ -103,7 +103,11 @@ describe('Uses the template overview', () => {
         cy.get('[data-cy="task-menu-button"]').should('exist').click();
         cy.get('[data-cy="activity-0-remove-button"]').should('exist').click();
       });
-    cy.get('.sk-dialog-buttons').should('exist').contains('Ta bort').click();
+    cy.get('.sk-modal-dialog')
+      .should('exist')
+      .within(() => {
+        cy.get('[data-color="error"]').should('exist').contains('Ta bort').click();
+      });
     cy.wait('@removeTask').should(({ request }) => {
       expect(request.method).to.equal('DELETE');
     });
