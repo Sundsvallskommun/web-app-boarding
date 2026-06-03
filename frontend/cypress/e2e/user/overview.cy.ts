@@ -1,15 +1,11 @@
 import { managerAsEmployeeIntroduction } from '../../fixtures/manager-as-employee-introduction';
 import { emptyDelegatedIntroductions, emptyManagedIntroductions } from '../../fixtures/empty-introductions';
-import {
-  delegatedIntroductionResponse,
-  managedIntroductions,
-  searchEmployeeResponse,
-} from '../../fixtures/managed-introductions';
+import { managedIntroductions, searchEmployeeResponse } from '../../fixtures/managed-introductions';
 
 describe('Overview as user', () => {
   beforeEach(() => {
     cy.intercept('GET', '**/api/me', { fixture: 'me-manager.json' });
-    cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse).as('searchEmployee');
+    cy.intercept('GET', '**/api/portalpersondata/**', searchEmployeeResponse).as('searchEmployee');
     cy.viewport('macbook-15');
     cy.visit('http://localhost:3000/');
   });
@@ -58,6 +54,9 @@ describe('Overview as user', () => {
     cy.intercept('GET', '**/api/employee-checklists/manager/ann01che', managedIntroductions);
     cy.intercept('GET', '**/api/employee-checklists/employee/ann01che', { fixture: 'employee-checklist-none.json' });
     cy.intercept('GET', '**/api/employee-checklists/delegated-to/ann01che', emptyDelegatedIntroductions);
+    cy.intercept('POST', '**/api/employee-checklists/**/delegate-to/**', {
+      fixture: null,
+    });
 
     cy.get('[data-cy="managed-checklists-table"]').should('exist');
     managedIntroductions.data.map((employeeIntroduction) => {
@@ -86,7 +85,6 @@ describe('Overview as user', () => {
     cy.get('button').contains('Sök').click();
     cy.wait('@searchEmployee');
     cy.get('[data-cy="add-search-result-button"]').should('exist').contains('Lägg till').click();
-    cy.intercept('POST', '**/api/employee-checklists/**/delegate-to/**', delegatedIntroductionResponse);
     cy.get('[data-cy="assign-delegations-button"]')
       .should('exist')
       .should('have.text', 'Tilldela')

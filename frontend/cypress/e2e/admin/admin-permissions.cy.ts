@@ -91,7 +91,7 @@ describe('Uses the organization templates', () => {
           });
       });
     cy.get('.sk-modal-wrapper').each(() => {
-      cy.get('h1').contains('Ta bort aktivitet?').should('exist');
+      cy.get('.sk-modal-dialog-header-title').contains('Ta bort aktivitet?').should('exist');
       cy.get('button').contains('Avbryt').should('exist');
       cy.get('button').contains('Ta bort').should('exist');
       cy.get('[data-color="error"]').contains('Ta bort').click({ force: true });
