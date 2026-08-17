@@ -1,6 +1,6 @@
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { useCrudHelper } from '@utils/use-crud-helpers';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { getChecklistAsEmployee } from './checklist-service';
 import { useChecklistStore } from './use-checklist-store';
@@ -51,6 +51,7 @@ export const useChecklist = (
       setId(username);
       refresh(username);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   return { data, loaded, loading, refresh: handleRefresh };

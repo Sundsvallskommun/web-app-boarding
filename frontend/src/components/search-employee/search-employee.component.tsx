@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
 import { getEmployeeDepartment } from '@utils/get-employee-department';
 
-let formSchema = yup.object({
+const formSchema = yup.object({
   userId: yup.string().required(),
 });
 

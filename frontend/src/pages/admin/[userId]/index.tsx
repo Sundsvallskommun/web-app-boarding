@@ -61,6 +61,7 @@ export const CheckList: React.FC = () => {
     if (employeeChecklist?.manager?.username) {
       refreshManagedChecklists(employeeChecklist.manager.username);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [employeeChecklist?.manager?.username]);
 
   useEffect(() => {

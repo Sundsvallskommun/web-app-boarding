@@ -54,6 +54,7 @@ export const useUserInformation = (
       setId(username);
       refresh(username);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   return { data, loaded, loading, refresh: handleRefresh };

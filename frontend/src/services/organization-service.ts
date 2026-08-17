@@ -22,7 +22,7 @@ export const getOrgTree = async (orgId: number) =>
         return res.data.data;
       }
     })
-    .catch((e) => {
+    .catch(() => {
       return undefined;
     });
 
@@ -155,6 +155,7 @@ export const useOrgTree = (organizations?: number[]) => {
           setLoading(false);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgstring]);
 
   return { data: Object.values(data), loaded, loading };
@@ -192,6 +193,7 @@ export const useOrgTemplates = (orgid: number) => {
   );
   const { data: orgTree } = useOrgTree();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refresh = (_orgid: number) => {
     setData(undefined);
     setLoaded(false);
@@ -226,6 +228,7 @@ export const useOrgTemplates = (orgid: number) => {
     if (orgid !== data?.organizationNumber) {
       refresh(orgid);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgid]);
 
   return { data, loaded, loading, refresh };

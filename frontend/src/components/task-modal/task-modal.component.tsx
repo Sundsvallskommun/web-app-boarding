@@ -41,7 +41,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
   const [richText, setRichText] = useState<string>('');
   const { t } = useTranslation();
 
-  let formSchema = yup.object({
+  const formSchema = yup.object({
     heading: yup.string().trim().required(t('task:errors.heading')).min(1, t('task:errors.heading')),
     headingReference: yup.string(),
     text: yup.string().max(2048, t('task:errors.text')),
@@ -111,6 +111,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
     setTimeout(() => {
       setFocus(mode === 'edit' ? 'heading' : 'phaseId');
     }, 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen, mode, task, newSortOrder]);
 
   const refreshAndClose = () => {

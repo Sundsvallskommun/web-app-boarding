@@ -56,6 +56,7 @@ export const AdminTemplateSidebarActivities: React.FC<AdminTemplateSidebarActivi
         setLoadingTemplates(false);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgid]);
 
   return (

@@ -37,6 +37,7 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
     if (username === query?.userId) {
       setIsUserIntroduction(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const openHandler = () => {
@@ -67,32 +68,32 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
 
   const onSubmit = () => {
     fields.map((field: UserInformation) => {
-      data &&
-        assignMentor(data.id, { userId: field.userId, name: field.fullName })
-          .then(() => {
-            delegateChecklist(data.id, field.email)
-              .then(() => {
-                closeHandler();
-              })
-              .catch(() => {
-                toastMessage({
-                  position: 'bottom',
-                  closeable: false,
-                  message: t('delegation:errors.conflict', {
-                    user: field.email,
-                  }),
-                  status: 'error',
-                });
+      if (!data) return;
+      assignMentor(data.id, { userId: field.userId, name: field.fullName })
+        .then(() => {
+          delegateChecklist(data.id, field.email)
+            .then(() => {
+              closeHandler();
+            })
+            .catch(() => {
+              toastMessage({
+                position: 'bottom',
+                closeable: false,
+                message: t('delegation:errors.conflict', {
+                  user: field.email,
+                }),
+                status: 'error',
               });
-          })
-          .catch(() => {
-            toastMessage({
-              position: 'bottom',
-              closeable: false,
-              message: t('mentor:add_mentor_error'),
-              status: 'error',
             });
+        })
+        .catch(() => {
+          toastMessage({
+            position: 'bottom',
+            closeable: false,
+            message: t('mentor:add_mentor_error'),
+            status: 'error',
           });
+        });
     });
   };
 

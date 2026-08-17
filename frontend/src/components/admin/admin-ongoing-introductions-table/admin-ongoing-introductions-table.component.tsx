@@ -81,6 +81,7 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
 
   useEffect(() => {
     refresh('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSize, currentPage, sortOrder, sortColumn]);
 
   const dataRows = useMemo(() => {
@@ -116,6 +117,7 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
           </Table.Row>
         );
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, sortOrder, sortColumn]);
 
   return (

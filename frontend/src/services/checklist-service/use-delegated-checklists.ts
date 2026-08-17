@@ -43,6 +43,7 @@ export const useDelegatedChecklists = (): {
     if (!loaded || !data) {
       refresh();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, permissions.isManager]);
 
   return { data, loaded, loading, refresh };

@@ -34,7 +34,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
   const { refresh } = useTemplate(templateId);
   const { handleUpdate, handleCreate } = useCrudHelper('task');
   const toastMessage = useSnackbar();
-  let formSchema = yup.object({
+  const formSchema = yup.object({
     heading: yup.string().min(1, t('task:errors.heading')).required(t('task:errors.heading')),
     headingReference: yup.string().optional(),
     text: yup.string().optional().max(2048, t('task:errors.text')),
@@ -97,6 +97,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
       sortOrder: Number.parseInt(task?.sortOrder || '0', 10) || 0,
       optional: task?.optional,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [task]);
 
   const onError = (error: any) => {
@@ -162,17 +163,15 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
                 task.id ? task.roleType === 'MANAGER_FOR_NEW_MANAGER' || task.roleType === 'NEW_MANAGER' : false
               }
               onChange={() => {
-                if (
-                  getValues().roleType === 'MANAGER_FOR_NEW_EMPLOYEE' ||
-                  getValues().roleType === 'MANAGER_FOR_NEW_MANAGER'
-                ) {
-                  getValues().roleType === 'MANAGER_FOR_NEW_EMPLOYEE' ?
-                    setValue('roleType', 'MANAGER_FOR_NEW_MANAGER')
-                  : setValue('roleType', 'MANAGER_FOR_NEW_EMPLOYEE');
+                const current = getValues().roleType;
+                if (current === 'MANAGER_FOR_NEW_EMPLOYEE') {
+                  setValue('roleType', 'MANAGER_FOR_NEW_MANAGER');
+                } else if (current === 'MANAGER_FOR_NEW_MANAGER') {
+                  setValue('roleType', 'MANAGER_FOR_NEW_EMPLOYEE');
+                } else if (current === 'NEW_EMPLOYEE') {
+                  setValue('roleType', 'NEW_MANAGER');
                 } else {
-                  getValues().roleType === 'NEW_EMPLOYEE' ?
-                    setValue('roleType', 'NEW_MANAGER')
-                  : setValue('roleType', 'NEW_EMPLOYEE');
+                  setValue('roleType', 'NEW_EMPLOYEE');
                 }
               }}
               data-cy="role-type-checkbox"

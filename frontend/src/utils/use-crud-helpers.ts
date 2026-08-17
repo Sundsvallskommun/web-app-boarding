@@ -1,7 +1,7 @@
 import { useSnackbar } from '@sk-web-gui/react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
-import { AxiosError, isAxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 
 export const useCrudHelper = (resource: string) => {
   const message = useSnackbar();
@@ -15,7 +15,7 @@ export const useCrudHelper = (resource: string) => {
     try {
       const result = await getOne();
       return Promise.resolve(result);
-    } catch (e: unknown | AxiosError) {
+    } catch (e) {
       if (isAxiosError(e)) {
         const errorCode = e?.response?.status;
         if (errorCode === 401 || errorCode === 403) {
@@ -39,7 +39,7 @@ export const useCrudHelper = (resource: string) => {
     try {
       const result = await getMany();
       return Promise.resolve(result);
-    } catch (e: unknown | AxiosError) {
+    } catch (e) {
       if (isAxiosError(e)) {
         const errorCode = e?.response?.status;
         if (errorCode === 401 || errorCode === 403) {
@@ -67,7 +67,7 @@ export const useCrudHelper = (resource: string) => {
         message({ message: capitalize(t('crud:create.success', { resource: name })), status: 'success' });
         return Promise.resolve(result);
       }
-    } catch (e: unknown | AxiosError) {
+    } catch (e) {
       if (isAxiosError(e)) {
         const errorCode = e?.response?.status;
         if (errorCode === 401 || errorCode === 403) {
@@ -90,7 +90,7 @@ export const useCrudHelper = (resource: string) => {
         message({ message: capitalize(t('crud:update.success', { resource: name })), status: 'success' });
         return Promise.resolve(result);
       }
-    } catch (e: unknown | AxiosError) {
+    } catch (e) {
       if (isAxiosError(e)) {
         const errorCode = e?.response?.status;
         if (errorCode === 401 || errorCode === 403) {
@@ -113,7 +113,7 @@ export const useCrudHelper = (resource: string) => {
         message({ message: capitalize(t('crud:remove.success', { resource: name })), status: 'success' });
         return Promise.resolve(result);
       }
-    } catch (e: unknown | AxiosError) {
+    } catch (e) {
       if (isAxiosError(e)) {
         const errorCode = e?.response?.status;
         if (errorCode === 401 || errorCode === 403) {

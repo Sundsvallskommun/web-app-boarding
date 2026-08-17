@@ -84,20 +84,20 @@ export const CheckList: React.FC = () => {
     : employeeChecklist;
 
   const handleRemoveDelegation = () => {
-    data &&
-      removeDelegation(data.id, email)
-        .then(() => {
-          refreshDelegatedChecklists();
-          router.push('/');
-        })
-        .catch(() => {
-          toastMessage({
-            position: 'bottom',
-            closeable: false,
-            message: t('delegation:errors.remove'),
-            status: 'error',
-          });
+    if (!data) return;
+    removeDelegation(data.id, email)
+      .then(() => {
+        refreshDelegatedChecklists();
+        router.push('/');
+      })
+      .catch(() => {
+        toastMessage({
+          position: 'bottom',
+          closeable: false,
+          message: t('delegation:errors.remove'),
+          status: 'error',
         });
+      });
   };
 
   useEffect(() => {
@@ -105,6 +105,7 @@ export const CheckList: React.FC = () => {
       setCurrentView(1);
       setIsUserChecklist(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isManager]);
 
   useEffect(() => {

@@ -27,6 +27,7 @@ export const OrgTemplate: React.FC = () => {
 
   useEffect(() => {
     setTemplateData(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgid]);
 
   const editable = useCallback(
@@ -36,6 +37,7 @@ export const OrgTemplate: React.FC = () => {
       const userIsGlobalAdmin = user.role === 'global_admin';
       return userHasOrgPermission || userIsGlobalAdmin;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data, user]
   );
 

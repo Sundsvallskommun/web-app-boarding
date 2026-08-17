@@ -51,6 +51,7 @@ export const EditTemplate = () => {
         checklist.lifeCycle === 'CREATED' || (!templateVersioningEnabled && checklist.lifeCycle === 'ACTIVE');
       return (userHasOrgPermission || userIsGlobalAdmin) && editableLifeCycle;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data, user]
   );
 
@@ -228,6 +229,7 @@ export const EditTemplate = () => {
           </div>
         ));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   );
 

@@ -56,6 +56,7 @@ export const useDelegatedUsers = (
         refresh(email);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emails]);
 
   return { data, loaded, loading, refresh: handleRefresh };
