@@ -39,9 +39,7 @@ export const hasRoles = (roles: Array<KeyOfMap<InternalRoleMap>>) => async (req:
   }
 };
 
-export const hasOrgPermissions = async (req: Request, res: Response, next: NextFunction) => {
-  const userOrgId = req.user.organizationId;
-  const params = req.params;
+export const hasOrgPermissions = async (req: Request, _res: Response, next: NextFunction) => {
   const { orgId } = req.params;
 
   const userIsGlobalAdmin = req.user.role === 'global_admin';
@@ -57,8 +55,6 @@ export const hasOrgPermissions = async (req: Request, res: Response, next: NextF
 };
 
 export const hasOrgTemplatePermissions = async (req: Request, res: Response, next: NextFunction) => {
-  const userOrgId = req.user.organizationId;
-  const params = req.params;
   const { orgId, templateId } = req.params;
 
   const organization: Organization = await getOrganization(parseInt(orgId, 10), req.user);

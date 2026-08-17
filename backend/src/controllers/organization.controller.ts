@@ -191,7 +191,6 @@ export class OrganizationController {
     @Req() req: RequestWithUser,
     @Param('orgId') orgId: string,
     @Body() data: OrganizationUpdateRequest,
-    @Res() response: Response<Organization>,
   ): Promise<ApiResponse<Organization>> {
     const { name } = req.user;
     if (!name || !data.communicationChannels) {
