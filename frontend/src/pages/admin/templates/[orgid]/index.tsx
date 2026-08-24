@@ -11,13 +11,13 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 
 export const OrgTemplate: React.FC = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const query = router.query;
-  const user = useUserStore((s) => s.user, shallow);
+  const user = useUserStore(useShallow((s) => s.user));
   const orgid = Array.isArray(query?.orgid) ? query.orgid[0] : query.orgid || '';
   const toastMessage = useSnackbar();
   const { data: orgTree } = useOrgTreeStore();

@@ -10,7 +10,7 @@ import { Button, Modal, Select } from '@sk-web-gui/react';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 import {
   CustomTaskCreateRequest,
   CustomTaskUpdateRequest,
@@ -34,7 +34,7 @@ export interface TaskModalProps {
 
 export const TaskModal: React.FC<TaskModalProps> = (props) => {
   const { closeModalHandler, isModalOpen, task, checklistId, mode, currentView, data, newSortOrder } = props;
-  const user = useUserStore((s) => s.user, shallow);
+  const user = useUserStore(useShallow((s) => s.user));
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
   const { refresh: refreshChecklist } = useChecklist();

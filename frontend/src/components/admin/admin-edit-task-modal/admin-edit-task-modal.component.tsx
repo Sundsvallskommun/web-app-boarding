@@ -13,7 +13,7 @@ import router from 'next/router';
 import React, { useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 import dynamic from 'next/dynamic';
 const TextEditor = dynamic(() => import('@sk-web-gui/text-editor'), { ssr: false });
 
@@ -28,7 +28,7 @@ interface AdminEditTaskModalProps {
 export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => {
   const { closeHandler, isOpen, task, templateId, phaseId } = props;
   const { orgid } = router.query;
-  const user = useUserStore((s) => s.user, shallow);
+  const user = useUserStore(useShallow((s) => s.user));
   const { data: orgTreeData } = useOrgTreeStore();
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);

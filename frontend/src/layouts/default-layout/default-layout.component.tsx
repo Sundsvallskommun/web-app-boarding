@@ -7,7 +7,7 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { capitalize } from 'underscore.string';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 import React from 'react';
 import { InfoBanner } from '@components/common/info-banner/info-banner.component';
 
@@ -35,7 +35,7 @@ export default function DefaultLayout({
   const layoutTitle = `${process.env.NEXT_PUBLIC_APP_NAME}${headerSubtitle ? ` - ${headerSubtitle}` : ''}`;
   const fullTitle = postTitle ? `${layoutTitle} - ${postTitle}` : `${layoutTitle}`;
   const pathname = usePathname();
-  const user = useUserStore((s) => s.user, shallow);
+  const user = useUserStore(useShallow((s) => s.user));
 
   const { t } = useTranslation();
 

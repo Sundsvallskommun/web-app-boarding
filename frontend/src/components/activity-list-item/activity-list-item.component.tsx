@@ -8,7 +8,7 @@ import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Checkbox, cx, Label, PopupMenu, useSnackbar } from '@sk-web-gui/react';
 import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 import { OptionalActivityButton } from '@components/activity-list-item/optional-activity-button.component';
 
 const isChecked = (fulfilmentStatus: string) => {
@@ -35,7 +35,7 @@ interface ActivityListItemProps {
 }
 
 export const ActivityListItem: React.FC<ActivityListItemProps> = (props) => {
-  const user = useUserStore((s) => s.user, shallow);
+  const user = useUserStore(useShallow((s) => s.user));
   const { task, checklistId, currentView, isUserChecklist } = props;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const toastMessage = useSnackbar();

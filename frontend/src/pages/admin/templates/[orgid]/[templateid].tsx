@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { AdminTemplateSidebar } from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
 import { templateVersioningEnabled } from '@services/featureflag-service';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 
 export const EditTemplate = () => {
   const { t } = useTranslation();
@@ -32,7 +32,7 @@ export const EditTemplate = () => {
   const { data, refresh, loaded, loading } = useTemplate(templateid as string);
   const { data: orgTreeData } = useOrgTreeStore();
   const { data: orgData } = useOrgTemplates(parseInt(orgid as string, 10));
-  const user = useUserStore((s) => s.user, shallow);
+  const user = useUserStore(useShallow((s) => s.user));
   const [currentView, setCurrentView] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [phaseId, setPhaseId] = useState<string>();
