@@ -14,14 +14,9 @@ export const useDelegatedUsers = (
 } => {
   const { handleGetOne } = useCrudHelper('user');
   const [data, setData] = delegatedUsersStore(useShallow((state) => [state.data, state.setData]));
-  const [loaded, setLoaded, loading, setLoading, id, setId] = delegatedUsersStore((state) => [
-    state.loaded,
-    state.setLoaded,
-    state.loading,
-    state.setLoading,
-    state.id,
-    state.setId,
-  ]);
+  const [loaded, setLoaded, loading, setLoading, id, setId] = delegatedUsersStore(
+    useShallow((state) => [state.loaded, state.setLoaded, state.loading, state.setLoading, state.id, state.setId])
+  );
 
   const refresh = (_email: string) => {
     if (!_email) return;

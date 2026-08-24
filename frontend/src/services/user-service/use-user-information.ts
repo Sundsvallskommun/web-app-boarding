@@ -14,14 +14,9 @@ export const useUserInformation = (
 } => {
   const { handleGetOne } = useCrudHelper('user');
   const [data, setData] = userInformationStore(useShallow((state) => [state.data, state.setData]));
-  const [loaded, setLoaded, loading, setLoading, id, setId] = userInformationStore((state) => [
-    state.loaded,
-    state.setLoaded,
-    state.loading,
-    state.setLoading,
-    state.id,
-    state.setId,
-  ]);
+  const [loaded, setLoaded, loading, setLoading, id, setId] = userInformationStore(
+    useShallow((state) => [state.loaded, state.setLoaded, state.loading, state.setLoading, state.id, state.setId])
+  );
 
   const refresh = (_username: string) => {
     if (!_username) return;
