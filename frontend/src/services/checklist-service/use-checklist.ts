@@ -15,14 +15,9 @@ export const useChecklist = (
 } => {
   const { handleGetOne } = useCrudHelper('checklists');
   const [data, setData] = useChecklistStore(useShallow((state) => [state.data, state.setData]));
-  const [loaded, setLoaded, loading, setLoading, id, setId] = useChecklistStore((state) => [
-    state.loaded,
-    state.setLoaded,
-    state.loading,
-    state.setLoading,
-    state.id,
-    state.setId,
-  ]);
+  const [loaded, setLoaded, loading, setLoading, id, setId] = useChecklistStore(
+    useShallow((state) => [state.loaded, state.setLoaded, state.loading, state.setLoading, state.id, state.setId])
+  );
 
   const refresh = (_username: string) => {
     if (_username) {

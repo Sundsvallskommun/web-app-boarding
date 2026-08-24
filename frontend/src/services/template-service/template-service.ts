@@ -201,12 +201,9 @@ export const createNewVersion: (orgId: string, templateId: string) => Promise<Ch
 
 export const useTemplate = (templateid: string) => {
   const [data, setData] = useTemplateStore(useShallow((state) => [state.data, state.setData]));
-  const [loaded, setLoaded, loading, setLoading] = useTemplateStore((state) => [
-    state.loaded,
-    state.setLoaded,
-    state.loading,
-    state.setLoading,
-  ]);
+  const [loaded, setLoaded, loading, setLoading] = useTemplateStore(
+    useShallow((state) => [state.loaded, state.setLoaded, state.loading, state.setLoading])
+  );
 
   const refresh = (templateid: string) => {
     if (templateid) {
