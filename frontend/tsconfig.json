@@ -55,14 +55,24 @@
       ],
       "@data-contracts/*": [
         "src/data-contracts/*"
+      ],
+      "@app/*": [
+        "src/app/*"
       ]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "node_modules/dayjs/plugin/utc.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
