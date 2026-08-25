@@ -1,3 +1,5 @@
+'use client';
+
 import { OngoingEmployeeChecklist, PagingMetaData } from '@data-contracts/backend/data-contracts';
 import { useUserStore } from '@services/user-service/user-service';
 import { useEffect } from 'react';

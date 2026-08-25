@@ -1,8 +1,10 @@
+'use client';
+
 import { OrgTree } from '@data-contracts/backend/data-contracts';
 import { useOrgTree } from '@services/organization-service';
 import { MenuVertical, MenuIndex } from '@sk-web-gui/react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 interface OrganizationMenuProps {
@@ -13,13 +15,13 @@ export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue 
   const [current, setCurrent] = useState<MenuIndex>();
   const rootIds = process.env.NEXT_PUBLIC_ROOT_IDS?.split(',').map((id) => parseInt(id, 10)) || [];
   const { data, loading } = useOrgTree(rootIds);
-  const router = useRouter();
+  const params = useParams<{ orgid?: string }>();
 
   useEffect(() => {
-    if (router?.query?.orgid) {
-      setCurrent(parseInt(router.query.orgid as string, 10));
+    if (params?.orgid) {
+      setCurrent(parseInt(params.orgid, 10));
     }
-  }, [router]);
+  }, [params?.orgid]);
 
   const filterData = (orgs: OrgTree[]) => {
     let hasMatch = false;

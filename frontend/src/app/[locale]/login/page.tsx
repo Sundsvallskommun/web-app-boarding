@@ -1,67 +1,53 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import { Button, FormErrorMessage } from '@sk-web-gui/react';
 import EmptyLayout from '@layouts/empty-layout/empty-layout.component';
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
 import { appURL } from '@utils/app-url';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'react-i18next';
 
 export default function Start() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState('');
   const [mounted, setMounted] = useState(false);
   const { t } = useTranslation();
 
-  const params = new URLSearchParams(window.location.search);
-  const isLoggedOut = params.get('loggedout') === '';
-  const failMessage = params.get('failMessage');
-  // Turn on/off automatic login
+  const isLoggedOut = searchParams?.has('loggedout') ?? false;
+  const failMessage = searchParams?.get('failMessage');
   const autoLogin = true;
 
-  const initalFocus = useRef<HTMLButtonElement>(null);
-  const setInitalFocus = () => {
+  const initialFocus = useRef<HTMLButtonElement>(null);
+  const setInitialFocus = () => {
     setTimeout(() => {
-      if (initalFocus.current) initalFocus.current.focus();
+      if (initialFocus.current) initialFocus.current.focus();
     });
   };
 
   const onLogin = () => {
-    // NOTE: send user to login with SSO
-    const path = new URLSearchParams(window.location.search).get('path') || router.query.path || '';
-    router.push({
-      pathname: `${process.env.NEXT_PUBLIC_API_URL}/saml/login`,
-      query: {
-        successRedirect: `${appURL()}${path}`,
-      },
-    });
+    const path = searchParams?.get('path') || '';
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/saml/login`);
+    url.searchParams.set('successRedirect', `${appURL()}${path}`);
+    window.location.assign(url.toString());
   };
 
   useEffect(() => {
-    setInitalFocus();
-    if (!router.isReady) return;
-    setTimeout(() => setMounted(true), 500); // to not flash the login-screen on autologin
+    setInitialFocus();
+    setTimeout(() => setMounted(true), 500);
     if (isLoggedOut) {
-      router.push(
-        {
-          pathname: '/login',
-        },
-        '/login',
-        { shallow: true }
-      );
+      window.history.replaceState(null, '', '/login');
     } else {
       if (!failMessage && autoLogin) {
-        // autologin
         onLogin();
       } else if (failMessage) {
         setErrorMessage(t(`login:errors.${failMessage}`));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady]);
+  }, []);
 
   if (!mounted && !failMessage) {
-    // to not flash the login-screen on autologin
     return <LoaderFullScreen />;
   }
 
@@ -75,7 +61,7 @@ export default function Start() {
               <p className="my-0">{t('login:description')}</p>
             </div>
 
-            <Button inverted onClick={() => onLogin()} ref={initalFocus} data-cy="loginButton">
+            <Button inverted onClick={() => onLogin()} ref={initialFocus} data-cy="loginButton">
               {t('common:login')}
             </Button>
 
@@ -86,9 +72,3 @@ export default function Start() {
     </EmptyLayout>
   );
 }
-
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ['common', 'login'])),
-  },
-});

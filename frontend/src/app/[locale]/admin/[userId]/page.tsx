@@ -1,3 +1,5 @@
+'use client';
+
 import { ChecklistSidebar } from '@components/checklist-sidebar/checklist-sidebar.component';
 import DefaultLayout from '@layouts/default-layout/default-layout.component';
 import Main from '@layouts/main/main.component';
@@ -5,8 +7,7 @@ import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { useUserStore } from '@services/user-service/user-service';
 import { Spinner } from '@sk-web-gui/spinner';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslation } from 'react-i18next';
@@ -19,8 +20,8 @@ import { useDelegatedChecklists } from '@services/checklist-service/use-delegate
 
 export const CheckList: React.FC = () => {
   const { username } = useUserStore(useShallow((s) => s.user));
-  const router = useRouter();
-  const { query } = router;
+  const params = useParams<{ userId: string }>();
+  const userId = params?.userId;
 
   const [currentPhase, setCurrentPhase] = useState<number>(0);
   const [currentView, setCurrentView] = useState<number>(0);
@@ -37,24 +38,23 @@ export const CheckList: React.FC = () => {
     data: employeeChecklist,
     loaded: employeeChecklistLoaded,
     loading: employeeChecklistLoading,
-  } = useChecklist((query?.userId as string) || username);
+  } = useChecklist(userId || username);
   const {
     refresh: refreshDelegatedChecklists,
     loading: delegatedChecklistLoading,
     loaded: delegatedChecklistLoaded,
   } = useDelegatedChecklists();
 
-  const routerReady = router.isReady;
   const isLoaded = managedChecklistLoaded && employeeChecklistLoaded && delegatedChecklistLoaded;
   const isLoading = managedChecklistLoading || employeeChecklistLoading || delegatedChecklistLoading;
-  const showSpinner = isLoading || !isLoaded || !routerReady;
+  const showSpinner = isLoading || !isLoaded;
 
   const refreshAllChecklists = async () => {
     refreshChecklist();
     refreshDelegatedChecklists();
   };
 
-  const managedChecklist = managedChecklists.filter((employee) => employee.employee.username === query?.userId)[0];
+  const managedChecklist = managedChecklists.filter((employee) => employee.employee.username === userId)[0];
   const data = currentView === 0 ? managedChecklist : employeeChecklist;
 
   useEffect(() => {
@@ -155,21 +155,5 @@ export const CheckList: React.FC = () => {
     </DefaultLayout>
   );
 };
-
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, [
-      'common',
-      'layout',
-      'crud',
-      'checklists',
-      'delegation',
-      'task',
-      'mentor',
-      'user',
-      'templates',
-    ])),
-  },
-});
 
 export default CheckList;

@@ -1,3 +1,5 @@
+'use client';
+
 import { Task, TaskCreateRequest, TaskUpdateRequest } from '@data-contracts/backend/data-contracts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useOrgTreeStore } from '@services/organization-service';
@@ -5,16 +7,17 @@ import { createTask, updateTask, useTemplate } from '@services/template-service/
 import { useUserStore } from '@services/user-service/user-service';
 import { FormControl, FormErrorMessage, FormLabel, Input } from '@sk-web-gui/forms';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Checkbox, Modal, useSnackbar } from '@sk-web-gui/react';
+import { Button, Checkbox, Modal } from '@sk-web-gui/react';
+import { useSnackbar } from '@utils/use-snackbar';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 import { useCrudHelper } from '@utils/use-crud-helpers';
-import { useTranslation } from 'next-i18next';
-import router from 'next/router';
+import { useParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
 import dynamic from 'next/dynamic';
+import { useTranslation } from 'react-i18next';
 const TextEditor = dynamic(() => import('@sk-web-gui/text-editor'), { ssr: false });
 
 interface AdminEditTaskModalProps {
@@ -27,7 +30,8 @@ interface AdminEditTaskModalProps {
 
 export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => {
   const { closeHandler, isOpen, task, templateId, phaseId } = props;
-  const { orgid } = router.query;
+  const params = useParams<{ orgid: string }>();
+  const orgid = params?.orgid ?? '';
   const user = useUserStore(useShallow((s) => s.user));
   const { data: orgTreeData } = useOrgTreeStore();
   const { t } = useTranslation();
@@ -53,7 +57,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
     optional: yup.boolean().optional(),
   });
 
-  const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid as string, 10));
+  const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid, 10));
   const level = org?.treeLevel || 0;
 
   const formControl = useForm<TaskCreateRequest & TaskUpdateRequest>({
@@ -107,7 +111,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
   const onSubmit: SubmitHandler<TaskUpdateRequest | TaskCreateRequest> = (data) => {
     if (task.id && task.id !== '') {
       handleUpdate(() => {
-        return updateTask(orgid as string, templateId, phaseId, task.id, data as TaskUpdateRequest)
+        return updateTask(orgid, templateId, phaseId, task.id, data as TaskUpdateRequest)
           .then(() => {
             refresh(templateId);
           })

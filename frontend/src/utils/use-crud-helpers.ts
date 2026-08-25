@@ -1,4 +1,4 @@
-import { useSnackbar } from '@sk-web-gui/react';
+import { useSnackbar } from '@utils/use-snackbar';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { isAxiosError } from 'axios';

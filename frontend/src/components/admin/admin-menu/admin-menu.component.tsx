@@ -1,16 +1,18 @@
+'use client';
+
 import { NavigationBar } from '@sk-web-gui/react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 
 export const AdminMenu = () => {
   const { t } = useTranslation();
-  const router = useRouter();
+  const pathname = usePathname();
 
   const current =
-    router.pathname.startsWith('/admin/checklists') ? 0
-    : router.pathname.startsWith('/admin/templates') ? 1
+    pathname?.startsWith('/admin/checklists') ? 0
+    : pathname?.startsWith('/admin/templates') ? 1
     : undefined;
 
   return (

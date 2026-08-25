@@ -1,13 +1,16 @@
+'use client';
+
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
 import { useUserStore } from '@services/user-service/user-service';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useParams, usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 export const LoginGuard: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const user = useUserStore((s) => s.user);
   const getMe = useUserStore((s) => s.getMe);
   const router = useRouter();
-  const { query } = router;
+  const pathname = usePathname();
+  const params = useParams<{ userId?: string }>();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -16,27 +19,23 @@ export const LoginGuard: React.FC<{ children?: React.ReactNode }> = ({ children 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!mounted || (!user.name && !router.pathname.includes('/login'))) {
-    return <LoaderFullScreen />;
-  }
+  useEffect(() => {
+    if (!mounted || !user?.username) return;
 
-  if (
-    user?.username &&
-    !user?.permissions?.isManager &&
-    query?.userId !== user?.username &&
-    user?.role !== 'global_admin' &&
-    user?.role !== 'department_admin' &&
-    user?.role !== 'developer'
-  ) {
-    router.push(`/${user.username}`);
-  }
-  if (
-    router.pathname.startsWith('/admin') &&
-    user?.role !== 'global_admin' &&
-    user?.role !== 'department_admin' &&
-    user?.role !== 'developer'
-  ) {
-    router.push('/');
+    const isAdminRole = user.role === 'global_admin' || user.role === 'department_admin' || user.role === 'developer';
+
+    if (!user.permissions?.isManager && params?.userId !== user.username && !isAdminRole) {
+      router.push(`/${user.username}`);
+      return;
+    }
+
+    if (pathname?.startsWith('/admin') && !isAdminRole) {
+      router.push('/');
+    }
+  }, [mounted, user, params?.userId, pathname, router]);
+
+  if (!mounted || (!user.name && !pathname?.includes('/login'))) {
+    return <LoaderFullScreen />;
   }
 
   return <>{children}</>;

@@ -1,10 +1,11 @@
 import { SearchEmployeeComponent } from '@components/search-employee/search-employee.component';
 import { delegateChecklist } from '@services/checklist-service/checklist-service';
 import { FormLabel } from '@sk-web-gui/forms';
-import { Button, Modal, useSnackbar } from '@sk-web-gui/react';
-import { useTranslation } from 'next-i18next';
+import { Button, Modal } from '@sk-web-gui/react';
+import { useSnackbar } from '@utils/use-snackbar';
 import React from 'react';
 import { FormProvider, useFieldArray, useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 interface DelegateMultipleChecklistsModalProps {
   checklistIds: string[];

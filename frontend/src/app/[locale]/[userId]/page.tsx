@@ -1,3 +1,5 @@
+'use client';
+
 import { ChecklistSidebar } from '@components/checklist-sidebar/checklist-sidebar.component';
 import DefaultLayout from '@layouts/default-layout/default-layout.component';
 import Main from '@layouts/main/main.component';
@@ -5,8 +7,7 @@ import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { useUserStore } from '@services/user-service/user-service';
 import { Spinner } from '@sk-web-gui/spinner';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRouter } from 'next/router';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { TaskModal } from '@components/task-modal/task-modal.component';
 import { useShallow } from 'zustand/react/shallow';
@@ -14,28 +15,27 @@ import { useDelegatedChecklists } from '@services/checklist-service/use-delegate
 import { useTranslation } from 'react-i18next';
 import { IntroductionPhaseMenu } from '@components/common/introduction-phase-menu/introduction-phase-menu.component';
 import { IntroductionActivityList } from '@components/common/introduction-activity-list/introduction-activity-list.component';
-import { Button, Tabs, useSnackbar } from '@sk-web-gui/react';
+import { Button, Tabs } from '@sk-web-gui/react';
+import { useSnackbar } from '@utils/use-snackbar';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { removeDelegation } from '@services/checklist-service/checklist-service';
 
 const CUSTOM_TASK_OFFSET = 6000;
 
-export const CheckList: React.FC = () => {
+export default function CheckList() {
   const {
     username,
     email,
     permissions: { isManager },
   } = useUserStore(useShallow((s) => s.user));
   const router = useRouter();
-  const { query } = router;
+  const params = useParams<{ locale: string; userId: string }>();
+  const userId = params?.userId;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toastMessage = useSnackbar();
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
+  const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const [currentPhase, setCurrentPhase] = useState<number>(0);
   const [currentView, setCurrentView] = useState<number>(0);
@@ -53,7 +53,7 @@ export const CheckList: React.FC = () => {
     data: employeeChecklist,
     loading: checklistLoading,
     loaded: employeeChecklistLoaded,
-  } = useChecklist((query?.userId as string) || username);
+  } = useChecklist(userId || username);
   const {
     refresh: refreshDelegatedChecklists,
     data: delegatedChecklists,
@@ -71,12 +71,10 @@ export const CheckList: React.FC = () => {
   const isLoaded = managedChecklistLoaded && employeeChecklistLoaded && delegatedChecklistsLoaded;
 
   const managedChecklist = managedChecklists.filter(
-    (checklist) => checklist.employee.username === query?.userId && checklist.manager.username === username
+    (checklist) => checklist.employee.username === userId && checklist.manager.username === username
   )[0];
 
-  const delegatedChecklist = delegatedChecklists.filter(
-    (checklist) => checklist.employee.username === query?.userId
-  )[0];
+  const delegatedChecklist = delegatedChecklists.filter((checklist) => checklist.employee.username === userId)[0];
 
   const data =
     currentView === 0 && managedChecklist ? managedChecklist
@@ -101,7 +99,7 @@ export const CheckList: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!isManager || (isManager && employeeChecklist?.employee?.username === query?.userId)) {
+    if (!isManager || (isManager && employeeChecklist?.employee?.username === userId)) {
       setCurrentView(1);
       setIsUserChecklist(true);
     }
@@ -223,21 +221,4 @@ export const CheckList: React.FC = () => {
       />
     </DefaultLayout>
   );
-};
-
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, [
-      'common',
-      'layout',
-      'crud',
-      'checklists',
-      'delegation',
-      'task',
-      'mentor',
-      'user',
-    ])),
-  },
-});
-
-export default CheckList;
+}

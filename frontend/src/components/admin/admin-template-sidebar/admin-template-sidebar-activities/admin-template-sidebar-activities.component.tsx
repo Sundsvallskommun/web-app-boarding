@@ -1,10 +1,12 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { Accordion, Button } from '@sk-web-gui/react';
 import { RoleType } from '@data-contracts/RoleType';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import sanitized from '@services/sanitizer-service';
 import Divider from '@sk-web-gui/divider';
-import { useRouter } from 'next/router';
+import { useRouter, useParams } from 'next/navigation';
 import { getOrgTemplates, getParentChain, useOrgTree } from '@services/organization-service';
 import { useTranslation } from 'react-i18next';
 import { Checklist } from '@data-contracts/backend/data-contracts';
@@ -22,7 +24,8 @@ interface SidebarOrgTemplate {
 export const AdminTemplateSidebarActivities: React.FC<AdminTemplateSidebarActivitiesProps> = (props) => {
   const { currentView } = props;
   const router = useRouter();
-  const { orgid } = router.query;
+  const params = useParams<{ orgid: string }>();
+  const orgid = params?.orgid ?? '';
   const { data: orgTree } = useOrgTree();
   const [loadingTemplates, setLoadingTemplates] = useState<boolean>(true);
   const [templateSidebarData, setTemplateSidebarData] = useState<SidebarOrgTemplate[]>([]);

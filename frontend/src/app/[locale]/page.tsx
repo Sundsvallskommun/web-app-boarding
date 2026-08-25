@@ -1,9 +1,10 @@
+'use client';
+
 import { DelegateMultipleChecklistsModal } from '@components/delegate-checklists-modal/delegate-checklists-modal.component';
 import { OngoingChecklistsTable } from '@components/ongoing-checklists-table/ongoing-checklists-table.component';
 import DefaultLayout from '@layouts/default-layout/default-layout.component';
 import Main from '@layouts/main/main.component';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -13,11 +14,11 @@ import { useUserStore } from '@services/user-service/user-service';
 import { useShallow } from 'zustand/react/shallow';
 import { Avatar, Button, Spinner } from '@sk-web-gui/react';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { countAllCompletedTasks, countAllTasks } from '@utils/count-tasks';
 import { useDelegatedChecklists } from '@services/checklist-service/use-delegated-checklists';
 
-export function Index() {
+export function Page() {
   const router = useRouter();
   const { t } = useTranslation();
   const methods = useForm<{ checkAll: boolean; checked: [] }>({
@@ -129,18 +130,4 @@ export function Index() {
   );
 }
 
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, [
-      'common',
-      'layout',
-      'crud',
-      'checklists',
-      'delegation',
-      'task',
-      'templates',
-    ])),
-  },
-});
-
-export default Index;
+export default Page;

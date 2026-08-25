@@ -1,11 +1,12 @@
+'use client';
+
 import DefaultLayout from '@layouts/default-layout/default-layout.component';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { AdminOngoingIntroductionsTable } from '@components/admin/admin-ongoing-introductions-table/admin-ongoing-introductions-table.component';
 
-export const Admin: React.FC = () => {
+export const Page: React.FC = () => {
   const { t } = useTranslation();
   return (
     <DefaultLayout title={`${t('common:title')} - ${t('common:admin')}`} logoLinkHref="/admin">
@@ -16,11 +17,4 @@ export const Admin: React.FC = () => {
     </DefaultLayout>
   );
 };
-
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ['common', 'example', 'layout', 'admin', 'checklists', 'templates'])),
-  },
-});
-
-export default Admin;
+export default Page;
