@@ -19,8 +19,8 @@ interface ResponseData<T> {
 @Controller()
 @UseBefore(authMiddleware, hasSomePermission(['canEditAdmin', 'canEditDepartment']))
 export class TemplateController {
-  private apiService = new ApiService();
-  private checklist = APIS.find(api => api.name === 'checklist');
+  private readonly apiService = new ApiService();
+  private readonly checklist = APIS.find(api => api.name === 'checklist');
 
   @Get('/templates')
   @OpenAPI({ summary: 'Fetch all checklist templates' })
