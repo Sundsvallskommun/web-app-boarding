@@ -25,7 +25,7 @@ const CUSTOM_TASK_OFFSET = 6000;
 
 const getNewSortOrder = (data: EmployeeChecklist | null, currentPhase: number) => {
   const customTasks = data?.phases?.[currentPhase]?.tasks.filter((task) => task.customTask) || [];
-  return (customTasks[customTasks.length - 1]?.sortOrder || CUSTOM_TASK_OFFSET) + 1;
+  return (customTasks.at(-1)?.sortOrder || CUSTOM_TASK_OFFSET) + 1;
 };
 
 export default function CheckList() {

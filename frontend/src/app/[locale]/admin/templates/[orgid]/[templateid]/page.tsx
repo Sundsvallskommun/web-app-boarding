@@ -20,7 +20,7 @@ import { useSnackbar } from '@utils/use-snackbar';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 import dayjs from 'dayjs';
 import { useRouter, useParams } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { AdminTemplateSidebar } from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
@@ -43,7 +43,6 @@ export const EditTemplate = () => {
   const confirm = useConfirm();
   const toastMessage = useSnackbar();
   const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid, 10));
-  const [phaseIndex, setPhaseIndex] = useState<number>(0);
   const [activateTemplateModalOpen, setActivateTemplateModalOpen] = useState<boolean>(false);
 
   const editable = useCallback(
@@ -79,7 +78,14 @@ export const EditTemplate = () => {
       permission: 'ADMIN',
       questionType: 'YES_OR_NO',
       fulfilmentStatus: 'EMPTY',
-      sortOrder: data && org ? (1000 * org?.treeLevel + data.phases[phaseIndex].tasks?.length + 1).toString() : '0',
+      sortOrder:
+        data && org ?
+          (
+            1000 * org.treeLevel +
+            (data.phases.find((phase) => phase.id === phaseId)?.tasks?.length ?? 0) +
+            1
+          ).toString()
+        : '0',
     };
   };
 
@@ -93,7 +99,7 @@ export const EditTemplate = () => {
         taskOrder:
           phase.tasks
             // WHY IS SORTORDER NOT A NUMBER FOR TASKS WHEN IT IS FOR PHASES??
-            ?.sort((a, b) => Number.parseInt(a.sortOrder, 10) - Number.parseInt(b.sortOrder, 10))
+            ?.toSorted((a, b) => Number.parseInt(a.sortOrder, 10) - Number.parseInt(b.sortOrder, 10))
             .map((task, index) => {
               // sortOrder for manager activities gets an additional prefix of 500 to make sure their sortOrders
               // do not overlap with employee activities
@@ -191,7 +197,7 @@ export const EditTemplate = () => {
   const filteredTasks = useCallback(
     (checklist: Checklist, roleTypes: string[]) => {
       return checklist?.phases
-        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .toSorted((a, b) => a.sortOrder - b.sortOrder)
         .map((phase, index) => (
           <div key={phase.id} className="py-20 px-20 mb-48" data-cy={`phase-section-${index}`}>
             <h3 className="mb-12 text-h3-md"> {phase.name}</h3>
@@ -222,7 +228,6 @@ export const EditTemplate = () => {
                 showBackground={false}
                 color="info"
                 onClick={() => {
-                  setPhaseIndex(index);
                   setPhaseId(phase.id);
                   setIsOpen(true);
                 }}
@@ -240,10 +245,12 @@ export const EditTemplate = () => {
   const lifeCycle = data?.lifeCycle;
   const isActiveTemplate = lifeCycle === 'ACTIVE';
 
-  const lifeCycleLabel =
-    isActiveTemplate ? t('templates:active')
-    : lifeCycle === 'CREATED' ? t('templates:created')
-    : t('templates:deprecated');
+  let lifeCycleLabel = t('templates:deprecated');
+  if (isActiveTemplate) {
+    lifeCycleLabel = t('templates:active');
+  } else if (lifeCycle === 'CREATED') {
+    lifeCycleLabel = t('templates:created');
+  }
 
   const isEditableTemplate = !!data && editable(data, user);
   const canActivateTemplate = isEditableTemplate && lifeCycle === 'CREATED';
@@ -251,6 +258,21 @@ export const EditTemplate = () => {
     isEditableTemplate &&
     templateVersioningEnabled &&
     orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0;
+
+  let templateActionButton: ReactNode = null;
+  if (canActivateTemplate) {
+    templateActionButton = (
+      <Button size="md" onClick={() => setActivateTemplateModalOpen(true)}>
+        {t('templates:activate.title')}
+      </Button>
+    );
+  } else if (canCreateNewVersion) {
+    templateActionButton = (
+      <Button size="sm" color="vattjom" onClick={onNewVersion}>
+        {t('templates:new_version.confirm')}
+      </Button>
+    );
+  }
 
   return (
     <AdminLayout
@@ -272,15 +294,7 @@ export const EditTemplate = () => {
                 </Label>
               </div>
 
-              {canActivateTemplate ?
-                <Button size="md" onClick={() => setActivateTemplateModalOpen(true)}>
-                  {t('templates:activate.title')}
-                </Button>
-              : canCreateNewVersion ?
-                <Button size="sm" color="vattjom" onClick={onNewVersion}>
-                  {t('templates:new_version.confirm')}
-                </Button>
-              : null}
+              {templateActionButton}
             </div>
             {loaded && (
               <div>
