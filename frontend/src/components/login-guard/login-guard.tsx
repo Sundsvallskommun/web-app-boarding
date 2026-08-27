@@ -1,6 +1,7 @@
 'use client';
 
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
+import { useAppContext } from '@contexts/app.context';
 import { useUserStore } from '@services/user-service/user-service';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -8,14 +9,29 @@ import React, { useEffect, useState } from 'react';
 export const LoginGuard: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const user = useUserStore((s) => s.user);
   const getMe = useUserStore((s) => s.getMe);
+  const resetUser = useUserStore((s) => s.reset);
+  const { setDefaults } = useAppContext();
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams<{ userId?: string }>();
   const [mounted, setMounted] = useState(false);
 
+  const logout = () => {
+    setDefaults();
+    resetUser();
+    localStorage.clear();
+  };
+
   useEffect(() => {
+    const checkAuth = async () => {
+      const res = await getMe();
+      if (res.error && !pathname?.includes('/login')) {
+        logout();
+        router.push(`/login?failMessage=${encodeURIComponent(res.message ?? String(res.error))}`);
+      }
+    };
     setMounted(true);
-    getMe();
+    checkAuth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
