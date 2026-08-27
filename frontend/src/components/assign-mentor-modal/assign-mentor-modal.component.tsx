@@ -110,6 +110,15 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
     }
   };
 
+  const canManageMentor = isManager && !isUserIntroduction && !pathname?.includes('/admin') && !isDelegatedChecklist;
+
+  const noMentorContent =
+    canManageMentor ?
+      <Button data-cy="add-mentor-button" variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
+        {t('mentor:add')}
+      </Button>
+    : <p>{t('mentor:not_added')}</p>;
+
   return (
     <FormProvider {...methods}>
       <FormLabel>{t('mentor:mentor')}</FormLabel>
@@ -121,7 +130,7 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
               <Avatar initials={getInitials(data?.mentor?.name)} size="sm" rounded className="mr-8" />
               <p>{`${data?.mentor?.name}`}</p>
             </div>
-            {isManager && !isUserIntroduction && !pathname?.includes('/admin') && !isDelegatedChecklist && (
+            {canManageMentor && (
               <div
                 className="relative w-fit h-fit flex items-center"
                 onMouseEnter={() => handleHover(0)}
@@ -143,11 +152,7 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
               </div>
             )}
           </div>
-        : isManager && !isUserIntroduction && !pathname?.includes('/admin') && !isDelegatedChecklist ?
-          <Button data-cy="add-mentor-button" variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
-            {t('mentor:add')}
-          </Button>
-        : <p>{t('mentor:not_added')}</p>}
+        : noMentorContent}
 
         <Modal
           show={isOpen}

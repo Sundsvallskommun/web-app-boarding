@@ -10,10 +10,12 @@ export const AdminMenu = () => {
   const { t } = useTranslation();
   const pathname = usePathname();
 
-  const current =
-    pathname?.startsWith('/admin/checklists') ? 0
-    : pathname?.startsWith('/admin/templates') ? 1
-    : undefined;
+  let current: number | undefined;
+  if (pathname?.startsWith('/admin/checklists')) {
+    current = 0;
+  } else if (pathname?.startsWith('/admin/templates')) {
+    current = 1;
+  }
 
   return (
     <NavigationBar current={current} data-cy="nav-admin-menu">

@@ -23,6 +23,11 @@ import { removeDelegation } from '@services/checklist-service/checklist-service'
 
 const CUSTOM_TASK_OFFSET = 6000;
 
+const getNewSortOrder = (data: EmployeeChecklist | null, currentPhase: number) => {
+  const customTasks = data?.phases?.[currentPhase]?.tasks.filter((task) => task.customTask) || [];
+  return (customTasks[customTasks.length - 1]?.sortOrder || CUSTOM_TASK_OFFSET) + 1;
+};
+
 export default function CheckList() {
   const {
     username,
@@ -70,16 +75,13 @@ export default function CheckList() {
   const isLoading = managedChecklistsLoading || checklistLoading || delegatedChecklistLoading;
   const isLoaded = managedChecklistLoaded && employeeChecklistLoaded && delegatedChecklistsLoaded;
 
-  const managedChecklist = managedChecklists.filter(
+  const managedChecklist = managedChecklists.find(
     (checklist) => checklist.employee.username === userId && checklist.manager.username === username
-  )[0];
+  );
 
-  const delegatedChecklist = delegatedChecklists.filter((checklist) => checklist.employee.username === userId)[0];
+  const delegatedChecklist = delegatedChecklists.find((checklist) => checklist.employee.username === userId);
 
-  const data =
-    currentView === 0 && managedChecklist ? managedChecklist
-    : currentView === 0 && delegatedChecklist ? delegatedChecklist
-    : employeeChecklist;
+  const data = currentView === 0 ? (managedChecklist ?? delegatedChecklist ?? employeeChecklist) : employeeChecklist;
 
   const handleRemoveDelegation = () => {
     if (!data) return;
@@ -99,7 +101,7 @@ export default function CheckList() {
   };
 
   useEffect(() => {
-    if (!isManager || (isManager && employeeChecklist?.employee?.username === userId)) {
+    if (!isManager || employeeChecklist?.employee?.username === userId) {
       setCurrentView(1);
       setIsUserChecklist(true);
     }
@@ -110,31 +112,27 @@ export default function CheckList() {
     setCurrentPhase(0);
   }, [currentView]);
 
-  const customTasksLength = data?.phases?.[currentPhase]?.tasks.filter((t) => t.customTask).length || 0;
-  const newSortOrder =
-    (data?.phases?.[currentPhase]?.tasks.filter((t) => t.customTask)?.[customTasksLength - 1]?.sortOrder ||
-      CUSTOM_TASK_OFFSET) + 1;
+  const newSortOrder = getNewSortOrder(data, currentPhase);
 
-  const renderedData = (data: EmployeeChecklist) =>
-    data ?
-      <div className="grow rounded bg-background-content border-1 border-divider">
-        <IntroductionPhaseMenu
+  const renderedData = (data: EmployeeChecklist) => (
+    <div className="grow rounded bg-background-content border-1 border-divider">
+      <IntroductionPhaseMenu
+        data={data}
+        currentPhase={currentPhase}
+        setCurrentPhase={setCurrentPhase}
+        currentView={currentView}
+        refreshAllChecklists={refreshAllChecklists}
+      />
+      <div className="py-24 px-40">
+        <IntroductionActivityList
           data={data}
-          currentPhase={currentPhase}
-          setCurrentPhase={setCurrentPhase}
           currentView={currentView}
-          refreshAllChecklists={refreshAllChecklists}
+          currentPhase={currentPhase}
+          isUserChecklist={isUserChecklist}
         />
-        <div className="py-24 px-40">
-          <IntroductionActivityList
-            data={data}
-            currentView={currentView}
-            currentPhase={currentPhase}
-            isUserChecklist={isUserChecklist}
-          />
-        </div>
       </div>
-    : null;
+    </div>
+  );
 
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>

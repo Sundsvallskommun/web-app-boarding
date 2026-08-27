@@ -37,12 +37,10 @@ export default function Start() {
     setTimeout(() => setMounted(true), 500);
     if (isLoggedOut) {
       window.history.replaceState(null, '', '/login');
-    } else {
-      if (!failMessage && autoLogin) {
-        onLogin();
-      } else if (failMessage) {
-        setErrorMessage(t(`login:errors.${failMessage}`));
-      }
+    } else if (!failMessage && autoLogin) {
+      onLogin();
+    } else if (failMessage) {
+      setErrorMessage(t(`login:errors.${failMessage}`));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

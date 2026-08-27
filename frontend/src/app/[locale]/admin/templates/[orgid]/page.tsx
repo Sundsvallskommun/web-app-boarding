@@ -25,7 +25,7 @@ export const OrgTemplate: React.FC = () => {
   const { data: orgTree } = useOrgTreeStore();
 
   const { setData: setTemplateData } = useTemplate('');
-  const { data, loaded, loading, refresh: refreshOrgTemplates } = useOrgTemplates(parseInt(orgid, 10));
+  const { data, loaded, loading, refresh: refreshOrgTemplates } = useOrgTemplates(Number.parseInt(orgid, 10));
 
   useEffect(() => {
     setTemplateData(null);
@@ -34,7 +34,8 @@ export const OrgTemplate: React.FC = () => {
 
   const editable = useCallback(
     (orgId: string, user: User) => {
-      const userHasOrgPermission = user.role === 'department_admin' && user.children.includes(parseInt(orgid, 10));
+      const userHasOrgPermission =
+        user.role === 'department_admin' && user.children.includes(Number.parseInt(orgid, 10));
       const userIsGlobalAdmin = user.role === 'global_admin';
       return userHasOrgPermission || userIsGlobalAdmin;
     },
@@ -108,7 +109,7 @@ export const OrgTemplate: React.FC = () => {
               <div className="flex flex-wrap">
                 {currentTemplates.length > 0 ?
                   currentTemplates
-                    .sort((a, b) => b.version - a.version)
+                    .toSorted((a, b) => b.version - a.version)
                     .map((template) => <TemplateCard orgId={orgid} template={template} key={template.id} />)
                 : <div>
                     <p>{t('templates:no_org_template', { org: data?.organizationName })}</p>

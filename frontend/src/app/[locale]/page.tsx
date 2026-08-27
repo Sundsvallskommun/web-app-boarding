@@ -48,79 +48,80 @@ export function Page() {
     setIsOpen(false);
   };
 
+  const pageContent =
+    hasData ?
+      <div className="py-10">
+        {checklist?.id ?
+          <div
+            className="flex justify-between border-1 border-divider rounded-button bg-background-content px-16 pt-16 pb-16 mb-40 w-1/3"
+            data-cy="user-introduction"
+          >
+            <div className="flex" data-cy="employee-checklist-card">
+              <Avatar
+                rounded
+                initials={`${checklist.employee.firstName[0]}${checklist.employee.lastName[0]}`}
+                size="md"
+              />
+              <div className="px-16">
+                <strong>
+                  {checklist.employee.firstName} {checklist.employee.lastName}
+                </strong>
+                <p className="text-small my-0">
+                  <Icon name="check" size="1.8rem" className="align-top mr-6" />
+                  {t('task:activities_completed', {
+                    first: countAllCompletedTasks(checklist),
+                    second: countAllTasks(checklist),
+                  })}
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <Button
+                data-cy="user-introduction-button"
+                iconButton
+                leftIcon={<Icon name="arrow-right" />}
+                onClick={() => {
+                  router.push(`/${username}`);
+                }}
+              />
+            </div>
+          </div>
+        : null}
+
+        {managedChecklists?.length ?
+          <>
+            <h2 className="my-16">{capitalize(t('checklists:ongoing_checklists'))}</h2>
+            <p className="mb-16">{t('checklists:you_got_ongoing_checklists', { count: managedChecklists?.length })}</p>
+
+            <div data-cy="managed-checklists-table">
+              <FormProvider {...methods}>
+                <OngoingChecklistsTable data={managedChecklists} delegatedChecklists={false} />
+              </FormProvider>
+            </div>
+          </>
+        : null}
+
+        {delegatedChecklists?.length ?
+          <div className="py-24">
+            <h2 className="mb-16">{t('common:assigned_introductions')}</h2>
+            <p className="mb-16">
+              {t('checklists:you_got_assigned_introductions', { count: delegatedChecklists?.length })}
+            </p>
+            <div data-cy="delegated-checklists-table">
+              <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
+            </div>
+          </div>
+        : null}
+      </div>
+    : <h2>{t('common:no_introductions')}</h2>;
+
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
         {isLoading || !isLoaded ?
           <Spinner className="mx-auto my-40" />
-        : hasData ?
-          <div className="py-10">
-            {checklist?.id ?
-              <div
-                className="flex justify-between border-1 border-divider rounded-button bg-background-content px-16 pt-16 pb-16 mb-40 w-1/3"
-                data-cy="user-introduction"
-              >
-                <div className="flex" data-cy="employee-checklist-card">
-                  <Avatar
-                    rounded
-                    initials={`${checklist.employee.firstName[0]}${checklist.employee.lastName[0]}`}
-                    size="md"
-                  />
-                  <div className="px-16">
-                    <strong>
-                      {checklist.employee.firstName} {checklist.employee.lastName}
-                    </strong>
-                    <p className="text-small my-0">
-                      <Icon name="check" size="1.8rem" className="align-top mr-6" />
-                      {t('task:activities_completed', {
-                        first: countAllCompletedTasks(checklist),
-                        second: countAllTasks(checklist),
-                      })}
-                    </p>
-                  </div>
-                </div>
-
-                <div>
-                  <Button
-                    data-cy="user-introduction-button"
-                    iconButton
-                    leftIcon={<Icon name="arrow-right" />}
-                    onClick={() => {
-                      router.push(`/${username}`);
-                    }}
-                  />
-                </div>
-              </div>
-            : null}
-
-            {managedChecklists?.length ?
-              <>
-                <h2 className="my-16">{capitalize(t('checklists:ongoing_checklists'))}</h2>
-                <p className="mb-16">
-                  {t('checklists:you_got_ongoing_checklists', { count: managedChecklists?.length })}
-                </p>
-
-                <div data-cy="managed-checklists-table">
-                  <FormProvider {...methods}>
-                    <OngoingChecklistsTable data={managedChecklists} delegatedChecklists={false} />
-                  </FormProvider>
-                </div>
-              </>
-            : null}
-
-            {delegatedChecklists?.length ?
-              <div className="py-24">
-                <h2 className="mb-16">{t('common:assigned_introductions')}</h2>
-                <p className="mb-16">
-                  {t('checklists:you_got_assigned_introductions', { count: delegatedChecklists?.length })}
-                </p>
-                <div data-cy="delegated-checklists-table">
-                  <OngoingChecklistsTable data={delegatedChecklists} delegatedChecklists={true} />
-                </div>
-              </div>
-            : null}
-          </div>
-        : <h2>{t('common:no_introductions')}</h2>}
+        : pageContent}
 
         <FormProvider {...methods}>
           <DelegateMultipleChecklistsModal checklistIds={checked} onClose={closeHandler} isOpen={isOpen} />

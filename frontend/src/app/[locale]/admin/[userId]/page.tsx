@@ -54,7 +54,7 @@ export const CheckList: React.FC = () => {
     refreshDelegatedChecklists();
   };
 
-  const managedChecklist = managedChecklists.filter((employee) => employee.employee.username === userId)[0];
+  const managedChecklist = managedChecklists.find((checklist) => checklist.employee.username === userId);
   const data = currentView === 0 ? managedChecklist : employeeChecklist;
 
   useEffect(() => {

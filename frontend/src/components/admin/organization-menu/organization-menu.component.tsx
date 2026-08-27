@@ -13,13 +13,13 @@ interface OrganizationMenuProps {
 
 export const OrganizationMenu: React.FC<OrganizationMenuProps> = ({ searchValue }) => {
   const [current, setCurrent] = useState<MenuIndex>();
-  const rootIds = process.env.NEXT_PUBLIC_ROOT_IDS?.split(',').map((id) => parseInt(id, 10)) || [];
+  const rootIds = process.env.NEXT_PUBLIC_ROOT_IDS?.split(',').map((id) => Number.parseInt(id, 10)) || [];
   const { data, loading } = useOrgTree(rootIds);
   const params = useParams<{ orgid?: string }>();
 
   useEffect(() => {
     if (params?.orgid) {
-      setCurrent(parseInt(params.orgid, 10));
+      setCurrent(Number.parseInt(params.orgid, 10));
     }
   }, [params?.orgid]);
 
