@@ -35,20 +35,21 @@ export const EditTemplate = () => {
   const templateid = params?.templateid ?? '';
   const { data, refresh, loaded, loading } = useTemplate(templateid as string);
   const { data: orgTreeData } = useOrgTreeStore();
-  const { data: orgData } = useOrgTemplates(parseInt(orgid, 10));
+  const { data: orgData } = useOrgTemplates(Number.parseInt(orgid, 10));
   const user = useUserStore(useShallow((s) => s.user));
   const [currentView, setCurrentView] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [phaseId, setPhaseId] = useState<string>();
   const confirm = useConfirm();
   const toastMessage = useSnackbar();
-  const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid, 10));
+  const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid, 10));
   const [phaseIndex, setPhaseIndex] = useState<number>(0);
   const [activateTemplateModalOpen, setActivateTemplateModalOpen] = useState<boolean>(false);
 
   const editable = useCallback(
     (checklist: Checklist, user: User) => {
-      const userHasOrgPermission = user.role === 'department_admin' && user.children.includes(parseInt(orgid, 10));
+      const userHasOrgPermission =
+        user.role === 'department_admin' && user.children.includes(Number.parseInt(orgid, 10));
       const userIsGlobalAdmin = user.role === 'global_admin';
       const editableLifeCycle =
         checklist.lifeCycle === 'CREATED' || (!templateVersioningEnabled && checklist.lifeCycle === 'ACTIVE');
@@ -83,7 +84,7 @@ export const EditTemplate = () => {
   };
 
   const getSortorder = (checklist: Checklist) => {
-    const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid, 10));
+    const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid, 10));
     const level = org?.treeLevel || 0;
     const order: SortorderRequest = {
       phaseOrder: checklist.phases?.map((phase, index) => ({
@@ -92,7 +93,7 @@ export const EditTemplate = () => {
         taskOrder:
           phase.tasks
             // WHY IS SORTORDER NOT A NUMBER FOR TASKS WHEN IT IS FOR PHASES??
-            ?.sort((a, b) => parseInt(a.sortOrder, 10) - parseInt(b.sortOrder, 10))
+            ?.sort((a, b) => Number.parseInt(a.sortOrder, 10) - Number.parseInt(b.sortOrder, 10))
             .map((task, index) => {
               // sortOrder for manager activities gets an additional prefix of 500 to make sure their sortOrders
               // do not overlap with employee activities
@@ -236,6 +237,21 @@ export const EditTemplate = () => {
     [data]
   );
 
+  const lifeCycle = data?.lifeCycle;
+  const isActiveTemplate = lifeCycle === 'ACTIVE';
+
+  const lifeCycleLabel =
+    isActiveTemplate ? t('templates:active')
+    : lifeCycle === 'CREATED' ? t('templates:created')
+    : t('templates:deprecated');
+
+  const isEditableTemplate = !!data && editable(data, user);
+  const canActivateTemplate = isEditableTemplate && lifeCycle === 'CREATED';
+  const canCreateNewVersion =
+    isEditableTemplate &&
+    templateVersioningEnabled &&
+    orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0;
+
   return (
     <AdminLayout
       title={`${t('common:title')} - ${t('common:admin')}`}
@@ -251,29 +267,16 @@ export const EditTemplate = () => {
                   {capitalize(data?.displayName || '')}
                 </h2>
 
-                <Label
-                  className="mx-md my-xs"
-                  color={data?.lifeCycle === 'ACTIVE' ? 'gronsta' : 'tertiary'}
-                  inverted
-                  rounded
-                >
-                  {data?.lifeCycle === 'ACTIVE' ?
-                    t('templates:active')
-                  : data?.lifeCycle === 'CREATED' ?
-                    t('templates:created')
-                  : t('templates:deprecated')}
+                <Label className="mx-md my-xs" color={isActiveTemplate ? 'gronsta' : 'tertiary'} inverted rounded>
+                  {lifeCycleLabel}
                 </Label>
               </div>
 
-              {editable(data, user) && data?.lifeCycle === 'CREATED' ?
+              {canActivateTemplate ?
                 <Button size="md" onClick={() => setActivateTemplateModalOpen(true)}>
                   {t('templates:activate.title')}
                 </Button>
-              : (
-                editable(data, user) &&
-                templateVersioningEnabled &&
-                orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
-              ) ?
+              : canCreateNewVersion ?
                 <Button size="sm" color="vattjom" onClick={onNewVersion}>
                   {t('templates:new_version.confirm')}
                 </Button>

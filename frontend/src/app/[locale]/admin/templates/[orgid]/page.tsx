@@ -102,7 +102,7 @@ export const OrgTemplate: React.FC = () => {
       {loading || !data ?
         <LoaderFullScreen />
       : <div className="my-40 flex justify-between">
-          <div>
+          <div className="pt-40">
             <h2 className="text-h2-sm md:text-h2-md xl:text-h2-lg mb-40">{data?.organizationName}</h2>
             {loaded && (
               <div className="flex flex-wrap">

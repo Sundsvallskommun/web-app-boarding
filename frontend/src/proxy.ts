@@ -11,20 +11,22 @@ export async function proxy(req: NextRequest) {
     const cookieName = 'connect.sid';
     const token = req.cookies.get(cookieName)?.value ?? '';
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
-      cache: 'no-cache',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Cookie: `${cookieName}=${encodeURIComponent(token)}`,
-      },
-    });
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
+        cache: 'no-cache',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Cookie: `${cookieName}=${encodeURIComponent(token)}`,
+        },
+      });
 
-    if (response.status === 401) {
-      const loginUrl = new URL('/login', origin);
-      loginUrl.searchParams.set('path', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+      if (response.status === 401) {
+        const loginUrl = new URL('/login', origin);
+        loginUrl.searchParams.set('path', pathname);
+        return NextResponse.redirect(loginUrl);
+      }
+    } catch {}
   }
 
   return i18nRouter(req, i18nConfig);

@@ -117,25 +117,23 @@ export default function CheckList() {
 
   const renderedData = (data: EmployeeChecklist) =>
     data ?
-      <>
-        <div className="grow rounded bg-background-content border-1 border-divider">
-          <IntroductionPhaseMenu
+      <div className="grow rounded bg-background-content border-1 border-divider">
+        <IntroductionPhaseMenu
+          data={data}
+          currentPhase={currentPhase}
+          setCurrentPhase={setCurrentPhase}
+          currentView={currentView}
+          refreshAllChecklists={refreshAllChecklists}
+        />
+        <div className="py-24 px-40">
+          <IntroductionActivityList
             data={data}
-            currentPhase={currentPhase}
-            setCurrentPhase={setCurrentPhase}
             currentView={currentView}
-            refreshAllChecklists={refreshAllChecklists}
+            currentPhase={currentPhase}
+            isUserChecklist={isUserChecklist}
           />
-          <div className="py-24 px-40">
-            <IntroductionActivityList
-              data={data}
-              currentView={currentView}
-              currentPhase={currentPhase}
-              isUserChecklist={isUserChecklist}
-            />
-          </div>
         </div>
-      </>
+      </div>
     : null;
 
   return (
