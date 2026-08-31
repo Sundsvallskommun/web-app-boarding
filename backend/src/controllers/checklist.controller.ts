@@ -26,8 +26,8 @@ interface ResponseData<T> {
 
 @Controller()
 export class ChecklistController {
-  private apiService = new ApiService();
-  private checklist = APIS.find(api => api.name === 'checklist');
+  private readonly apiService = new ApiService();
+  private readonly checklist = APIS.find(api => api.name === 'checklist');
 
   @Get('/employee-checklists/manager/:username')
   @OpenAPI({ summary: 'Fetch checklists as manager' })
