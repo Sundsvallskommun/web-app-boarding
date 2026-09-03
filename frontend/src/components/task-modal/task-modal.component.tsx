@@ -10,7 +10,7 @@ import { Button, Modal, Select } from '@sk-web-gui/react';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 import {
   CustomTaskCreateRequest,
   CustomTaskUpdateRequest,
@@ -34,14 +34,14 @@ export interface TaskModalProps {
 
 export const TaskModal: React.FC<TaskModalProps> = (props) => {
   const { closeModalHandler, isModalOpen, task, checklistId, mode, currentView, data, newSortOrder } = props;
-  const user = useUserStore((s) => s.user, shallow);
+  const user = useUserStore(useShallow((s) => s.user));
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { refresh: refreshDelegatedChecklists } = useDelegatedChecklists();
   const { refresh: refreshChecklist } = useChecklist();
   const [richText, setRichText] = useState<string>('');
   const { t } = useTranslation();
 
-  let formSchema = yup.object({
+  const formSchema = yup.object({
     heading: yup.string().trim().required(t('task:errors.heading')).min(1, t('task:errors.heading')),
     headingReference: yup.string(),
     text: yup.string().max(2048, t('task:errors.text')),
@@ -111,6 +111,7 @@ export const TaskModal: React.FC<TaskModalProps> = (props) => {
     setTimeout(() => {
       setFocus(mode === 'edit' ? 'heading' : 'phaseId');
     }, 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen, mode, task, newSortOrder]);
 
   const refreshAndClose = () => {

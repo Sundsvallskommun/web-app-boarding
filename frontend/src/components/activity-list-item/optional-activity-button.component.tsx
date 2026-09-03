@@ -1,7 +1,7 @@
 import React from 'react';
-import { useTranslation } from 'next-i18next';
 import { Button } from '@sk-web-gui/react';
 import { Ban, Goal } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export interface OptionalActivityButtonProps {
   fulfilmentStatus: 'EMPTY' | 'TRUE' | 'FALSE' | 'NOT_RELEVANT';

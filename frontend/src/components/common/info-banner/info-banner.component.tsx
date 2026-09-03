@@ -8,7 +8,7 @@ export const InfoBanner: React.FC = () => {
   const { t } = useTranslation();
 
   const handleClick = () => {
-    showText ? setShowText(false) : setShowText(true);
+    setShowText((prev) => !prev);
   };
 
   return (

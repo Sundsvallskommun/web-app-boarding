@@ -1,17 +1,20 @@
+'use client';
+
 import { SearchEmployeeComponent, UserInformation } from '@components/search-employee/search-employee.component';
 import { assignMentor, delegateChecklist, removeMentor } from '@services/checklist-service/checklist-service';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { Avatar } from '@sk-web-gui/avatar';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Modal, Tooltip, useSnackbar } from '@sk-web-gui/react';
+import { Button, Modal, Tooltip } from '@sk-web-gui/react';
+import { useSnackbar } from '@utils/use-snackbar';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { getInitials, useUserStore } from '@services/user-service/user-service';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslation } from 'react-i18next';
 import { FormLabel } from '@sk-web-gui/forms';
-import { useRouter } from 'next/router';
+import { useParams, usePathname } from 'next/navigation';
 
 interface AssignMentorModalProps {
   isDelegatedChecklist: boolean;
@@ -28,15 +31,16 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
   const { data, refresh } = useChecklist();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
   const { t } = useTranslation();
-  const router = useRouter();
-  const { pathname, query } = router;
+  const pathname = usePathname();
+  const params = useParams<{ userId?: string }>();
   const toastMessage = useSnackbar();
   const [removeMentorModalOpen, setRemoveMentorModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (username === query?.userId) {
+    if (username === params?.userId) {
       setIsUserIntroduction(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const openHandler = () => {
@@ -67,32 +71,32 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
 
   const onSubmit = () => {
     fields.map((field: UserInformation) => {
-      data &&
-        assignMentor(data.id, { userId: field.userId, name: field.fullName })
-          .then(() => {
-            delegateChecklist(data.id, field.email)
-              .then(() => {
-                closeHandler();
-              })
-              .catch(() => {
-                toastMessage({
-                  position: 'bottom',
-                  closeable: false,
-                  message: t('delegation:errors.conflict', {
-                    user: field.email,
-                  }),
-                  status: 'error',
-                });
+      if (!data) return;
+      assignMentor(data.id, { userId: field.userId, name: field.fullName })
+        .then(() => {
+          delegateChecklist(data.id, field.email)
+            .then(() => {
+              closeHandler();
+            })
+            .catch(() => {
+              toastMessage({
+                position: 'bottom',
+                closeable: false,
+                message: t('delegation:errors.conflict', {
+                  user: field.email,
+                }),
+                status: 'error',
               });
-          })
-          .catch(() => {
-            toastMessage({
-              position: 'bottom',
-              closeable: false,
-              message: t('mentor:add_mentor_error'),
-              status: 'error',
             });
+        })
+        .catch(() => {
+          toastMessage({
+            position: 'bottom',
+            closeable: false,
+            message: t('mentor:add_mentor_error'),
+            status: 'error',
           });
+        });
     });
   };
 
@@ -106,6 +110,15 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
     }
   };
 
+  const canManageMentor = isManager && !isUserIntroduction && !pathname?.includes('/admin') && !isDelegatedChecklist;
+
+  const noMentorContent =
+    canManageMentor ?
+      <Button data-cy="add-mentor-button" variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
+        {t('mentor:add')}
+      </Button>
+    : <p>{t('mentor:not_added')}</p>;
+
   return (
     <FormProvider {...methods}>
       <FormLabel>{t('mentor:mentor')}</FormLabel>
@@ -117,7 +130,7 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
               <Avatar initials={getInitials(data?.mentor?.name)} size="sm" rounded className="mr-8" />
               <p>{`${data?.mentor?.name}`}</p>
             </div>
-            {isManager && !isUserIntroduction && !pathname.includes('/admin') && !isDelegatedChecklist && (
+            {canManageMentor && (
               <div
                 className="relative w-fit h-fit flex items-center"
                 onMouseEnter={() => handleHover(0)}
@@ -139,11 +152,7 @@ export const AssignMentorModal: React.FC<AssignMentorModalProps> = ({ isDelegate
               </div>
             )}
           </div>
-        : isManager && !isUserIntroduction && !pathname.includes('/admin') && !isDelegatedChecklist ?
-          <Button data-cy="add-mentor-button" variant="tertiary" onClick={openHandler} size="sm" className="mt-8">
-            {t('mentor:add')}
-          </Button>
-        : <p>{t('mentor:not_added')}</p>}
+        : noMentorContent}
 
         <Modal
           show={isOpen}

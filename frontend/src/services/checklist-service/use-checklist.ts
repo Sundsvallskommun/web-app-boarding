@@ -1,6 +1,8 @@
+'use client';
+
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { useCrudHelper } from '@utils/use-crud-helpers';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { getChecklistAsEmployee } from './checklist-service';
 import { useChecklistStore } from './use-checklist-store';
@@ -15,14 +17,9 @@ export const useChecklist = (
 } => {
   const { handleGetOne } = useCrudHelper('checklists');
   const [data, setData] = useChecklistStore(useShallow((state) => [state.data, state.setData]));
-  const [loaded, setLoaded, loading, setLoading, id, setId] = useChecklistStore((state) => [
-    state.loaded,
-    state.setLoaded,
-    state.loading,
-    state.setLoading,
-    state.id,
-    state.setId,
-  ]);
+  const [loaded, setLoaded, loading, setLoading, id, setId] = useChecklistStore(
+    useShallow((state) => [state.loaded, state.setLoaded, state.loading, state.setLoading, state.id, state.setId])
+  );
 
   const refresh = (_username: string) => {
     if (_username) {
@@ -51,6 +48,7 @@ export const useChecklist = (
       setId(username);
       refresh(username);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   return { data, loaded, loading, refresh: handleRefresh };

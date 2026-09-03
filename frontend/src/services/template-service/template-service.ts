@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Checklist,
   ChecklistApiResponse,
@@ -5,7 +7,6 @@ import {
   Events,
   OrganizationCreateRequest,
   OrgTree,
-  Phase,
   SortorderRequest,
   Task,
   TaskCreateRequest,
@@ -34,18 +35,6 @@ export const getTemplateHistory: (id: string) => Promise<Events | undefined> = (
     }
   });
 };
-
-export interface TaskWithOrgId extends Task {
-  orgId: string;
-}
-
-export interface PhaseWithOrgId extends Phase {
-  tasks: TaskWithOrgId[];
-}
-
-export interface ChecklistWithOrgId extends Checklist {
-  phases: PhaseWithOrgId[];
-}
 
 export const setSortorder: (
   orgId: string,
@@ -214,14 +203,9 @@ export const createNewVersion: (orgId: string, templateId: string) => Promise<Ch
 
 export const useTemplate = (templateid: string) => {
   const [data, setData] = useTemplateStore(useShallow((state) => [state.data, state.setData]));
-  const [loaded, setLoaded, loading, setLoading, id, setId] = useTemplateStore((state) => [
-    state.loaded,
-    state.setLoaded,
-    state.loading,
-    state.setLoading,
-    state.id,
-    state.setId,
-  ]);
+  const [loaded, setLoaded, loading, setLoading] = useTemplateStore(
+    useShallow((state) => [state.loaded, state.setLoaded, state.loading, state.setLoading])
+  );
 
   const refresh = (templateid: string) => {
     if (templateid) {
@@ -248,6 +232,7 @@ export const useTemplate = (templateid: string) => {
     if (data?.id !== templateid) {
       refresh(templateid);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [templateid]);
 
   return { data, setData, refresh, loaded, loading };

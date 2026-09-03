@@ -3,10 +3,10 @@ import { DefaultLayoutProps } from '@layouts/default-layout/default-layout.compo
 import Main from '@layouts/main/main.component';
 import { PageHeader } from '@layouts/page-header/page-header.component';
 import { isAdmin, useUserStore } from '@services/user-service/user-service';
-import Head from 'next/head';
 import NextLink from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
+import { useEffect } from 'react';
 
 export default function AdminLayoutComponent({
   title,
@@ -27,13 +27,12 @@ export default function AdminLayoutComponent({
     }
   };
 
+  useEffect(() => {
+    document.title = title || fullTitle;
+  }, [title, fullTitle]);
+
   return isAdmin(user) ?
       <div className="DefaultLayout full-page-layout bg-background-100">
-        <Head>
-          <title>{title ? title : fullTitle}</title>
-          <meta name="description" content={title ? title : `${process.env.NEXT_PUBLIC_APP_NAME}`} />
-        </Head>
-
         <NextLink href="#content" onClick={setFocusToMain} className="next-link-a" data-cy="systemMessage-a">
           {t('layout:header.goto_content')}
         </NextLink>

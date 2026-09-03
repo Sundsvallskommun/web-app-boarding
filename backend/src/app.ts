@@ -14,7 +14,7 @@ import morgan from 'morgan';
 import passport from 'passport';
 import { Strategy, VerifiedCallback } from '@node-saml/passport-saml';
 import bodyParser from 'body-parser';
-import { useExpressServer, getMetadataArgsStorage } from 'routing-controllers';
+import { getMetadataArgsStorage, useExpressServer } from 'routing-controllers';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import swaggerUi from 'swagger-ui-express';
 import {
@@ -41,17 +41,17 @@ import {
 } from '@config';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
-import { Profile } from './interfaces/profile.interface';
-import { HttpException } from './exceptions/HttpException';
+import { Profile } from '@interfaces/profile.interface';
+import { HttpException } from '@exceptions/HttpException';
 import { join } from 'path';
-import { isValidUrl } from './utils/util';
-import { additionalConverters } from './utils/custom-validation-classes';
-import { getPermissions, getRole } from './services/authorization.service';
+import { isValidUrl } from '@utils/util';
+import { additionalConverters } from '@utils/custom-validation-classes';
+import { getPermissions, getRole } from '@services/authorization.service';
 import ApiService from './services/api.service';
 import { EmployeeChecklist } from './responses/checklist.response';
 import { DelegatedEmployeeChecklistResponse } from '@/data-contracts/checklist/data-contracts';
 import { PortalPersonData } from './data-contracts/employee/data-contracts';
-import { getOrgChildren } from './services/organization.service';
+import { getOrgChildren } from '@services/organization.service';
 import { Organization } from './data-contracts/company/data-contracts';
 
 const SessionStoreCreate = SESSION_MEMORY ? createMemoryStore(session) : createFileStore(session);
@@ -83,7 +83,7 @@ const samlStrategy = new Strategy(
     digestAlgorithm: 'sha256',
     issuer: SAML_ISSUER,
     wantAssertionsSigned: false,
-    acceptedClockSkewMs: 1000,
+    acceptedClockSkewMs: -1,
     logoutCallbackUrl: SAML_LOGOUT_CALLBACK_URL,
     wantAuthnResponseSigned: false,
     audience: false,
@@ -123,7 +123,7 @@ const samlStrategy = new Strategy(
     }
 
     const checklistApi = APIS.find(api => api.name === 'checklist');
-    const groupList: string[] = groups !== undefined ? (groups.split(',').map(x => x.toLowerCase()) as string[]) : [];
+    const groupList: string[] = groups.split(',').map(x => x.toLowerCase()) as string[];
 
     const appGroups: string[] = groupList.length > 0 ? groupList : [];
 
@@ -164,11 +164,7 @@ const samlStrategy = new Strategy(
           },
         );
 
-        if (Array.isArray(hasDelegatedRes.data.employeeChecklists) && hasDelegatedRes.data.employeeChecklists.length > 0) {
-          return true;
-        }
-
-        return false;
+        return Array.isArray(hasDelegatedRes.data.employeeChecklists) && hasDelegatedRes.data.employeeChecklists.length > 0;
       } catch {
         return false;
       }
@@ -265,11 +261,10 @@ const samlStrategy = new Strategy(
       }
 
       // Assign the list of children of the determined organizationId
-      const children = await getOrgChildren(findUser.organizationId, findUser).catch(err => {
+      findUser.children = await getOrgChildren(findUser.organizationId, findUser).catch(err => {
         logger.error(`Error fetching child organizations: ${err.message || err}`);
         return [] as number[];
       });
-      findUser.children = children;
 
       logger.info(`Constructed user: ${JSON.stringify(findUser)}`);
       return done(null, findUser);
@@ -414,16 +409,15 @@ class App {
     });
 
     this.app.post(`${BASE_URL_PREFIX}/saml/login/callback`, bodyParser.urlencoded({ extended: false }), (req, res, next) => {
-      let successRedirect, failureRedirect;
+      let successRedirect = ORIGIN;
       if (isValidUrl(req.body.RelayState)) {
         successRedirect = req.body.RelayState;
       }
 
-      if (req.session.messages?.length > 0) {
-        failureRedirect = successRedirect + `?failMessage=${req.session.messages[0]}`;
-      } else {
-        failureRedirect = successRedirect + `?failMessage='SAML_UNKNOWN_ERROR'`;
-      }
+      const failureRedirect =
+        req.session.messages?.length > 0
+          ? `${successRedirect}?failMessage=${req.session.messages[0]}`
+          : `${successRedirect}?failMessage=SAML_UNKNOWN_ERROR`;
 
       passport.authenticate('saml', {
         successReturnToOrRedirect: successRedirect,

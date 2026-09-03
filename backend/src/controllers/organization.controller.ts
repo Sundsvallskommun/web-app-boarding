@@ -13,9 +13,9 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 @Controller()
 export class OrganizationController {
-  private apiService = new ApiService();
-  private company = APIS.find(api => api.name === 'company');
-  private checklist = APIS.find(api => api.name === 'checklist');
+  private readonly apiService = new ApiService();
+  private readonly company = APIS.find(api => api.name === 'company');
+  private readonly checklist = APIS.find(api => api.name === 'checklist');
 
   @Get('/org/:orgId/tree')
   @OpenAPI({
@@ -191,7 +191,6 @@ export class OrganizationController {
     @Req() req: RequestWithUser,
     @Param('orgId') orgId: string,
     @Body() data: OrganizationUpdateRequest,
-    @Res() response: Response<Organization>,
   ): Promise<ApiResponse<Organization>> {
     const { name } = req.user;
     if (!name || !data.communicationChannels) {

@@ -1,8 +1,10 @@
+'use client';
+
 import { AdminMenu } from '@components/admin/admin-menu/admin-menu.component';
 import { isAdmin, useUserStore } from '@services/user-service/user-service';
 import { Divider, Header, Icon, Link, UserMenu } from '@sk-web-gui/react';
 import { LogOut, User2, UserCog } from 'lucide-react';
-import { useRouter } from 'next/router';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { useShallow } from 'zustand/react/shallow';
@@ -18,9 +20,10 @@ interface PageHeaderProps extends React.ComponentProps<typeof Header> {
 export const PageHeader: React.FC<PageHeaderProps> = ({ headerSubtitle, headerTitle, logoLinkHref = '/' }) => {
   const user = useUserStore(useShallow((state) => state.user));
   const router = useRouter();
+  const pathname = usePathname();
   const { t } = useTranslation();
 
-  const showAdminMenu = router.pathname.startsWith('/admin') && isAdmin(user);
+  const showAdminMenu = pathname?.startsWith('/admin') && isAdmin(user);
 
   const handleLogoClick = () => {
     router.push(logoLinkHref);

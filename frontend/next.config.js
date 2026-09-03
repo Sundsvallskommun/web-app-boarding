@@ -1,13 +1,10 @@
 const envalid = require('envalid');
-const { i18n } = require('./next-i18next.config');
 
 const authDependent = envalid.makeValidator((x) => {
   const authEnabled = process.env.HEALTH_AUTH === 'true';
-
   if (authEnabled && !x.length) {
     throw new Error(`Can't be empty if "HEALTH_AUTH" is true`);
   }
-
   return x;
 });
 
@@ -24,18 +21,19 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 module.exports = withBundleAnalyzer({
   output: 'standalone',
-  i18n,
   images: {
-    domains: [process.env.DOMAIN_NAME],
+    remotePatterns: [{ protocol: 'https', hostname: process.env.DOMAIN_NAME }],
     formats: ['image/avif', 'image/webp'],
   },
   basePath: process.env.BASE_PATH,
   sassOptions: {
     prependData: `$basePath: '${process.env.BASE_PATH}';`,
   },
-  transpilePackages: ['lucide-react'],
   experimental: {
-    optimizePackageImports: ['lucide-react', '@sk-web-gui'],
+    optimizePackageImports: ['@sk-web-gui/core', '@sk-web-gui/react', 'lodash', 'dayjs'],
+  },
+  turbopack: {
+    root: __dirname,
   },
   async rewrites() {
     return [{ source: '/napi/:path*', destination: '/api/:path*' }];

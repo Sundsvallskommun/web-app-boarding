@@ -54,9 +54,9 @@ export const getDelegatedChecklists: (username: string) => Promise<DelegatedEmpl
 };
 
 export const countFinishedTasks = (phases: Phase[], currentView: number) => {
-  let phaseArray: number[] = [];
+  const phaseArray: number[] = [];
   phases.map((phase: Phase) => {
-    let count = 0;
+    let count;
     if (currentView === 0) {
       count = phase.tasks.filter(
         (task: Task) =>
@@ -253,7 +253,7 @@ export const getAllOngoingChecklists: (
   sortDirection: string,
   searchTerm?: string
 ) => Promise<COngoingEmployeeChecklists> = async (currentPage, limit, sortBy, sortDirection, searchTerm) => {
-  let url = `/employee-checklists/ongoing?page=${currentPage}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}&employeeName=${searchTerm}`;
+  const url = `/employee-checklists/ongoing?page=${currentPage}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}&employeeName=${searchTerm}`;
 
   return apiService
     .get<ApiResponse<COngoingEmployeeChecklists>>(url)

@@ -114,7 +114,7 @@ describe('Employee introduction as manager', () => {
   });
 
   it('can delegate introduction and remove delegation', () => {
-    cy.intercept('GET', '**/api/portalpersondata/personal/**', searchEmployeeResponse).as('searchEmployee');
+    cy.intercept('GET', '**/api/portalpersondata/anv01anv', searchEmployeeResponse).as('searchEmployee');
     cy.intercept('DELETE', '**/api/employee-checklists/**/delegated-to/**', removeDelegationResponse);
 
     cy.get('[data-cy="delegate-introduction-button"]').should('exist').click();

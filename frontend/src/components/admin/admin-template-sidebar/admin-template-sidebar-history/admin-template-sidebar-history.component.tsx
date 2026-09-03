@@ -1,18 +1,20 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { Events } from '@data-contracts/backend/data-contracts';
 import { getTemplateHistory } from '@services/template-service/template-service';
-import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation';
 import { Spinner } from '@sk-web-gui/react';
 import dayjs from 'dayjs';
 
 export const AdminTemplateSidebarHistory: React.FC = () => {
-  const router = useRouter();
-  const { templateid } = router.query;
+  const params = useParams<{ templateid: string }>();
+  const templateid = params?.templateid ?? '';
   const [templateHistory, setTemplateHistory] = useState<Events>();
 
   useEffect(() => {
     if (templateid) {
-      getTemplateHistory(templateid.toString()).then((res) => {
+      getTemplateHistory(templateid).then((res) => {
         setTemplateHistory(res);
       });
     }

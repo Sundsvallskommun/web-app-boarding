@@ -1,3 +1,5 @@
+'use client';
+
 import { Task, TaskCreateRequest, TaskUpdateRequest } from '@data-contracts/backend/data-contracts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useOrgTreeStore } from '@services/organization-service';
@@ -5,16 +7,17 @@ import { createTask, updateTask, useTemplate } from '@services/template-service/
 import { useUserStore } from '@services/user-service/user-service';
 import { FormControl, FormErrorMessage, FormLabel, Input } from '@sk-web-gui/forms';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Checkbox, Modal, useSnackbar } from '@sk-web-gui/react';
+import { Button, Checkbox, Modal } from '@sk-web-gui/react';
+import { useSnackbar } from '@utils/use-snackbar';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 import { useCrudHelper } from '@utils/use-crud-helpers';
-import { useTranslation } from 'next-i18next';
-import router from 'next/router';
+import { useParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 import dynamic from 'next/dynamic';
+import { useTranslation } from 'react-i18next';
 const TextEditor = dynamic(() => import('@sk-web-gui/text-editor'), { ssr: false });
 
 interface AdminEditTaskModalProps {
@@ -27,14 +30,15 @@ interface AdminEditTaskModalProps {
 
 export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => {
   const { closeHandler, isOpen, task, templateId, phaseId } = props;
-  const { orgid } = router.query;
-  const user = useUserStore((s) => s.user, shallow);
+  const params = useParams<{ orgid: string }>();
+  const orgid = params?.orgid ?? '';
+  const user = useUserStore(useShallow((s) => s.user));
   const { data: orgTreeData } = useOrgTreeStore();
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);
   const { handleUpdate, handleCreate } = useCrudHelper('task');
   const toastMessage = useSnackbar();
-  let formSchema = yup.object({
+  const formSchema = yup.object({
     heading: yup.string().min(1, t('task:errors.heading')).required(t('task:errors.heading')),
     headingReference: yup.string().optional(),
     text: yup.string().optional().max(2048, t('task:errors.text')),
@@ -53,7 +57,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
     optional: yup.boolean().optional(),
   });
 
-  const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid as string, 10));
+  const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid, 10));
   const level = org?.treeLevel || 0;
 
   const formControl = useForm<TaskCreateRequest & TaskUpdateRequest>({
@@ -97,6 +101,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
       sortOrder: Number.parseInt(task?.sortOrder || '0', 10) || 0,
       optional: task?.optional,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [task]);
 
   const onError = (error: any) => {
@@ -106,7 +111,7 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
   const onSubmit: SubmitHandler<TaskUpdateRequest | TaskCreateRequest> = (data) => {
     if (task.id && task.id !== '') {
       handleUpdate(() => {
-        return updateTask(orgid as string, templateId, phaseId, task.id, data as TaskUpdateRequest)
+        return updateTask(orgid, templateId, phaseId, task.id, data as TaskUpdateRequest)
           .then(() => {
             refresh(templateId);
           })
@@ -162,17 +167,15 @@ export const AdminEditTaskModal: React.FC<AdminEditTaskModalProps> = (props) => 
                 task.id ? task.roleType === 'MANAGER_FOR_NEW_MANAGER' || task.roleType === 'NEW_MANAGER' : false
               }
               onChange={() => {
-                if (
-                  getValues().roleType === 'MANAGER_FOR_NEW_EMPLOYEE' ||
-                  getValues().roleType === 'MANAGER_FOR_NEW_MANAGER'
-                ) {
-                  getValues().roleType === 'MANAGER_FOR_NEW_EMPLOYEE' ?
-                    setValue('roleType', 'MANAGER_FOR_NEW_MANAGER')
-                  : setValue('roleType', 'MANAGER_FOR_NEW_EMPLOYEE');
+                const current = getValues().roleType;
+                if (current === 'MANAGER_FOR_NEW_EMPLOYEE') {
+                  setValue('roleType', 'MANAGER_FOR_NEW_MANAGER');
+                } else if (current === 'MANAGER_FOR_NEW_MANAGER') {
+                  setValue('roleType', 'MANAGER_FOR_NEW_EMPLOYEE');
+                } else if (current === 'NEW_EMPLOYEE') {
+                  setValue('roleType', 'NEW_MANAGER');
                 } else {
-                  getValues().roleType === 'NEW_EMPLOYEE' ?
-                    setValue('roleType', 'NEW_MANAGER')
-                  : setValue('roleType', 'NEW_EMPLOYEE');
+                  setValue('roleType', 'NEW_EMPLOYEE');
                 }
               }}
               data-cy="role-type-checkbox"

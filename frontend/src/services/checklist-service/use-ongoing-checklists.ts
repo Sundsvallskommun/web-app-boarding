@@ -1,3 +1,5 @@
+'use client';
+
 import { OngoingEmployeeChecklist, PagingMetaData } from '@data-contracts/backend/data-contracts';
 import { useUserStore } from '@services/user-service/user-service';
 import { useEffect } from 'react';
@@ -62,6 +64,7 @@ export const useOngoingChecklists = (
     if (!loaded || !data) {
       refresh('');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, permissions.canViewAdmin]);
 
   return { data, loaded, loading, refresh };

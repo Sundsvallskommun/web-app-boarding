@@ -1,5 +1,4 @@
 import { Badge, Label } from '@sk-web-gui/react';
-import { useEffect, useState } from 'react';
 import { countFinishedTasks } from '@services/checklist-service/checklist-service';
 import { Phase, Task } from '@data-contracts/backend/data-contracts';
 import { setTimeToBeCompleted } from '@utils/fulfilment-status-utils';

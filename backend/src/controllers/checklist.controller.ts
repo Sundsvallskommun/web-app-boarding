@@ -26,8 +26,8 @@ interface ResponseData<T> {
 
 @Controller()
 export class ChecklistController {
-  private apiService = new ApiService();
-  private checklist = APIS.find(api => api.name === 'checklist');
+  private readonly apiService = new ApiService();
+  private readonly checklist = APIS.find(api => api.name === 'checklist');
 
   @Get('/employee-checklists/manager/:username')
   @OpenAPI({ summary: 'Fetch checklists as manager' })
@@ -87,7 +87,7 @@ export class ChecklistController {
     @QueryParam('sortBy') sortBy: string,
     @QueryParam('sortDirection') sortDirection: string,
   ): Promise<ResponseData<OngoingEmployeeChecklists>> {
-    let url = `/${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/employee-checklists/ongoing?page=${page}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}&employeeName=${employeeName}`;
+    const url = `/${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/employee-checklists/ongoing?page=${page}&limit=${limit}&sortBy=${sortBy}&sortDirection=${sortDirection}&employeeName=${employeeName}`;
 
     return await this.apiService.get<OngoingEmployeeChecklists>({ url }, req.user);
   }

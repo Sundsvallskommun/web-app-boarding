@@ -1,6 +1,5 @@
 import { APIS, MUNICIPALITY_ID } from '@/config';
 import { Checklist, SortorderRequest as ISortorderRequest, Task as TaskType, Events } from '@/data-contracts/checklist/data-contracts';
-import { HttpException } from '@/exceptions/HttpException';
 import { RequestWithUser } from '@/interfaces/auth.interface';
 import { hasOrgPermissions, hasOrgTemplatePermissions, hasSomePermission } from '@/middlewares/permissions.middleware';
 import { ChecklistApiResponse, ChecklistCreateRequest, Task, TaskCreateRequest, TaskUpdateRequest } from '@/responses/checklist.response';
@@ -20,8 +19,8 @@ interface ResponseData<T> {
 @Controller()
 @UseBefore(authMiddleware, hasSomePermission(['canEditAdmin', 'canEditDepartment']))
 export class TemplateController {
-  private apiService = new ApiService();
-  private checklist = APIS.find(api => api.name === 'checklist');
+  private readonly apiService = new ApiService();
+  private readonly checklist = APIS.find(api => api.name === 'checklist');
 
   @Get('/templates')
   @OpenAPI({ summary: 'Fetch all checklist templates' })
@@ -48,7 +47,7 @@ export class TemplateController {
   @UseBefore(hasOrgPermissions)
   async setSortorder(@Req() req: RequestWithUser, @Param('orgId') orgId: string, @Body() data: ISortorderRequest): Promise<ISortorderRequest> {
     const url = `${this.checklist.name}/${this.checklist.version}/${MUNICIPALITY_ID}/sortorder/${orgId}`;
-    return this.apiService.put<SortorderRequest, ISortorderRequest>({ url, data }, req.user).then(response => data);
+    return this.apiService.put<SortorderRequest, ISortorderRequest>({ url, data }, req.user).then(() => data);
   }
 
   @Post('/org/:orgId/templates/:templateId/phases/:phaseId/tasks')
