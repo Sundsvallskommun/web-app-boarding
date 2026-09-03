@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { useUserStore } from '@services/user-service/user-service';
 import { useShallow } from 'zustand/react/shallow';

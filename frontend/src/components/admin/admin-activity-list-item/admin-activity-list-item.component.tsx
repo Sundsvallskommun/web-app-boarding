@@ -1,12 +1,14 @@
+'use client';
+
 import { Task } from '@data-contracts/backend/data-contracts';
 import sanitized from '@services/sanitizer-service';
 import LucideIcon, { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Button, Label, Link, Modal, PopupMenu } from '@sk-web-gui/react';
-import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { AdminEditTaskModal } from '../admin-edit-task-modal/admin-edit-task-modal.component';
 import { removeTask, useTemplate } from '@services/template-service/template-service';
-import router from 'next/router';
+import { useParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 
 interface AdminActivityListItemProps {
   task: Task;
@@ -21,14 +23,15 @@ interface AdminActivityListItemProps {
 
 export const AdminActivityListItem: React.FC<AdminActivityListItemProps> = (props) => {
   const { task, templateId, phaseId, index, items, moveUp, moveDown, editable = false } = props;
-  const { orgid } = router.query;
+  const params = useParams<{ orgid: string }>();
+  const orgid = params?.orgid ?? '';
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { t } = useTranslation();
   const { refresh } = useTemplate(templateId);
   const [removeTaskModalOpen, setRemoveTaskModalOpen] = useState<boolean>(false);
 
   const onRemoveTask = () => {
-    removeTask(orgid as string, templateId, phaseId, task.id).then(() => {
+    removeTask(orgid, templateId, phaseId, task.id).then(() => {
       refresh(templateId);
       removeTaskModalCloseHandler();
     });

@@ -1,3 +1,5 @@
+'use client';
+
 import { AssignMentorModal } from '@components/assign-mentor-modal/assign-mentor-modal.component';
 import { DelegateMultipleChecklistsModal } from '@components/delegate-checklists-modal/delegate-checklists-modal.component';
 import { removeDelegation } from '@services/checklist-service/checklist-service';
@@ -13,7 +15,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDelegatedUsers } from '@services/user-service/use-delegated-user';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 interface ChecklistSidebarProps {
   isUserChecklist: boolean;
@@ -26,12 +28,11 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
     permissions: { isManager, canEditAdmin, canEditDepartment },
   } = useUserStore(useShallow((state) => state.user));
 
-  const router = useRouter();
-  const { pathname } = router;
+  const pathname = usePathname();
 
   const canAssign =
     (isManager && !isUserChecklist && !isDelegatedChecklist) ||
-    ((canEditAdmin || canEditDepartment) && pathname.includes('/admin'));
+    ((canEditAdmin || canEditDepartment) && pathname?.includes('/admin'));
 
   const { refresh, data } = useChecklist();
   const { refresh: refreshManagedChecklists } = useManagedChecklists();
@@ -103,7 +104,7 @@ export const ChecklistSidebar: React.FC<ChecklistSidebarProps> = ({ isUserCheckl
           </p>
         </div>
 
-        {(isDelegatedChecklist || pathname.includes('/admin')) && (
+        {(isDelegatedChecklist || pathname?.includes('/admin')) && (
           <div className="mt-16">
             <strong>{t('common:manager')}</strong>
             <p className="m-0">
