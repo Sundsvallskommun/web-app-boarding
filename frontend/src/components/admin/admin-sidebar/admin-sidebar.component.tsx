@@ -1,3 +1,5 @@
+'use client';
+
 import { OrganizationMenu } from '@components/admin/organization-menu/organization-menu.component';
 import { SearchField } from '@sk-web-gui/react';
 import { useState } from 'react';

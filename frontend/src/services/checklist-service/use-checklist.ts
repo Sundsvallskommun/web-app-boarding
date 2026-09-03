@@ -1,3 +1,5 @@
+'use client';
+
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { useCrudHelper } from '@utils/use-crud-helpers';
 import { useEffect } from 'react';

@@ -1,15 +1,16 @@
+'use client';
+
 import { PageHeader } from '@layouts/page-header/page-header.component';
 import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useUserStore } from '@services/user-service/user-service';
 import Breadcrumb from '@sk-web-gui/breadcrumb';
-import { useTranslation } from 'next-i18next';
-import Head from 'next/head';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { capitalize } from 'underscore.string';
 import { useShallow } from 'zustand/react/shallow';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { InfoBanner } from '@components/common/info-banner/info-banner.component';
+import { useTranslation } from 'react-i18next';
 
 export interface DefaultLayoutProps {
   children: React.ReactNode;
@@ -46,15 +47,15 @@ export default function DefaultLayout({
     }
   };
 
+  useEffect(() => {
+    document.title = title || fullTitle;
+  }, [title, fullTitle]);
+
   const { data } = useChecklist();
 
   return (
     <div className="DefaultLayout full-page-layout bg-background-100">
       <InfoBanner />
-      <Head>
-        <title>{title ? title : fullTitle}</title>
-        <meta name="description" content={title ? title : `${process.env.NEXT_PUBLIC_APP_NAME}`} />
-      </Head>
 
       <NextLink href="#content" onClick={setFocusToMain} className="next-link-a" data-cy="systemMessage-a">
         {t('layout:header.goto_content')}
@@ -64,7 +65,7 @@ export default function DefaultLayout({
         <PageHeader headerSubtitle={headerSubtitle} headerTitle={headerTitle || title} logoLinkHref={logoLinkHref} />
 
         <div className="main-container flex-grow relative w-full flex flex-col pt-20">
-          {pathname !== '/' && !pathname.includes('/admin') && user.permissions.isManager ?
+          {pathname && pathname !== '/' && !pathname.includes('/admin') && user.permissions.isManager ?
             <div className="w-full">
               <Breadcrumb className="container ">
                 <Breadcrumb.Item>

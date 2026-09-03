@@ -1,3 +1,5 @@
+'use client';
+
 import { ChecklistSidebar } from '@components/checklist-sidebar/checklist-sidebar.component';
 import DefaultLayout from '@layouts/default-layout/default-layout.component';
 import Main from '@layouts/main/main.component';
@@ -5,8 +7,7 @@ import { useChecklist } from '@services/checklist-service/use-checklist';
 import { useManagedChecklists } from '@services/checklist-service/use-managed-checklists';
 import { useUserStore } from '@services/user-service/user-service';
 import { Spinner } from '@sk-web-gui/spinner';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRouter } from 'next/router';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { TaskModal } from '@components/task-modal/task-modal.component';
 import { useShallow } from 'zustand/react/shallow';
@@ -14,28 +15,32 @@ import { useDelegatedChecklists } from '@services/checklist-service/use-delegate
 import { useTranslation } from 'react-i18next';
 import { IntroductionPhaseMenu } from '@components/common/introduction-phase-menu/introduction-phase-menu.component';
 import { IntroductionActivityList } from '@components/common/introduction-activity-list/introduction-activity-list.component';
-import { Button, Tabs, useSnackbar } from '@sk-web-gui/react';
+import { Button, Tabs } from '@sk-web-gui/react';
+import { useSnackbar } from '@utils/use-snackbar';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { removeDelegation } from '@services/checklist-service/checklist-service';
 
 const CUSTOM_TASK_OFFSET = 6000;
 
-export const CheckList: React.FC = () => {
+const getNewSortOrder = (data: EmployeeChecklist | null, currentPhase: number) => {
+  const customTasks = data?.phases?.[currentPhase]?.tasks.filter((task) => task.customTask) || [];
+  return (customTasks.at(-1)?.sortOrder || CUSTOM_TASK_OFFSET) + 1;
+};
+
+export default function CheckList() {
   const {
     username,
     email,
     permissions: { isManager },
   } = useUserStore(useShallow((s) => s.user));
   const router = useRouter();
-  const { query } = router;
+  const params = useParams<{ locale: string; userId: string }>();
+  const userId = params?.userId;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toastMessage = useSnackbar();
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
+  const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const [currentPhase, setCurrentPhase] = useState<number>(0);
   const [currentView, setCurrentView] = useState<number>(0);
@@ -53,7 +58,7 @@ export const CheckList: React.FC = () => {
     data: employeeChecklist,
     loading: checklistLoading,
     loaded: employeeChecklistLoaded,
-  } = useChecklist((query?.userId as string) || username);
+  } = useChecklist(userId || username);
   const {
     refresh: refreshDelegatedChecklists,
     data: delegatedChecklists,
@@ -70,18 +75,13 @@ export const CheckList: React.FC = () => {
   const isLoading = managedChecklistsLoading || checklistLoading || delegatedChecklistLoading;
   const isLoaded = managedChecklistLoaded && employeeChecklistLoaded && delegatedChecklistsLoaded;
 
-  const managedChecklist = managedChecklists.filter(
-    (checklist) => checklist.employee.username === query?.userId && checklist.manager.username === username
-  )[0];
+  const managedChecklist = managedChecklists.find(
+    (checklist) => checklist.employee.username === userId && checklist.manager.username === username
+  );
 
-  const delegatedChecklist = delegatedChecklists.filter(
-    (checklist) => checklist.employee.username === query?.userId
-  )[0];
+  const delegatedChecklist = delegatedChecklists.find((checklist) => checklist.employee.username === userId);
 
-  const data =
-    currentView === 0 && managedChecklist ? managedChecklist
-    : currentView === 0 && delegatedChecklist ? delegatedChecklist
-    : employeeChecklist;
+  const data = currentView === 0 ? (managedChecklist ?? delegatedChecklist ?? employeeChecklist) : employeeChecklist;
 
   const handleRemoveDelegation = () => {
     if (!data) return;
@@ -101,7 +101,7 @@ export const CheckList: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!isManager || (isManager && employeeChecklist?.employee?.username === query?.userId)) {
+    if (!isManager || employeeChecklist?.employee?.username === userId) {
       setCurrentView(1);
       setIsUserChecklist(true);
     }
@@ -112,33 +112,27 @@ export const CheckList: React.FC = () => {
     setCurrentPhase(0);
   }, [currentView]);
 
-  const customTasksLength = data?.phases?.[currentPhase]?.tasks.filter((t) => t.customTask).length || 0;
-  const newSortOrder =
-    (data?.phases?.[currentPhase]?.tasks.filter((t) => t.customTask)?.[customTasksLength - 1]?.sortOrder ||
-      CUSTOM_TASK_OFFSET) + 1;
+  const newSortOrder = getNewSortOrder(data, currentPhase);
 
-  const renderedData = (data: EmployeeChecklist) =>
-    data ?
-      <>
-        <div className="grow rounded bg-background-content border-1 border-divider">
-          <IntroductionPhaseMenu
-            data={data}
-            currentPhase={currentPhase}
-            setCurrentPhase={setCurrentPhase}
-            currentView={currentView}
-            refreshAllChecklists={refreshAllChecklists}
-          />
-          <div className="py-24 px-40">
-            <IntroductionActivityList
-              data={data}
-              currentView={currentView}
-              currentPhase={currentPhase}
-              isUserChecklist={isUserChecklist}
-            />
-          </div>
-        </div>
-      </>
-    : null;
+  const renderedData = (data: EmployeeChecklist) => (
+    <div className="grow rounded bg-background-content border-1 border-divider">
+      <IntroductionPhaseMenu
+        data={data}
+        currentPhase={currentPhase}
+        setCurrentPhase={setCurrentPhase}
+        currentView={currentView}
+        refreshAllChecklists={refreshAllChecklists}
+      />
+      <div className="py-24 px-40">
+        <IntroductionActivityList
+          data={data}
+          currentView={currentView}
+          currentPhase={currentPhase}
+          isUserChecklist={isUserChecklist}
+        />
+      </div>
+    </div>
+  );
 
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
@@ -223,21 +217,4 @@ export const CheckList: React.FC = () => {
       />
     </DefaultLayout>
   );
-};
-
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, [
-      'common',
-      'layout',
-      'crud',
-      'checklists',
-      'delegation',
-      'task',
-      'mentor',
-      'user',
-    ])),
-  },
-});
-
-export default CheckList;
+}

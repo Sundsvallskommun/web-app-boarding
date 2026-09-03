@@ -1,3 +1,5 @@
+'use client';
+
 import { AdminActivityListItem } from '@components/admin/admin-activity-list-item/admin-activity-list-item.component';
 import { AdminEditTaskModal } from '@components/admin/admin-edit-task-modal/admin-edit-task-modal.component';
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
@@ -13,12 +15,12 @@ import {
 } from '@services/template-service/template-service';
 import { useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
-import { Button, Label, useConfirm, useSnackbar, Tabs, Modal } from '@sk-web-gui/react';
+import { Button, Label, useConfirm, Tabs, Modal } from '@sk-web-gui/react';
+import { useSnackbar } from '@utils/use-snackbar';
 import { findOrgInTree } from '@utils/find-org-in-tree';
 import dayjs from 'dayjs';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRouter } from 'next/router';
-import { useCallback, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { ReactNode, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from 'underscore.string';
 import { AdminTemplateSidebar } from '@components/admin/admin-template-sidebar/admin-template-sidebar.component';
@@ -28,24 +30,25 @@ import { useShallow } from 'zustand/react/shallow';
 export const EditTemplate = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { templateid, orgid } = router.query;
+  const params = useParams<{ orgid: string; templateid: string }>();
+  const orgid = params?.orgid ?? '';
+  const templateid = params?.templateid ?? '';
   const { data, refresh, loaded, loading } = useTemplate(templateid as string);
   const { data: orgTreeData } = useOrgTreeStore();
-  const { data: orgData } = useOrgTemplates(parseInt(orgid as string, 10));
+  const { data: orgData } = useOrgTemplates(Number.parseInt(orgid, 10));
   const user = useUserStore(useShallow((s) => s.user));
   const [currentView, setCurrentView] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [phaseId, setPhaseId] = useState<string>();
   const confirm = useConfirm();
   const toastMessage = useSnackbar();
-  const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid as string, 10));
-  const [phaseIndex, setPhaseIndex] = useState<number>(0);
+  const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid, 10));
   const [activateTemplateModalOpen, setActivateTemplateModalOpen] = useState<boolean>(false);
 
   const editable = useCallback(
     (checklist: Checklist, user: User) => {
       const userHasOrgPermission =
-        user.role === 'department_admin' && user.children.includes(parseInt(orgid as string, 10));
+        user.role === 'department_admin' && user.children.includes(Number.parseInt(orgid, 10));
       const userIsGlobalAdmin = user.role === 'global_admin';
       const editableLifeCycle =
         checklist.lifeCycle === 'CREATED' || (!templateVersioningEnabled && checklist.lifeCycle === 'ACTIVE');
@@ -75,12 +78,19 @@ export const EditTemplate = () => {
       permission: 'ADMIN',
       questionType: 'YES_OR_NO',
       fulfilmentStatus: 'EMPTY',
-      sortOrder: data && org ? (1000 * org?.treeLevel + data.phases[phaseIndex].tasks?.length + 1).toString() : '0',
+      sortOrder:
+        data && org ?
+          (
+            1000 * org.treeLevel +
+            (data.phases.find((phase) => phase.id === phaseId)?.tasks?.length ?? 0) +
+            1
+          ).toString()
+        : '0',
     };
   };
 
   const getSortorder = (checklist: Checklist) => {
-    const org = findOrgInTree(Object.values(orgTreeData), parseInt(orgid as string, 10));
+    const org = findOrgInTree(Object.values(orgTreeData), Number.parseInt(orgid, 10));
     const level = org?.treeLevel || 0;
     const order: SortorderRequest = {
       phaseOrder: checklist.phases?.map((phase, index) => ({
@@ -89,7 +99,7 @@ export const EditTemplate = () => {
         taskOrder:
           phase.tasks
             // WHY IS SORTORDER NOT A NUMBER FOR TASKS WHEN IT IS FOR PHASES??
-            ?.sort((a, b) => parseInt(a.sortOrder, 10) - parseInt(b.sortOrder, 10))
+            ?.toSorted((a, b) => Number.parseInt(a.sortOrder, 10) - Number.parseInt(b.sortOrder, 10))
             .map((task, index) => {
               // sortOrder for manager activities gets an additional prefix of 500 to make sure their sortOrders
               // do not overlap with employee activities
@@ -130,7 +140,7 @@ export const EditTemplate = () => {
     checklist.phases[phaseIndex] = thisPhase;
 
     const newSortorder = getSortorder(checklist);
-    await setSortorder(orgid as string, checklist.id, newSortorder);
+    await setSortorder(orgid, checklist.id, newSortorder);
     refresh(templateid as string);
   }
 
@@ -140,9 +150,9 @@ export const EditTemplate = () => {
 
   const onActivate = () => {
     if (data) {
-      activateTemplate(orgid as string, data.id)
+      activateTemplate(orgid, data.id)
         .then(() => {
-          refresh(templateid as string);
+          refresh(templateid);
           closeActivateTemplateModalHandler();
         })
         .catch(() => {
@@ -187,7 +197,7 @@ export const EditTemplate = () => {
   const filteredTasks = useCallback(
     (checklist: Checklist, roleTypes: string[]) => {
       return checklist?.phases
-        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .toSorted((a, b) => a.sortOrder - b.sortOrder)
         .map((phase, index) => (
           <div key={phase.id} className="py-20 px-20 mb-48" data-cy={`phase-section-${index}`}>
             <h3 className="mb-12 text-h3-md"> {phase.name}</h3>
@@ -218,7 +228,6 @@ export const EditTemplate = () => {
                 showBackground={false}
                 color="info"
                 onClick={() => {
-                  setPhaseIndex(index);
                   setPhaseId(phase.id);
                   setIsOpen(true);
                 }}
@@ -232,6 +241,38 @@ export const EditTemplate = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   );
+
+  const lifeCycle = data?.lifeCycle;
+  const isActiveTemplate = lifeCycle === 'ACTIVE';
+
+  let lifeCycleLabel = t('templates:deprecated');
+  if (isActiveTemplate) {
+    lifeCycleLabel = t('templates:active');
+  } else if (lifeCycle === 'CREATED') {
+    lifeCycleLabel = t('templates:created');
+  }
+
+  const isEditableTemplate = !!data && editable(data, user);
+  const canActivateTemplate = isEditableTemplate && lifeCycle === 'CREATED';
+  const canCreateNewVersion =
+    isEditableTemplate &&
+    templateVersioningEnabled &&
+    orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0;
+
+  let templateActionButton: ReactNode = null;
+  if (canActivateTemplate) {
+    templateActionButton = (
+      <Button size="md" onClick={() => setActivateTemplateModalOpen(true)}>
+        {t('templates:activate.title')}
+      </Button>
+    );
+  } else if (canCreateNewVersion) {
+    templateActionButton = (
+      <Button size="sm" color="vattjom" onClick={onNewVersion}>
+        {t('templates:new_version.confirm')}
+      </Button>
+    );
+  }
 
   return (
     <AdminLayout
@@ -248,33 +289,12 @@ export const EditTemplate = () => {
                   {capitalize(data?.displayName || '')}
                 </h2>
 
-                <Label
-                  className="mx-md my-xs"
-                  color={data?.lifeCycle === 'ACTIVE' ? 'gronsta' : 'tertiary'}
-                  inverted
-                  rounded
-                >
-                  {data?.lifeCycle === 'ACTIVE' ?
-                    t('templates:active')
-                  : data?.lifeCycle === 'CREATED' ?
-                    t('templates:created')
-                  : t('templates:deprecated')}
+                <Label className="mx-md my-xs" color={isActiveTemplate ? 'gronsta' : 'tertiary'} inverted rounded>
+                  {lifeCycleLabel}
                 </Label>
               </div>
 
-              {editable(data, user) && data?.lifeCycle === 'CREATED' ?
-                <Button size="md" onClick={() => setActivateTemplateModalOpen(true)}>
-                  {t('templates:activate.title')}
-                </Button>
-              : (
-                editable(data, user) &&
-                templateVersioningEnabled &&
-                orgData?.checklists?.filter((c) => c.lifeCycle === 'CREATED').length === 0
-              ) ?
-                <Button size="sm" color="vattjom" onClick={onNewVersion}>
-                  {t('templates:new_version.confirm')}
-                </Button>
-              : null}
+              {templateActionButton}
             </div>
             {loaded && (
               <div>
@@ -311,7 +331,7 @@ export const EditTemplate = () => {
         <AdminEditTaskModal
           closeHandler={closeHandler}
           isOpen={isOpen}
-          templateId={templateid as string}
+          templateId={templateid}
           phaseId={phaseId}
           task={newTask(currentView === 0 ? 'MANAGER_FOR_NEW_EMPLOYEE' : 'NEW_EMPLOYEE')}
         />
@@ -333,19 +353,5 @@ export const EditTemplate = () => {
     </AdminLayout>
   );
 };
-
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, [
-      'common',
-      'example',
-      'layout',
-      'admin',
-      'checklists',
-      'task',
-      'templates',
-    ])),
-  },
-});
 
 export default EditTemplate;

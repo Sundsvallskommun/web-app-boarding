@@ -1,3 +1,5 @@
+'use client';
+
 import { TemplateCard } from '@components/admin/template-card/template-card.component';
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
 import { Template, User } from '@data-contracts/backend/data-contracts';
@@ -6,24 +8,24 @@ import { updateCommunicationChannels, useOrgTemplates, useOrgTreeStore } from '@
 import { createTemplate, useTemplate } from '@services/template-service/template-service';
 import { useUserStore } from '@services/user-service/user-service';
 import LucideIcon from '@sk-web-gui/lucide-icon';
-import { Button, Switch, useSnackbar } from '@sk-web-gui/react';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRouter } from 'next/router';
+import { Button, Switch } from '@sk-web-gui/react';
+import { useSnackbar } from '@utils/use-snackbar';
+import { useRouter, useParams } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useShallow } from 'zustand/react/shallow';
+import { useTranslation } from 'react-i18next';
 
 export const OrgTemplate: React.FC = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const query = router.query;
+  const params = useParams<{ orgid: string }>();
   const user = useUserStore(useShallow((s) => s.user));
-  const orgid = Array.isArray(query?.orgid) ? query.orgid[0] : query.orgid || '';
+  const orgid = params?.orgid || '';
   const toastMessage = useSnackbar();
   const { data: orgTree } = useOrgTreeStore();
 
   const { setData: setTemplateData } = useTemplate('');
-  const { data, loaded, loading, refresh: refreshOrgTemplates } = useOrgTemplates(parseInt(orgid as string, 10));
+  const { data, loaded, loading, refresh: refreshOrgTemplates } = useOrgTemplates(Number.parseInt(orgid, 10));
 
   useEffect(() => {
     setTemplateData(null);
@@ -33,7 +35,7 @@ export const OrgTemplate: React.FC = () => {
   const editable = useCallback(
     (orgId: string, user: User) => {
       const userHasOrgPermission =
-        user.role === 'department_admin' && user.children.includes(parseInt(orgid as string, 10));
+        user.role === 'department_admin' && user.children.includes(Number.parseInt(orgid, 10));
       const userIsGlobalAdmin = user.role === 'global_admin';
       return userHasOrgPermission || userIsGlobalAdmin;
     },
@@ -101,13 +103,13 @@ export const OrgTemplate: React.FC = () => {
       {loading || !data ?
         <LoaderFullScreen />
       : <div className="my-40 flex justify-between">
-          <div>
+          <div className="pt-40">
             <h2 className="text-h2-sm md:text-h2-md xl:text-h2-lg mb-40">{data?.organizationName}</h2>
             {loaded && (
               <div className="flex flex-wrap">
                 {currentTemplates.length > 0 ?
                   currentTemplates
-                    .sort((a, b) => b.version - a.version)
+                    .toSorted((a, b) => b.version - a.version)
                     .map((template) => <TemplateCard orgId={orgid} template={template} key={template.id} />)
                 : <div>
                     <p>{t('templates:no_org_template', { org: data?.organizationName })}</p>
@@ -160,11 +162,5 @@ export const OrgTemplate: React.FC = () => {
     </AdminLayout>
   );
 };
-
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ['common', 'example', 'layout', 'admin', 'checklists', 'templates'])),
-  },
-});
 
 export default OrgTemplate;

@@ -67,7 +67,7 @@ export const useUserStore = create<State & Actions>()(
           user = res.data;
           set(() => ({ user: user }));
         }
-        return { data: user };
+        return res.error ? res : { data: user };
       },
       reset: () => {
         set(initialState);

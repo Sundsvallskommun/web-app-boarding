@@ -1,9 +1,11 @@
+'use client';
+
 import { EmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import { Avatar, Button, Checkbox, Input, Pagination, SortMode, Table } from '@sk-web-gui/react';
 import { Spinner } from '@sk-web-gui/spinner';
 import { getChecklistStatusLabel } from '@utils/get-checklist-status';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { DelegateMultipleChecklistsModal } from '@components/delegate-checklists-modal/delegate-checklists-modal.component';

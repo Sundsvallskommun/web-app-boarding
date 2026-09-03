@@ -1,7 +1,9 @@
+'use client';
+
 import React, { useEffect, useMemo, useState } from 'react';
 import { useOngoingChecklists } from '@services/checklist-service/use-ongoing-checklists';
 import { Button, Input, Pagination, SearchField, SortMode, Table } from '@sk-web-gui/react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { OngoingEmployeeChecklist } from '@data-contracts/backend/data-contracts';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';

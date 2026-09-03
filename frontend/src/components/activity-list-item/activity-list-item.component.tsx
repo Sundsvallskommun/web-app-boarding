@@ -5,11 +5,12 @@ import sanitized from '@services/sanitizer-service';
 import { useUserInformation } from '@services/user-service/use-user-information';
 import { useUserStore } from '@services/user-service/user-service';
 import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
-import { Button, Checkbox, cx, Label, PopupMenu, useSnackbar } from '@sk-web-gui/react';
-import { useTranslation } from 'next-i18next';
+import { Button, Checkbox, cx, Label, PopupMenu } from '@sk-web-gui/react';
+import { useSnackbar } from '@utils/use-snackbar';
 import React, { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { OptionalActivityButton } from '@components/activity-list-item/optional-activity-button.component';
+import { useTranslation } from 'react-i18next';
 
 const isChecked = (fulfilmentStatus: string) => {
   switch (fulfilmentStatus) {
