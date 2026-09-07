@@ -27,7 +27,9 @@ export const LoginGuard: React.FC<{ children?: React.ReactNode }> = ({ children 
       const res = await getMe();
       if (res.error && !pathname?.includes('/login')) {
         logout();
-        router.push(`/login?failMessage=${encodeURIComponent(res.message ?? String(res.error))}`);
+        const existingFailMessage = new URLSearchParams(window.location.search).get('failMessage');
+        const failMessage = existingFailMessage || res.message || String(res.error);
+        router.push(`/login?failMessage=${encodeURIComponent(failMessage)}`);
       }
     };
     setMounted(true);

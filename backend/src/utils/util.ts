@@ -1,4 +1,4 @@
-import { API_BASE_URL, BASE_URL_PREFIX } from '@config';
+import { API_BASE_URL, BASE_URL_PREFIX, ORIGIN } from '@config';
 /**
  * @method isEmpty
  * @param {String | Number | Object} value
@@ -55,6 +55,18 @@ export const formatOrgNr = (orgNr: string, format: OrgNumberFormat = OrgNumberFo
     return; // NOTE: incorrect org number
   }
   return format === OrgNumberFormat.DASH ? orgNumber.substring(0, 6) + '-' + orgNumber.substring(6, 10) : orgNumber;
+};
+
+export const isValidOrigin = (string: string) => {
+  const allowedOrigins = (ORIGIN ?? '')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(origin => origin !== '');
+  try {
+    return allowedOrigins.includes(new URL(string).origin);
+  } catch {
+    return false;
+  }
 };
 
 export const isValidUrl = (string: string) => {

@@ -44,7 +44,7 @@ import { logger, stream } from '@utils/logger';
 import { Profile } from '@interfaces/profile.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { join } from 'path';
-import { isValidUrl } from '@utils/util';
+import { isValidOrigin, isValidUrl } from '@utils/util';
 import { additionalConverters } from '@utils/custom-validation-classes';
 import { getPermissions, getRole } from '@services/authorization.service';
 import ApiService from './services/api.service';
@@ -338,22 +338,16 @@ class App {
     this.app.use(passport.session());
     passport.use('saml', samlStrategy);
 
-    this.app.get(
-      `${BASE_URL_PREFIX}/saml/login`,
-      (req, res, next) => {
-        if (req.session.returnTo) {
-          req.query.RelayState = req.session.returnTo;
-        } else if (req.query.successRedirect) {
-          req.query.RelayState = req.query.successRedirect;
-        }
-        next();
-      },
-      (req, res, next) => {
-        passport.authenticate('saml', {
-          failureRedirect: SAML_FAILURE_REDIRECT,
-        })(req, res, next);
-      },
-    );
+    this.app.get(`${BASE_URL_PREFIX}/saml/login`, (req, res, next) => {
+      const successRedirect = (req.session.returnTo as string | undefined) || (req.query.successRedirect as string | undefined);
+      const failureRedirect = req.query.failureRedirect as string | undefined;
+      const relayState = [successRedirect, failureRedirect].filter(Boolean).join(',');
+
+      passport.authenticate('saml', {
+        failureRedirect: SAML_FAILURE_REDIRECT,
+        ...(relayState ? { additionalParams: { RelayState: relayState } } : {}),
+      })(req, res, next);
+    });
 
     this.app.get(`${BASE_URL_PREFIX}/saml/metadata`, (req, res) => {
       res.type('application/xml');
@@ -398,7 +392,7 @@ class App {
         if (req.session.messages?.length > 0) {
           failureRedirect = successRedirect + `?failMessage=${req.session.messages[0]}`;
         } else {
-          failureRedirect = successRedirect + `?failMessage='SAML_UNKNOWN_ERROR'`;
+          failureRedirect = successRedirect + `?failMessage=SAML_UNKNOWN_ERROR`;
         }
         if (failureRedirect) {
           res.redirect(failureRedirect);
@@ -409,20 +403,38 @@ class App {
     });
 
     this.app.post(`${BASE_URL_PREFIX}/saml/login/callback`, bodyParser.urlencoded({ extended: false }), (req, res, next) => {
-      let successRedirect = ORIGIN;
-      if (isValidUrl(req.body.RelayState)) {
-        successRedirect = req.body.RelayState;
-      }
+      const [successUrl, failureUrl] = String(req.body?.RelayState ?? '').split(',');
+      const successRedirect = isValidUrl(successUrl) && isValidOrigin(successUrl) ? successUrl : ORIGIN;
+      const failureRedirect = new URL(isValidUrl(failureUrl) && isValidOrigin(failureUrl) ? failureUrl : successRedirect);
 
-      const failureRedirect =
-        req.session.messages?.length > 0
-          ? `${successRedirect}?failMessage=${req.session.messages[0]}`
-          : `${successRedirect}?failMessage=SAML_UNKNOWN_ERROR`;
+      const redirectToFailure = (failMessage: string) => {
+        failureRedirect.searchParams.set('failMessage', failMessage);
+        res.redirect(failureRedirect.toString());
+      };
 
-      passport.authenticate('saml', {
-        successReturnToOrRedirect: successRedirect,
-        failureRedirect: failureRedirect,
-        failureMessage: true,
+      passport.authenticate('saml', (err: Error | null, user: Express.User | false | null, info?: { name?: string; message?: string }) => {
+        if (err) {
+          logger.error(`SAML callback error :: name=${err?.name} :: message=${err?.message}`);
+          return redirectToFailure(err?.name || 'SAML_UNKNOWN_ERROR');
+        }
+
+        if (!user) {
+          logger.error(`SAML callback failed :: name=${info?.name} :: message=${info?.message}`);
+          return redirectToFailure(info?.name || 'NO_USER');
+        }
+
+        if (!(user as { username?: string }).username) {
+          logger.error('SAML callback failed :: user could not be constructed');
+          return redirectToFailure('NO_USER');
+        }
+
+        req.login(user, loginErr => {
+          if (loginErr) {
+            logger.error(`SAML req.login error :: ${loginErr?.message ?? loginErr}`);
+            return redirectToFailure('SAML_UNKNOWN_ERROR');
+          }
+          return res.redirect(successRedirect);
+        });
       })(req, res, next);
     });
   }
