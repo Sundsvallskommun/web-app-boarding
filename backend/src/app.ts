@@ -8,6 +8,7 @@ import session from 'express-session';
 import createMemoryStore from 'memorystore';
 import createFileStore from 'session-file-store';
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
@@ -325,6 +326,12 @@ class App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
 
+    const samlLimiter = rateLimit({
+      windowMs: 60 * 1000,
+      limit: 100,
+    });
+    this.app.set('trust proxy', 1);
+
     this.app.use(
       session({
         secret: SECRET_KEY,
@@ -338,7 +345,7 @@ class App {
     this.app.use(passport.session());
     passport.use('saml', samlStrategy);
 
-    this.app.get(`${BASE_URL_PREFIX}/saml/login`, (req, res, next) => {
+    this.app.get(`${BASE_URL_PREFIX}/saml/login`, samlLimiter, (req, res, next) => {
       const successRedirect = (req.session.returnTo as string | undefined) || (req.query.successRedirect as string | undefined);
       const failureRedirect = req.query.failureRedirect as string | undefined;
       const relayState = [successRedirect, failureRedirect].filter(Boolean).join(',');
@@ -355,7 +362,7 @@ class App {
       res.status(200).send(metadata);
     });
 
-    this.app.get(`${BASE_URL_PREFIX}/saml/logout`, (req, res, next) => {
+    this.app.get(`${BASE_URL_PREFIX}/saml/logout`, samlLimiter, (req, res, next) => {
       const successRedirect = req.query.successRedirect as string | undefined;
       const redirectTo = isValidUrl(successRedirect) && isValidOrigin(successRedirect) ? successRedirect : ORIGIN;
       samlStrategy.logout(req as any, () => {
@@ -368,7 +375,7 @@ class App {
       });
     });
 
-    this.app.get(`${BASE_URL_PREFIX}/saml/logout/callback`, bodyParser.urlencoded({ extended: false }), (req, res, next) => {
+    this.app.get(`${BASE_URL_PREFIX}/saml/logout/callback`, samlLimiter, bodyParser.urlencoded({ extended: false }), (req, res, next) => {
       req.logout(err => {
         if (err) {
           return next(err);
@@ -387,7 +394,7 @@ class App {
       });
     });
 
-    this.app.post(`${BASE_URL_PREFIX}/saml/login/callback`, bodyParser.urlencoded({ extended: false }), (req, res, next) => {
+    this.app.post(`${BASE_URL_PREFIX}/saml/login/callback`, samlLimiter, bodyParser.urlencoded({ extended: false }), (req, res, next) => {
       const [successUrl, failureUrl] = String(req.body?.RelayState ?? '').split(',');
       const successRedirect = isValidUrl(successUrl) && isValidOrigin(successUrl) ? successUrl : ORIGIN;
       const failureRedirect = new URL(isValidUrl(failureUrl) && isValidOrigin(failureUrl) ? failureUrl : successRedirect);
