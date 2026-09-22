@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Button, FormErrorMessage } from '@sk-web-gui/react';
+import { Button } from '@sk-web-gui/react';
+import { LucideIcon as Icon } from '@sk-web-gui/lucide-icon';
 import EmptyLayout from '@layouts/empty-layout/empty-layout.component';
 import LoaderFullScreen from '@components/loader/loader-fullscreen';
 import { appURL } from '@utils/app-url';
@@ -11,41 +12,41 @@ import { useTranslation } from 'react-i18next';
 export default function Start() {
   const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState('');
-  const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation();
 
   const isLoggedOut = searchParams?.has('loggedout') ?? false;
   const failMessage = searchParams?.get('failMessage');
-  const autoLogin = true;
+  const showLogin = isLoggedOut || (!!failMessage && failMessage !== 'NOT_AUTHORIZED');
 
   const initialFocus = useRef<HTMLButtonElement>(null);
-  const setInitialFocus = () => {
-    setTimeout(() => {
-      if (initialFocus.current) initialFocus.current.focus();
-    });
-  };
 
-  const onLogin = () => {
-    const path = searchParams?.get('path') || '';
+  const onLogin = useCallback(() => {
+    const searchPath = searchParams?.get('path') || '';
+    const path = searchPath.match(/\/login|\/logout/) ? '' : searchPath;
     const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/saml/login`);
     url.searchParams.set('successRedirect', `${appURL()}${path}`);
+    url.searchParams.set('failureRedirect', `${appURL()}/login`);
     window.location.assign(url.toString());
-  };
+  }, [searchParams]);
 
   useEffect(() => {
-    setInitialFocus();
-    setTimeout(() => setMounted(true), 500);
-    if (isLoggedOut) {
-      window.history.replaceState(null, '', '/login');
-    } else if (!failMessage && autoLogin) {
+    if (!showLogin) {
       onLogin();
-    } else if (failMessage) {
+      return;
+    }
+
+    if (failMessage) {
       setErrorMessage(t(`login:errors.${failMessage}`));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setIsLoading(false);
+  }, [showLogin, failMessage, onLogin, t]);
 
-  if (!mounted && !failMessage) {
+  useEffect(() => {
+    if (!isLoading) initialFocus.current?.focus();
+  }, [isLoading]);
+
+  if (isLoading) {
     return <LoaderFullScreen />;
   }
 
@@ -53,17 +54,21 @@ export default function Start() {
     <EmptyLayout title={`${process.env.NEXT_PUBLIC_APP_NAME} - Logga In`}>
       <main>
         <div className="flex items-center justify-center min-h-screen">
-          <div className="max-w-5xl w-full flex flex-col text-light-primary bg-inverted-background-content p-20 shadow-lg text-left">
+          <div className="max-w-5xl w-full flex flex-col text-light-primary bg-inverted-background-content p-20 shadow-lg text-left rounded-cards">
             <div className="mb-14">
               <h1 className="mb-10 text-xl">{process.env.NEXT_PUBLIC_APP_NAME}</h1>
               <p className="my-0">{t('login:description')}</p>
             </div>
 
-            <Button inverted onClick={() => onLogin()} ref={initialFocus} data-cy="loginButton">
+            <Button inverted onClick={onLogin} ref={initialFocus} data-cy="loginButton">
               {t('common:login')}
             </Button>
 
-            {errorMessage && <FormErrorMessage className="mt-lg">{errorMessage}</FormErrorMessage>}
+            {errorMessage && (
+              <p className="flex gap-8 mt-lg text-inverted-error items-center" role="alert">
+                <Icon name="info" size={21} /> {errorMessage}
+              </p>
+            )}
           </div>
         </div>
       </main>
