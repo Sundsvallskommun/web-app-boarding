@@ -355,28 +355,18 @@ class App {
       res.status(200).send(metadata);
     });
 
-    this.app.get(
-      `${BASE_URL_PREFIX}/saml/logout`,
-      (req, res, next) => {
-        if (req.session.returnTo) {
-          req.query.RelayState = req.session.returnTo;
-        } else if (req.query.successRedirect) {
-          req.query.RelayState = req.query.successRedirect;
-        }
-        next();
-      },
-      (req, res, next) => {
-        const successRedirect = req.query.successRedirect;
-        samlStrategy.logout(req as any, () => {
-          req.logout(err => {
-            if (err) {
-              return next(err);
-            }
-            res.redirect(successRedirect as string);
-          });
+    this.app.get(`${BASE_URL_PREFIX}/saml/logout`, (req, res, next) => {
+      const successRedirect = req.query.successRedirect as string | undefined;
+      const redirectTo = isValidUrl(successRedirect) && isValidOrigin(successRedirect) ? successRedirect : ORIGIN;
+      samlStrategy.logout(req as any, () => {
+        req.logout(err => {
+          if (err) {
+            return next(err);
+          }
+          res.redirect(redirectTo);
         });
-      },
-    );
+      });
+    });
 
     this.app.get(`${BASE_URL_PREFIX}/saml/logout/callback`, bodyParser.urlencoded({ extended: false }), (req, res, next) => {
       req.logout(err => {
@@ -384,21 +374,16 @@ class App {
           return next(err);
         }
 
-        let successRedirect, failureRedirect;
-        if (isValidUrl(req.body.RelayState)) {
-          successRedirect = req.body.RelayState;
-        }
+        const relayState = (req.query?.RelayState ?? req.body?.RelayState) as string | undefined;
+        const successRedirect = isValidUrl(relayState) && isValidOrigin(relayState) ? relayState : ORIGIN;
+        const failMessage = req.session?.messages?.[0];
 
-        if (req.session.messages?.length > 0) {
-          failureRedirect = successRedirect + `?failMessage=${req.session.messages[0]}`;
-        } else {
-          failureRedirect = successRedirect + `?failMessage=SAML_UNKNOWN_ERROR`;
+        if (failMessage) {
+          const failureRedirect = new URL(successRedirect);
+          failureRedirect.searchParams.set('failMessage', failMessage);
+          return res.redirect(failureRedirect.toString());
         }
-        if (failureRedirect) {
-          res.redirect(failureRedirect);
-        } else {
-          res.redirect(successRedirect);
-        }
+        res.redirect(successRedirect);
       });
     });
 
