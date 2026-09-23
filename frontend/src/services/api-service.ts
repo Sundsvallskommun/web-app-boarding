@@ -19,7 +19,7 @@ export const handleError = (error: any) => {
   }
   const currentPath = window.location.pathname;
   if (error?.response?.status === 401 && !currentPath.includes('login')) {
-    navigate?.(`/login?path=${encodeURIComponent(currentPath)}&failMessage=${encodeURIComponent(String(error))}`);
+    navigate?.(`/login?path=${encodeURIComponent(currentPath)}&failMessage=${encodeURIComponent(error.response?.data?.message ?? 'NOT_AUTHORIZED')}`);
   }
   throw error;
 };

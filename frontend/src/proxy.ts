@@ -24,6 +24,8 @@ export async function proxy(req: NextRequest) {
       if (response.status === 401) {
         const loginUrl = new URL('/login', origin);
         loginUrl.searchParams.set('path', pathname);
+        const failMessage = req.nextUrl.searchParams.get('failMessage');
+        if (failMessage) loginUrl.searchParams.set('failMessage', failMessage);
         return NextResponse.redirect(loginUrl);
       }
     } catch {}

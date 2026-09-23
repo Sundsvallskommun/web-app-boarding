@@ -1,8 +1,13 @@
 {
   "description": "Introduktioner för nyanställda",
   "errors": {
+    "NOT_AUTHORIZED": "Inte inloggad",
+    "NO_USER": "Misslyckades att konfigurera användare",
+    "AUTH_FAILED": "Inloggningen misslyckades",
+    "SAML_MISSING_PROFILE": "Användarprofil saknas",
     "SAML_MISSING_GROUP": "Användaren saknar rätt grupper",
     "SAML_MISSING_ATTRIBUTES": "Användaren saknar rätt attribut",
+    "SAML_UNKNOWN_ERROR": "Ett okänt fel uppstod vid inloggning",
     "MISSING_PERMISSIONS": "Användaren saknar rättigheter"
   }
 }
