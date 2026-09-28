@@ -103,7 +103,7 @@ export const AdminOngoingIntroductionsTable: React.FC = () => {
             <Table.Column>{checklist.employeeUsername}</Table.Column>
             <Table.Column>{checklist.departmentName}</Table.Column>
             <Table.Column>{checklist.managerName}</Table.Column>
-            <Table.Column>{dayjs(checklist.employmentDate).format('DD MMMM YYYY')}</Table.Column>
+            <Table.Column>{dayjs(checklist.employmentDate).format('D MMMM YYYY')}</Table.Column>
             <Table.Column className="justify-end">
               <Button
                 data-cy={`table-row-button-${idx}`}

@@ -37,7 +37,7 @@ export const AdminTemplateSidebarHistory: React.FC = () => {
                 <p className="font-normal -mt-[4px] mb-6">
                   {event.message} av {event.metadata[0].value}
                 </p>
-                <small className="mb-6">{dayjs(event.created).format('DD MMMM YYYY, HH.mm')}</small>
+                <small className="mb-6">{dayjs(event.created).format('D MMMM YYYY, HH.mm')}</small>
               </div>
             );
           })}
