@@ -31,23 +31,19 @@ export const CheckList: React.FC = () => {
     refresh: refreshManagedChecklists,
     data: managedChecklists,
     loaded: managedChecklistLoaded,
-    loading: managedChecklistLoading,
   } = useManagedChecklists();
   const {
     refresh: refreshChecklist,
     data: employeeChecklist,
     loaded: employeeChecklistLoaded,
-    loading: employeeChecklistLoading,
   } = useChecklist(userId || username);
   const {
     refresh: refreshDelegatedChecklists,
-    loading: delegatedChecklistLoading,
     loaded: delegatedChecklistLoaded,
   } = useDelegatedChecklists();
 
   const isLoaded = managedChecklistLoaded && employeeChecklistLoaded && delegatedChecklistLoaded;
-  const isLoading = managedChecklistLoading || employeeChecklistLoading || delegatedChecklistLoading;
-  const showSpinner = isLoading || !isLoaded;
+  const showSpinner = !isLoaded;
 
   const refreshAllChecklists = async () => {
     refreshChecklist();
