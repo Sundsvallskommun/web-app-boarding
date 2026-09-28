@@ -24,6 +24,7 @@ module.exports = withBundleAnalyzer({
   images: {
     remotePatterns: [{ protocol: 'https', hostname: process.env.DOMAIN_NAME }],
     formats: ['image/avif', 'image/webp'],
+    unoptimized: true,
   },
   basePath: process.env.BASE_PATH,
   sassOptions: {
