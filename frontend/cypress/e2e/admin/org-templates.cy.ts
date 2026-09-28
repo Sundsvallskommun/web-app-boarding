@@ -34,7 +34,7 @@ describe('Uses the organization templates', () => {
     cy.get('[data-cy^="template-card-"]').should('have.length', 1);
     cy.get('[data-cy="template-card-4b955690-f49d-4116-8c94-6076d93c6303"]').within(() => {
       cy.contains('Grund för checklista');
-      cy.contains('21 Nov 2024');
+      cy.contains('21 nov 2024');
       cy.contains('Publicerad');
     });
     cy.get('[data-cy="communication-channel-switch"]').should('exist');

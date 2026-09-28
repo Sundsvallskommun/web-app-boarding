@@ -30,7 +30,7 @@ module.exports = withBundleAnalyzer({
     prependData: `$basePath: '${process.env.BASE_PATH}';`,
   },
   experimental: {
-    optimizePackageImports: ['@sk-web-gui/core', '@sk-web-gui/react', 'lodash', 'dayjs'],
+    optimizePackageImports: ['@sk-web-gui/core', '@sk-web-gui/react', 'lodash'],
   },
   turbopack: {
     root: __dirname,

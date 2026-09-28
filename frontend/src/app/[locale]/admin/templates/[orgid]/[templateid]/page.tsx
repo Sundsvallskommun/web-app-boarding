@@ -299,7 +299,7 @@ export const EditTemplate = () => {
             {loaded && (
               <div>
                 <p className="text-small mb-40">
-                  {t('templates:properties.updated')} {dayjs(data?.updated).format('DD MMM YYYY, HH:mm')}
+                  {t('templates:properties.updated')} {dayjs(data?.updated).format('D MMM YYYY, HH:mm')}
                 </p>
                 <Tabs current={currentView} className="items-start" data-cy="template-tab-bar">
                   <Tabs.Item data-cy={`template-tabs-bar-item-0`}>

@@ -50,19 +50,16 @@ export default function CheckList() {
   const {
     refresh: refreshManagedChecklists,
     data: managedChecklists,
-    loading: managedChecklistsLoading,
     loaded: managedChecklistLoaded,
   } = useManagedChecklists();
   const {
     refresh: refreshChecklist,
     data: employeeChecklist,
-    loading: checklistLoading,
     loaded: employeeChecklistLoaded,
   } = useChecklist(userId || username);
   const {
     refresh: refreshDelegatedChecklists,
     data: delegatedChecklists,
-    loading: delegatedChecklistLoading,
     loaded: delegatedChecklistsLoaded,
   } = useDelegatedChecklists();
 
@@ -72,7 +69,6 @@ export default function CheckList() {
     refreshManagedChecklists(data?.manager.username);
   };
 
-  const isLoading = managedChecklistsLoading || checklistLoading || delegatedChecklistLoading;
   const isLoaded = managedChecklistLoaded && employeeChecklistLoaded && delegatedChecklistsLoaded;
 
   const managedChecklist = managedChecklists.find(
@@ -137,7 +133,7 @@ export default function CheckList() {
   return (
     <DefaultLayout title={`${process.env.NEXT_PUBLIC_APP_NAME}`}>
       <Main>
-        {isLoading || !isLoaded ?
+        {!isLoaded ?
           <Spinner className="mx-auto my-40" />
         : <div>
             {data ?

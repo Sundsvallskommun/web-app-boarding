@@ -6,7 +6,6 @@ import { AppWrapper } from '@contexts/app.context';
 import LoginGuard from '@components/login-guard/login-guard';
 import { ConfirmationDialogContextProvider, GuiProvider } from '@sk-web-gui/react';
 import dayjs from 'dayjs';
-import updateLocale from 'dayjs/plugin/updateLocale';
 import utc from 'dayjs/plugin/utc';
 import dynamic from 'next/dynamic';
 import { ReactNode, useEffect } from 'react';
@@ -19,24 +18,6 @@ const SnackbarBridge = dynamic(() => import('@components/snackbar-bridge/snackba
 
 dayjs.extend(utc);
 dayjs.locale('sv');
-dayjs.extend(updateLocale);
-dayjs.updateLocale('sv', {
-  months: [
-    'Januari',
-    'Februari',
-    'Mars',
-    'April',
-    'Maj',
-    'Juni',
-    'Juli',
-    'Augusti',
-    'September',
-    'Oktober',
-    'November',
-    'December',
-  ],
-  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
-});
 
 interface AppLayoutProps {
   children: ReactNode;
