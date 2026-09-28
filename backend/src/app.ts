@@ -445,6 +445,7 @@ class App {
   }
 
   private initializeSwagger(controllers: Function[]) {
+    type OpenAPISchemas = NonNullable<NonNullable<Parameters<typeof routingControllersToSpec>[2]>['components']>['schemas'];
     const schemas = validationMetadatasToSchemas({
       classTransformerMetadataStorage: defaultMetadataStorage,
       refPointerPrefix: '#/components/schemas/',
@@ -459,7 +460,7 @@ class App {
     const storage = getMetadataArgsStorage();
     const spec = routingControllersToSpec(storage, routingControllersOptions, {
       components: {
-        schemas: schemas as { [schema: string]: unknown },
+        schemas: schemas as OpenAPISchemas,
         securitySchemes: {
           basicAuth: {
             scheme: 'basic',
