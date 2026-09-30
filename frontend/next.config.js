@@ -24,13 +24,14 @@ module.exports = withBundleAnalyzer({
   images: {
     remotePatterns: [{ protocol: 'https', hostname: process.env.DOMAIN_NAME }],
     formats: ['image/avif', 'image/webp'],
+    unoptimized: true,
   },
   basePath: process.env.BASE_PATH,
   sassOptions: {
     prependData: `$basePath: '${process.env.BASE_PATH}';`,
   },
   experimental: {
-    optimizePackageImports: ['@sk-web-gui/core', '@sk-web-gui/react', 'lodash', 'dayjs'],
+    optimizePackageImports: ['@sk-web-gui/core', '@sk-web-gui/react', 'lodash'],
   },
   turbopack: {
     root: __dirname,
