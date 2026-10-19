@@ -5,8 +5,6 @@ import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import createMemoryStore from 'memorystore';
-import createFileStore from 'session-file-store';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
@@ -37,7 +35,7 @@ import {
   SAML_PRIVATE_KEY,
   SAML_PUBLIC_KEY,
   SECRET_KEY,
-  SESSION_MEMORY,
+  SESSION_STORE,
   SWAGGER_ENABLED,
 } from '@config';
 import errorMiddleware from '@middlewares/error.middleware';
@@ -47,6 +45,8 @@ import { HttpException } from '@exceptions/HttpException';
 import { join } from 'path';
 import { isValidOrigin, isValidUrl } from '@utils/util';
 import { additionalConverters } from '@utils/custom-validation-classes';
+import { createSessionStore } from '@utils/createSessionStore';
+import { livenessHandler } from '@/routes/liveness.route';
 import { getPermissions, getRole } from '@services/authorization.service';
 import ApiService from './services/api.service';
 import { EmployeeChecklist } from './responses/checklist.response';
@@ -55,12 +55,9 @@ import { PortalPersonData } from './data-contracts/employee/data-contracts';
 import { getOrgChildren } from '@services/organization.service';
 import { Organization } from './data-contracts/company/data-contracts';
 
-const SessionStoreCreate = SESSION_MEMORY ? createMemoryStore(session) : createFileStore(session);
-const sessionTTL = 4 * 24 * 60 * 60;
-// NOTE: memory uses ms while file uses seconds
-const sessionStore = new SessionStoreCreate(SESSION_MEMORY ? { checkPeriod: sessionTTL * 1000 } : { sessionTTL, path: './data/sessions' });
+// Session lifetime in seconds (4 days)
+const SESSION_TTL = 4 * 24 * 60 * 60;
 
-// const prisma = new PrismaClient();
 const apiService = new ApiService();
 
 passport.serializeUser(function (user, done) {
@@ -287,6 +284,7 @@ class App {
   public env: string;
   public port: string | number;
   public swaggerEnabled: boolean;
+  private readonly sessionStore: session.Store;
 
   constructor(Controllers: Function[]) {
     this.app = express();
@@ -295,7 +293,10 @@ class App {
     this.swaggerEnabled = SWAGGER_ENABLED || false;
 
     this.initializeDataFolders();
+    // When SESSION_STORE=redis, server.ts must have awaited initRedis() before constructing App.
+    this.sessionStore = createSessionStore(SESSION_TTL);
 
+    this.initializeLivenessRoute();
     this.initializeMiddlewares();
     this.initializeRoutes(Controllers);
     if (this.swaggerEnabled) {
@@ -317,7 +318,15 @@ class App {
     return this.app;
   }
 
+  private initializeLivenessRoute() {
+    this.app.get('/health', livenessHandler);
+  }
+
   private initializeMiddlewares() {
+    // Behind the OpenShift route TLS is terminated before Express; trust the first proxy hop
+    // so req.secure, req.protocol and secure cookies reflect the client connection.
+    this.app.set('trust proxy', 1);
+
     this.app.use(morgan(LOG_FORMAT, { stream }));
     this.app.use(hpp());
     this.app.use(helmet());
@@ -330,14 +339,13 @@ class App {
       windowMs: 60 * 1000,
       limit: 100,
     });
-    this.app.set('trust proxy', 1);
 
     this.app.use(
       session({
         secret: SECRET_KEY,
         resave: false,
         saveUninitialized: false,
-        store: sessionStore,
+        store: this.sessionStore,
       }),
     );
 
@@ -484,17 +492,17 @@ class App {
   }
 
   private initializeDataFolders() {
-    const databaseDir: string = join(__dirname, '../data/database');
-    if (!existsSync(databaseDir)) {
-      mkdirSync(databaseDir, { recursive: true });
-    }
     const logsDir: string = join(__dirname, '../data/logs');
     if (!existsSync(logsDir)) {
       mkdirSync(logsDir, { recursive: true });
     }
-    const sessionsDir: string = join(__dirname, '../data/sessions');
-    if (!existsSync(sessionsDir)) {
-      mkdirSync(sessionsDir, { recursive: true });
+
+    // Only the file-based session store needs local disk. Redis/memory keep the pod stateless.
+    if (SESSION_STORE === 'file') {
+      const sessionsDir: string = join(__dirname, '../data/sessions');
+      if (!existsSync(sessionsDir)) {
+        mkdirSync(sessionsDir, { recursive: true });
+      }
     }
   }
 }

@@ -4,7 +4,8 @@ import { ClientUser } from '@interfaces/users.interface';
 import { apiURL } from '@utils/util';
 import { logger } from '@utils/logger';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
-import ApiTokenService from './api-token.service';
+import { createApiTokenService } from './api-token.service';
+import { IApiTokenService } from '@interfaces/api-token.interface';
 
 export class ApiResponse<T> {
   data: T;
@@ -12,7 +13,15 @@ export class ApiResponse<T> {
   message: string;
 }
 
-const apiTokenService = new ApiTokenService();
+// Created lazily so the Redis-backed variant is only resolved after initRedis() has run.
+let apiTokenService: IApiTokenService | null = null;
+
+function getApiTokenService(): IApiTokenService {
+  if (!apiTokenService) {
+    apiTokenService = createApiTokenService();
+  }
+  return apiTokenService;
+}
 
 class ApiService {
   private instance: AxiosInstance;
@@ -23,7 +32,7 @@ class ApiService {
         if (request.url === apiURL('token')) {
           return Promise.resolve(request);
         }
-        const token = await apiTokenService.getToken();
+        const token = await getApiTokenService().getToken();
         const defaultHeaders = {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -44,7 +53,7 @@ class ApiService {
         // TODO This is an ugly workaround for the fact that setting correct API version
         // in the location header is difficult for some APIs, such as Messaging
         // So, for Messaging specifically, we - for now - ignore the location header
-        const token = await apiTokenService.getToken();
+        const token = await getApiTokenService().getToken();
         const defaultHeaders = {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
