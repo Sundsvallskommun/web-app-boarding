@@ -274,7 +274,7 @@ const samlStrategy = new Strategy(
       return done(err);
     }
   },
-  async function (profile: Profile, done: VerifiedCallback) {
+  function (profile: Profile, done: VerifiedCallback) {
     return done(null, {});
   },
 );
