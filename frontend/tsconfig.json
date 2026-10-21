@@ -24,7 +24,6 @@
       "@styles/*": ["src/styles/*"],
       "@utils/*": ["src/utils/*"],
       "@public/*": ["public/*"],
-      "@jestRoot/*": [".jest/*"],
       "@data-contracts/*": ["src/data-contracts/*"],
       "@app/*": ["src/app/*"]
     },
