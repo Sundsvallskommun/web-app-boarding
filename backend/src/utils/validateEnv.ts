@@ -21,6 +21,10 @@ const validateEnv = () => {
     ADMIN_GROUP: str(),
     DEPARTMENT_ADMIN_GROUP: str(),
     MUNICIPALITY_ID: str(),
+    SESSION_STORE: str({ choices: ['memory', 'file', 'redis'], default: 'memory' }),
+    REDIS_HOST: str({ default: '' }),
+    REDIS_PORT: port({ default: 6379 }),
+    REDIS_PASSWORD: str({ default: '' }),
   });
 };
 
