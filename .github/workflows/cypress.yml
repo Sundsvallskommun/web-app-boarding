@@ -6,11 +6,9 @@ permissions:
 on:
   workflow_dispatch:
   pull_request:
-  push:
     branches:
       - "develop"
       - "main"
-      - "*"
     paths:
       - frontend/src/**
       - frontend/cypress/**
@@ -27,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cypress run
-        uses: cypress-io/github-action@e65cba2e7319696fc0fdc4d5a319b737aec4ba1c
+        uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060
         with:
           working-directory: frontend
           install-command: yarn --frozen-lockfile --silent --network-timeout 1000000
@@ -41,9 +39,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEXT_PUBLIC_APP_NAME: Introduktioner
           NEXT_PUBLIC_API_URL: http://localhost:3001/api
+          INTERNAL_API_URL: http://localhost:3001/api
           NEXT_PUBLIC_ROOT_IDS: "2668,2669,2725,2744,2754,2755,2764,13"
           DOMAIN_NAME: localhost
-          BASE_PATH: ""
           ADMIN_URL: http://localhost:3000/admin
           NEXT_PUBLIC_BASE_PATH: ""
           NEXT_PUBLIC_PROTECTED_ROUTES: '"admin"'

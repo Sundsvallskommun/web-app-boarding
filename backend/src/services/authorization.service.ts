@@ -10,10 +10,10 @@ export const defaultPermissions: () => Permissions = () => ({
 });
 
 enum RoleOrderEnum {
-  'admin',
-  'department_admin',
-  'developer',
-  'user',
+  admin,
+  department_admin,
+  developer,
+  user,
 }
 
 const roles = new Map<InternalRole, Partial<Permissions>>([
